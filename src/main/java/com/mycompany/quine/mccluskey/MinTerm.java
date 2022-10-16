@@ -8,24 +8,24 @@ import java.util.ArrayList;
  */
 public final class MinTerm {
 
-    private       String              literal;
-    private ArrayList<Integer>    decimal_NEW;
-    private       String               binary;
-    private       int               onesCount;
-    private       int         implicantBitPos;
-    private       int                    size;
-    private       boolean            hasPrime;
-    private       boolean         isEssential;
+    private ArrayList<Integer> decimal;
+    private       String       literal;
+    private       String        binary;
+    private       int        onesCount;
+    private       int  implicantBitPos;
+    private       int             size;
+    private       boolean     hasPrime;
+    private       boolean  isEssential;
     
     public MinTerm() {
-        binary          = "0000";
-        decimal_NEW = new ArrayList<>();
-        literal         =     "";
-        implicantBitPos =     -1;
-        onesCount       =      0;
-        size            =      0;
-        hasPrime        =  false;
-        isEssential     =   true;
+        decimal = new ArrayList<>();
+        binary             = "0000";
+        literal            =     "";
+        implicantBitPos    =     -1;
+        onesCount          =      0;
+        size               =      0;
+        hasPrime           =  false;
+        isEssential        =   true;
     }
     
     public MinTerm(String inputFormat, String inputExp) {
@@ -33,9 +33,9 @@ public final class MinTerm {
         switch(inputFormat) {
             case "Literal" -> {
                 setMinTermFromLiteral(inputExp);
-                binary      = literal2binary(literal);
-                decimal_NEW = new ArrayList<>();
-                decimal_NEW.add(binary2decimal(binary));
+                binary = literal2binary(literal);
+                decimal = new ArrayList<>();
+                decimal.add(binary2decimal(binary));
                 
             }
             case "Decimal" -> {
@@ -45,8 +45,8 @@ public final class MinTerm {
             }
             case "Binária" -> {
                 setMinTermFromBinary(inputExp);
-                decimal_NEW = new ArrayList<>();
-                decimal_NEW.add(binary2decimal(binary));
+                decimal = new ArrayList<>();
+                decimal.add(binary2decimal(binary));
                 literal = binary2literal(binary);
             }
             default -> {
@@ -63,7 +63,7 @@ public final class MinTerm {
     }
     
     public ArrayList<Integer> getDecimal() {
-        return decimal_NEW;
+        return decimal;
     }
     
     public String getBinary() {
@@ -135,7 +135,7 @@ public final class MinTerm {
     }
     
     public void addDecimal (int newDecimal) {
-        decimal_NEW.add(newDecimal); 
+        decimal.add(newDecimal); 
     }
     
     public void setMinTermFromLiteral(String litInput) {
@@ -147,8 +147,8 @@ public final class MinTerm {
     }
     
     public void setMinTermFromDecimal(int decimal) {
-        decimal_NEW = new ArrayList<>();
-        decimal_NEW.add(decimal);
+        this.decimal = new ArrayList<>();
+        this.decimal.add(decimal);
     }
     
     public String literal2binary(String lit) {
@@ -232,7 +232,8 @@ public final class MinTerm {
         int inputPos=0;
         while (inputPos < upInput.length()) {
             list.add(new ArrayList<>());
-            list.get(list.size()-1).add('L'); //Reserva para o literal
+            //Reserva para o literal:
+            list.get(list.size()-1).add('L');
             
             //Separa os "!"
             while (upInput.charAt(inputPos) == '!') {
@@ -240,7 +241,8 @@ public final class MinTerm {
                 inputPos++;
             }
             
-            list.get(list.size()-1).set(0,upInput.charAt(inputPos)); //Guarda literal na posição reservada
+            //Guarda o literal na posição reservada:
+            list.get(list.size()-1).set(0,upInput.charAt(inputPos));
             inputPos++;
             
             if (list.size() > 1) {

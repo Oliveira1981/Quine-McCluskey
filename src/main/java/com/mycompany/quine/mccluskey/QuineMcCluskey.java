@@ -37,19 +37,18 @@ public class QuineMcCluskey {
         }
         
         exp.groupPrimeImplicants();
+        exp.print("\n+++++++++++++++++++++++++++++++");
         
         for(int i=0; i<exp.getAuxMinTermsTable().size(); i++) {
-            exp.print("\n+++++++++++");
-            exp.print(exp.getAuxMinTermsTable().get(i).getLiteral());
-            exp.print("#####");
+            exp.print("\n"+exp.getAuxMinTermsTable().get(i).getLiteral());
             for(int q=0; q<exp.getAuxMinTermsTable().get(i).getDecimal().size(); q++) {
-                exp.print(exp.getAuxMinTermsTable().get(i).getDecimal().get(q));
+                System.out.print("-"+exp.getAuxMinTermsTable().get(i).getDecimal().get(q));
             }
-            exp.print("#####");
+            exp.print("-");
             exp.print(exp.getAuxMinTermsTable().get(i).getBinary());
         }
         exp.setOptimizedExpression();
-        exp.print(exp.getOptimizedExpression());
+        exp.print("\n"+exp.getOptimizedExpression()+"\n");
         
     }
 }
