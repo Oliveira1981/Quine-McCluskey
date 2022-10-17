@@ -30,7 +30,6 @@ public class QuineMcCluskey {
         System.out.println("expression:"+expression);
         
         SOP exp = new SOP(inputFormat, expression);
-        
         for(int i=0; i<exp.getMinTermsTable().size(); i++) {
             exp.print("\n");
             exp.print(exp.getMinTermsTable().get(i).getDecimal()+"   ");
@@ -39,9 +38,15 @@ public class QuineMcCluskey {
         }
         
         exp.sortByOnesCount();
+        for(int i=0; i<exp.getMinTermsTable().size(); i++) {
+            exp.print("\n");
+            exp.print(exp.getMinTermsTable().get(i).getDecimal()+"   ");
+            exp.print(exp.getMinTermsTable().get(i).getBinary()+"   ");
+            exp.print(exp.getMinTermsTable().get(i).getLiteral()+"\n");
+        }
+        
         exp.mergePrimeImplicants();
         exp.print("\n+++++++++++++++++++++++++++++++\n");
-        
         for(int i=0; i<exp.getMinTermsTable().size(); i++) {
             for(int q=0; q<exp.getMinTermsTable().get(i).getDecimal().size(); q++) {
                 exp.print("-"+exp.getMinTermsTable().get(i).getDecimal().get(q));
@@ -50,6 +55,7 @@ public class QuineMcCluskey {
             exp.print(exp.getMinTermsTable().get(i).getBinary()+"   ");
             exp.print(exp.getMinTermsTable().get(i).getLiteral()+"\n");
         }
+        
         exp.setOptimizedExpression();
         exp.print("\n"+exp.getOptimizedExpression()+"\n");
         

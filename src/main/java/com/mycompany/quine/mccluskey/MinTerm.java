@@ -124,7 +124,7 @@ public final class MinTerm {
     public void setOnesCount() {
         int count = 0;
         for (int b=0; b<size; b++){
-            if (binary.charAt(b)=='1');
+            if (binary.charAt(b)=='1')
                 count ++;
         }
         onesCount = count;
