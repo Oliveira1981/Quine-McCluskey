@@ -9,7 +9,7 @@ import java.util.ArrayList;
 public final class SOP {
 
     private String inputFormat;
-    private String expression;
+    private String inputExpression;
     private String optimizedExpression;
     private ArrayList<MinTerm> minTermsTable;
     private ArrayList<MinTerm> auxMinTermsTable;
@@ -17,33 +17,33 @@ public final class SOP {
     public SOP(String inputFormat, String expression) {
         this.inputFormat = inputFormat;
         if (inputFormat.equals("Literal")){
-            this.expression = cleanUpExpression(expression);
+            this.inputExpression = cleanUpExpression(expression);
         }
         else {
-            this.expression = expression;
+            this.inputExpression = expression;
         }
         fillMinTermsTable();
     }
     
     public SOP() {
         this.inputFormat = "literal";
-        this.expression = "";
+        this.inputExpression = "";
         fillMinTermsTable();
     }
 
     public void setExpression(String inputFormat, String expression) {
         this.inputFormat = inputFormat;
         if (inputFormat.equals("Literal")){
-            this.expression = cleanUpExpression(expression);
+            this.inputExpression = cleanUpExpression(expression);
         }
         else {
-            this.expression = expression;
+            this.inputExpression = expression;
         }
         fillMinTermsTable();
     }
 
-    public String getExpression() {
-        return expression;
+    public String getInputExpression() {
+        return inputExpression;
     }
     
     public ArrayList<MinTerm> getMinTermsTable(){
@@ -59,16 +59,16 @@ public final class SOP {
         int begin = 0;
         int end;
         do {
-            end = expression.indexOf('+', begin);
+            end = inputExpression.indexOf('+', begin);
             if (end<0)
-                end = expression.length();
-            String str = expression.substring(begin, end);
+                end = inputExpression.length();
+            String str = inputExpression.substring(begin, end);
             minTermsTable.add(new MinTerm(inputFormat, str));
             begin = end+1;
-            if (begin>=expression.length())
+            if (begin>=inputExpression.length())
                 break;
         }
-        while (begin<expression.length());
+        while (begin<inputExpression.length());
     }
     
     public void sortByOnesCount() {
@@ -90,7 +90,6 @@ public final class SOP {
     }
     
     //Retorna a posição do bit variante ou -1 se não é primo implicante
-    //FALTA CONSIDERAR TAMBÉM OS BITS IMPLICANTES: "_"
     public int primeImplicantBitPosition(String minTerm1, String minTerm2, int size) {
         int count = 0;
         int pos = -1;
@@ -99,9 +98,11 @@ public final class SOP {
                 count++;
                 pos = b;
             }
-            if (count >= 2)
+            if (count > 1)
                 return -1;
         }
+        if (count == 0)
+            return -2;
         return pos;
     }
     
@@ -109,9 +110,16 @@ public final class SOP {
         return str.substring(0, pos) + c + str.substring(pos+1);
     }
     
+    public void resetHasPrime() {
+        for (int i=0; i < minTermsTable.size(); i++)
+            minTermsTable.get(i).setHasPrime(false);
+    }
+    
     //FALTA RECURSIVIDADE (ALTERNAR TABELAS AUX E NORMAL)
+    //VAI TER QUE RESETAR TODOS OS hasPrime antes de começar
     public void groupPrimeImplicants() {
-        boolean hasPrime = false;
+        boolean primesWereFound = false;
+        //reset hasPrime de toda a tabela OU AQUI
         auxMinTermsTable = new ArrayList<>();
         for (int i=0; i < (minTermsTable.size()-1); i++) {
             int j = i + 1;
@@ -120,23 +128,31 @@ public final class SOP {
                     minTermsTable.get(i).getSize(),
                     minTermsTable.get(j).getSize()
                 );
-                int implicantBitPosition = primeImplicantBitPosition(
+                int bitPosition = primeImplicantBitPosition(
                     minTermsTable.get(i).getBinary(),
                     minTermsTable.get(j).getBinary(),
                     size
                 );
-                if (implicantBitPosition != -1) {
-                    hasPrime = true;
+                if (bitPosition != -1) {
+                    primesWereFound = true;
                     minTermsTable.get(i).setHasPrime(true);
                     minTermsTable.get(j).setHasPrime(true);
-                    int newDecimal = minTermsTable.get(j).getDecimal().get(0);
                     String bitString = "";
                     for (int c=0; c < minTermsTable.get(i).getSize(); c++)
-                        if (c == implicantBitPosition) bitString += "_";
+                        if (c == bitPosition) bitString += "_";
                         else bitString += minTermsTable.get(i).getBinary().charAt(c);
                     auxMinTermsTable.add(new MinTerm("Binária", bitString));
-                    auxMinTermsTable.get(auxMinTermsTable.size()-1).addDecimal(newDecimal);
-                    auxMinTermsTable.get(auxMinTermsTable.size()-1).setHasPrime(true);
+                    auxMinTermsTable.get(auxMinTermsTable.size()-1).getDecimal().clear();
+                    for(int d=0; d < minTermsTable.get(i).getDecimal().size(); d++) {
+                        auxMinTermsTable.get(auxMinTermsTable.size()-1).addDecimal(
+                            minTermsTable.get(i).getDecimal().get(d)
+                        );
+                    }
+                    for(int d=0; d < minTermsTable.get(j).getDecimal().size(); d++) {
+                        auxMinTermsTable.get(auxMinTermsTable.size()-1).addDecimal(
+                            minTermsTable.get(j).getDecimal().get(d)
+                        );
+                    }
                 }
                 j++;
             }
@@ -151,9 +167,13 @@ public final class SOP {
         if (!minTermsTable.get(minTermsTable.size()-1).hasPrime()) {
             auxMinTermsTable.add(minTermsTable.get(minTermsTable.size()-1));
         }
-        //if (hasPrime) {
-        //    groupPrimeImplicants();
-        //}
+        
+        if (primesWereFound) {
+        //if (r>0) {
+            minTermsTable = auxMinTermsTable;
+            resetHasPrime();
+            groupPrimeImplicants();
+        }
     }
     
     public char getAlphabetChar(int c) {
@@ -189,8 +209,8 @@ public final class SOP {
         return optimizedExpression;
     }
     
-    public void print (Object obj) {
-        System.out.println(obj);
+    public void print(Object obj) {
+        System.out.print(obj);
     }
     
 }

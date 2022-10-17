@@ -29,6 +29,10 @@ public final class MinTerm {
     }
     
     public MinTerm(String inputFormat, String inputExp) {
+        setMinTerm(inputFormat, inputExp);
+    }
+    
+    public void setMinTerm(String inputFormat, String inputExp) {
         setSize(inputFormat, inputExp);
         switch(inputFormat) {
             case "Literal" -> {
@@ -277,7 +281,7 @@ public final class MinTerm {
     }
     
     public void print (Object obj) {
-        System.out.println(obj);
+        System.out.print(obj);
     }
 
 }

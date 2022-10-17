@@ -1,5 +1,7 @@
 package com.mycompany.quine.mccluskey;
 
+import java.util.ArrayList;
+
 /**
  *
  * @author Rodrigo da Rosa
@@ -30,22 +32,22 @@ public class QuineMcCluskey {
         SOP exp = new SOP(inputFormat, expression);
         
         for(int i=0; i<exp.getMinTermsTable().size(); i++) {
-            exp.print("");
-            exp.print(exp.getMinTermsTable().get(i).getLiteral());
-            exp.print(exp.getMinTermsTable().get(i).getDecimal());
-            exp.print(exp.getMinTermsTable().get(i).getBinary());
+            exp.print("\n");
+            exp.print(exp.getMinTermsTable().get(i).getDecimal()+"   ");
+            exp.print(exp.getMinTermsTable().get(i).getBinary()+"   ");
+            exp.print(exp.getMinTermsTable().get(i).getLiteral()+"\n");
         }
         
         exp.groupPrimeImplicants();
-        exp.print("\n+++++++++++++++++++++++++++++++");
+        exp.print("\n+++++++++++++++++++++++++++++++\n");
         
-        for(int i=0; i<exp.getAuxMinTermsTable().size(); i++) {
-            exp.print("\n"+exp.getAuxMinTermsTable().get(i).getLiteral());
-            for(int q=0; q<exp.getAuxMinTermsTable().get(i).getDecimal().size(); q++) {
-                System.out.print("-"+exp.getAuxMinTermsTable().get(i).getDecimal().get(q));
+        for(int i=0; i<exp.getMinTermsTable().size(); i++) {
+            for(int q=0; q<exp.getMinTermsTable().get(i).getDecimal().size(); q++) {
+                exp.print("-"+exp.getMinTermsTable().get(i).getDecimal().get(q));
             }
-            exp.print("-");
-            exp.print(exp.getAuxMinTermsTable().get(i).getBinary());
+            exp.print("-   ");
+            exp.print(exp.getMinTermsTable().get(i).getBinary()+"   ");
+            exp.print(exp.getMinTermsTable().get(i).getLiteral()+"\n");
         }
         exp.setOptimizedExpression();
         exp.print("\n"+exp.getOptimizedExpression()+"\n");
