@@ -117,7 +117,7 @@ public final class SOP {
     
     //FALTA RECURSIVIDADE (ALTERNAR TABELAS AUX E NORMAL)
     //VAI TER QUE RESETAR TODOS OS hasPrime antes de começar
-    public void groupPrimeImplicants() {
+    public void mergePrimeImplicants() {
         boolean primesWereFound = false;
         //reset hasPrime de toda a tabela OU AQUI
         auxMinTermsTable = new ArrayList<>();
@@ -172,7 +172,7 @@ public final class SOP {
         //if (r>0) {
             minTermsTable = auxMinTermsTable;
             resetHasPrime();
-            groupPrimeImplicants();
+            mergePrimeImplicants();
         }
     }
     

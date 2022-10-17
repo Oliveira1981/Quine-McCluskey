@@ -38,7 +38,8 @@ public class QuineMcCluskey {
             exp.print(exp.getMinTermsTable().get(i).getLiteral()+"\n");
         }
         
-        exp.groupPrimeImplicants();
+        exp.sortByOnesCount();
+        exp.mergePrimeImplicants();
         exp.print("\n+++++++++++++++++++++++++++++++\n");
         
         for(int i=0; i<exp.getMinTermsTable().size(); i++) {
