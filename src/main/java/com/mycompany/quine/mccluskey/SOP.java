@@ -13,6 +13,7 @@ public final class SOP {
     private String optimizedExpression;
     private ArrayList<MinTerm> minTermsTable;
     private ArrayList<MinTerm> auxMinTermsTable;
+    private int numberOfVars;
     
     public SOP(String inputFormat, String expression) {
         this.inputFormat = inputFormat;
@@ -23,12 +24,14 @@ public final class SOP {
             this.inputExpression = expression;
         }
         fillMinTermsTable();
+        //numberOfVars = setNumberOfVars(minTermsTable);
     }
     
     public SOP() {
         this.inputFormat = "literal";
         this.inputExpression = "";
         fillMinTermsTable();
+        //numberOfVars = setNumberOfVars(minTermsTable);
     }
 
     public void setExpression(String inputFormat, String expression) {
@@ -40,6 +43,7 @@ public final class SOP {
             this.inputExpression = expression;
         }
         fillMinTermsTable();
+        //numberOfVars = setNumberOfVars(minTermsTable);
     }
 
     public String getInputExpression() {
@@ -54,8 +58,13 @@ public final class SOP {
         return auxMinTermsTable;
     }
     
+    public int getNumberOfVars() {
+        return numberOfVars;
+    }
+    
     public void fillMinTermsTable() {
         minTermsTable = new ArrayList<>();
+        numberOfVars = getGlobalSize(inputFormat, inputExpression);
         int begin = 0;
         int end;
         do {
@@ -63,12 +72,12 @@ public final class SOP {
             if (end<0)
                 end = inputExpression.length();
             String str = inputExpression.substring(begin, end);
-            minTermsTable.add(new MinTerm(inputFormat, str));
+            minTermsTable.add(new MinTerm(inputFormat, str, numberOfVars));
             begin = end+1;
-            if (begin>=inputExpression.length())
+            if (begin >= inputExpression.length())
                 break;
         }
-        while (begin<inputExpression.length());
+        while (begin < inputExpression.length());
     }
     
     public void sortByOnesCount() {
@@ -141,7 +150,7 @@ public final class SOP {
                     for (int c=0; c < minTermsTable.get(i).getSize(); c++)
                         if (c == bitPosition) bitString += "_";
                         else bitString += minTermsTable.get(i).getBinary().charAt(c);
-                    auxMinTermsTable.add(new MinTerm("Binária", bitString));
+                    auxMinTermsTable.add(new MinTerm("Binária", bitString, numberOfVars));
                     auxMinTermsTable.get(auxMinTermsTable.size()-1).getDecimal().clear();
                     for(int d=0; d < minTermsTable.get(i).getDecimal().size(); d++) {
                         auxMinTermsTable.get(auxMinTermsTable.size()-1).addDecimal(
@@ -194,7 +203,6 @@ public final class SOP {
         
         return out;
     }
-    
     public void setOptimizedExpression() {
         optimizedExpression = "";
         //Temporariamente usando a aux
@@ -205,6 +213,70 @@ public final class SOP {
         }
     }
     
+    public int getGlobalSize(String inputFormat, String inputExp) {
+        int begin = 0;
+        int end;
+        int biggestSize = 0;
+        int currSize;
+        do {
+            end = inputExp.indexOf('+', begin);
+            if (end<0)
+                end = inputExp.length();
+            String str = inputExp.substring(begin, end);
+            
+            //Determina o tamanho de cada mintermo
+            switch(str) {
+                case "Literal" -> {
+                    currSize = 0;
+                    for (int c=0; c<str.length(); c++) {
+                        if (Character.isAlphabetic(str.charAt(c))){
+                            currSize++;
+                        }
+                    }
+                    if (currSize > biggestSize)
+                        biggestSize = currSize;
+                }
+                case "Binária" -> {
+                    if (str.length() > biggestSize)
+                        biggestSize = str.length();
+                }
+                case "Decimal" -> {
+                    currSize = 0;
+                    int integerInput = Integer.parseInt(str);
+                    do {
+                        integerInput = (int) (integerInput / 2);
+                        currSize++;
+                    }
+                    while (integerInput > 0);
+                 if (currSize > biggestSize)
+                        biggestSize = currSize;
+                }
+                default -> {
+                    biggestSize = 4;
+                }
+            }
+            //////////////////////////////////////
+            
+            begin = end+1;
+            if (begin >= inputExp.length())
+                break;
+        }
+        while (begin < inputExp.length());
+        return biggestSize;
+    }
+    /*
+    public int setNumberOfVars(ArrayList<MinTerm> mtTable){
+        int biggestSize = 0;
+        int currSize;
+        for (int i=0; i < mtTable.size(); i++) {
+            currSize = mtTable.get(i).getSize();
+            if (currSize > biggestSize) {
+                biggestSize = currSize;
+            }
+        }
+        return biggestSize;
+    }
+    */
     public String getOptimizedExpression() {
         return optimizedExpression;
     }

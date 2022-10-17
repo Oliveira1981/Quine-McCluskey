@@ -28,19 +28,19 @@ public final class MinTerm {
         isEssential        =   true;
     }
     
-    public MinTerm(String inputFormat, String inputExp) {
-        setMinTerm(inputFormat, inputExp);
+    public MinTerm(String inputFormat, String inputExp, int size) {
+        setMinTerm(inputFormat, inputExp, size);
     }
     
-    public void setMinTerm(String inputFormat, String inputExp) {
-        setSize(inputFormat, inputExp);
+    public void setMinTerm(String inputFormat, String inputExp, int size) {
+        //setIndividualSize(inputFormat, inputExp);
+        this.size = size;
         switch(inputFormat) {
             case "Literal" -> {
                 setMinTermFromLiteral(inputExp);
                 binary = literal2binary(literal);
                 decimal = new ArrayList<>();
                 decimal.add(binary2decimal(binary));
-                
             }
             case "Decimal" -> {
                 setMinTermFromDecimal(Integer.parseInt(inputExp));
@@ -94,7 +94,16 @@ public final class MinTerm {
         return isEssential;
     }
     
-    public void setSize(String inputFormat, String inputExp) {
+    //Determina o número de variáveis a ser utilizado,
+    //mesmo por mintermos menores
+    //Ver "SOP.java, setNumberOfVars
+    //public void setGlobalSize(int globalSize) {
+    //    size = globalSize;
+    //}
+    
+    //Determina o número de variáveis deste mintermo
+    /*
+    public void setIndividualSize(String inputFormat, String inputExp) {
         switch(inputFormat) {
             case "Literal" -> {
                 int count = 0;
@@ -109,21 +118,27 @@ public final class MinTerm {
                 size = inputExp.length();
             }
             case "Decimal" -> {
-                size = 4;
+                size = 0;
+                int curr = Integer.parseInt(inputExp);
+                do {
+                    curr = (int) (curr / 2);
+                    size++;
+                }
+                while (curr > 0);
             }
             default -> {
                 size = 4;
             }
         }
     }
-    
+    */
     public void setImplicantBitPos(int pos) {
         this.implicantBitPos = pos;
     }
     
     public void setOnesCount() {
         int count = 0;
-        for (int b=0; b<size; b++){
+        for (int b=0; b < binary.length(); b++){
             if (binary.charAt(b)=='1')
                 count ++;
         }
@@ -142,10 +157,12 @@ public final class MinTerm {
         decimal.add(newDecimal); 
     }
     
+    //FALTA FECHAR COM O size, que é tmb SOP.numberOfVars
     public void setMinTermFromLiteral(String litInput) {
         literal = sortLiteralInput(litInput);
     }
 
+    //FALTA FECHAR COM O size, que é tmb SOP.numberOfVars
     public void setMinTermFromBinary(String bitString) {
         binary = bitString;
     }
@@ -155,9 +172,10 @@ public final class MinTerm {
         this.decimal.add(decimal);
     }
     
+    //FALTA FECHAR COM O size, que é tmb SOP.numberOfVars
     public String literal2binary(String lit) {
         String strBin = "";
-        
+        int pos = 0;
         for (int c = 0; c < lit.length(); c++) {
             boolean isNegate = false;
             while(lit.charAt(c) == '!') {
@@ -165,10 +183,13 @@ public final class MinTerm {
                 c++;
             }
             if (Character.isAlphabetic(lit.charAt(c))){
+                if (lit.charAt(c) != getAlphabetChar(pos))
+                    strBin += "_";
                 if(isNegate)
                     strBin += "0";
                 else
                     strBin += "1";
+                pos++;
             }
         }
         return strBin;
@@ -176,7 +197,7 @@ public final class MinTerm {
     
     public int binary2decimal(String bits) {
         int decimalValue = 0;
-        for (int i = 0; i<bits.length(); i++) {
+        for (int i = 0; i < bits.length(); i++) {
             int exp = bits.length()-1-i;
             if(bits.charAt(i) == '1') {
                 decimalValue += (int) Math.pow(2, (double) exp);
@@ -185,6 +206,7 @@ public final class MinTerm {
         return decimalValue;
     }
     
+    //testar se FECHA COM O size, que é tmb SOP.numberOfVars
     public String decimal2binary(int deci) {
         String str = "";
         int b = 0;
@@ -211,6 +233,7 @@ public final class MinTerm {
         return reversedStr.toString();
     }
     
+    //FALTA FECHAR COM O size, que é tmb SOP.numberOfVars
     public String binary2literal(String bits) {
         String lit = "";
         int c = 0;
