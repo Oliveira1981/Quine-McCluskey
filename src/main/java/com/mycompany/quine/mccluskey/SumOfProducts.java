@@ -13,6 +13,7 @@ public final class SumOfProducts {
     private String optimizedExpression;
     private ArrayList<MinTerm> minTermsTable;
     private ArrayList<MinTerm> auxMinTermsTable;
+    private ArrayList<ArrayList<Integer>> coveringTable;
     private int numberOfVars;
     
     public SumOfProducts(String inputFormat, String expression) {
@@ -64,6 +65,7 @@ public final class SumOfProducts {
     
     public void fillMinTermsTable() {
         minTermsTable = new ArrayList<>();
+        coveringTable = new ArrayList<>();
         numberOfVars = getNumberOfVars(inputFormat, inputExpression);
         int begin = 0;
         int end;
@@ -73,11 +75,24 @@ public final class SumOfProducts {
                 end = inputExpression.length();
             String str = inputExpression.substring(begin, end);
             minTermsTable.add(new MinTerm(inputFormat, str, numberOfVars));
+            
+            coveringTable.add(new ArrayList<>());
+            coveringTable.get(coveringTable.size()-1)
+                .add(minTermsTable.get(minTermsTable.size()-1)
+                    .getDecimal().get(0));
+            
             begin = end+1;
             if (begin >= inputExpression.length())
                 break;
         }
         while (begin < inputExpression.length());
+        
+        for (int i=0; i<coveringTable.size(); i++) {
+            print("\n");
+            for (int j=0; j<coveringTable.get(i).size(); j++) {
+                print(" "+coveringTable.get(i).get(j));
+            }
+        }
     }
     
     public void sortByOnesCount() {
