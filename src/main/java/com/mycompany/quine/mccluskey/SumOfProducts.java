@@ -86,13 +86,6 @@ public final class SumOfProducts {
                 break;
         }
         while (begin < inputExpression.length());
-        
-        for (int i=0; i<coveringTable.size(); i++) {
-            print("\n");
-            for (int j=0; j<coveringTable.get(i).size(); j++) {
-                print(" "+coveringTable.get(i).get(j));
-            }
-        }
     }
     
     public void sortByOnesCount() {
@@ -289,6 +282,40 @@ public final class SumOfProducts {
         return true;
     }
     
+    public void fillCoveringTable() {
+        /*
+        VAI TER QUE SER COM STRINGS
+        pra cada decimal (cada entrada da coveringTable),
+        varre, em cada mintermo, seus decimais
+        se algum é igual, adiciona o mintermo à coveringTable
+        (o decimal está no i, e o mintermo estará no j)
+        */
+        for (int c=0; c < coveringTable.size(); c++) {
+            for (int m=0; m < minTermsTable.size(); m++) {
+                int numberOfDecimals = minTermsTable.get(m).getDecimal().size();
+                for (int d=0; d < numberOfDecimals; d++) {
+                    int decimalFromCovering = coveringTable.get(c).get(0);
+                    int decimalFromMinTerm = minTermsTable.get(m).getDecimal().get(d);
+                    if (decimalFromCovering == decimalFromMinTerm) {
+                        coveringTable.get(c).add(1/*minTermsTable.get(m).getLiteral()*/);
+                    }
+                }
+            }
+        }
+    }
+    /*
+    PRA RESOLVER A TABELA DE COBERTURA
+    em cada mintermo, pra cada decimal dele,
+    procura decimal igual em todos os demais mintermos (ver *)
+    se achou, marca o mintermo original como não essencial
+    se não achou, marca como essencial
+    e marca todos os decimais dele como cobertos (não sei como)
+    
+    * ir colocando numa lista os decimais já testados e comparar com ela
+    pra não repetir a busca com um mesmo decimal
+    
+    */
+        
     public String getOptimizedExpression() {
         return optimizedExpression;
     }
