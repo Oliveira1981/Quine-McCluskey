@@ -6,7 +6,7 @@ import java.util.ArrayList;
  *
  * @author Rodrigo da Rosa
  */
-public final class SOP {
+public final class SumOfProducts {
 
     private String inputFormat;
     private String inputExpression;
@@ -15,7 +15,7 @@ public final class SOP {
     private ArrayList<MinTerm> auxMinTermsTable;
     private int numberOfVars;
     
-    public SOP(String inputFormat, String expression) {
+    public SumOfProducts(String inputFormat, String expression) {
         this.inputFormat = inputFormat;
         if (inputFormat.equals("Literal")){
             this.inputExpression = cleanUpExpression(expression);
@@ -27,7 +27,7 @@ public final class SOP {
         //numberOfVars = setNumberOfVars(minTermsTable);
     }
     
-    public SOP() {
+    public SumOfProducts() {
         this.inputFormat = "literal";
         this.inputExpression = "";
         fillMinTermsTable();

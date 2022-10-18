@@ -22,7 +22,7 @@ public class QuineMcCluskey {
         String deciTemplate = "2+4+6+8+9+10+12+13+15";
         
         GUI gui = new GUI();
-        gui.showDialog(litTemplate);
+        gui.showDialog(deciTemplate);
         
         String inputFormat;
         String expression;
@@ -33,7 +33,7 @@ public class QuineMcCluskey {
         System.out.println("inputFormat:"+inputFormat);
         System.out.println("expression:"+expression);
         
-        SOP exp = new SOP(inputFormat, expression);
+        SumOfProducts exp = new SumOfProducts(inputFormat, expression);
         exp.print("\nVARS: "+exp.getNumberOfVars()+"\n");
         exp.sortByOnesCount();
         for(int i=0; i<exp.getMinTermsTable().size(); i++) {
