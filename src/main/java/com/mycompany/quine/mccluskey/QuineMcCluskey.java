@@ -13,9 +13,11 @@ public class QuineMcCluskey {
         //String litTemplate = "ABCD+!A!BCD+A!B!C!D+!ABCD";
         //String litTemplate = "A!BCD+!ABC!D+!ABCD+A!B!CD";
         //String litTemplate = "!A*!B*!C*!D + !A*!B*!C*D + !A*B*!C*D + !A*B*C*!D + !A*B*C*D";
-        String litTemplate = "ab!c+a!bc!d+!ab"; //diferentes tamanhos (perguntar quantas variáveis ou definir pelo mintermo maior)
-        String binTemplate = "1111+0011+1000+0111";
-        //String binTemplate = "1111+0011+1010+0111";
+        //String litTemplate = "ab!c+a!bc!d+!ab"; //diferentes tamanhos (definir pelo mintermo maior)
+        String litTemplate = "abc+bcd"; //diferentes tamanhos (definir pelo mintermo maior)
+        //String binTemplate = "1111+0011+1000+0111";
+        String binTemplate = "1111+0011+1010+0111";
+        //String binTemplate = "111+11+101+01"; //diferentes tamanhos (definir pelo mintermo maior)
         //String deciTemplate = "15+3+10+7";
         String deciTemplate = "2+4+6+8+9+10+12+13+15";
         
@@ -32,7 +34,7 @@ public class QuineMcCluskey {
         System.out.println("expression:"+expression);
         
         SOP exp = new SOP(inputFormat, expression);
-        exp.print("\nVARS: "+exp.getNumberOfVars());
+        exp.print("\nVARS: "+exp.getNumberOfVars()+"\n");
         exp.sortByOnesCount();
         for(int i=0; i<exp.getMinTermsTable().size(); i++) {
             exp.print("\n");

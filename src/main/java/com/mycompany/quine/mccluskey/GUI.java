@@ -34,8 +34,8 @@ public final class GUI {
     public void showDialog(String template) throws Exception {
         
         String[] optionsToChoose = {
-            "Decimal",
             "Literal",
+            "Decimal",
             "Binária",
         };
         

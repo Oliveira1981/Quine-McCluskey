@@ -64,7 +64,7 @@ public final class SOP {
     
     public void fillMinTermsTable() {
         minTermsTable = new ArrayList<>();
-        numberOfVars = getGlobalSize(inputFormat, inputExpression);
+        numberOfVars = getNumberOfVars(inputFormat, inputExpression);
         int begin = 0;
         int end;
         do {
@@ -102,7 +102,7 @@ public final class SOP {
     public int primeImplicantBitPosition(String minTerm1, String minTerm2, int size) {
         int count = 0;
         int pos = -1;
-        for (int b=0; b<size; b++) {
+        for (int b=0; b < size; b++) {
             if (minTerm1.charAt(b) != minTerm2.charAt(b)) {
                 count++;
                 pos = b;
@@ -124,11 +124,8 @@ public final class SOP {
             minTermsTable.get(i).setHasPrime(false);
     }
     
-    //FALTA RECURSIVIDADE (ALTERNAR TABELAS AUX E NORMAL)
-    //VAI TER QUE RESETAR TODOS OS hasPrime antes de começar
     public void mergePrimeImplicants() {
         boolean primesWereFound = false;
-        //reset hasPrime de toda a tabela OU AQUI
         auxMinTermsTable = new ArrayList<>();
         for (int i=0; i < (minTermsTable.size()-1); i++) {
             int j = i + 1;
@@ -147,7 +144,7 @@ public final class SOP {
                     minTermsTable.get(i).setHasPrime(true);
                     minTermsTable.get(j).setHasPrime(true);
                     String bitString = "";
-                    for (int c=0; c < minTermsTable.get(i).getSize(); c++)
+                    for (int c=0; c < minTermsTable.get(i).getBinary().length(); c++)
                         if (c == bitPosition) bitString += "_";
                         else bitString += minTermsTable.get(i).getBinary().charAt(c);
                     auxMinTermsTable.add(new MinTerm("Binária", bitString, numberOfVars));
@@ -178,7 +175,6 @@ public final class SOP {
         }
         
         if (primesWereFound) {
-        //if (r>0) {
             minTermsTable = auxMinTermsTable;
             resetHasPrime();
             mergePrimeImplicants();
@@ -213,32 +209,37 @@ public final class SOP {
         }
     }
     
-    public int getGlobalSize(String inputFormat, String inputExp) {
+    public int getNumberOfVars(String inputFormat, String inputExp) {
         int begin = 0;
         int end;
         int biggestSize = 0;
         int currSize;
+        String vars = "";
         do {
             end = inputExp.indexOf('+', begin);
-            if (end<0)
+            if (end < 0)
                 end = inputExp.length();
             String str = inputExp.substring(begin, end);
             
             //Determina o tamanho de cada mintermo
-            switch(str) {
+            switch(inputFormat) {
                 case "Literal" -> {
-                    currSize = 0;
-                    for (int c=0; c<str.length(); c++) {
-                        if (Character.isAlphabetic(str.charAt(c))){
-                            currSize++;
+                    //currSize = 0;
+                    for (int c=0; c < str.length(); c++) {
+                        if (Character.isAlphabetic(str.charAt(c))) {
+                            if (isNewVar(str.charAt(c), vars)) {
+                                //currSize++;
+                                vars += str.charAt(c);
+                            }
                         }
                     }
-                    if (currSize > biggestSize)
-                        biggestSize = currSize;
+                    if (vars.length() > biggestSize)
+                        biggestSize = vars.length();
                 }
                 case "Binária" -> {
-                    if (str.length() > biggestSize)
+                    if (str.length() > biggestSize){
                         biggestSize = str.length();
+                    }
                 }
                 case "Decimal" -> {
                     currSize = 0;
@@ -248,9 +249,9 @@ public final class SOP {
                         currSize++;
                     }
                     while (integerInput > 0);
-                 if (currSize > biggestSize)
+                    if (currSize > biggestSize)
                         biggestSize = currSize;
-                }
+                    }
                 default -> {
                     biggestSize = 4;
                 }
@@ -264,19 +265,15 @@ public final class SOP {
         while (begin < inputExp.length());
         return biggestSize;
     }
-    /*
-    public int setNumberOfVars(ArrayList<MinTerm> mtTable){
-        int biggestSize = 0;
-        int currSize;
-        for (int i=0; i < mtTable.size(); i++) {
-            currSize = mtTable.get(i).getSize();
-            if (currSize > biggestSize) {
-                biggestSize = currSize;
-            }
+    
+    public boolean isNewVar(char c, String str) {
+        for (int i=0; i < str.length(); i++) {
+            if (c == str.charAt(i))
+                return false;
         }
-        return biggestSize;
+        return true;
     }
-    */
+    
     public String getOptimizedExpression() {
         return optimizedExpression;
     }
