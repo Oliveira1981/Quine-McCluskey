@@ -6,8 +6,10 @@ import java.util.ArrayList;
  *
  * @author Rodrigo da Rosa
  */
-public class Table {
+public class MinTerm extends Tools {
     
-    //private ArrayList<MinTerm> mit;
+    private int decimalMinTerm;
+    private boolean isCovered;
+    
     
 }

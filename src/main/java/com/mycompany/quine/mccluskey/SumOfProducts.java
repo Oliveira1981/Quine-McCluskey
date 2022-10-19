@@ -6,14 +6,15 @@ import java.util.ArrayList;
  *
  * @author Rodrigo da Rosa
  */
-public final class SumOfProducts {
+public final class SumOfProducts extends Tools {
 
     private String inputFormat;
     private String inputExpression;
     private String optimizedExpression;
-    private ArrayList<Product> productsList;
+    private ArrayList<Product> productsList;          // Linhas da coveringTable
     private ArrayList<Product> auxProductsList;
-    private ArrayList<ArrayList<Integer>> coveringTable;
+    private ArrayList<MinTerm> minTermsList;         // Colunas da coveringTable
+    private ArrayList<ArrayList<Integer>> coveringTable;//Talvez vire uma Classe
     private int numberOfVars;
     
     public SumOfProducts(String inputFormat, String expression) {
@@ -319,9 +320,6 @@ public final class SumOfProducts {
     public String getOptimizedExpression() {
         return optimizedExpression;
     }
-    
-    public void print(Object obj) {
-        System.out.print(obj);
-    }
-    
+
+
 }
