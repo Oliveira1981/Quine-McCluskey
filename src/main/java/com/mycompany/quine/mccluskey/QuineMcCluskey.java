@@ -36,22 +36,22 @@ public class QuineMcCluskey {
         SumOfProducts exp = new SumOfProducts(inputFormat, expression);
         exp.print("\nVARS: "+exp.getNumberOfVars()+"\n");
         exp.sortByOnesCount();
-        for(int i=0; i<exp.getMinTermsTable().size(); i++) {
+        for(int i=0; i<exp.getProductsList().size(); i++) {
             exp.print("\n");
-            exp.print(exp.getMinTermsTable().get(i).getDecimal()+"   ");
-            exp.print(exp.getMinTermsTable().get(i).getBinary()+"   ");
-            exp.print(exp.getMinTermsTable().get(i).getLiteral());
+            exp.print(exp.getProductsList().get(i).getDecimal()+"   ");
+            exp.print(exp.getProductsList().get(i).getBinary()+"   ");
+            exp.print(exp.getProductsList().get(i).getLiteral());
         }
         
         exp.mergePrimeImplicants();
         exp.print("\n+++++++++++++++++++++++++++++++\n");
-        for(int i=0; i<exp.getMinTermsTable().size(); i++) {
-            for(int q=0; q<exp.getMinTermsTable().get(i).getDecimal().size(); q++) {
-                exp.print("-"+exp.getMinTermsTable().get(i).getDecimal().get(q));
+        for(int i=0; i<exp.getProductsList().size(); i++) {
+            for(int q=0; q<exp.getProductsList().get(i).getDecimal().size(); q++) {
+                exp.print("-"+exp.getProductsList().get(i).getDecimal().get(q));
             }
             exp.print("-   ");
-            exp.print(exp.getMinTermsTable().get(i).getBinary()+"   ");
-            exp.print(exp.getMinTermsTable().get(i).getLiteral()+"\n");
+            exp.print(exp.getProductsList().get(i).getBinary()+"   ");
+            exp.print(exp.getProductsList().get(i).getLiteral()+"\n");
         }
         
         exp.setOptimizedExpression();

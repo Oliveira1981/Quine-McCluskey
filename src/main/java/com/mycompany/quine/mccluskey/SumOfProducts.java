@@ -11,28 +11,28 @@ public final class SumOfProducts {
     private String inputFormat;
     private String inputExpression;
     private String optimizedExpression;
-    private ArrayList<MinTerm> minTermsTable;
-    private ArrayList<MinTerm> auxMinTermsTable;
+    private ArrayList<Product> productsList;
+    private ArrayList<Product> auxProductsList;
     private ArrayList<ArrayList<Integer>> coveringTable;
     private int numberOfVars;
     
     public SumOfProducts(String inputFormat, String expression) {
         this.inputFormat = inputFormat;
-        if (inputFormat.equals("Literal")){
+        if (inputFormat.equals("Literal")) {
             this.inputExpression = cleanUpExpression(expression);
         }
         else {
             this.inputExpression = expression;
         }
-        fillMinTermsTable();
-        //numberOfVars = setNumberOfVars(minTermsTable);
+        fillProductsList();
+        //numberOfVars = setNumberOfVars(productsList);
     }
     
     public SumOfProducts() {
         this.inputFormat = "literal";
         this.inputExpression = "";
-        fillMinTermsTable();
-        //numberOfVars = setNumberOfVars(minTermsTable);
+        fillProductsList();
+        //numberOfVars = setNumberOfVars(productsList);
     }
 
     public void setExpression(String inputFormat, String expression) {
@@ -43,30 +43,30 @@ public final class SumOfProducts {
         else {
             this.inputExpression = expression;
         }
-        fillMinTermsTable();
-        //numberOfVars = setNumberOfVars(minTermsTable);
+        fillProductsList();
+        //numberOfVars = setNumberOfVars(productsList);
     }
 
     public String getInputExpression() {
         return inputExpression;
     }
     
-    public ArrayList<MinTerm> getMinTermsTable(){
-        return minTermsTable;
+    public ArrayList<Product> getProductsList(){
+        return productsList;
     }
 
-    public ArrayList<MinTerm> getAuxMinTermsTable() {
-        return auxMinTermsTable;
+    public ArrayList<Product> getAuxProductsList() {
+        return auxProductsList;
     }
     
     public int getNumberOfVars() {
         return numberOfVars;
     }
     
-    public void fillMinTermsTable() {
-        minTermsTable = new ArrayList<>();
+    public void fillProductsList() {
+        productsList = new ArrayList<>();
         coveringTable = new ArrayList<>();
-        numberOfVars = getNumberOfVars(inputFormat, inputExpression);
+        numberOfVars = detectNumberOfVars(inputFormat, inputExpression);
         int begin = 0;
         int end;
         do {
@@ -74,11 +74,11 @@ public final class SumOfProducts {
             if (end<0)
                 end = inputExpression.length();
             String str = inputExpression.substring(begin, end);
-            minTermsTable.add(new MinTerm(inputFormat, str, numberOfVars));
+            productsList.add(new Product(inputFormat, str, numberOfVars));
             
             coveringTable.add(new ArrayList<>());
             coveringTable.get(coveringTable.size()-1)
-                .add(minTermsTable.get(minTermsTable.size()-1)
+                .add(productsList.get(productsList.size()-1)
                     .getDecimal().get(0));
             
             begin = end+1;
@@ -89,29 +89,31 @@ public final class SumOfProducts {
     }
     
     public void sortByOnesCount() {
-        for(int i=1; i<minTermsTable.size(); i++) {
-            int count_k = minTermsTable.get(i).getOnesCount();
-            if(count_k < minTermsTable.get(i-1).getOnesCount()) {
+        for(int i=1; i<productsList.size(); i++) {
+            int count_k = productsList.get(i).getOnesCount();
+            if(count_k < productsList.get(i-1).getOnesCount()) {
                 int j = i;
                 do {
                     j--;
                     if (j<1) break;
-                } while(count_k < minTermsTable.get(j-1).getOnesCount());
-                minTermsTable.add(j, minTermsTable.remove(i));
+                } while(count_k < productsList.get(j-1).getOnesCount());
+                productsList.add(j, productsList.remove(i));
             }
         }
     }
     
-    public int countOnes(String minTerm) {
-        return minTerm.split("1", -1).length-1;
+    public int countOnes(String product) {
+        return product.split("1", -1).length-1;
     }
     
-    //Retorna a posição do bit variante ou -1 se não é primo implicante
-    public int primeImplicantBitPosition(String minTerm1, String minTerm2, int size) {
+    //Retorna a posição do bit variante ou:
+    //-1 se os produtos não são primos implicantes
+    //-2 se os produtos são iguais
+    public int primeImplicantBitPosition(String product1, String product2, int size) {
         int count = 0;
         int pos = -1;
         for (int b=0; b < size; b++) {
-            if (minTerm1.charAt(b) != minTerm2.charAt(b)) {
+            if (product1.charAt(b) != product2.charAt(b)) {
                 count++;
                 pos = b;
             }
@@ -128,62 +130,60 @@ public final class SumOfProducts {
     }
     
     public void resetHasPrime() {
-        for (int i=0; i < minTermsTable.size(); i++)
-            minTermsTable.get(i).setHasPrime(false);
+        for (int i=0; i < productsList.size(); i++)
+            productsList.get(i).setHasPrime(false);
     }
     
     public void mergePrimeImplicants() {
         boolean primesWereFound = false;
-        auxMinTermsTable = new ArrayList<>();
-        for (int i=0; i < (minTermsTable.size()-1); i++) {
+        auxProductsList = new ArrayList<>();
+        for (int i=0; i < (productsList.size()-1); i++) {
             int j = i + 1;
-            while (j < minTermsTable.size()) {
-                int size = Math.min(
-                    minTermsTable.get(i).getSize(),
-                    minTermsTable.get(j).getSize()
+            while (j < productsList.size()) {
+                int size = Math.min(productsList.get(i).getSize(),
+                    productsList.get(j).getSize()
                 );
-                int bitPosition = primeImplicantBitPosition(
-                    minTermsTable.get(i).getBinary(),
-                    minTermsTable.get(j).getBinary(),
+                int bitPosition = primeImplicantBitPosition(productsList.get(i).getBinary(),
+                    productsList.get(j).getBinary(),
                     size
                 );
                 if (bitPosition != -1) {
                     primesWereFound = true;
-                    minTermsTable.get(i).setHasPrime(true);
-                    minTermsTable.get(j).setHasPrime(true);
+                    productsList.get(i).setHasPrime(true);
+                    productsList.get(j).setHasPrime(true);
                     String bitString = "";
-                    for (int c=0; c < minTermsTable.get(i).getBinary().length(); c++)
-                        if (c == bitPosition) bitString += "_";
-                        else bitString += minTermsTable.get(i).getBinary().charAt(c);
-                    auxMinTermsTable.add(new MinTerm("Binária", bitString, numberOfVars));
-                    auxMinTermsTable.get(auxMinTermsTable.size()-1).getDecimal().clear();
-                    for(int d=0; d < minTermsTable.get(i).getDecimal().size(); d++) {
-                        auxMinTermsTable.get(auxMinTermsTable.size()-1).addDecimal(
-                            minTermsTable.get(i).getDecimal().get(d)
-                        );
+                    for (int c=0; c < productsList.get(i).getBinary().length(); c++)
+                        if (c == bitPosition)
+                            bitString += "_";
+                        else
+                            bitString += productsList.get(i).getBinary().charAt(c);
+                    auxProductsList.add(new Product("Binária", bitString, numberOfVars));
+                    auxProductsList.get(auxProductsList.size()-1).getDecimal().clear();
+                    for(int d=0; d < productsList.get(i).getDecimal().size(); d++) {
+                        auxProductsList.get(auxProductsList.size()-1)
+                            .addDecimal(productsList.get(i).getDecimal().get(d));
                     }
-                    for(int d=0; d < minTermsTable.get(j).getDecimal().size(); d++) {
-                        auxMinTermsTable.get(auxMinTermsTable.size()-1).addDecimal(
-                            minTermsTable.get(j).getDecimal().get(d)
-                        );
+                    for(int d=0; d < productsList.get(j).getDecimal().size(); d++) {
+                        auxProductsList.get(auxProductsList.size()-1)
+                            .addDecimal(productsList.get(j).getDecimal().get(d));
                     }
                 }
                 j++;
             }
             //Após testar com todos os mintermos, este mintermo não teve primo
             //e vai inalterado para a tabela auxiliar
-            if (!minTermsTable.get(i).hasPrime()) {
-                auxMinTermsTable.add(minTermsTable.get(i));
+            if (!productsList.get(i).hasPrime()) {
+                auxProductsList.add(productsList.get(i));
             }
         }
         //Se o último mintermo da lista não teve primo,
         //vai inalterado para a tabela auxiliar
-        if (!minTermsTable.get(minTermsTable.size()-1).hasPrime()) {
-            auxMinTermsTable.add(minTermsTable.get(minTermsTable.size()-1));
+        if (!productsList.get(productsList.size()-1).hasPrime()) {
+            auxProductsList.add(productsList.get(productsList.size()-1));
         }
         
         if (primesWereFound) {
-            minTermsTable = auxMinTermsTable;
+            productsList = auxProductsList;
             resetHasPrime();
             mergePrimeImplicants();
         }
@@ -210,14 +210,14 @@ public final class SumOfProducts {
     public void setOptimizedExpression() {
         optimizedExpression = "";
         //Temporariamente usando a aux
-        for (int i=0; i < auxMinTermsTable.size(); i++) {
-            optimizedExpression += auxMinTermsTable.get(i).getLiteral();
-            if (i < (auxMinTermsTable.size()-1))
+        for (int i=0; i < auxProductsList.size(); i++) {
+            optimizedExpression += auxProductsList.get(i).getLiteral();
+            if (i < (auxProductsList.size()-1))
                 optimizedExpression += " + ";
         }
     }
     
-    public int getNumberOfVars(String inputFormat, String inputExp) {
+    public int detectNumberOfVars(String inputFormat, String inputExp) {
         int begin = 0;
         int end;
         int biggestSize = 0;
@@ -229,7 +229,7 @@ public final class SumOfProducts {
                 end = inputExp.length();
             String str = inputExp.substring(begin, end);
             
-            //Determina o tamanho de cada mintermo
+            //Determina o tamanho de cada produto
             switch(inputFormat) {
                 case "Literal" -> {
                     //currSize = 0;
@@ -291,13 +291,13 @@ public final class SumOfProducts {
         (o decimal está no i, e o mintermo estará no j)
         */
         for (int c=0; c < coveringTable.size(); c++) {
-            for (int m=0; m < minTermsTable.size(); m++) {
-                int numberOfDecimals = minTermsTable.get(m).getDecimal().size();
+            for (int m=0; m < productsList.size(); m++) {
+                int numberOfDecimals = productsList.get(m).getDecimal().size();
                 for (int d=0; d < numberOfDecimals; d++) {
                     int decimalFromCovering = coveringTable.get(c).get(0);
-                    int decimalFromMinTerm = minTermsTable.get(m).getDecimal().get(d);
+                    int decimalFromMinTerm = productsList.get(m).getDecimal().get(d);
                     if (decimalFromCovering == decimalFromMinTerm) {
-                        coveringTable.get(c).add(1/*minTermsTable.get(m).getLiteral()*/);
+                        coveringTable.get(c).add(1/*productsList.get(m).getLiteral()*/);
                     }
                 }
             }

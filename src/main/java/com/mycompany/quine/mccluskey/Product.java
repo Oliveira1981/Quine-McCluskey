@@ -6,7 +6,7 @@ import java.util.ArrayList;
  *
  * @author Rodrigo da Rosa
  */
-public final class MinTerm {
+public final class Product {
 
     private ArrayList<Integer> decimal;
     private       String       literal;
@@ -17,7 +17,7 @@ public final class MinTerm {
     private       boolean     hasPrime;
     private       boolean  isEssential;
     
-    public MinTerm() {
+    public Product() {
         decimal = new ArrayList<>();
         binary             = "0000";
         literal            =     "";
@@ -28,26 +28,26 @@ public final class MinTerm {
         isEssential        =   true;
     }
     
-    public MinTerm(String inputFormat, String inputExp, int size) {
-        setMinTerm(inputFormat, inputExp, size);
+    public Product(String inputFormat, String inputExp, int size) {
+        setProduct(inputFormat, inputExp, size);
     }
     
-    public void setMinTerm(String inputFormat, String inputExp, int size) {
+    public void setProduct(String inputFormat, String inputExp, int size) {
         this.size = size;
         switch(inputFormat) {
             case "Literal" -> {
-                setMinTermFromLiteral(inputExp);
+                setProductFromLiteral(inputExp);
                 binary = literal2binary(literal);
                 decimal = new ArrayList<>();
                 decimal.add(binary2decimal(binary));
             }
             case "Decimal" -> {
-                setMinTermFromDecimal(Integer.parseInt(inputExp));
+                setProductFromDecimal(Integer.parseInt(inputExp));
                 binary = decimal2binary(Integer.parseInt(inputExp));
                 literal = binary2literal(binary);
             }
             case "Binária" -> {
-                setMinTermFromBinary(inputExp);
+                setProductFromBinary(inputExp);
                 decimal = new ArrayList<>();
                 decimal.add(binary2decimal(binary));
                 literal = binary2literal(binary);
@@ -118,11 +118,11 @@ public final class MinTerm {
         decimal.add(newDecimal); 
     }
     
-    public void setMinTermFromLiteral(String litInput) {
+    public void setProductFromLiteral(String litInput) {
         literal = sortLiteralInput(litInput);
     }
 
-    public void setMinTermFromBinary(String bitString) {
+    public void setProductFromBinary(String bitString) {
         binary = "";
         int dif = size - bitString.length();
         while (dif > 0) {
@@ -134,7 +134,7 @@ public final class MinTerm {
         }
     }
     
-    public void setMinTermFromDecimal(int decimal) {
+    public void setProductFromDecimal(int decimal) {
         this.decimal = new ArrayList<>();
         this.decimal.add(decimal);
     }
