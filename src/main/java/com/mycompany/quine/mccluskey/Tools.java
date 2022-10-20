@@ -147,6 +147,107 @@ public class Tools {
         return alphabet.charAt(c);
     }
     
+    //Retorna a posição do bit variante ou:
+    //-1 se os produtos não são primos implicantes
+    //-2 se os produtos são iguais
+    public int primeImplicantBitPosition(String product1, String product2, int size) {
+        int count = 0;
+        int pos = -1;
+        for (int b=0; b < size; b++) {
+            if (product1.charAt(b) != product2.charAt(b)) {
+                count++;
+                pos = b;
+            }
+            if (count > 1)
+                return -1;
+        }
+        if (count == 0)
+            return -2;
+        return pos;
+    }
+    
+    public String subst(String str, int pos, char c) {
+        return str.substring(0, pos) + c + str.substring(pos+1);
+    }
+    
+    public String cleanUpExpression(String in) {
+        String out = "";
+        for (int c=0; c < in.length(); c++) {
+            if (
+              Character.isAlphabetic(in.charAt(c)) ||
+              in.charAt(c) == '!' ||
+              in.charAt(c) == '+') {
+                out += in.charAt(c);
+            }
+        }
+        return out;
+    }
+    
+    public int detectNumberOfVars(String inputFormat, String inputExp) {
+        int begin = 0;
+        int end;
+        int biggestSize = 0;
+        int currSize;
+        String vars = "";
+        do {
+            end = inputExp.indexOf('+', begin);
+            if (end < 0)
+                end = inputExp.length();
+            String str = inputExp.substring(begin, end);
+            
+            //Determina o tamanho de cada produto
+            switch(inputFormat) {
+                case "Literal" -> {
+                    //currSize = 0;
+                    for (int c=0; c < str.length(); c++) {
+                        if (Character.isAlphabetic(str.charAt(c))) {
+                            if (isNewVar(str.charAt(c), vars)) {
+                                //currSize++;
+                                vars += str.charAt(c);
+                            }
+                        }
+                    }
+                    if (vars.length() > biggestSize)
+                        biggestSize = vars.length();
+                }
+                case "Binária" -> {
+                    if (str.length() > biggestSize){
+                        biggestSize = str.length();
+                    }
+                }
+                case "Decimal" -> {
+                    currSize = 0;
+                    int integerInput = Integer.parseInt(str);
+                    do {
+                        integerInput = (int) (integerInput / 2);
+                        currSize++;
+                    }
+                    while (integerInput > 0);
+                    if (currSize > biggestSize)
+                        biggestSize = currSize;
+                    }
+                default -> {
+                    biggestSize = 4;
+                }
+            }
+            //////////////////////////////////////
+            
+            begin = end+1;
+            if (begin >= inputExp.length())
+                break;
+        }
+        while (begin < inputExp.length());
+        return biggestSize;
+    }
+    
+    public boolean isNewVar(char c, String str) {
+        for (int i=0; i < str.length(); i++) {
+            if (c == str.charAt(i))
+                return false;
+        }
+        return true;
+    }
+    
     public void print (Object obj) {
         System.out.print(obj);
     }

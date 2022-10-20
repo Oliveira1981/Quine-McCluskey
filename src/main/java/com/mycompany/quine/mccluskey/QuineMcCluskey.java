@@ -38,7 +38,7 @@ public class QuineMcCluskey {
         exp.sortByOnesCount();
         for(int i=0; i<exp.getProductsList().size(); i++) {
             exp.print("\n");
-            exp.print(exp.getProductsList().get(i).getDecimal()+"   ");
+            exp.print(exp.getProductsList().get(i).getDecimalsList()+"   ");
             exp.print(exp.getProductsList().get(i).getBinary()+"   ");
             exp.print(exp.getProductsList().get(i).getLiteral());
         }
@@ -46,14 +46,17 @@ public class QuineMcCluskey {
         exp.mergePrimeImplicants();
         exp.print("\n+++++++++++++++++++++++++++++++\n");
         for(int i=0; i<exp.getProductsList().size(); i++) {
-            for(int q=0; q<exp.getProductsList().get(i).getDecimal().size(); q++) {
-                exp.print("-"+exp.getProductsList().get(i).getDecimal().get(q));
+            for(int q=0; q<exp.getProductsList().get(i).getDecimalsList().size(); q++) {
+                exp.print("-"+exp.getProductsList().get(i).getDecimalsList().get(q));
             }
             exp.print("-   ");
             exp.print(exp.getProductsList().get(i).getBinary()+"   ");
             exp.print(exp.getProductsList().get(i).getLiteral()+"\n");
         }
         
+        for (int i=0; i<exp.getMinTermsList().size(); i++) {
+            exp.print("\n"+exp.getMinTermsList().get(i).getDecimal());
+        }
         exp.setOptimizedExpression();
         exp.print("\n"+exp.getOptimizedExpression()+"\n");
         

@@ -8,17 +8,18 @@ import java.util.ArrayList;
  */
 public final class Product extends Tools {
 
-    private ArrayList<Integer> decimal;
-    private       String       literal;
-    private       String        binary;
-    private       int        onesCount;
-    private       int  implicantBitPos;
-    private       int             size;
-    private       boolean     hasPrime;
-    private       boolean  isEssential;
+    private ArrayList<Integer> decimalsList;
+    private ArrayList<MinTerm> minTermsList;
+    private       String            literal;
+    private       String             binary;
+    private       int             onesCount;
+    private       int       implicantBitPos;
+    private       int                  size;
+    private       boolean          hasPrime;
+    private       boolean       isEssential;
     
     public Product() {
-        decimal = new ArrayList<>();
+        decimalsList = new ArrayList<>();
         binary             = "0000";
         literal            =     "";
         implicantBitPos    =     -1;
@@ -38,8 +39,8 @@ public final class Product extends Tools {
             case "Literal" -> {
                 setProductFromLiteral(inputExp);
                 binary = literal2binary(literal, size);
-                decimal = new ArrayList<>();
-                decimal.add(binary2decimal(binary, size));
+                decimalsList = new ArrayList<>();
+                decimalsList.add(binary2decimal(binary, size));
             }
             case "Decimal" -> {
                 setProductFromDecimal(Integer.parseInt(inputExp));
@@ -48,8 +49,8 @@ public final class Product extends Tools {
             }
             case "Binária" -> {
                 setProductFromBinary(inputExp);
-                decimal = new ArrayList<>();
-                decimal.add(binary2decimal(binary, size));
+                decimalsList = new ArrayList<>();
+                decimalsList.add(binary2decimal(binary, size));
                 literal = binary2literal(binary, size);
             }
             default -> {
@@ -65,8 +66,12 @@ public final class Product extends Tools {
         return literal;
     }
     
-    public ArrayList<Integer> getDecimal() {
-        return decimal;
+    public ArrayList<Integer> getDecimalsList() {
+        return decimalsList;
+    }
+    
+    public ArrayList<MinTerm> getMinTermsList() {
+        return minTermsList;
     }
     
     public String getBinary() {
@@ -114,8 +119,12 @@ public final class Product extends Tools {
         this.isEssential = isEssential;
     }
     
-    public void addDecimal (int newDecimal) {
-        decimal.add(newDecimal); 
+    public void addDecimal(int newDecimal) {
+        decimalsList.add(newDecimal);
+    }
+    
+    public void addMinTerm(MinTerm mt) {
+        minTermsList.add(mt);
     }
     
     public void setProductFromLiteral(String litInput) {
@@ -135,8 +144,8 @@ public final class Product extends Tools {
     }
     
     public void setProductFromDecimal(int decimal) {
-        this.decimal = new ArrayList<>();
-        this.decimal.add(decimal);
+        this.decimalsList = new ArrayList<>();
+        this.decimalsList.add(decimal);
     }
 
 }

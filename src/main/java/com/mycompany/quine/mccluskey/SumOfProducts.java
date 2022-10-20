@@ -60,13 +60,18 @@ public final class SumOfProducts extends Tools {
         return auxProductsList;
     }
     
+    public ArrayList<MinTerm> getMinTermsList() {
+        return minTermsList;
+    }
+    
     public int getNumberOfVars() {
         return numberOfVars;
     }
     
     public void fillProductsList() {
         productsList = new ArrayList<>();
-        coveringTable = new ArrayList<>();
+        //coveringTable = new ArrayList<>();
+        minTermsList = new ArrayList<>();
         numberOfVars = detectNumberOfVars(inputFormat, inputExpression);
         int begin = 0;
         int end;
@@ -77,11 +82,17 @@ public final class SumOfProducts extends Tools {
             String str = inputExpression.substring(begin, end);
             productsList.add(new Product(inputFormat, str, numberOfVars));
             
+            minTermsList
+                .add(new MinTerm(productsList
+                    .get(productsList.size()-1)
+                        .getDecimalsList().get(0), numberOfVars));
+            
+            /*
             coveringTable.add(new ArrayList<>());
             coveringTable.get(coveringTable.size()-1)
                 .add(productsList.get(productsList.size()-1)
-                    .getDecimal().get(0));
-            
+                    .getDecimalsList().get(0));
+            */
             begin = end+1;
             if (begin >= inputExpression.length())
                 break;
@@ -105,29 +116,6 @@ public final class SumOfProducts extends Tools {
     
     public int countOnes(String product) {
         return product.split("1", -1).length-1;
-    }
-    
-    //Retorna a posição do bit variante ou:
-    //-1 se os produtos não são primos implicantes
-    //-2 se os produtos são iguais
-    public int primeImplicantBitPosition(String product1, String product2, int size) {
-        int count = 0;
-        int pos = -1;
-        for (int b=0; b < size; b++) {
-            if (product1.charAt(b) != product2.charAt(b)) {
-                count++;
-                pos = b;
-            }
-            if (count > 1)
-                return -1;
-        }
-        if (count == 0)
-            return -2;
-        return pos;
-    }
-    
-    public String subst(String str, int pos, char c) {
-        return str.substring(0, pos) + c + str.substring(pos+1);
     }
     
     public void resetHasPrime() {
@@ -159,14 +147,14 @@ public final class SumOfProducts extends Tools {
                         else
                             bitString += productsList.get(i).getBinary().charAt(c);
                     auxProductsList.add(new Product("Binária", bitString, numberOfVars));
-                    auxProductsList.get(auxProductsList.size()-1).getDecimal().clear();
-                    for(int d=0; d < productsList.get(i).getDecimal().size(); d++) {
+                    auxProductsList.get(auxProductsList.size()-1).getDecimalsList().clear();
+                    for(int d=0; d < productsList.get(i).getDecimalsList().size(); d++) {
                         auxProductsList.get(auxProductsList.size()-1)
-                            .addDecimal(productsList.get(i).getDecimal().get(d));
+                            .addDecimal(productsList.get(i).getDecimalsList().get(d));
                     }
-                    for(int d=0; d < productsList.get(j).getDecimal().size(); d++) {
+                    for(int d=0; d < productsList.get(j).getDecimalsList().size(); d++) {
                         auxProductsList.get(auxProductsList.size()-1)
-                            .addDecimal(productsList.get(j).getDecimal().get(d));
+                            .addDecimal(productsList.get(j).getDecimalsList().get(d));
                     }
                 }
                 j++;
@@ -190,24 +178,6 @@ public final class SumOfProducts extends Tools {
         }
     }
     
-    public char getAlphabetChar(int c) {
-        String alphabet = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
-        return alphabet.charAt(c);
-    }
-    
-    public String cleanUpExpression(String in) {
-        String out = "";
-        for (int c=0; c < in.length(); c++) {
-            if (
-              Character.isAlphabetic(in.charAt(c)) ||
-              in.charAt(c) == '!' ||
-              in.charAt(c) == '+') {
-                out += in.charAt(c);
-            }
-        }
-        
-        return out;
-    }
     public void setOptimizedExpression() {
         optimizedExpression = "";
         //Temporariamente usando a aux
@@ -216,71 +186,6 @@ public final class SumOfProducts extends Tools {
             if (i < (auxProductsList.size()-1))
                 optimizedExpression += " + ";
         }
-    }
-    
-    public int detectNumberOfVars(String inputFormat, String inputExp) {
-        int begin = 0;
-        int end;
-        int biggestSize = 0;
-        int currSize;
-        String vars = "";
-        do {
-            end = inputExp.indexOf('+', begin);
-            if (end < 0)
-                end = inputExp.length();
-            String str = inputExp.substring(begin, end);
-            
-            //Determina o tamanho de cada produto
-            switch(inputFormat) {
-                case "Literal" -> {
-                    //currSize = 0;
-                    for (int c=0; c < str.length(); c++) {
-                        if (Character.isAlphabetic(str.charAt(c))) {
-                            if (isNewVar(str.charAt(c), vars)) {
-                                //currSize++;
-                                vars += str.charAt(c);
-                            }
-                        }
-                    }
-                    if (vars.length() > biggestSize)
-                        biggestSize = vars.length();
-                }
-                case "Binária" -> {
-                    if (str.length() > biggestSize){
-                        biggestSize = str.length();
-                    }
-                }
-                case "Decimal" -> {
-                    currSize = 0;
-                    int integerInput = Integer.parseInt(str);
-                    do {
-                        integerInput = (int) (integerInput / 2);
-                        currSize++;
-                    }
-                    while (integerInput > 0);
-                    if (currSize > biggestSize)
-                        biggestSize = currSize;
-                    }
-                default -> {
-                    biggestSize = 4;
-                }
-            }
-            //////////////////////////////////////
-            
-            begin = end+1;
-            if (begin >= inputExp.length())
-                break;
-        }
-        while (begin < inputExp.length());
-        return biggestSize;
-    }
-    
-    public boolean isNewVar(char c, String str) {
-        for (int i=0; i < str.length(); i++) {
-            if (c == str.charAt(i))
-                return false;
-        }
-        return true;
     }
     
     public void fillCoveringTable() {
@@ -293,11 +198,11 @@ public final class SumOfProducts extends Tools {
         */
         for (int c=0; c < coveringTable.size(); c++) {
             for (int m=0; m < productsList.size(); m++) {
-                int numberOfDecimals = productsList.get(m).getDecimal().size();
+                int numberOfDecimals = productsList.get(m).getDecimalsList().size();
                 for (int d=0; d < numberOfDecimals; d++) {
                     int decimalFromCovering = coveringTable.get(c).get(0);
-                    int decimalFromMinTerm = productsList.get(m).getDecimal().get(d);
-                    if (decimalFromCovering == decimalFromMinTerm) {
+                    int decimalFromProduct = productsList.get(m).getDecimalsList().get(d);
+                    if (decimalFromCovering == decimalFromProduct) {
                         coveringTable.get(c).add(1/*productsList.get(m).getLiteral()*/);
                     }
                 }
@@ -320,6 +225,5 @@ public final class SumOfProducts extends Tools {
     public String getOptimizedExpression() {
         return optimizedExpression;
     }
-
 
 }
