@@ -14,7 +14,8 @@ public final class SumOfProducts extends Tools {
     private ArrayList<Product> productsList;          // Linhas da coveringTable
     private ArrayList<Product> auxProductsList;
     private ArrayList<MinTerm> minTermsList;         // Colunas da coveringTable
-    private ArrayList<ArrayList<Integer>> coveringTable;//Talvez vire uma Classe
+    //private ArrayList<ArrayList<Integer>> coveringTable;//Talvez vire uma Classe
+    private ArrayList<String> essentialProductsList;
     private int numberOfVars;
     
     public SumOfProducts(String inputFormat, String expression) {
@@ -62,6 +63,10 @@ public final class SumOfProducts extends Tools {
     
     public ArrayList<MinTerm> getMinTermsList() {
         return minTermsList;
+    }
+
+    public ArrayList<String> getEssentialProductsList() {
+        return essentialProductsList;
     }
     
     public int getNumberOfVars() {
@@ -234,6 +239,16 @@ public final class SumOfProducts extends Tools {
         }
     }
     
+    public void fillEssentialsList() {
+        essentialProductsList = new ArrayList<>();
+        for (int m=0; m < minTermsList.size(); m++) {
+            if (minTermsList.get(m).getProductsList().size() == 1) {
+                essentialProductsList.add(
+                    minTermsList.get(m).getProductsList().get(0));
+            }
+        }
+    }
+    
     public void fillCoveringTable() {
         /*
         VAI TER QUE SER COM STRINGS
@@ -242,18 +257,18 @@ public final class SumOfProducts extends Tools {
         se algum é igual, adiciona o mintermo à coveringTable
         (o decimal está no i, e o mintermo estará no j)
         */
-        for (int c=0; c < coveringTable.size(); c++) {
+        /*for (int c=0; c < coveringTable.size(); c++) {
             for (int m=0; m < productsList.size(); m++) {
                 int numberOfDecimals = productsList.get(m).getDecimalsList().size();
                 for (int d=0; d < numberOfDecimals; d++) {
                     int decimalFromCovering = coveringTable.get(c).get(0);
                     int decimalFromProduct = productsList.get(m).getDecimalsList().get(d);
                     if (decimalFromCovering == decimalFromProduct) {
-                        coveringTable.get(c).add(1/*productsList.get(m).getLiteral()*/);
+                        coveringTable.get(c).add(1);//productsList.get(m).getLiteral());
                     }
                 }
             }
-        }
+        }*/
     }
     /*
     PRA RESOLVER A TABELA DE COBERTURA
