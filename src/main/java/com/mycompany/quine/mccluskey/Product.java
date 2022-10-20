@@ -8,6 +8,7 @@ import java.util.ArrayList;
  */
 public final class Product extends Tools {
 
+    //private ArrayList<Integer> decimalsList;
     private ArrayList<Integer> decimalsList;
     private ArrayList<MinTerm> minTermsList;
     private       String            literal;
@@ -40,7 +41,10 @@ public final class Product extends Tools {
                 setProductFromLiteral(inputExp);
                 binary = literal2binary(literal, size);
                 decimalsList = new ArrayList<>();
-                decimalsList.add(binary2decimal(binary, size));
+                int newDecimal = binary2decimal(binary, size);
+                if (!decimalsList.contains(newDecimal)) {
+                    decimalsList.add(newDecimal);
+                }
             }
             case "Decimal" -> {
                 setProductFromDecimal(Integer.parseInt(inputExp));
@@ -50,7 +54,10 @@ public final class Product extends Tools {
             case "Binária" -> {
                 setProductFromBinary(inputExp);
                 decimalsList = new ArrayList<>();
-                decimalsList.add(binary2decimal(binary, size));
+                int newDecimal = binary2decimal(binary, size);
+                if (!decimalsList.contains(newDecimal)) {
+                    decimalsList.add(newDecimal);
+                }
                 literal = binary2literal(binary, size);
             }
             default -> {
@@ -120,7 +127,9 @@ public final class Product extends Tools {
     }
     
     public void addDecimal(int newDecimal) {
-        decimalsList.add(newDecimal);
+        if (!decimalsList.contains(newDecimal)) {
+            decimalsList.add(newDecimal);
+        }
     }
     
     public void addMinTerm(MinTerm mt) {
@@ -144,8 +153,10 @@ public final class Product extends Tools {
     }
     
     public void setProductFromDecimal(int decimal) {
-        this.decimalsList = new ArrayList<>();
-        this.decimalsList.add(decimal);
+        decimalsList = new ArrayList<>();
+        if (!decimalsList.contains(decimal)) {
+            decimalsList.add(decimal);
+        }
     }
 
 }

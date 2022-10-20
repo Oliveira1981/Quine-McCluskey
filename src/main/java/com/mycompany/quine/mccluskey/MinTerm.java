@@ -9,11 +9,11 @@ import java.util.ArrayList;
 public final class MinTerm extends Tools {
     
     private ArrayList<String> productsList;
-    private       int               decimal;
-    private       String            literal;
-    private       String             binary;
-    private       int                  size;
-    private       boolean         isCovered;
+    private       int              decimal;
+    private       String           literal;
+    private       String            binary;
+    private       int                 size;
+    private       boolean        isCovered;
 
     public MinTerm() {
         productsList = new ArrayList<>();
@@ -34,6 +34,8 @@ public final class MinTerm extends Tools {
         this.binary = decimal2binary(decimal, size);
         this.literal = binary2literal(this.binary, size);
         isCovered = false;
+        productsList = new ArrayList<>();
+        //addProduct(literal);
     }
 
     public ArrayList<String> getProductsList() {

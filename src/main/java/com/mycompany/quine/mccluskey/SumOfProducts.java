@@ -35,7 +35,7 @@ public final class SumOfProducts extends Tools {
         fillProductsList();
         //numberOfVars = setNumberOfVars(productsList);
     }
-
+    
     public void setExpression(String inputFormat, String expression) {
         this.inputFormat = inputFormat;
         if (inputFormat.equals("Literal")){
@@ -47,7 +47,7 @@ public final class SumOfProducts extends Tools {
         fillProductsList();
         //numberOfVars = setNumberOfVars(productsList);
     }
-
+    
     public String getInputExpression() {
         return inputExpression;
     }
@@ -156,6 +156,18 @@ public final class SumOfProducts extends Tools {
                         auxProductsList.get(auxProductsList.size()-1)
                             .addDecimal(productsList.get(j).getDecimalsList().get(d));
                     }
+                    /*
+                    int firstDecimal_1 = productsList.get(i).getDecimalsList().get(0);
+                    int firstDecimal_2 = productsList.get(j).getDecimalsList().get(0);
+                    print("\nfd: "+firstDecimal_1);
+                    String product = auxProductsList.get(auxProductsList.size()-1).getLiteral();
+                    for (int d=0; d < minTermsList.size(); d++) {
+                        print("\nmtdecimal: "+minTermsList.get(d).getDecimal());
+                        if (firstDecimal_1 == minTermsList.get(d).getDecimal() ||
+                            firstDecimal_2 == minTermsList.get(d).getDecimal()) {
+                            minTermsList.get(d).addProduct(product);
+                        }
+                    }*/
                 }
                 j++;
             }
@@ -163,17 +175,36 @@ public final class SumOfProducts extends Tools {
             //e vai inalterado para a tabela auxiliar
             if (!productsList.get(i).hasPrime()) {
                 auxProductsList.add(productsList.get(i));
+                /*
+                int firstDecimal = productsList.get(i).getDecimalsList().get(0);
+                String product = productsList.get(i).getLiteral();
+                for (int d=0; d < minTermsList.size(); d++) {
+                    if (firstDecimal == minTermsList.get(d).getDecimal()) {
+                        minTermsList.get(d).addProduct(product);
+                    }
+                }*/
             }
         }
         //Se o último mintermo da lista não teve primo,
         //vai inalterado para a tabela auxiliar
         if (!productsList.get(productsList.size()-1).hasPrime()) {
             auxProductsList.add(productsList.get(productsList.size()-1));
+            /*
+            int firstDecimal = productsList.get(productsList.size()-1).getDecimalsList().get(0);
+            String product = productsList.get(productsList.size()-1).getLiteral();
+            for (int d=0; d < minTermsList.size(); d++) {
+                if (firstDecimal == minTermsList.get(d).getDecimal()) {
+                    minTermsList.get(d).addProduct(product);
+                }
+            }*/
         }
         
         if (primesWereFound) {
             productsList = auxProductsList;
             resetHasPrime();
+            /*for (int d=0; d < minTermsList.size(); d++) {
+                minTermsList.get(d).getProductsList().clear();
+            }*/
             mergePrimeImplicants();
         }
     }
@@ -185,6 +216,21 @@ public final class SumOfProducts extends Tools {
             optimizedExpression += auxProductsList.get(i).getLiteral();
             if (i < (auxProductsList.size()-1))
                 optimizedExpression += " + ";
+        }
+    }
+    
+    public void fillMinTermsList() {
+        for (int m=0; m < minTermsList.size(); m++) {
+            for (int p=0; p<productsList.size(); p++) {
+                for (int d=0; d<productsList.get(p).getDecimalsList().size(); d++) {
+                    int mtDecimal = minTermsList.get(m).getDecimal();
+                    int pdDecimal = productsList.get(p).getDecimalsList().get(d);
+                    if (mtDecimal == pdDecimal) {
+                        String product = productsList.get(p).getLiteral();
+                        minTermsList.get(m).addProduct(product);
+                    }
+                }
+            }
         }
     }
     

@@ -54,8 +54,10 @@ public class QuineMcCluskey {
             exp.print(exp.getProductsList().get(i).getLiteral()+"\n");
         }
         
+        exp.fillMinTermsList();
         for (int i=0; i<exp.getMinTermsList().size(); i++) {
-            exp.print("\n"+exp.getMinTermsList().get(i).getDecimal());
+            exp.print("\n"+exp.getMinTermsList().get(i).getDecimal()+" - ");
+            exp.print(exp.getMinTermsList().get(i).getProductsList());//.get(0));
         }
         exp.setOptimizedExpression();
         exp.print("\n"+exp.getOptimizedExpression()+"\n");
