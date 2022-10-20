@@ -240,11 +240,25 @@ public final class SumOfProducts extends Tools {
     }
     
     public void fillEssentialsList() {
+        
+        //Colocar na essentialProductsList todos os
+        //produtos que aparecem apenas uma vez em algum mintermo
         essentialProductsList = new ArrayList<>();
         for (int m=0; m < minTermsList.size(); m++) {
             if (minTermsList.get(m).getProductsList().size() == 1) {
                 essentialProductsList.add(
                     minTermsList.get(m).getProductsList().get(0));
+            }
+        }
+        
+        //Em todos os mintermos em que os produtos essenciais aparecem,
+        //marcar isCovered = true;
+        for (int e=0; e < essentialProductsList.size(); e++) {
+            String product = essentialProductsList.get(e);
+            for (int m=0; m < minTermsList.size(); m++) {
+                if (minTermsList.get(m).getProductsList().contains(product)) {
+                    minTermsList.get(m).setIsCovered(true);
+                }
             }
         }
     }

@@ -63,8 +63,16 @@ public class QuineMcCluskey {
         exp.fillEssentialsList();
         exp.print("\n\nEssential Products List: \n"+exp.getEssentialProductsList()+"\n");
         
+        for (int i=0; i<exp.getMinTermsList().size(); i++) {
+            exp.print("\nMinTerm "+exp.getMinTermsList().get(i).getDecimal()+" ");
+            if (exp.getMinTermsList().get(i).isIsCovered())
+                exp.print("is covered.");
+            else
+                exp.print(" - ");
+        }
+        
         exp.setOptimizedExpression();
-        exp.print("\n"+exp.getOptimizedExpression()+"\n");
+        exp.print("\n\n"+exp.getOptimizedExpression()+"\n");
         
     }
 }
