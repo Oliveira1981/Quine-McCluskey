@@ -10,7 +10,6 @@ public final class Product extends Tools {
 
     //private ArrayList<Integer> decimalsList;
     private ArrayList<Integer> decimalsList;
-    private ArrayList<MinTerm> minTermsList;
     private       String            literal;
     private       String             binary;
     private       int             onesCount;
@@ -77,10 +76,6 @@ public final class Product extends Tools {
         return decimalsList;
     }
     
-    public ArrayList<MinTerm> getMinTermsList() {
-        return minTermsList;
-    }
-    
     public String getBinary() {
         return binary;
     }
@@ -130,10 +125,6 @@ public final class Product extends Tools {
         if (!decimalsList.contains(newDecimal)) {
             decimalsList.add(newDecimal);
         }
-    }
-    
-    public void addMinTerm(MinTerm mt) {
-        minTermsList.add(mt);
     }
     
     public void setProductFromLiteral(String litInput) {

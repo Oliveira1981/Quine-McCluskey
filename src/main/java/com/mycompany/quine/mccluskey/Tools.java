@@ -89,6 +89,9 @@ public class Tools {
                 if (bits.charAt(b) == '0') {
                     lit += "!";
                 }
+                else {
+                    lit += " ";
+                }
                 lit += getAlphabetChar(c);
             }
             c++;

@@ -8,7 +8,7 @@ import java.util.ArrayList;
  */
 public final class MinTerm extends Tools {
     
-    private ArrayList<String> productsList;
+    private ArrayList<Product> productsList_NEW;
     private       int              decimal;
     private       String           literal;
     private       String            binary;
@@ -16,7 +16,7 @@ public final class MinTerm extends Tools {
     private       boolean        isCovered;
 
     public MinTerm() {
-        productsList = new ArrayList<>();
+        productsList_NEW = new ArrayList<>();
         decimal            =           0;
         binary             =      "0000";
         literal            =          "";
@@ -34,60 +34,54 @@ public final class MinTerm extends Tools {
         this.binary = decimal2binary(decimal, size);
         this.literal = binary2literal(this.binary, size);
         isCovered = false;
-        productsList = new ArrayList<>();
-        //addProduct(literal);
+        productsList_NEW = new ArrayList<>();
     }
-
-    public ArrayList<String> getProductsList() {
-        return productsList;
+    
+    public ArrayList<Product> getProductsList_NEW() {
+        return productsList_NEW;
     }
-
+    
     public int getDecimal() {
         return decimal;
     }
-
+    
     public String getLiteral() {
         return literal;
     }
-
+    
     public String getBinary() {
         return binary;
     }
-
+    
     public int getSize() {
         return size;
     }
-
+    
     public boolean isIsCovered() {
         return isCovered;
     }
-
+    
     public void setDecimal(int decimal) {
         this.decimal = decimal;
         //E CONVERSORES
     }
-
+    
     public void setLiteral(String literal) {
         this.literal = literal;
         //E CONVERSORES
     }
-
+    
     public void setBinary(String binary) {
         this.binary = binary;
         //E CONVERSORES
     }
-
+    
     public void setIsCovered(boolean isCovered) {
         this.isCovered = isCovered;
     }
     
-    
-    
-    public void addProduct(String product) {
-        productsList.add(product);
+    public void addProduct_NEW(Product product) {
+        productsList_NEW.add(product);
     }
-    
-    
-    
-    
+
 }
