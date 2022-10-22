@@ -9,41 +9,45 @@ import java.util.Collections;
  */
 public final class SumOfProducts extends Tools {
 
-    private String inputFormat;
-    private String inputExpression;
-    private String optimizedExpression;
-    private ArrayList<Product> productsList;          // Linhas da coveringTable
-    private ArrayList<Product> auxProductsList;
-    private ArrayList<MinTerm> minTermsList;         // Colunas da coveringTable
-    private ArrayList<Product> finalProductsList;
-    private int numberOfVars;
+    private String                         inputFormat;
+    private String                     inputExpression;
+    private String                 optimizedExpression;
+    private ArrayList<Product>            productsList; // Linhas da coveringTable
+    private ArrayList<Product>         auxProductsList;
+    private ArrayList<MinTerm>            minTermsList; // Colunas da coveringTable
+    private ArrayList<Product>       finalProductsList;
+    private int                           numberOfVars;
     private ArrayList<ArrayList<Integer>> permutations;
     
     public SumOfProducts(String inputFormat, String expression) {
         this.inputFormat = inputFormat;
+        
         if (inputFormat.equals("Literal")) {
             this.inputExpression = cleanUpExpression(expression);
         }
         else {
             this.inputExpression = expression;
         }
+        
         fillProductsList();
     }
     
     public SumOfProducts() {
-        this.inputFormat = "literal";
-        this.inputExpression = "";
+        this.inputFormat     = "literal";
+        this.inputExpression =        "";
         fillProductsList();
     }
     
     public void setExpression(String inputFormat, String expression) {
         this.inputFormat = inputFormat;
+        
         if (inputFormat.equals("Literal")){
             this.inputExpression = cleanUpExpression(expression);
         }
         else {
             this.inputExpression = expression;
         }
+        
         fillProductsList();
     }
     
@@ -80,8 +84,9 @@ public final class SumOfProducts extends Tools {
         minTermsList = new ArrayList<>();
         permutations = new ArrayList<>();
         numberOfVars = detectNumberOfVars(inputFormat, inputExpression);
-        int begin = 0;
+        int begin    = 0;
         int end;
+        
         do {
             end = inputExpression.indexOf('+', begin);
             if (end<0)
@@ -92,7 +97,7 @@ public final class SumOfProducts extends Tools {
             minTermsList
                 .add(new MinTerm(productsList
                     .get(productsList.size()-1)
-                        .getDecimalsList().get(0), numberOfVars));
+                        .getMinTermsList().get(0), numberOfVars));
             
             begin = end+1;
             if (begin >= inputExpression.length())
@@ -104,6 +109,7 @@ public final class SumOfProducts extends Tools {
     public void sortByOnesCount() {
         for(int i=1; i<productsList.size(); i++) {
             int count_k = productsList.get(i).getOnesCount();
+            
             if(count_k < productsList.get(i-1).getOnesCount()) {
                 int j = i;
                 do {
@@ -127,35 +133,40 @@ public final class SumOfProducts extends Tools {
     public void mergePrimeImplicants() {
         boolean primesWereFound = false;
         auxProductsList = new ArrayList<>();
+        
         for (int i=0; i < (productsList.size()-1); i++) {
             int j = i + 1;
+            
             while (j < productsList.size()) {
-                int size = Math.min(productsList.get(i).getSize(),
-                    productsList.get(j).getSize()
-                );
-                int bitPosition = primeImplicantBitPosition(productsList.get(i).getBinary(),
-                    productsList.get(j).getBinary(),
-                    size
-                );
+                int size =
+                    Math.min(productsList.get(i).getSize(),
+                             productsList.get(j).getSize());
+                int bitPosition =
+                    primeImplicantBitPosition(productsList.get(i).getBinaryView(),
+                                              productsList.get(j).getBinaryView(),size);
                 if (bitPosition != -1) {
                     primesWereFound = true;
                     productsList.get(i).setHasPrime(true);
                     productsList.get(j).setHasPrime(true);
                     String bitString = "";
-                    for (int c=0; c < productsList.get(i).getBinary().length(); c++)
+                    
+                    for (int c=0; c < productsList.get(i).getBinaryView().length(); c++) {
                         if (c == bitPosition)
                             bitString += "_";
                         else
-                            bitString += productsList.get(i).getBinary().charAt(c);
-                    auxProductsList.add(new Product("Binária", bitString, numberOfVars));
-                    auxProductsList.get(auxProductsList.size()-1).getDecimalsList().clear();
-                    for(int d=0; d < productsList.get(i).getDecimalsList().size(); d++) {
-                        auxProductsList.get(auxProductsList.size()-1)
-                            .addDecimal(productsList.get(i).getDecimalsList().get(d));
+                            bitString += productsList.get(i).getBinaryView().charAt(c);
                     }
-                    for(int d=0; d < productsList.get(j).getDecimalsList().size(); d++) {
+                    auxProductsList.add(new Product("Binária", bitString, numberOfVars));
+                    auxProductsList.get(auxProductsList.size()-1).getMinTermsList().clear();
+                    
+                    for(int d=0; d < productsList.get(i).getMinTermsList().size(); d++) {
                         auxProductsList.get(auxProductsList.size()-1)
-                            .addDecimal(productsList.get(j).getDecimalsList().get(d));
+                            .addMinTerm(productsList.get(i).getMinTermsList().get(d));
+                    }
+                    
+                    for(int d=0; d < productsList.get(j).getMinTermsList().size(); d++) {
+                        auxProductsList.get(auxProductsList.size()-1)
+                            .addMinTerm(productsList.get(j).getMinTermsList().get(d));
                     }
                 }
                 j++;
@@ -183,7 +194,7 @@ public final class SumOfProducts extends Tools {
         optimizedExpression = "";
         
         for (int i=0; i < finalProductsList.size(); i++) {
-            optimizedExpression += finalProductsList.get(i).getLiteral();
+            optimizedExpression += finalProductsList.get(i).getLiteralView();
             if (i < (finalProductsList.size()-1))
                 optimizedExpression += " + ";
         }
@@ -191,13 +202,16 @@ public final class SumOfProducts extends Tools {
     
     public void fillMinTermsList() {
         for (int m=0; m < minTermsList.size(); m++) {
+            
             for (int p=0; p<productsList.size(); p++) {
-                for (int d=0; d<productsList.get(p).getDecimalsList().size(); d++) {
-                    int mtDecimal = minTermsList.get(m).getDecimal();
-                    int pdDecimal = productsList.get(p).getDecimalsList().get(d);
+                
+                for (int d=0; d<productsList.get(p).getMinTermsList().size(); d++) {
+                    int mtDecimal = minTermsList.get(m).getDecimalView();
+                    int pdDecimal = productsList.get(p).getMinTermsList().get(d);
+                    
                     if (mtDecimal == pdDecimal) {
                         Product product_NEW = productsList.get(p);
-                        minTermsList.get(m).addProduct_NEW(product_NEW);
+                        minTermsList.get(m).addProduct(product_NEW);
                     }
                 }
             }
@@ -208,14 +222,18 @@ public final class SumOfProducts extends Tools {
         //Colocar na essentialProductsList todos os
         //produtos que aparecem apenas uma vez em algum mintermo
         finalProductsList = new ArrayList<>();
+        
         for (int m=0; m < minTermsList.size(); m++) {
+            
             if (minTermsList.get(m).getProductsList().size() == 1) {
                 Product product = minTermsList.get(m).getProductsList().get(0);
+                
                 if (!finalProductsList.contains(product)) {
                     finalProductsList.add(product);
                 }
             }
         }
+        
         setIsCovered();
     }
     
@@ -223,8 +241,10 @@ public final class SumOfProducts extends Tools {
         //Em todos os mintermos em que os produtos essenciais aparecem,
         //marcar isCovered = true
         clearAllCovered();
+        
         for (int e=0; e < finalProductsList.size(); e++) {
             Product product = finalProductsList.get(e);
+            
             for (int m=0; m < minTermsList.size(); m++) {
                 if (minTermsList.get(m).getProductsList().contains(product)) {
                     minTermsList.get(m).setIsCovered(true);
@@ -235,10 +255,12 @@ public final class SumOfProducts extends Tools {
     
     public boolean isAllCovered() {
         for (int i=0; i < minTermsList.size(); i++) {
+            
             if (!minTermsList.get(i).isIsCovered()) {
                 return false;
             }
         }
+        
         return true;
     }
     
@@ -252,21 +274,26 @@ public final class SumOfProducts extends Tools {
         if (isAllCovered()) {
             return;
         }
+        
         ArrayList<Product> finalListBackup = (ArrayList) finalProductsList.clone();
         ArrayList<Product> finalListCandidate = (ArrayList) finalProductsList.clone();
         int smaller = getCandidateProductsIndexes().size();
         int addedProducts;
+        
         for (int p=0; p < permutations.size(); p++) {
             setIsCovered();
-            addedProducts = completeFinalListCandidate(
-                    p, smaller);
+            addedProducts =
+                completeFinalListCandidate(p, smaller);
+            
             if (addedProducts < smaller) {
                 smaller = addedProducts;
                 finalListCandidate = (ArrayList) finalProductsList.clone();
             }
+            
             if (addedProducts == 1) {
                 return;
             }
+            
             if (p == permutations.size()-1 &&
                 smaller == getCandidateProductsIndexes().size()) {
                 return;
@@ -274,56 +301,75 @@ public final class SumOfProducts extends Tools {
             else {
                 finalProductsList = (ArrayList) finalListBackup.clone();
             }
+            
         }
+        
         finalProductsList = (ArrayList) finalListCandidate.clone();
     }
     
     public int completeFinalListCandidate(int candidate, int smaller) {
         int addedProductsCount = 0;
+        
         for (int r=0; r < permutations.get(candidate).size(); r++) {
             int p = permutations.get(candidate).get(r);
             Product product = productsList.get(p);
+            
             if (!finalProductsList.contains(product)) {
                 finalProductsList.add(product);
                 addedProductsCount++;
+                
                 if (addedProductsCount >= smaller) {
                     return addedProductsCount;
                 }
-                for (int d=0; d < productsList.get(p).getDecimalsList().size(); d++) {
-                    int decimal = productsList.get(p).getDecimalsList().get(d);
+                
+                for (int d=0; d < productsList.get(p).getMinTermsList().size(); d++) {
+                    int decimal = productsList.get(p).getMinTermsList().get(d);
+                    
                     for (int m=0; m < minTermsList.size(); m++) {
-                        if (decimal == minTermsList.get(m).getDecimal()){
+                        
+                        if (decimal == minTermsList.get(m).getDecimalView()){
                             minTermsList.get(m).setIsCovered(true);
                         }
+                        
                     }
+                    
                 }
+                
                 if (isAllCovered()) {
                     return addedProductsCount;
                 }
             }
         }
+        
         return addedProductsCount;
     }
     
     public ArrayList getCandidateProductsIndexes() {
         ArrayList<Integer> indexes = new ArrayList<>();
+        
         for (int p=0; p < productsList.size(); p++) {
             Product product = productsList.get(p);
+            
             if (!finalProductsList.contains(product)) {
                 indexes.add(p);
             }
         }
+        
         return indexes;
     }
     
     public void permute(ArrayList elements, int n) {
         int[] indexes = new int[n];
+        
         for (int i = 0; i < n; i++) {
             indexes[i] = 0;
         }
+        
         permutations.add((ArrayList) elements.clone());
         int i = 0;
+        
         while (i < n) {
+            
             if (indexes[i] < i) {
                 Collections.swap(elements, i % 2 == 0 ?  0: indexes[i], i);
                 permutations.add((ArrayList) elements.clone());

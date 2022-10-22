@@ -9,19 +9,19 @@ import java.util.ArrayList;
 public final class MinTerm extends Tools {
     
     private ArrayList<Product> productsList;
-    private       int               decimal;
-    private       String            literal;
-    private       String             binary;
-    private       int                  size;
-    private       boolean         isCovered;
+    private String              literalView;
+    private String               binaryView;
+    private int                 decimalView;
+    private int                        size;
+    private boolean               isCovered;
 
     public MinTerm() {
         productsList = new ArrayList<>();
-        decimal            =           0;
-        binary             =      "0000";
-        literal            =          "";
-        size               =           0;
-        isCovered          =       false;
+        literalView  =                "";
+        binaryView   =            "0000";
+        decimalView  =                 0;
+        size         =                 0;
+        isCovered    =             false;
     }
     
     public MinTerm(int decimal, int size) {
@@ -29,28 +29,28 @@ public final class MinTerm extends Tools {
     }
     
     public void setMinTerm(int decimal, int size) {
-        this.size = size;
-        this.decimal = decimal;
-        this.binary = decimal2binary(decimal, size);
-        this.literal = binary2literal(this.binary, size);
-        isCovered = false;
-        productsList = new ArrayList<>();
+        this.size        = size;
+        this.decimalView = decimal;
+        this.binaryView  = decimal2binary(decimal, size);
+        this.literalView = binary2literal(this.binaryView, size);
+        isCovered        = false;
+        productsList     = new ArrayList<>();
     }
     
     public ArrayList<Product> getProductsList() {
         return productsList;
     }
     
-    public int getDecimal() {
-        return decimal;
+    public int getDecimalView() {
+        return decimalView;
     }
     
-    public String getLiteral() {
-        return literal;
+    public String getLiteralView() {
+        return literalView;
     }
     
-    public String getBinary() {
-        return binary;
+    public String getBinaryView() {
+        return binaryView;
     }
     
     public int getSize() {
@@ -61,26 +61,29 @@ public final class MinTerm extends Tools {
         return isCovered;
     }
     
-    public void setDecimal(int decimal) {
-        this.decimal = decimal;
-        //E CONVERSORES
+    public void setMinTermFromDecimal(int decimalView) {
+        this.decimalView = decimalView;
+        this.binaryView  = decimal2binary(decimalView, size);
+        this.literalView = binary2literal(binaryView, size);
     }
     
-    public void setLiteral(String literal) {
-        this.literal = literal;
-        //E CONVERSORES
+    public void setMinTermFromLiteral(String literalView) {
+        this.literalView = literalView;
+        this.binaryView  = literal2binary(literalView, size);
+        this.decimalView = binary2decimal(binaryView, size);
     }
     
-    public void setBinary(String binary) {
-        this.binary = binary;
-        //E CONVERSORES
+    public void setMinTermFromBinary(String binaryView) {
+        this.binaryView  = binaryView;
+        this.literalView = binary2literal(binaryView, size);
+        this.decimalView = binary2decimal(binaryView, size);
     }
     
     public void setIsCovered(boolean isCovered) {
         this.isCovered = isCovered;
     }
     
-    public void addProduct_NEW(Product product) {
+    public void addProduct(Product product) {
         productsList.add(product);
     }
 

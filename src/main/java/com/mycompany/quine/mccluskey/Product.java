@@ -8,24 +8,26 @@ import java.util.ArrayList;
  */
 public final class Product extends Tools {
 
-    private ArrayList<Integer> decimalsList;
-    private       String            literal;
-    private       String             binary;
-    private       int             onesCount;
-    private       int       implicantBitPos;
-    private       int                  size;
-    private       boolean          hasPrime;
-    private       boolean       isEssential;
+    private ArrayList<Integer> minTermsList;
+    private String              literalView;
+    private String               binaryView;
+    private int                 decimalView;
+    private int                   onesCount;
+    private int             implicantBitPos;
+    private int                        size;
+    private boolean                hasPrime;
+    private boolean             isEssential;
     
     public Product() {
-        decimalsList = new ArrayList<>();
-        binary             = "0000";
-        literal            =     "";
-        implicantBitPos    =     -1;
-        onesCount          =      0;
-        size               =      0;
-        hasPrime           =  false;
-        isEssential        =   true;
+        minTermsList    = new ArrayList<>();
+        literalView     =                "";
+        binaryView      =            "0000";
+        decimalView     =                 0;
+        implicantBitPos =                -1;
+        onesCount       =                 0;
+        size            =                 0;
+        hasPrime        =             false;
+        isEssential     =              true;
     }
     
     public Product(String inputFormat, String inputExp, int size) {
@@ -34,49 +36,57 @@ public final class Product extends Tools {
     
     public void setProduct(String inputFormat, String inputExp, int size) {
         this.size = size;
+        
         switch(inputFormat) {
             case "Literal" -> {
                 setProductFromLiteral(inputExp);
-                binary = literal2binary(literal, size);
-                decimalsList = new ArrayList<>();
-                int newDecimal = binary2decimal(binary, size);
-                if (!decimalsList.contains(newDecimal)) {
-                    decimalsList.add(newDecimal);
+                binaryView     = literal2binary(literalView, size);
+                decimalView    = Integer.parseInt(inputExp);
+                minTermsList   = new ArrayList<>();
+                int newDecimal = binary2decimal(binaryView, size);
+                if (!minTermsList.contains(newDecimal)) {
+                    minTermsList.add(newDecimal);
                 }
             }
             case "Decimal" -> {
                 setProductFromDecimal(Integer.parseInt(inputExp));
-                binary = decimal2binary(Integer.parseInt(inputExp), size);
-                literal = binary2literal(binary, size);
+                decimalView = Integer.parseInt(inputExp);
+                binaryView  = decimal2binary(Integer.parseInt(inputExp), size);
+                literalView = binary2literal(binaryView, size);
             }
             case "Binária" -> {
                 setProductFromBinary(inputExp);
-                decimalsList = new ArrayList<>();
-                int newDecimal = binary2decimal(binary, size);
-                if (!decimalsList.contains(newDecimal)) {
-                    decimalsList.add(newDecimal);
+                literalView    = binary2literal(binaryView, size);
+                minTermsList   = new ArrayList<>();
+                int newDecimal = binary2decimal(binaryView, size);
+                if (!minTermsList.contains(newDecimal)) {
+                    minTermsList.add(newDecimal);
                 }
-                literal = binary2literal(binary, size);
             }
             default -> {
             }
         }
+        
         setOnesCount();
-        implicantBitPos = -1;
-        hasPrime = false;
-        isEssential = true;
+        implicantBitPos =    -1;
+        hasPrime        = false;
+        isEssential     =  true;
     }
     
-    public String getLiteral() {
-        return literal;
+    public String getLiteralView() {
+        return literalView;
     }
     
-    public ArrayList<Integer> getDecimalsList() {
-        return decimalsList;
+    public ArrayList<Integer> getMinTermsList() {
+        return minTermsList;
     }
     
-    public String getBinary() {
-        return binary;
+    public String getBinaryView() {
+        return binaryView;
+    }
+    
+    public int getDecimalView() {
+        return decimalView;
     }
     
     public int getImplicantBitPos() {
@@ -105,10 +115,13 @@ public final class Product extends Tools {
     
     public void setOnesCount() {
         int count = 0;
-        for (int b=0; b < binary.length(); b++){
-            if (binary.charAt(b)=='1')
+        
+        for (int b=0; b < binaryView.length(); b++) {
+            
+            if (binaryView.charAt(b)=='1')
                 count ++;
         }
+        
         onesCount = count;
     }
 
@@ -120,32 +133,35 @@ public final class Product extends Tools {
         this.isEssential = isEssential;
     }
     
-    public void addDecimal(int newDecimal) {
-        if (!decimalsList.contains(newDecimal)) {
-            decimalsList.add(newDecimal);
+    public void addMinTerm(int newDecimal) {
+        if (!minTermsList.contains(newDecimal)) {
+            minTermsList.add(newDecimal);
         }
     }
     
     public void setProductFromLiteral(String litInput) {
-        literal = sortLiteralInput(litInput);
+        literalView = sortLiteralInput(litInput);
     }
 
     public void setProductFromBinary(String bitString) {
-        binary = "";
-        int dif = size - bitString.length();
+        binaryView = "";
+        int dif    = size - bitString.length();
+        
         while (dif > 0) {
-            binary += "0";
+            binaryView += "0";
             dif--;
         }
+        
         for (int i=0; i < bitString.length(); i++) {
-            binary += bitString.charAt(i);
+            binaryView += bitString.charAt(i);
         }
     }
     
     public void setProductFromDecimal(int decimal) {
-        decimalsList = new ArrayList<>();
-        if (!decimalsList.contains(decimal)) {
-            decimalsList.add(decimal);
+        minTermsList = new ArrayList<>();
+        
+        if (!minTermsList.contains(decimal)) {
+            minTermsList.add(decimal);
         }
     }
 
