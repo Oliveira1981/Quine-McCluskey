@@ -2,7 +2,6 @@ package com.mycompany.quine.mccluskey;
 
 import java.util.ArrayList;
 import java.util.Collections;
-import java.util.List;
 
 /**
  *
@@ -231,8 +230,9 @@ public final class SumOfProducts extends Tools {
     
     public void setIsCovered() {
         //Em todos os mintermos em que os produtos essenciais aparecem,
-        //marcar isCovered = true;
-        
+        //marcar isCovered = true
+        //os demais, marcar como false
+        clearAllCovered();
         for (int e=0; e < finalProductsList.size(); e++) {
             Product product = finalProductsList.get(e);
             for (int m=0; m < minTermsList.size(); m++) {
@@ -252,16 +252,53 @@ public final class SumOfProducts extends Tools {
         return true;
     }
     
-    public int completeFinalListCandidate() {
-        //FALTA dizer pro método qual ordem de adição deve seguir
+    public void clearAllCovered() {
+        for (int i=0; i < minTermsList.size(); i++) {
+            minTermsList.get(i).setIsCovered(false);
+        }
+    }
+    
+    public void completeFinalList() {
+        if (isAllCovered()) {
+            return;
+        }
+        ArrayList<Product> finalListBackup = (ArrayList) finalProductsList.clone();
+        ArrayList<Product> finalListCandidate = (ArrayList) finalProductsList.clone();
+        int smaller = getCandidateProductsIndexes().size();
+        int addedProducts;// = smaller;
+        for (int p=0; p < permutations.size(); p++) {
+            setIsCovered();
+            addedProducts = completeFinalListCandidate(
+                    p, smaller);
+            if (addedProducts < smaller) {
+                smaller = addedProducts;
+                finalListCandidate = (ArrayList) finalProductsList.clone();
+            }
+            if (addedProducts == 1) {
+                return;
+            }
+            if (p == permutations.size()-1 &&
+                smaller == getCandidateProductsIndexes().size()) {
+                return;
+            }
+            else {
+                finalProductsList = (ArrayList) finalListBackup.clone();
+            }
+        }
+        finalProductsList = (ArrayList) finalListCandidate.clone();
+    }
+    
+    public int completeFinalListCandidate(int candidate, int smaller) {
         int addedProductsCount = 0;
-        //VARIAR AQUI (NÃO SEI COMO) A ORDEM DE ABORDAGEM:
-        for (int p=0; p < productsList.size(); p++) {
-        //////////////////////////////////////////////////
+        for (int r=0; r < permutations.get(candidate).size(); r++) {
+            int p = permutations.get(candidate).get(r);
             Product product = productsList.get(p);
             if (!finalProductsList.contains(product)) {
                 finalProductsList.add(product);
                 addedProductsCount++;
+                if (addedProductsCount >= smaller) {
+                    return addedProductsCount;
+                }
                 for (int d=0; d < productsList.get(p).getDecimalsList().size(); d++) {
                     int decimal = productsList.get(p).getDecimalsList().get(d);
                     for (int m=0; m < minTermsList.size(); m++) {

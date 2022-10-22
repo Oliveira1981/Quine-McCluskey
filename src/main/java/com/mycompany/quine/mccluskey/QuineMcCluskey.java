@@ -1,7 +1,6 @@
 package com.mycompany.quine.mccluskey;
 
 import java.util.ArrayList;
-import java.util.List;
 
 /**
  *
@@ -86,11 +85,11 @@ public class QuineMcCluskey extends Tools{
         }
         
         exp.permute(indexes, indexes.size());
-        for (int i=0; i<exp.getPermutations().size(); i++) {
+        /*for (int i=0; i<exp.getPermutations().size(); i++) {
             print("\n"+exp.getPermutations().get(i));
-        }
+        }*/
         
-        print("\n\nAdded products: "+exp.completeFinalListCandidate()+"\n");
+        exp.completeFinalList();
         print("\nFinal Products List:\n");
         for (int i=0; i<exp.getFinalProductsList().size(); i++) {
             print(exp.getFinalProductsList().get(i).getLiteral()+"\t");
