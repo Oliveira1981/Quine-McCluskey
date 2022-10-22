@@ -1,6 +1,8 @@
 package com.mycompany.quine.mccluskey;
 
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
 
 /**
  *
@@ -17,6 +19,7 @@ public final class SumOfProducts extends Tools {
     //private ArrayList<ArrayList<Integer>> coveringTable;//Talvez vire uma Classe
     private ArrayList<Product> finalProductsList;
     private int numberOfVars;
+    private ArrayList<ArrayList<Integer>> permutations;
     
     public SumOfProducts(String inputFormat, String expression) {
         this.inputFormat = inputFormat;
@@ -69,11 +72,16 @@ public final class SumOfProducts extends Tools {
     public int getNumberOfVars() {
         return numberOfVars;
     }
+
+    public ArrayList<ArrayList<Integer>> getPermutations() {
+        return permutations;
+    }
     
     public void fillProductsList() {
         productsList = new ArrayList<>();
         //coveringTable = new ArrayList<>();
         minTermsList = new ArrayList<>();
+        permutations = new ArrayList<>();
         numberOfVars = detectNumberOfVars(inputFormat, inputExpression);
         int begin = 0;
         int end;
@@ -228,7 +236,7 @@ public final class SumOfProducts extends Tools {
         for (int e=0; e < finalProductsList.size(); e++) {
             Product product = finalProductsList.get(e);
             for (int m=0; m < minTermsList.size(); m++) {
-                if (minTermsList.get(m).getProductsList_NEW().contains(product)) { //FUNFA MEMO?
+                if (minTermsList.get(m).getProductsList_NEW().contains(product)) {
                     minTermsList.get(m).setIsCovered(true);
                 }
             }
@@ -247,9 +255,11 @@ public final class SumOfProducts extends Tools {
     public int completeFinalListCandidate() {
         //FALTA dizer pro método qual ordem de adição deve seguir
         int addedProductsCount = 0;
+        //VARIAR AQUI (NÃO SEI COMO) A ORDEM DE ABORDAGEM:
         for (int p=0; p < productsList.size(); p++) {
+        //////////////////////////////////////////////////
             Product product = productsList.get(p);
-            if (!finalProductsList.contains(product)) {//VER SE FUNFA MESMO
+            if (!finalProductsList.contains(product)) {
                 finalProductsList.add(product);
                 addedProductsCount++;
                 for (int d=0; d < productsList.get(p).getDecimalsList().size(); d++) {
@@ -266,6 +276,46 @@ public final class SumOfProducts extends Tools {
             }
         }
         return addedProductsCount;
+    }
+    
+    public ArrayList getCandidateProductsIndexes() {
+        ArrayList<Integer> indexes = new ArrayList<>();
+        for (int p=0; p < productsList.size(); p++) {
+            Product product = productsList.get(p);
+            if (!finalProductsList.contains(product)) {
+                indexes.add(p);
+            }
+        }
+        return indexes;
+    }
+    
+    public void permute(ArrayList elements, int n) {
+        int[] indexes = new int[n];
+        for (int i = 0; i < n; i++) {
+            indexes[i] = 0;
+        }
+        permutations.add((ArrayList) elements.clone());
+        int i = 0;
+        while (i < n) {
+            if (indexes[i] < i) {
+                Collections.swap(elements, i % 2 == 0 ?  0: indexes[i], i);
+                permutations.add((ArrayList) elements.clone());
+                indexes[i]++;
+                i = 0;
+            }
+            else {
+                indexes[i] = 0;
+                i++;
+            }
+        }
+    }
+    
+    public void foo() {
+        permute(getCandidateProductsIndexes(),
+                getCandidateProductsIndexes().size());
+        //for (int i=0; i<permutations.size(); i++) {
+        //    print("\n"+permutations.get(i));
+        //}
     }
     
     public void fillCoveringTable() {

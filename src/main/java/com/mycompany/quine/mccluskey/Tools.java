@@ -1,6 +1,8 @@
 package com.mycompany.quine.mccluskey;
 
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
 
 /**
  *
@@ -251,7 +253,7 @@ public class Tools {
         return true;
     }
     
-    public void print (Object obj) {
+    public static void print (Object obj) {
         System.out.print(obj);
     }
 

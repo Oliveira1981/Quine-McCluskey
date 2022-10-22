@@ -1,6 +1,7 @@
 package com.mycompany.quine.mccluskey;
 
 import java.util.ArrayList;
+import java.util.List;
 
 /**
  *
@@ -12,9 +13,9 @@ public class QuineMcCluskey extends Tools{
         
         //String litTemplate = "ABCD+!A!BCD+A!B!C!D+!ABCD";
         //String litTemplate = "A!BCD+!ABC!D+!ABCD+A!B!CD";
-        //String litTemplate = "!A*!B*!C*!D + !A*!B*!C*D + !A*B*!C*D + !A*B*C*!D + !A*B*C*D";
+        String litTemplate = "!A*!B*!C*!D + !A*!B*!C*D + !A*B*!C*D + !A*B*C*!D + !A*B*C*D";
         //String litTemplate = "ab!c+a!bc!d+!ab"; //diferentes tamanhos (definir pelo mintermo maior)
-        String litTemplate = "abc+bcd"; //diferentes tamanhos (definir pelo mintermo maior)
+        //String litTemplate = "abc+bcd"; //diferentes tamanhos (definir pelo mintermo maior)
         //String binTemplate = "1111+0011+1000+0111";
         String binTemplate = "1111+0011+1010+0111";
         //String binTemplate = "111+11+101+01"; //diferentes tamanhos (definir pelo mintermo maior)
@@ -34,59 +35,69 @@ public class QuineMcCluskey extends Tools{
         System.out.println("expression:"+expression);
         
         SumOfProducts exp = new SumOfProducts(inputFormat, expression);
-        exp.print("\nVARS: "+exp.getNumberOfVars()+"\n");
+        print("\nVARS: "+exp.getNumberOfVars()+"\n");
         exp.sortByOnesCount();
         for(int i=0; i<exp.getProductsList().size(); i++) {
-            exp.print("\n");
-            exp.print(exp.getProductsList().get(i).getDecimalsList()+"\t");
-            exp.print(exp.getProductsList().get(i).getBinary()+"\t");
-            exp.print(exp.getProductsList().get(i).getLiteral());
+            print("\n");
+            print(exp.getProductsList().get(i).getDecimalsList()+"\t");
+            print(exp.getProductsList().get(i).getBinary()+"\t");
+            print(exp.getProductsList().get(i).getLiteral());
         }
         
         exp.mergePrimeImplicants();
-        exp.print("\n+++++++++++++++++++++++++++++++\n\n");
+        print("\n+++++++++++++++++++++++++++++++\n\n");
         for(int i=0; i<exp.getProductsList().size(); i++) {
             int q = 0;
             for(; q<exp.getProductsList().get(i).getDecimalsList().size(); q++) {
-                exp.print("-"+exp.getProductsList().get(i).getDecimalsList().get(q));
+                print("-"+exp.getProductsList().get(i).getDecimalsList().get(q));
             }
             if(q < 3)
-                exp.print("-\t");
-            exp.print("\t");
-            exp.print(exp.getProductsList().get(i).getBinary()+" \t");
-            exp.print(exp.getProductsList().get(i).getLiteral()+"\n");
+                print("-\t");
+            print("\t");
+            print(exp.getProductsList().get(i).getBinary()+" \t");
+            print(exp.getProductsList().get(i).getLiteral()+"\n");
         }
         
         exp.fillMinTermsList();
         for (int i=0; i<exp.getMinTermsList().size(); i++) {
-            exp.print("\n"+exp.getMinTermsList().get(i).getDecimal()+" -");
+            print("\n"+exp.getMinTermsList().get(i).getDecimal()+" -");
             for (int p=0; p<exp.getMinTermsList().get(i).getProductsList_NEW().size(); p++) {
-                exp.print("\t\t"+exp.getMinTermsList().get(i).getProductsList_NEW().get(p).getLiteral());//.get(0));
+                print("\t\t"+exp.getMinTermsList().get(i).getProductsList_NEW().get(p).getLiteral());//.get(0));
             }
         }
         
         exp.essentialProductsToFinalList();
-        exp.print("\n\nFinal Products List:\n");
+        print("\n\nFinal Products List:\n");
         for (int i=0; i<exp.getFinalProductsList().size(); i++) {
-            exp.print(exp.getFinalProductsList().get(i).getLiteral()+"\n");
+            print(exp.getFinalProductsList().get(i).getLiteral()+"\t");
+        }
+        
+        ArrayList<Integer> indexes = exp.getCandidateProductsIndexes();
+        for (int i=0; i < indexes.size(); i++) {
+            print("\n"+indexes.get(i));
         }
         
         for (int i=0; i<exp.getMinTermsList().size(); i++) {
-            exp.print("\nMinTerm "+exp.getMinTermsList().get(i).getDecimal()+" ");
+            print("\nMinTerm "+exp.getMinTermsList().get(i).getDecimal()+" ");
             if (exp.getMinTermsList().get(i).isIsCovered())
-                exp.print("is covered.");
+                print("is covered.");
             else
-                exp.print(" - ");
+                print(" - ");
         }
         
-        exp.print("\n\nAdded products: "+exp.completeFinalListCandidate()+"\n");
-        exp.print("\nFinal Products List:\n");
+        exp.permute(indexes, indexes.size());
+        for (int i=0; i<exp.getPermutations().size(); i++) {
+            print("\n"+exp.getPermutations().get(i));
+        }
+        
+        print("\n\nAdded products: "+exp.completeFinalListCandidate()+"\n");
+        print("\nFinal Products List:\n");
         for (int i=0; i<exp.getFinalProductsList().size(); i++) {
-            exp.print(exp.getFinalProductsList().get(i).getLiteral()+"\t");
+            print(exp.getFinalProductsList().get(i).getLiteral()+"\t");
         }
         
         exp.setOptimizedExpression();
-        exp.print("\n\n"+exp.getOptimizedExpression()+"\n");
+        print("\n\n"+exp.getOptimizedExpression()+"\n");
         
     }
 }
