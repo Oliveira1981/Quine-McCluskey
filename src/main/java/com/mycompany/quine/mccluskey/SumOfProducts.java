@@ -16,8 +16,8 @@ public final class SumOfProducts extends Tools {
     private ArrayList<Product>         auxProductsList;
     private ArrayList<MinTerm>            minTermsList; // Colunas da coveringTable
     private ArrayList<Product>       finalProductsList;
-    private int                           numberOfVars;
     private ArrayList<ArrayList<Integer>> permutations;
+    private int                           numberOfVars;
     
     public SumOfProducts(String inputFormat, String expression) {
         this.inputFormat = inputFormat;

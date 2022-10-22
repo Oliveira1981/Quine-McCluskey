@@ -22,20 +22,34 @@ public class QuineMcCluskey extends Tools{
         String deciTemplate = "2+4+6+8+9+10+12+13+15";
         
         GUI gui = new GUI();
+
+/////////////////////////////////////////////////////
         gui.showDialog(deciTemplate);
+/////////////////////////////////////////////////////
         
         String inputFormat;
         String expression;
+
+/////////////////////////////////////////////////////
         inputFormat = gui.getInputFormat();
         expression = gui.getExpression();
+/////////////////////////////////////////////////////
+
         if(expression == null) System.exit(0);
         
         System.out.println("inputFormat:"+inputFormat);
         System.out.println("expression:"+expression);
         
+/////////////////////////////////////////////////////
         SumOfProducts exp = new SumOfProducts(inputFormat, expression);
+/////////////////////////////////////////////////////
+
         print("\nVARS: "+exp.getNumberOfVars()+"\n");
+
+/////////////////////////////////////////////////////
         exp.sortByOnesCount();
+/////////////////////////////////////////////////////
+
         for(int i=0; i<exp.getProductsList().size(); i++) {
             print("\n");
             print(exp.getProductsList().get(i).getMinTermsList()+"\t");
@@ -43,7 +57,10 @@ public class QuineMcCluskey extends Tools{
             print(exp.getProductsList().get(i).getLiteralView());
         }
         
+/////////////////////////////////////////////////////
         exp.mergePrimeImplicants();
+/////////////////////////////////////////////////////
+
         print("\n+++++++++++++++++++++++++++++++\n\n");
         for(int i=0; i<exp.getProductsList().size(); i++) {
             int q = 0;
@@ -57,7 +74,10 @@ public class QuineMcCluskey extends Tools{
             print(exp.getProductsList().get(i).getLiteralView()+"\n");
         }
         
+/////////////////////////////////////////////////////
         exp.fillMinTermsList();
+/////////////////////////////////////////////////////
+
         for (int i=0; i<exp.getMinTermsList().size(); i++) {
             print("\n"+exp.getMinTermsList().get(i).getDecimalView()+" -");
             for (int p=0; p<exp.getMinTermsList().get(i).getProductsList().size(); p++) {
@@ -65,13 +85,19 @@ public class QuineMcCluskey extends Tools{
             }
         }
         
+/////////////////////////////////////////////////////
         exp.essentialProductsToFinalList();
+/////////////////////////////////////////////////////
+
         print("\n\nEssential Products List:\n");
         for (int i=0; i<exp.getFinalProductsList().size(); i++) {
             print(exp.getFinalProductsList().get(i).getLiteralView()+"\t");
         }
         
+/////////////////////////////////////////////////////
         ArrayList<Integer> indexes = exp.getCandidateProductsIndexes();
+/////////////////////////////////////////////////////
+
         for (int i=0; i < indexes.size(); i++) {
             print("\n"+indexes.get(i));
         }
@@ -84,18 +110,27 @@ public class QuineMcCluskey extends Tools{
                 print(" - ");
         }
         
+/////////////////////////////////////////////////////
         exp.permute(indexes, indexes.size());
+/////////////////////////////////////////////////////
+
         /*for (int i=0; i<exp.getPermutations().size(); i++) {
             print("\n"+exp.getPermutations().get(i));
         }*/
         
+/////////////////////////////////////////////////////
         exp.completeFinalList();
+/////////////////////////////////////////////////////
+
         print("\nFinal Products List:\n");
         for (int i=0; i<exp.getFinalProductsList().size(); i++) {
             print(exp.getFinalProductsList().get(i).getLiteralView()+"\t");
         }
         
+/////////////////////////////////////////////////////
         exp.setOptimizedExpression();
+/////////////////////////////////////////////////////
+
         print("\n\n"+exp.getOptimizedExpression()+"\n");
         
     }
