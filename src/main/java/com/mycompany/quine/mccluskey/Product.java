@@ -8,7 +8,6 @@ import java.util.ArrayList;
  */
 public final class Product extends Tools {
 
-    //private ArrayList<Integer> decimalsList;
     private ArrayList<Integer> decimalsList;
     private       String            literal;
     private       String             binary;

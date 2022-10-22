@@ -15,7 +15,6 @@ public final class SumOfProducts extends Tools {
     private ArrayList<Product> productsList;          // Linhas da coveringTable
     private ArrayList<Product> auxProductsList;
     private ArrayList<MinTerm> minTermsList;         // Colunas da coveringTable
-    //private ArrayList<ArrayList<Integer>> coveringTable;//Talvez vire uma Classe
     private ArrayList<Product> finalProductsList;
     private int numberOfVars;
     private ArrayList<ArrayList<Integer>> permutations;
@@ -78,7 +77,6 @@ public final class SumOfProducts extends Tools {
     
     public void fillProductsList() {
         productsList = new ArrayList<>();
-        //coveringTable = new ArrayList<>();
         minTermsList = new ArrayList<>();
         permutations = new ArrayList<>();
         numberOfVars = detectNumberOfVars(inputFormat, inputExpression);
@@ -96,12 +94,6 @@ public final class SumOfProducts extends Tools {
                     .get(productsList.size()-1)
                         .getDecimalsList().get(0), numberOfVars));
             
-            /*
-            coveringTable.add(new ArrayList<>());
-            coveringTable.get(coveringTable.size()-1)
-                .add(productsList.get(productsList.size()-1)
-                    .getDecimalsList().get(0));
-            */
             begin = end+1;
             if (begin >= inputExpression.length())
                 break;
@@ -215,11 +207,10 @@ public final class SumOfProducts extends Tools {
     public void essentialProductsToFinalList() {
         //Colocar na essentialProductsList todos os
         //produtos que aparecem apenas uma vez em algum mintermo
-        
         finalProductsList = new ArrayList<>();
         for (int m=0; m < minTermsList.size(); m++) {
-            if (minTermsList.get(m).getProductsList_NEW().size() == 1) {
-                Product product = minTermsList.get(m).getProductsList_NEW().get(0);
+            if (minTermsList.get(m).getProductsList().size() == 1) {
+                Product product = minTermsList.get(m).getProductsList().get(0);
                 if (!finalProductsList.contains(product)) {
                     finalProductsList.add(product);
                 }
@@ -231,12 +222,11 @@ public final class SumOfProducts extends Tools {
     public void setIsCovered() {
         //Em todos os mintermos em que os produtos essenciais aparecem,
         //marcar isCovered = true
-        //os demais, marcar como false
         clearAllCovered();
         for (int e=0; e < finalProductsList.size(); e++) {
             Product product = finalProductsList.get(e);
             for (int m=0; m < minTermsList.size(); m++) {
-                if (minTermsList.get(m).getProductsList_NEW().contains(product)) {
+                if (minTermsList.get(m).getProductsList().contains(product)) {
                     minTermsList.get(m).setIsCovered(true);
                 }
             }
@@ -265,7 +255,7 @@ public final class SumOfProducts extends Tools {
         ArrayList<Product> finalListBackup = (ArrayList) finalProductsList.clone();
         ArrayList<Product> finalListCandidate = (ArrayList) finalProductsList.clone();
         int smaller = getCandidateProductsIndexes().size();
-        int addedProducts;// = smaller;
+        int addedProducts;
         for (int p=0; p < permutations.size(); p++) {
             setIsCovered();
             addedProducts = completeFinalListCandidate(
@@ -346,48 +336,6 @@ public final class SumOfProducts extends Tools {
             }
         }
     }
-    
-    public void foo() {
-        permute(getCandidateProductsIndexes(),
-                getCandidateProductsIndexes().size());
-        //for (int i=0; i<permutations.size(); i++) {
-        //    print("\n"+permutations.get(i));
-        //}
-    }
-    
-    public void fillCoveringTable() {
-        /*
-        VAI TER QUE SER COM STRINGS
-        pra cada decimal (cada entrada da coveringTable),
-        varre, em cada mintermo, seus decimais
-        se algum é igual, adiciona o mintermo à coveringTable
-        (o decimal está no i, e o mintermo estará no j)
-        */
-        /*for (int c=0; c < coveringTable.size(); c++) {
-            for (int m=0; m < productsList.size(); m++) {
-                int numberOfDecimals = productsList.get(m).getDecimalsList().size();
-                for (int d=0; d < numberOfDecimals; d++) {
-                    int decimalFromCovering = coveringTable.get(c).get(0);
-                    int decimalFromProduct = productsList.get(m).getDecimalsList().get(d);
-                    if (decimalFromCovering == decimalFromProduct) {
-                        coveringTable.get(c).add(1);//productsList.get(m).getLiteral());
-                    }
-                }
-            }
-        }*/
-    }
-    /*
-    PRA RESOLVER A TABELA DE COBERTURA
-    em cada mintermo, pra cada decimal dele,
-    procura decimal igual em todos os demais mintermos (ver *)
-    se achou, marca o mintermo original como não essencial
-    se não achou, marca como essencial
-    e marca todos os decimais dele como cobertos (não sei como)
-    
-    * ir colocando numa lista os decimais já testados e comparar com ela
-    pra não repetir a busca com um mesmo decimal
-    
-    */
     
     public String getOptimizedExpression() {
         return optimizedExpression;

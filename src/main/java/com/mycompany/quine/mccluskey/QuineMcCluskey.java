@@ -60,13 +60,13 @@ public class QuineMcCluskey extends Tools{
         exp.fillMinTermsList();
         for (int i=0; i<exp.getMinTermsList().size(); i++) {
             print("\n"+exp.getMinTermsList().get(i).getDecimal()+" -");
-            for (int p=0; p<exp.getMinTermsList().get(i).getProductsList_NEW().size(); p++) {
-                print("\t\t"+exp.getMinTermsList().get(i).getProductsList_NEW().get(p).getLiteral());//.get(0));
+            for (int p=0; p<exp.getMinTermsList().get(i).getProductsList().size(); p++) {
+                print("\t\t"+exp.getMinTermsList().get(i).getProductsList().get(p).getLiteral());//.get(0));
             }
         }
         
         exp.essentialProductsToFinalList();
-        print("\n\nFinal Products List:\n");
+        print("\n\nEssential Products List:\n");
         for (int i=0; i<exp.getFinalProductsList().size(); i++) {
             print(exp.getFinalProductsList().get(i).getLiteral()+"\t");
         }
