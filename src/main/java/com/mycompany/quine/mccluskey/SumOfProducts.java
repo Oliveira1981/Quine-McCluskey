@@ -358,7 +358,8 @@ public final class SumOfProducts extends Tools {
         return indexes;
     }
     
-    public void permute(ArrayList elements, int n) {
+    public void permute(ArrayList elements) {
+        int n = elements.size();
         int[] indexes = new int[n];
         
         for (int i = 0; i < n; i++) {

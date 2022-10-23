@@ -32,7 +32,7 @@ public class QuineMcCluskey extends Tools{
 
 /////////////////////////////////////////////////////
         inputFormat = gui.getInputFormat();
-        expression = gui.getExpression();
+        expression  = gui.getExpression();
 /////////////////////////////////////////////////////
 
         if(expression == null) System.exit(0);
@@ -111,7 +111,7 @@ public class QuineMcCluskey extends Tools{
         }
         
 /////////////////////////////////////////////////////
-        exp.permute(indexes, indexes.size());
+        exp.permute(indexes);
 /////////////////////////////////////////////////////
 
         /*for (int i=0; i<exp.getPermutations().size(); i++) {
