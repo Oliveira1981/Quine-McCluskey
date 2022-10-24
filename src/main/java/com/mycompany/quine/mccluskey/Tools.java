@@ -308,8 +308,15 @@ public class Tools {
         return true;
     }
     
-    public static void print (Object obj) {
+    public static void print(Object obj) {
         System.out.print(obj);
+    }
+    
+    public static void printarr(ArrayList array) {
+        System.out.println();
+        for (int i=0; i < array.size(); i++) {
+            System.out.println (array.get(i));
+        }
     }
 
 }

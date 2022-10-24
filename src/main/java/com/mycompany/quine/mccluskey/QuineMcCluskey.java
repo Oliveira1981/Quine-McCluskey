@@ -97,10 +97,8 @@ public class QuineMcCluskey extends Tools{
 /////////////////////////////////////////////////////
         ArrayList<Integer> indexes = exp.getCandidateProductsIndexes();
 /////////////////////////////////////////////////////
-
-        for (int i=0; i < indexes.size(); i++) {
-            print("\n"+indexes.get(i));
-        }
+        
+        printarr(indexes);
         
         for (int i=0; i<exp.getMinTermsList().size(); i++) {
             print("\nMinTerm "+exp.getMinTermsList().get(i).getDecimalView()+" ");
