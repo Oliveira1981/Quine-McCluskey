@@ -31,14 +31,17 @@ public class QuineMcCluskey extends Tools{
         String expression;
 
 /////////////////////////////////////////////////////
-        inputFormat = gui.getInputFormat();
+        //inputFormat = gui.getInputFormat();
         expression  = gui.getExpression();
+        inputFormat = inputFormatDetection(expression);
 /////////////////////////////////////////////////////
 
         if(expression == null) System.exit(0);
         
         System.out.println("inputFormat:"+inputFormat);
         System.out.println("expression:"+expression);
+        
+        System.out.println("\n"+inputFormatDetection(expression));
         
 /////////////////////////////////////////////////////
         SumOfProducts exp = new SumOfProducts(inputFormat, expression);

@@ -34,8 +34,8 @@ public final class GUI {
     public void showDialog(String template) throws Exception {
         
         String[] optionsToChoose = {
-            "Decimal",
             "Literal",
+            "Decimal",
             "Binária",
         };
         
@@ -51,9 +51,9 @@ public final class GUI {
         textFieldLabel.setFont(font);
         comboBoxLabel.setFont(font);
         
-        myPanel.add(comboBoxLabel);
-        myPanel.add(jComboBox);
-        myPanel.add(Box.createHorizontalStrut(1));
+        //myPanel.add(comboBoxLabel);
+        //myPanel.add(jComboBox);
+        //myPanel.add(Box.createHorizontalStrut(1));
         myPanel.add(textFieldLabel);
         
         //expression = JOptionPane.showInputDialog(null, myPanel, template);

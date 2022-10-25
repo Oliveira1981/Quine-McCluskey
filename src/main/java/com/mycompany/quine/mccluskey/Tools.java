@@ -298,9 +298,12 @@ public class Tools {
     }
     
     public boolean isNewVar(char c, String str) {
-        for (int i=0; i < str.length(); i++) {
+        char ch = Character.toUpperCase(c);
+        String st = str.toUpperCase();
+        
+        for (int i=0; i < st.length(); i++) {
             
-            if (c == str.charAt(i))
+            if (ch == st.charAt(i))
                 return false;
             
         }
@@ -314,9 +317,68 @@ public class Tools {
     
     public static void printarr(ArrayList array) {
         System.out.println();
+        
         for (int i=0; i < array.size(); i++) {
             System.out.println (array.get(i));
         }
+    }
+    
+    public static String inputFormatDetection(String inputExp) {
+        String detectedFormat = "";
+        
+        for (int c=0; c < inputExp.length(); c++) {
+            
+            if (inputExp.charAt(c) != '!' &&
+                inputExp.charAt(c) != '+' &&
+                inputExp.charAt(c) != '*' &&
+                inputExp.charAt(c) != ' ' &&
+                inputExp.charAt(c) != '_') {
+                    
+                if (Character.isAlphabetic(inputExp.charAt(c))) {
+                    
+                    if (detectedFormat.length() == 0 ||
+                        detectedFormat.equals("Literal")) {
+                        detectedFormat = "Literal";
+                    }
+                    else {
+                        return "ERRO";
+                    }
+                }
+                
+                if (Character.isDigit(inputExp.charAt(c))) {
+                    
+                    if ((Integer.parseInt(inputExp.charAt(c)+"")) > 1) {
+                        
+                        if (detectedFormat.length() == 0 ||
+                            detectedFormat.equals("Binária") ||
+                            detectedFormat.equals("Decimal")) {
+                            detectedFormat = "Decimal";
+                        }
+                        else {
+                            return "ERRO";
+                        }
+                    }
+                    else {
+                        
+                        if (detectedFormat.length() == 0 ||
+                            detectedFormat.equals("Binária")) {
+                            detectedFormat = "Binária";
+                        }
+                        else {
+                            
+                            if (detectedFormat.equals("Decimal")) {
+                                detectedFormat = "Decimal";
+                            }
+                            else {
+                                return "ERRO";
+                            }
+                        }
+                    }
+                }
+            }
+        }
+        
+        return detectedFormat;
     }
 
 }
