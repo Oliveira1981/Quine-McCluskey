@@ -130,7 +130,7 @@ public final class SumOfProducts extends Tools {
             productsList.get(i).setHasPrime(false);
     }
     
-    public void mergePrimeImplicants() {
+    public void mergePrimeImplicants(int limit) {
         boolean primesWereFound = false;
         auxProductsList = new ArrayList<>();
         
@@ -183,11 +183,11 @@ public final class SumOfProducts extends Tools {
             auxProductsList.add(productsList.get(productsList.size()-1));
         }
         
-        if (primesWereFound) {
+        if (primesWereFound && limit > 0) {
             //AJUSTAR CASOS EM QUE ENCONTRA PRIMOS ETERNAMENTE
             productsList = auxProductsList;
             resetHasPrime();
-            mergePrimeImplicants();
+            mergePrimeImplicants(--limit);
         }
     }
     

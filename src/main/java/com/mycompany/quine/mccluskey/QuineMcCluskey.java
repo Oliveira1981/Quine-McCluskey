@@ -58,7 +58,7 @@ public class QuineMcCluskey extends Tools{
         }
         
 /////////////////////////////////////////////////////
-        exp.mergePrimeImplicants();
+        exp.mergePrimeImplicants(10);
 /////////////////////////////////////////////////////
 
         print("\n+++++++++++++++++++++++++++++++\n\n");
