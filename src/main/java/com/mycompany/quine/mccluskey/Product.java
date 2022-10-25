@@ -41,7 +41,7 @@ public final class Product extends Tools {
             case "Literal" -> {
                 setProductFromLiteral(inputExp);
                 binaryView     = literal2binary(literalView, size);
-                decimalView    = Integer.parseInt(inputExp);
+                decimalView    = binary2decimal(binaryView, size);
                 minTermsList   = new ArrayList<>();
                 int newDecimal = binary2decimal(binaryView, size);
                 if (!minTermsList.contains(newDecimal)) {
@@ -57,6 +57,7 @@ public final class Product extends Tools {
             case "Binária" -> {
                 setProductFromBinary(inputExp);
                 literalView    = binary2literal(binaryView, size);
+                decimalView    = binary2decimal(binaryView, size);
                 minTermsList   = new ArrayList<>();
                 int newDecimal = binary2decimal(binaryView, size);
                 if (!minTermsList.contains(newDecimal)) {

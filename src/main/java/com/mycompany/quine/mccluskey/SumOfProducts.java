@@ -184,6 +184,7 @@ public final class SumOfProducts extends Tools {
         }
         
         if (primesWereFound) {
+            //AJUSTAR CASOS EM QUE ENCONTRA PRIMOS ETERNAMENTE
             productsList = auxProductsList;
             resetHasPrime();
             mergePrimeImplicants();
