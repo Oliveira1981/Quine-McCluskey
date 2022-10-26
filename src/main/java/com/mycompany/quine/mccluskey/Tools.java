@@ -263,6 +263,19 @@ public class Tools {
         return out;
     }
     
+    public static String removeSpacesFromExpression(String in) {
+        String out = "";
+        
+        for (int c=0; c < in.length(); c++) {
+            
+            if (!(in.charAt(c) == ' ')) {
+                out += in.charAt(c);
+            }
+        }
+        
+        return out;
+    }
+    
     public int detectNumberOfVars(String inputFormat, String inputExp) {
         int begin = 0;
         int end;
@@ -359,18 +372,24 @@ public class Tools {
         }
     }
     
-    public static String inputFormatDetection(String inputExp) {
+    public static String detectInputFormat(String inputExp) {
+        String in = inputExp.toUpperCase();
         String detectedFormat = "";
         
-        for (int c=0; c < inputExp.length(); c++) {
+        for (int c=0; c < in.length(); c++) {
             
-            if (inputExp.charAt(c) != '!' &&
-                inputExp.charAt(c) != '+' &&
-                inputExp.charAt(c) != '*' &&
-                inputExp.charAt(c) != ' ' &&
-                inputExp.charAt(c) != '_') {
+            if (in.charAt(c) != '!' &&
+                in.charAt(c) != '+' &&
+                in.charAt(c) != '*' &&
+                in.charAt(c) != '_' &&
+                in.charAt(c) != ' ') {
+                
+                if (Character.isAlphabetic(in.charAt(c))) {
                     
-                if (Character.isAlphabetic(inputExp.charAt(c))) {
+                    if (in.charAt(c) == 'X' &&
+                       detectedFormat.equals("Binário")) {
+                        return "Hexadecimal";
+                    }
                     
                     if (detectedFormat.length() == 0 ||
                         detectedFormat.equals("Literal")) {
@@ -381,9 +400,9 @@ public class Tools {
                     }
                 }
                 
-                if (Character.isDigit(inputExp.charAt(c))) {
+                if (Character.isDigit(in.charAt(c))) {
                     
-                    if ((Integer.parseInt(inputExp.charAt(c)+"")) > 1) {
+                    if ((Integer.parseInt(in.charAt(c)+"")) > 1) {
                         
                         if (detectedFormat.length() == 0 ||
                             detectedFormat.equals("Binário") ||

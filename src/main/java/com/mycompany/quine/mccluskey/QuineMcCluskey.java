@@ -8,7 +8,7 @@ import java.util.ArrayList;
  * @author Rodrigo da Rosa
  */
 public class QuineMcCluskey extends Tools{
-    
+        
     public static void main(String[] args) throws Exception  {
         
         PrintWriter writer = new PrintWriter("Quine-McCluskey Results.txt", "UTF-8");
@@ -27,6 +27,8 @@ public class QuineMcCluskey extends Tools{
             System.exit(0);
         }
         
+        allExpressions = removeSpacesFromExpression(allExpressions);
+        
         int begin = 0;
         int end;
         do {
@@ -36,8 +38,16 @@ public class QuineMcCluskey extends Tools{
             }
             String expression = allExpressions.substring(begin, end);
             
-            inputFormat = inputFormatDetection(expression);
-            if (inputFormat.length() == 0) {
+            inputFormat = detectInputFormat(expression);
+            if (inputFormat.length() == 0 ||
+                inputFormat.equals("ERRO")) {
+                System.out.println("Expressão inconsistente.");
+                begin = end + 1;
+                continue;
+            }
+            
+            if (inputFormat.equals("Hexadecimal")) {
+                System.out.println("Entrada hexadecimal: trabalhando nisso...");
                 begin = end + 1;
                 continue;
             }
