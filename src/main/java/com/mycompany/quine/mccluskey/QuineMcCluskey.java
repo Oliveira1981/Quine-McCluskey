@@ -47,9 +47,12 @@ public class QuineMcCluskey extends Tools{
             }
             
             if (inputFormat.equals("Hexadecimal")) {
-                System.out.println("Entrada hexadecimal: trabalhando nisso...");
-                begin = end + 1;
-                continue;
+                
+                expression = hexadecimal2expression(expression);
+                
+                //System.out.println("Entrada hexadecimal: trabalhando nisso...");
+                //begin = end + 1;
+                //continue;
             }
             
             System.out.println("===================================="
@@ -61,6 +64,10 @@ public class QuineMcCluskey extends Tools{
                          + "====================================");
             writer.println("Formato de Entrada:\n - "+inputFormat);
             writer.println("\nExpressão:\n - "+expression);
+            
+            if (inputFormat.equals("Hexadecimal")) {
+                inputFormat = "Decimal";
+            }
             
 /////////////////////////////////////////////////////
             SumOfProducts exp = new SumOfProducts(inputFormat, expression);

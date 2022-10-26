@@ -8,7 +8,7 @@ import java.util.ArrayList;
  */
 public class Tools {
     
-    public String literal2binary(String lit, int size) {
+    public static String literal2binary(String lit, int size) {
         String strBin = "";
         int pos = 0;
         
@@ -43,7 +43,7 @@ public class Tools {
         return strBin;
     }
     
-    public int binary2decimal(String bits, int size) {
+    public static int binary2decimal(String bits, int size) {
         int decimalValue = 0;
         
         while (bits.length() < size) {
@@ -61,7 +61,9 @@ public class Tools {
         return decimalValue;
     }
     
-    public int hexa2decimal(String hexa) {
+    public static int hexa2decimal(String hexaIn) {
+        String hexa = hexaIn.substring(2);
+        hexa = hexa.toUpperCase();
         int decimalValue = 0;
         
         for (int i = 0; i < hexa.length(); i++) {
@@ -97,7 +99,7 @@ public class Tools {
         return decimalValue;
     }
     
-    public String decimal2binary(int deci, int size) {
+    public static String decimal2binary(int deci, int size) {
         String str = "";
         int b = 0;
         int curr = deci;
@@ -124,7 +126,7 @@ public class Tools {
         return reversedStr.toString();
     }
     
-    public String binary2literal(String bits, int size) {
+    public static String binary2literal(String bits, int size) {
         while (bits.length() < size) {
             bits = "0" + bits;
         }
@@ -157,7 +159,7 @@ public class Tools {
         return lit;
     }
     
-    public String sortLiteralInput(String input) {
+    public static String sortLiteralInput(String input) {
         String upInput = input.toUpperCase();
         ArrayList<ArrayList<Character>> list = new ArrayList<>();
         
@@ -212,7 +214,7 @@ public class Tools {
         return str;
     }
     
-    public char getAlphabetChar(int c) {
+    public static char getAlphabetChar(int c) {
         String alphabet =
             "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
         return alphabet.charAt(c);
@@ -221,7 +223,7 @@ public class Tools {
     //Retorna a posição do bit variante ou:
     //-1 se os produtos não são primos implicantes
     //-2 se os produtos são iguais
-    public int primeImplicantBitPosition(String product1, String product2, int size) {
+    public static int primeImplicantBitPosition(String product1, String product2, int size) {
         int count = 0;
         int pos = -1;
         
@@ -243,11 +245,11 @@ public class Tools {
         return pos;
     }
     
-    public String subst(String str, int pos, char c) {
+    public static String subst(String str, int pos, char c) {
         return str.substring(0, pos) + c + str.substring(pos+1);
     }
     
-    public String cleanUpExpression(String in) {
+    public static String cleanUpExpression(String in) {
         String out = "";
         
         for (int c=0; c < in.length(); c++) {
@@ -276,7 +278,7 @@ public class Tools {
         return out;
     }
     
-    public int detectNumberOfVars(String inputFormat, String inputExp) {
+    public static int detectNumberOfVars(String inputFormat, String inputExp) {
         int begin = 0;
         int end;
         int biggestSize = 0;
@@ -346,7 +348,7 @@ public class Tools {
         return biggestSize;
     }
     
-    public boolean isNewVar(char c, String str) {
+    public static boolean isNewVar(char c, String str) {
         char ch = Character.toUpperCase(c);
         String st = str.toUpperCase();
         
@@ -434,6 +436,30 @@ public class Tools {
         }
         
         return detectedFormat;
+    }
+    
+    public static String hexadecimal2expression(String hexa) {
+        String expression = "";
+        int decimal = hexa2decimal(hexa);
+
+print("\nDecimal: "+decimal);
+
+        int size = 16; //provisoriamente usando tamanho fixo 
+        String binary = decimal2binary(decimal, size);
+
+print("\nBinary: "+binary);
+        
+        for (int i=0; i < size; i++) {
+            int n = size - i - 1;
+            if (binary.charAt(n) == '1') {
+                if (expression.length() > 0) {
+                    expression += "+";
+                }
+                expression += Integer.toString(i);
+            }
+        }
+        
+        return expression;
     }
 
 }

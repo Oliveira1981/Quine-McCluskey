@@ -89,8 +89,9 @@ public final class SumOfProducts extends Tools {
         
         do {
             end = inputExpression.indexOf('+', begin);
-            if (end<0)
+            if (end < 0) {
                 end = inputExpression.length();
+            }
             String str = inputExpression.substring(begin, end);
             productsList.add(new Product(inputFormat, str, numberOfVars));
             
