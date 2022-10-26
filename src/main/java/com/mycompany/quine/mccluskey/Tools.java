@@ -61,6 +61,42 @@ public class Tools {
         return decimalValue;
     }
     
+    public int hexa2decimal(String hexa) {
+        int decimalValue = 0;
+        
+        for (int i = 0; i < hexa.length(); i++) {
+            int expo = hexa.length() - 1 - i;
+            
+            char hexaChar = hexa.charAt(i);
+            int hexaDigit;
+            switch (hexaChar) {
+                case 'A' -> {
+                    hexaDigit = 10;
+                }
+                case 'B' -> {
+                    hexaDigit = 11;
+                }
+                case 'C' -> {
+                    hexaDigit = 12;
+                }
+                case 'D' -> {
+                    hexaDigit = 13;
+                }
+                case 'E' -> {
+                    hexaDigit = 14;
+                }
+                case 'F' -> {
+                    hexaDigit = 15;
+                }
+                default -> {
+                    hexaDigit = Integer.parseInt(Character.toString(hexaChar));
+                }
+            }
+            decimalValue += hexaDigit * (int) Math.pow(16, (double) expo);
+        }
+        return decimalValue;
+    }
+    
     public String decimal2binary(int deci, int size) {
         String str = "";
         int b = 0;
