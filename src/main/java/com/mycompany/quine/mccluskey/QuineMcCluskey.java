@@ -14,9 +14,9 @@ public class QuineMcCluskey extends Tools{
         //String template = "A!BCD+!ABC!D+!ABCD+A!B!CD";
         //String template = "!A*!B*!C*!D + !A*!B*!C*D + !A*B*!C*D + !A*B*C*!D + !A*B*C*D";
         //String template = "ab!c+a!bc!d+!ab"; //diferentes tamanhos (definir pelo mintermo maior)
-        //String litTemplate = "abc+bcd"; //diferentes tamanhos (definir pelo mintermo maior)
+        //String template = "abc+bcd"; //diferentes tamanhos (definir pelo mintermo maior)
         
-        //String binTemplate = "1111+0011+1000+0111";
+        //String template = "1111+0011+1000+0111";
         //String template = "1111+0011+1010+0111";
         //String template = "111+11+101+01"; //diferentes tamanhos (definir pelo mintermo maior)
         
