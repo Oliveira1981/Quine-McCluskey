@@ -156,7 +156,7 @@ public final class SumOfProducts extends Tools {
                         else
                             bitString += productsList.get(i).getBinaryView().charAt(c);
                     }
-                    auxProductsList.add(new Product("Binária", bitString, numberOfVars));
+                    auxProductsList.add(new Product("Binário", bitString, numberOfVars));
                     auxProductsList.get(auxProductsList.size()-1).getMinTermsList().clear();
                     
                     for(int d=0; d < productsList.get(i).getMinTermsList().size(); d++) {

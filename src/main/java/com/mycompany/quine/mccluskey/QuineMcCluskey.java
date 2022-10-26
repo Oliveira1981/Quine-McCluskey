@@ -1,5 +1,6 @@
 package com.mycompany.quine.mccluskey;
 
+import java.io.PrintWriter;
 import java.util.ArrayList;
 
 /**
@@ -10,6 +11,7 @@ public class QuineMcCluskey extends Tools{
     
     public static void main(String[] args) throws Exception  {
         
+        PrintWriter writer = new PrintWriter("Quine-McCluskey Results.txt", "UTF-8");
         String template = "2+4+6+8+9+10+12+13+15";
         
         GUI gui = new GUI();
@@ -40,55 +42,63 @@ public class QuineMcCluskey extends Tools{
                 continue;
             }
             
-            System.out.println("Formato de entrada:\n - "+inputFormat);
+            System.out.println("===================================="
+                             + "====================================");
+            System.out.println("Formato de Entrada:\n - "+inputFormat);
             System.out.println("\nExpressão:\n - "+expression);
+            
+            writer.println("===================================="
+                         + "====================================");
+            writer.println("Formato de Entrada:\n - "+inputFormat);
+            writer.println("\nExpressão:\n - "+expression);
             
 /////////////////////////////////////////////////////
             SumOfProducts exp = new SumOfProducts(inputFormat, expression);
 /////////////////////////////////////////////////////
     
             print("\nVariáveis: "+exp.getNumberOfVars()+"\n");
+            writer.print("\nVariáveis: "+exp.getNumberOfVars()+"\n");
             
 /////////////////////////////////////////////////////
             exp.sortByOnesCount();
 /////////////////////////////////////////////////////
     
-            print ("\nMintermos por número de 1s:");
+            writer.print("\nMintermos por número de 1s:");
             for(int i=0; i < exp.getProductsList().size(); i++) {
-                print("\n");
-                print(exp.getProductsList().get(i).getMinTermsList()+"\t");
-                print(exp.getProductsList().get(i).getBinaryView()+"\t");
-                print(exp.getProductsList().get(i).getLiteralView());
+                writer.print("\n");
+                writer.print(exp.getProductsList().get(i).getMinTermsList()+"\t");
+                writer.print(exp.getProductsList().get(i).getBinaryView()+"\t");
+                writer.print(exp.getProductsList().get(i).getLiteralView());
             }
             
 /////////////////////////////////////////////////////
             exp.mergePrimeImplicants(10);
 /////////////////////////////////////////////////////
     
-            print("\n\nImplicantes primos mesclados:\n");
+            writer.print("\n\nImplicantes primos mesclados:\n");
             for(int i=0; i < exp.getProductsList().size(); i++) {
                 int q = 0;
                 for(; q < exp.getProductsList().get(i).getMinTermsList().size(); q++) {
-                    print("-"+exp.getProductsList().get(i).getMinTermsList().get(q));
+                    writer.print("-"+exp.getProductsList().get(i).getMinTermsList().get(q));
                 }
                 if(q < 3)
-                    print("-\t");
-                print("\t");
-                print(exp.getProductsList().get(i).getBinaryView()+" \t");
-                print(exp.getProductsList().get(i).getLiteralView()+"\n");
+                    writer.print("-\t");
+                writer.print("\t");
+                writer.print(exp.getProductsList().get(i).getBinaryView()+" \t");
+                writer.print(exp.getProductsList().get(i).getLiteralView()+"\n");
             }
             
 /////////////////////////////////////////////////////
             exp.fillMinTermsList();
 /////////////////////////////////////////////////////
     
-            print ("\nMintermos e seus produtos (Tabela de Cobertura):");
+            writer.print ("\nMintermos e seus produtos (Tabela de Cobertura):");
             for (int i=0; i < exp.getMinTermsList().size(); i++) {
-                print("\n"+exp.getMinTermsList().get(i).getDecimalView()+" -");
+                writer.print("\n"+exp.getMinTermsList().get(i).getDecimalView()+" -");
                 for (int p=0; p < exp.getMinTermsList().get(i).getProductsList().size(); p++) {
-                    print("\t\t"+exp.getMinTermsList().get(i).getProductsList().get(p).getLiteralView());//.get(0));
+                    writer.print("\t\t"+exp.getMinTermsList().get(i).getProductsList().get(p).getLiteralView());//.get(0));
                     if (exp.getMinTermsList().get(i).getProductsList().get(p).getLiteralView().length() < 8)
-                        print("\t");
+                        writer.print("\t");
                 }
             }
             
@@ -96,21 +106,21 @@ public class QuineMcCluskey extends Tools{
             exp.essentialProductsToFinalList();
 /////////////////////////////////////////////////////
     
-            print("\n\nProdutos Essenciais:\n");
+            writer.print("\n\nProdutos Essenciais:\n");
             for (int i=0; i < exp.getFinalProductsList().size(); i++) {
-                print(exp.getFinalProductsList().get(i).getLiteralView()+"\t");
+                writer.print(exp.getFinalProductsList().get(i).getLiteralView()+"\t");
             }
             
 /////////////////////////////////////////////////////
             ArrayList<Integer> indexes = exp.getCandidateProductsIndexes();
 /////////////////////////////////////////////////////
-            print("\n");
+            writer.print("\n");
             for (int i=0; i < exp.getMinTermsList().size(); i++) {
-                print("\nMinTerm "+exp.getMinTermsList().get(i).getDecimalView()+" ");
+                writer.print("\nMintermo "+exp.getMinTermsList().get(i).getDecimalView()+" ");
                 if (exp.getMinTermsList().get(i).isIsCovered())
-                    print("está coberto.");
+                    writer.print("está coberto.");
                 else
-                    print(" - ");
+                    writer.print(" - ");
             }
             
 /////////////////////////////////////////////////////
@@ -118,24 +128,26 @@ public class QuineMcCluskey extends Tools{
 /////////////////////////////////////////////////////
     
             /*for (int i=0; i<exp.getPermutations().size(); i++) {
-                print("\n"+exp.getPermutations().get(i));
+                writer.print("\n"+exp.getPermutations().get(i));
             }*/
             
 /////////////////////////////////////////////////////
             exp.completeFinalList();
 /////////////////////////////////////////////////////
     
-            print("\n\nProdutos Finais:\n");
+            writer.print("\n\nProdutos Finais:\n");
             for (int i=0; i < exp.getFinalProductsList().size(); i++) {
-                print(exp.getFinalProductsList().get(i).getLiteralView()+"\t");
+                writer.print(exp.getFinalProductsList().get(i).getLiteralView()+"\t");
             }
             
 /////////////////////////////////////////////////////
             exp.setOptimizedExpression();
 /////////////////////////////////////////////////////
     
-            print("\n\nExpressão otimizada:\n");
+            print("\nExpressão otimizada:\n");
             print(exp.getOptimizedExpression()+"\n\n");
+            writer.print("\n\nExpressão otimizada:\n");
+            writer.print(exp.getOptimizedExpression()+"\n\n");
             
             begin = end + 1;
             if (begin >= allExpressions.length()) {
@@ -143,5 +155,7 @@ public class QuineMcCluskey extends Tools{
             }
         }
         while (begin < allExpressions.length());
+        
+        writer.close();
     }
 }

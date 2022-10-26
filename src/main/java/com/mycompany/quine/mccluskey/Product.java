@@ -54,7 +54,7 @@ public final class Product extends Tools {
                 binaryView  = decimal2binary(Integer.parseInt(inputExp), size);
                 literalView = binary2literal(binaryView, size);
             }
-            case "Binária" -> {
+            case "Binário" -> {
                 setProductFromBinary(inputExp);
                 literalView    = binary2literal(binaryView, size);
                 decimalView    = binary2decimal(binaryView, size);

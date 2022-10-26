@@ -263,7 +263,7 @@ public class Tools {
                         biggestSize = vars.length();
                     
                 }
-                case "Binária" -> {
+                case "Binário" -> {
                     if (str.length() > biggestSize){
                         biggestSize = str.length();
                     }
@@ -350,7 +350,7 @@ public class Tools {
                     if ((Integer.parseInt(inputExp.charAt(c)+"")) > 1) {
                         
                         if (detectedFormat.length() == 0 ||
-                            detectedFormat.equals("Binária") ||
+                            detectedFormat.equals("Binário") ||
                             detectedFormat.equals("Decimal")) {
                             detectedFormat = "Decimal";
                         }
@@ -361,8 +361,8 @@ public class Tools {
                     else {
                         
                         if (detectedFormat.length() == 0 ||
-                            detectedFormat.equals("Binária")) {
-                            detectedFormat = "Binária";
+                            detectedFormat.equals("Binário")) {
+                            detectedFormat = "Binário";
                         }
                         else {
                             

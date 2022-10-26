@@ -35,7 +35,7 @@ public final class GUI {
         String[] optionsToChoose = {
             "Literal",
             "Decimal",
-            "Binária",
+            "Binário",
         };
         
         String[] templates = {
