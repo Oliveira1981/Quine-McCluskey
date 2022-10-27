@@ -46,28 +46,32 @@ public class QuineMcCluskey extends Tools{
                 continue;
             }
             
-            if (inputFormat.equals("Hexadecimal")) {
-                
-                expression = hexadecimal2expression(expression);
-                
-                //System.out.println("Entrada hexadecimal: trabalhando nisso...");
-                //begin = end + 1;
-                //continue;
-            }
-            
             System.out.println("===================================="
                              + "====================================");
-            System.out.println("Formato de Entrada:\n - "+inputFormat);
-            System.out.println("\nExpressão:\n - "+expression);
             
             writer.println("===================================="
                          + "====================================");
+            
+            System.out.println("Formato de Entrada:\n - "+inputFormat);
             writer.println("Formato de Entrada:\n - "+inputFormat);
-            writer.println("\nExpressão:\n - "+expression);
             
             if (inputFormat.equals("Hexadecimal")) {
+                System.out.println("\nExpressão original:\n - "+expression);
+                writer.println("\nExpressão original:\n - "+expression);
+                expression = hexadecimal2expression(expression);
                 inputFormat = "Decimal";
+                System.out.println("""
+                                   
+                                   Formato Convertido:
+                                    - Decimal""");
+                writer.println("""
+                               
+                               Formato Convertido:
+                                - Decimal""");
             }
+            
+            System.out.println("\nExpressão:\n - "+expression);
+            writer.println("\nExpressão:\n - "+expression);
             
 /////////////////////////////////////////////////////
             SumOfProducts exp = new SumOfProducts(inputFormat, expression);

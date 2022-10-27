@@ -1,0 +1,59 @@
+========================================================================
+Formato de Entrada:
+ - Decimal
+
+Expressão:
+ - 2+4+6+8+9+10+12+13+15
+
+Variáveis: 4
+
+Mintermos por número de 1s:
+[2]	0010	!A*!B* C*!D
+[4]	0100	!A* B*!C*!D
+[8]	1000	 A*!B*!C*!D
+[6]	0110	!A* B* C*!D
+[9]	1001	 A*!B*!C* D
+[10]	1010	 A*!B* C*!D
+[12]	1100	 A* B*!C*!D
+[13]	1101	 A* B*!C* D
+[15]	1111	 A* B* C* D
+
+Implicantes primos mesclados:
+-2-6-		0_10 	!A* C*!D
+-2-10-		_010 	!B* C*!D
+-4-6-		01_0 	!A* B*!D
+-4-12-		_100 	 B*!C*!D
+-8-9-12-13	1_0_ 	 A*!C
+-8-10-		10_0 	 A*!B*!D
+-13-15-		11_1 	 A* B* D
+
+Mintermos e seus produtos (Tabela de Cobertura):
+2 -		!A* C*!D		!B* C*!D
+4 -		!A* B*!D		 B*!C*!D
+6 -		!A* C*!D		!A* B*!D
+8 -		 A*!C			 A*!B*!D
+9 -		 A*!C	
+10 -		!B* C*!D		 A*!B*!D
+12 -		 B*!C*!D		 A*!C	
+13 -		 A*!C			 A* B* D
+15 -		 A* B* D
+
+Produtos Essenciais:
+ A*!C	 A* B* D	
+
+Mintermo 2  - 
+Mintermo 4  - 
+Mintermo 6  - 
+Mintermo 8 está coberto.
+Mintermo 9 está coberto.
+Mintermo 10  - 
+Mintermo 12 está coberto.
+Mintermo 13 está coberto.
+Mintermo 15 está coberto.
+
+Produtos Finais:
+ A*!C	 A* B* D	!B* C*!D	!A* B*!D	
+
+Expressão otimizada:
+ A*!C +  A* B* D + !B* C*!D + !A* B*!D
+

@@ -441,13 +441,9 @@ public class Tools {
     public static String hexadecimal2expression(String hexa) {
         String expression = "";
         int decimal = hexa2decimal(hexa);
-
-print("\nDecimal: "+decimal);
-
+        
         int size = 16; //provisoriamente usando tamanho fixo 
         String binary = decimal2binary(decimal, size);
-
-print("\nBinary: "+binary);
         
         for (int i=0; i < size; i++) {
             int n = size - i - 1;
