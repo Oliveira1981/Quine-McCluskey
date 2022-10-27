@@ -61,8 +61,8 @@ public class Tools {
         return decimalValue;
     }
     
-    public static int hexa2decimal(String hexaIn) {
-        String hexa = hexaIn.substring(2);
+    public static int hexa2decimal(String hexa) {
+        //String hexa = hexaIn.substring(2);
         hexa = hexa.toUpperCase();
         int decimalValue = 0;
         
@@ -439,22 +439,25 @@ public class Tools {
     }
     
     public static String hexadecimal2expression(String hexa) {
+        hexa = hexa.substring(2);
         String expression = "";
-        int decimal = hexa2decimal(hexa);
-        
-        int size = 16; //provisoriamente usando tamanho fixo 
-        String binary = decimal2binary(decimal, size);
-        
-        for (int i=0; i < size; i++) {
-            int n = size - i - 1;
-            if (binary.charAt(n) == '1') {
-                if (expression.length() > 0) {
-                    expression += "+";
+        for (int x=hexa.length()-1; x >= 0; x--) {
+            int mult = hexa.length() - 1 - x;
+            String hexaByte = Character.toString(hexa.charAt(x));
+            int decimal = hexa2decimal(hexaByte);
+            int size = 4;
+            String binary = decimal2binary(decimal, 4);
+            
+            for (int i=0; i < size; i++) {
+                int n = size - i - 1;
+                if (binary.charAt(n) == '1') {
+                    if (expression.length() > 0) {
+                        expression += "+";
+                    }
+                    expression += Integer.toString(i + mult*4);
                 }
-                expression += Integer.toString(i);
             }
         }
-        
         return expression;
     }
 

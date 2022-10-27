@@ -132,6 +132,7 @@ public final class SumOfProducts extends Tools {
     }
     
     public void mergePrimeImplicants(int limit) {
+        //print (".");
         boolean primesWereFound = false;
         auxProductsList = new ArrayList<>();
         
