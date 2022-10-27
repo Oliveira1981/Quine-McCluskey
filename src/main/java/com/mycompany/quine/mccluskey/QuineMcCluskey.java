@@ -41,44 +41,48 @@ public class QuineMcCluskey extends Tools{
             inputFormat = detectInputFormat(expression);
             if (inputFormat.length() == 0 ||
                 inputFormat.equals("ERRO")) {
-                System.out.println("Expressão inconsistente.");
+                print("\nExpressão inconsistente.");
                 begin = end + 1;
                 continue;
             }
             
-            System.out.println("===================================="
-                             + "====================================");
+            print("\n===================================="
+                  + "====================================");
             
             writer.println("===================================="
                          + "====================================");
             
-            System.out.println("Formato de Entrada:\n - "+inputFormat);
-            writer.println("Formato de Entrada:\n - "+inputFormat);
+            print("\nFormato de Entrada:"+
+                "\n> "+inputFormat);
+            writer.println("Formato de Entrada:"+
+                "\n> "+inputFormat);
             
             if (inputFormat.equals("Hexadecimal")) {
-                System.out.println("\nExpressão original:\n - "+expression);
-                writer.println("\nExpressão original:\n - "+expression);
+                print("\n\nExpressão original:"+
+                    "\n> "+expression);
+                writer.println("\nExpressão original:"+
+                    "\n> "+expression);
                 expression = hexadecimal2expression(expression);
                 inputFormat = "Decimal";
-                System.out.println("""
-                                   
-                                   Formato Convertido:
-                                    - Decimal""");
-                writer.println("""
-                               
-                               Formato Convertido:
-                                - Decimal""");
+                print("\n\nFormato Convertido:"+
+                    "\n> Decimal");
+                writer.println("\nFormato Convertido:"+
+                    "\n> Decimal");
             }
             
-            System.out.println("\nExpressão:\n - "+expression);
-            writer.println("\nExpressão:\n - "+expression);
+            print("\n\nExpressão:"+
+                "\n> "+expression);
+            writer.println("\nExpressão:"+
+                "\n> "+expression);
             
 /////////////////////////////////////////////////////
             SumOfProducts exp = new SumOfProducts(inputFormat, expression);
 /////////////////////////////////////////////////////
     
-            print("\nVariáveis: "+exp.getNumberOfVars()+"\n");
-            writer.print("\nVariáveis: "+exp.getNumberOfVars()+"\n");
+            print("\n\nVariáveis:"+
+                "\n> "+exp.getNumberOfVars()+"\n");
+            writer.print("\nVariáveis:"+
+                "\n> "+exp.getNumberOfVars()+"\n");
             
 /////////////////////////////////////////////////////
             exp.sortByOnesCount();
@@ -127,7 +131,7 @@ public class QuineMcCluskey extends Tools{
             exp.essentialProductsToFinalList();
 /////////////////////////////////////////////////////
     
-            writer.print("\n\nProdutos Essenciais:\n");
+            writer.print("\n\nProdutos Essenciais:\n> ");
             for (int i=0; i < exp.getFinalProductsList().size(); i++) {
                 writer.print(exp.getFinalProductsList().get(i).getLiteralView()+"\t");
             }
@@ -156,7 +160,7 @@ public class QuineMcCluskey extends Tools{
             exp.completeFinalList();
 /////////////////////////////////////////////////////
     
-            writer.print("\n\nProdutos Finais:\n");
+            writer.print("\n\nProdutos Finais:\n> ");
             for (int i=0; i < exp.getFinalProductsList().size(); i++) {
                 writer.print(exp.getFinalProductsList().get(i).getLiteralView()+"\t");
             }
@@ -166,9 +170,9 @@ public class QuineMcCluskey extends Tools{
 /////////////////////////////////////////////////////
     
             print("\nExpressão otimizada:\n");
-            print(exp.getOptimizedExpression()+"\n\n");
+            print("> "+exp.getOptimizedExpression()+"\n\n");
             writer.print("\n\nExpressão otimizada:\n");
-            writer.print(exp.getOptimizedExpression()+"\n\n");
+            writer.print("> "+exp.getOptimizedExpression()+"\n\n");
             
             begin = end + 1;
             if (begin >= allExpressions.length()) {
