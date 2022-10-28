@@ -8,15 +8,15 @@ import java.util.ArrayList;
  */
 public final class MinTerm extends Tools {
     
-    private ArrayList<String> productsString;
-    private String               literalView;
-    private String                binaryView;
-    private int                  decimalView;
-    private int                         size;
-    private boolean                isCovered;
+    private ArrayList<String> productsList;
+    private String             literalView;
+    private String              binaryView;
+    private int                decimalView;
+    private int                       size;
+    private boolean              isCovered;
 
     public MinTerm() {
-        productsString = new ArrayList<>();
+        productsList = new ArrayList<>();
         literalView  =                "";
         binaryView   =            "0000";
         decimalView  =                 0;
@@ -34,11 +34,11 @@ public final class MinTerm extends Tools {
         this.binaryView  = decimal2binary(decimal, size);
         this.literalView = binary2literal(this.binaryView, size);
         isCovered        = false;
-        productsString     = new ArrayList<>();
+        productsList     = new ArrayList<>();
     }
     
-    public ArrayList<String> getProductsListString() {
-        return productsString;
+    public ArrayList<String> getProductsList() {
+        return productsList;
     }
     
     public int getDecimalView() {
@@ -84,7 +84,7 @@ public final class MinTerm extends Tools {
     }
     
     public void addProduct(String product) {
-        productsString.add(product);
+        productsList.add(product);
     }
 
 }

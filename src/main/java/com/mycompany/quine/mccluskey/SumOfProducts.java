@@ -15,7 +15,7 @@ public final class SumOfProducts extends Tools {
     private ArrayList<Product>            productsList; // Linhas da coveringTable
     private ArrayList<Product>         auxProductsList;
     private ArrayList<MinTerm>            minTermsList; // Colunas da coveringTable
-    private ArrayList<String>     finalProductsListStr;
+    private ArrayList<String>        finalProductsList;
     private ArrayList<ArrayList<Integer>> permutations;
     private int                           numberOfVars;
     
@@ -67,8 +67,8 @@ public final class SumOfProducts extends Tools {
         return minTermsList;
     }
     
-    public ArrayList<String> getFinalProductsListStr() {
-        return finalProductsListStr;
+    public ArrayList<String> getFinalProductsList() {
+        return finalProductsList;
     }
     
     public int getNumberOfVars() {
@@ -194,9 +194,9 @@ public final class SumOfProducts extends Tools {
     public void setOptimizedExpression() {
         optimizedExpression = "";
         
-        for (int i=0; i < finalProductsListStr.size(); i++) {
-            optimizedExpression += finalProductsListStr.get(i);
-            if (i < (finalProductsListStr.size()-1))
+        for (int i=0; i < finalProductsList.size(); i++) {
+            optimizedExpression += finalProductsList.get(i);
+            if (i < (finalProductsList.size()-1))
                 optimizedExpression += " + ";
         }
     }
@@ -212,7 +212,7 @@ public final class SumOfProducts extends Tools {
                     
                     if (mtDecimal == pdDecimal) {
                         if (!minTermsList.get(m)
-                            .getProductsListString()
+                            .getProductsList()
                             .contains(productsList.get(p).getLiteralView())) {
                             minTermsList.get(m).addProduct(productsList.get(p).getLiteralView());
                         }
@@ -226,15 +226,15 @@ public final class SumOfProducts extends Tools {
         //Colocar na essentialProductsList todos os
         //produtos que aparecem apenas uma vez em algum mintermo
         //finalProductsList = new ArrayList<>();
-        finalProductsListStr = new ArrayList<>();
+        finalProductsList = new ArrayList<>();
         
         for (int m=0; m < minTermsList.size(); m++) {
             
-            if (minTermsList.get(m).getProductsListString().size() == 1) {
-                String productString = minTermsList.get(m).getProductsListString().get(0);
+            if (minTermsList.get(m).getProductsList().size() == 1) {
+                String productString = minTermsList.get(m).getProductsList().get(0);
                 
-                if (!finalProductsListStr.contains(productString)) {
-                    finalProductsListStr.add(productString);
+                if (!finalProductsList.contains(productString)) {
+                    finalProductsList.add(productString);
                 }
             }
         }
@@ -245,11 +245,11 @@ public final class SumOfProducts extends Tools {
     public void setIsCovered() {
         clearAllCovered();
         
-        for (int e=0; e < finalProductsListStr.size(); e++) {
-            String product = finalProductsListStr.get(e);
+        for (int e=0; e < finalProductsList.size(); e++) {
+            String product = finalProductsList.get(e);
             
             for (int m=0; m < minTermsList.size(); m++) {
-                if (minTermsList.get(m).getProductsListString().contains(product)) {
+                if (minTermsList.get(m).getProductsList().contains(product)) {
                     minTermsList.get(m).setIsCovered(true);
                 }
             }
@@ -278,8 +278,8 @@ public final class SumOfProducts extends Tools {
             return;
         }
         
-        ArrayList<String> finalListBackup = (ArrayList) finalProductsListStr.clone();
-        ArrayList<String> finalListCandidate = (ArrayList) finalProductsListStr.clone();
+        ArrayList<String> finalListBackup = (ArrayList) finalProductsList.clone();
+        ArrayList<String> finalListCandidate = (ArrayList) finalProductsList.clone();
         int smaller = getCandidateProductsIndexes().size();
         int addedProducts;
         
@@ -290,7 +290,7 @@ public final class SumOfProducts extends Tools {
             
             if (addedProducts < smaller) {
                 smaller = addedProducts;
-                finalListCandidate = (ArrayList) finalProductsListStr.clone();
+                finalListCandidate = (ArrayList) finalProductsList.clone();
             }
             
             if (addedProducts == 1) {
@@ -302,12 +302,12 @@ public final class SumOfProducts extends Tools {
                 return;
             }
             else {
-                finalProductsListStr = (ArrayList) finalListBackup.clone();
+                finalProductsList = (ArrayList) finalListBackup.clone();
             }
             
         }
         
-        finalProductsListStr = (ArrayList) finalListCandidate.clone();
+        finalProductsList = (ArrayList) finalListCandidate.clone();
     }
     
     public int completeFinalListCandidate(int candidate, int smaller) {
@@ -317,8 +317,8 @@ public final class SumOfProducts extends Tools {
             int p = permutations.get(candidate).get(r);
             String productString = productsList.get(p).getLiteralView();
             
-            if (!finalProductsListStr.contains(productString)) {
-                finalProductsListStr.add(productString);
+            if (!finalProductsList.contains(productString)) {
+                finalProductsList.add(productString);
                 addedProductsCount++;
                 
                 if (addedProductsCount >= smaller) {
@@ -353,7 +353,7 @@ public final class SumOfProducts extends Tools {
         for (int p=0; p < productsList.size(); p++) {
             String productString = productsList.get(p).getLiteralView();
             
-            if (!finalProductsListStr.contains(productString)) {
+            if (!finalProductsList.contains(productString)) {
                 indexes.add(p);
             }
         }
