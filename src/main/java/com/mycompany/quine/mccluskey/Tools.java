@@ -22,7 +22,7 @@ public class Tools {
             
             if (Character.isAlphabetic(lit.charAt(c))){
                 
-                if (lit.charAt(c) != getAlphabetChar(pos)) {
+                while (lit.charAt(c) != getAlphabetChar(pos)) {
                     strBin += "_";
                     pos++;
                 }
@@ -459,6 +459,15 @@ public class Tools {
             }
         }
         return expression;
+    }
+    
+    public static boolean isDumb(ArrayList<MinTerm> mt) {
+        for (int i=0; i < mt.size(); i++) {
+            if (i != mt.get(i).getDecimalView()) {
+                return false;
+            }
+        }
+        return true;
     }
 
 }

@@ -96,6 +96,13 @@ public class QuineMcCluskey extends Tools{
                 writer.print(exp.getProductsList().get(i).getLiteralView());
             }
             
+            if (isDumb(exp.getMinTermsList())) {
+                print ("\nDumb expression: use a WIRE!\n\n");
+                writer.print ("\n\nDumb expression: use a WIRE!\n\n");
+                writer.close();
+                System.exit(0);
+            }
+            
 /////////////////////////////////////////////////////
             exp.mergePrimeImplicants(10);
 /////////////////////////////////////////////////////

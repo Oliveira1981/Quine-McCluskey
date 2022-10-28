@@ -99,7 +99,7 @@ public final class SumOfProducts extends Tools {
                 .add(new MinTerm(productsList
                     .get(productsList.size()-1)
                         .getMinTermsList().get(0), numberOfVars));
-            
+            //print("\n"+minTermsList.get(minTermsList.size()-1).getDecimalView());
             begin = end+1;
             if (begin >= inputExpression.length())
                 break;
@@ -108,14 +108,14 @@ public final class SumOfProducts extends Tools {
     }
     
     public void sortByOnesCount() {
-        for(int i=1; i<productsList.size(); i++) {
+        for(int i=1; i < productsList.size(); i++) {
             int count_k = productsList.get(i).getOnesCount();
             
             if(count_k < productsList.get(i-1).getOnesCount()) {
                 int j = i;
                 do {
                     j--;
-                    if (j<1) break;
+                    if (j < 1) break;
                 } while(count_k < productsList.get(j-1).getOnesCount());
                 productsList.add(j, productsList.remove(i));
             }
@@ -132,7 +132,6 @@ public final class SumOfProducts extends Tools {
     }
     
     public void mergePrimeImplicants(int limit) {
-        //print (".");
         boolean primesWereFound = false;
         auxProductsList = new ArrayList<>();
         
