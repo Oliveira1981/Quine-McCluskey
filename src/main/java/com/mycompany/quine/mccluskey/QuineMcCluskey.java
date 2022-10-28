@@ -104,7 +104,7 @@ public class QuineMcCluskey extends Tools{
             }
             
 /////////////////////////////////////////////////////
-            exp.mergePrimeImplicants(10);
+            exp.mergePrimeImplicants(4);
 /////////////////////////////////////////////////////
     
             writer.print("\n\nImplicantes primos mesclados:\n");
@@ -127,9 +127,9 @@ public class QuineMcCluskey extends Tools{
             writer.print ("\nMintermos e seus produtos (Tabela de Cobertura):");
             for (int i=0; i < exp.getMinTermsList().size(); i++) {
                 writer.print("\n"+exp.getMinTermsList().get(i).getDecimalView()+" -");
-                for (int p=0; p < exp.getMinTermsList().get(i).getProductsList().size(); p++) {
-                    writer.print("\t\t"+exp.getMinTermsList().get(i).getProductsList().get(p).getLiteralView());//.get(0));
-                    if (exp.getMinTermsList().get(i).getProductsList().get(p).getLiteralView().length() < 8)
+                for (int p=0; p < exp.getMinTermsList().get(i).getProductsListString().size(); p++) {
+                    writer.print("\t\t"+exp.getMinTermsList().get(i).getProductsListString().get(p));
+                    if (exp.getMinTermsList().get(i).getProductsListString().get(p).length() < 8)
                         writer.print("\t");
                 }
             }
@@ -139,8 +139,8 @@ public class QuineMcCluskey extends Tools{
 /////////////////////////////////////////////////////
     
             writer.print("\n\nProdutos Essenciais:\n> ");
-            for (int i=0; i < exp.getFinalProductsList().size(); i++) {
-                writer.print(exp.getFinalProductsList().get(i).getLiteralView()+"\t");
+            for (int i=0; i < exp.getFinalProductsListStr().size(); i++) {
+                writer.print(exp.getFinalProductsListStr().get(i)+"\t");
             }
             
 /////////////////////////////////////////////////////
@@ -168,8 +168,8 @@ public class QuineMcCluskey extends Tools{
 /////////////////////////////////////////////////////
     
             writer.print("\n\nProdutos Finais:\n> ");
-            for (int i=0; i < exp.getFinalProductsList().size(); i++) {
-                writer.print(exp.getFinalProductsList().get(i).getLiteralView()+"\t");
+            for (int i=0; i < exp.getFinalProductsListStr().size(); i++) {
+                writer.print(exp.getFinalProductsListStr().get(i)+"\t");
             }
             
 /////////////////////////////////////////////////////

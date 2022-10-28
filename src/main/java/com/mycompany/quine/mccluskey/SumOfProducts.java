@@ -15,7 +15,7 @@ public final class SumOfProducts extends Tools {
     private ArrayList<Product>            productsList; // Linhas da coveringTable
     private ArrayList<Product>         auxProductsList;
     private ArrayList<MinTerm>            minTermsList; // Colunas da coveringTable
-    private ArrayList<Product>       finalProductsList;
+    private ArrayList<String>     finalProductsListStr;
     private ArrayList<ArrayList<Integer>> permutations;
     private int                           numberOfVars;
     
@@ -67,8 +67,8 @@ public final class SumOfProducts extends Tools {
         return minTermsList;
     }
     
-    public ArrayList<Product> getFinalProductsList() {
-        return finalProductsList;
+    public ArrayList<String> getFinalProductsListStr() {
+        return finalProductsListStr;
     }
     
     public int getNumberOfVars() {
@@ -99,7 +99,7 @@ public final class SumOfProducts extends Tools {
                 .add(new MinTerm(productsList
                     .get(productsList.size()-1)
                         .getMinTermsList().get(0), numberOfVars));
-            //print("\n"+minTermsList.get(minTermsList.size()-1).getDecimalView());
+            
             begin = end+1;
             if (begin >= inputExpression.length())
                 break;
@@ -184,8 +184,7 @@ public final class SumOfProducts extends Tools {
             auxProductsList.add(productsList.get(productsList.size()-1));
         }
         
-        if (primesWereFound && limit > 0) {
-            //AJUSTAR CASOS EM QUE ENCONTRA PRIMOS ETERNAMENTE
+        if (primesWereFound && numberOfVars > 1 && limit > 0) {
             productsList = auxProductsList;
             resetHasPrime();
             mergePrimeImplicants(--limit);
@@ -195,9 +194,9 @@ public final class SumOfProducts extends Tools {
     public void setOptimizedExpression() {
         optimizedExpression = "";
         
-        for (int i=0; i < finalProductsList.size(); i++) {
-            optimizedExpression += finalProductsList.get(i).getLiteralView();
-            if (i < (finalProductsList.size()-1))
+        for (int i=0; i < finalProductsListStr.size(); i++) {
+            optimizedExpression += finalProductsListStr.get(i);
+            if (i < (finalProductsListStr.size()-1))
                 optimizedExpression += " + ";
         }
     }
@@ -205,15 +204,18 @@ public final class SumOfProducts extends Tools {
     public void fillMinTermsList() {
         for (int m=0; m < minTermsList.size(); m++) {
             
-            for (int p=0; p<productsList.size(); p++) {
+            for (int p=0; p < productsList.size(); p++) {
                 
-                for (int d=0; d<productsList.get(p).getMinTermsList().size(); d++) {
+                for (int d=0; d < productsList.get(p).getMinTermsList().size(); d++) {
                     int mtDecimal = minTermsList.get(m).getDecimalView();
                     int pdDecimal = productsList.get(p).getMinTermsList().get(d);
                     
                     if (mtDecimal == pdDecimal) {
-                        Product product_NEW = productsList.get(p);
-                        minTermsList.get(m).addProduct(product_NEW);
+                        if (!minTermsList.get(m)
+                            .getProductsListString()
+                            .contains(productsList.get(p).getLiteralView())) {
+                            minTermsList.get(m).addProduct(productsList.get(p).getLiteralView());
+                        }
                     }
                 }
             }
@@ -223,15 +225,16 @@ public final class SumOfProducts extends Tools {
     public void essentialProductsToFinalList() {
         //Colocar na essentialProductsList todos os
         //produtos que aparecem apenas uma vez em algum mintermo
-        finalProductsList = new ArrayList<>();
+        //finalProductsList = new ArrayList<>();
+        finalProductsListStr = new ArrayList<>();
         
         for (int m=0; m < minTermsList.size(); m++) {
             
-            if (minTermsList.get(m).getProductsList().size() == 1) {
-                Product product = minTermsList.get(m).getProductsList().get(0);
+            if (minTermsList.get(m).getProductsListString().size() == 1) {
+                String productString = minTermsList.get(m).getProductsListString().get(0);
                 
-                if (!finalProductsList.contains(product)) {
-                    finalProductsList.add(product);
+                if (!finalProductsListStr.contains(productString)) {
+                    finalProductsListStr.add(productString);
                 }
             }
         }
@@ -240,15 +243,13 @@ public final class SumOfProducts extends Tools {
     }
     
     public void setIsCovered() {
-        //Em todos os mintermos em que os produtos essenciais aparecem,
-        //marcar isCovered = true
         clearAllCovered();
         
-        for (int e=0; e < finalProductsList.size(); e++) {
-            Product product = finalProductsList.get(e);
+        for (int e=0; e < finalProductsListStr.size(); e++) {
+            String product = finalProductsListStr.get(e);
             
             for (int m=0; m < minTermsList.size(); m++) {
-                if (minTermsList.get(m).getProductsList().contains(product)) {
+                if (minTermsList.get(m).getProductsListString().contains(product)) {
                     minTermsList.get(m).setIsCovered(true);
                 }
             }
@@ -277,8 +278,8 @@ public final class SumOfProducts extends Tools {
             return;
         }
         
-        ArrayList<Product> finalListBackup = (ArrayList) finalProductsList.clone();
-        ArrayList<Product> finalListCandidate = (ArrayList) finalProductsList.clone();
+        ArrayList<String> finalListBackup = (ArrayList) finalProductsListStr.clone();
+        ArrayList<String> finalListCandidate = (ArrayList) finalProductsListStr.clone();
         int smaller = getCandidateProductsIndexes().size();
         int addedProducts;
         
@@ -289,7 +290,7 @@ public final class SumOfProducts extends Tools {
             
             if (addedProducts < smaller) {
                 smaller = addedProducts;
-                finalListCandidate = (ArrayList) finalProductsList.clone();
+                finalListCandidate = (ArrayList) finalProductsListStr.clone();
             }
             
             if (addedProducts == 1) {
@@ -301,12 +302,12 @@ public final class SumOfProducts extends Tools {
                 return;
             }
             else {
-                finalProductsList = (ArrayList) finalListBackup.clone();
+                finalProductsListStr = (ArrayList) finalListBackup.clone();
             }
             
         }
         
-        finalProductsList = (ArrayList) finalListCandidate.clone();
+        finalProductsListStr = (ArrayList) finalListCandidate.clone();
     }
     
     public int completeFinalListCandidate(int candidate, int smaller) {
@@ -314,10 +315,10 @@ public final class SumOfProducts extends Tools {
         
         for (int r=0; r < permutations.get(candidate).size(); r++) {
             int p = permutations.get(candidate).get(r);
-            Product product = productsList.get(p);
+            String productString = productsList.get(p).getLiteralView();
             
-            if (!finalProductsList.contains(product)) {
-                finalProductsList.add(product);
+            if (!finalProductsListStr.contains(productString)) {
+                finalProductsListStr.add(productString);
                 addedProductsCount++;
                 
                 if (addedProductsCount >= smaller) {
@@ -350,9 +351,9 @@ public final class SumOfProducts extends Tools {
         ArrayList<Integer> indexes = new ArrayList<>();
         
         for (int p=0; p < productsList.size(); p++) {
-            Product product = productsList.get(p);
+            String productString = productsList.get(p).getLiteralView();
             
-            if (!finalProductsList.contains(product)) {
+            if (!finalProductsListStr.contains(productString)) {
                 indexes.add(p);
             }
         }
