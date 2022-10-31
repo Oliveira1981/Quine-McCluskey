@@ -32,12 +32,6 @@ public final class GUI {
     
     public void showDialog(String template) throws Exception {
         
-        String[] optionsToChoose = {
-            "Literal",
-            "Decimal",
-            "Binário",
-        };
-        
         String[] templates = {
             "2+4+6+8+9+10+12+13+15",
             "ABCD+!A!BCD+A!B!C!D+!ABCD",
@@ -53,40 +47,19 @@ public final class GUI {
         };
         
         UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
-        Font font = new Font("Segoe UI", Font.BOLD, 13);
         JPanel myPanel = new JPanel(new GridLayout(0,1));
         
-        //JLabel textFieldLabel = new JLabel("Expressão");
-        //JTextField jTextField = new JTextField("",20);
-        //JLabel comboBoxLabel = new JLabel("Tipo");
         JLabel comboBoxLabel = new JLabel("Expressão");
-        //JComboBox<String> jComboBox = new JComboBox<>(optionsToChoose);
+        Font font = new Font("Segoe UI", Font.BOLD, 13);
+        comboBoxLabel.setFont(font);
         JComboBox<String> jComboBox = new JComboBox<>(templates);
         jComboBox.setEditable(true);
         
-        //textFieldLabel.setFont(font);
-        comboBoxLabel.setFont(font);
-        
         myPanel.add(comboBoxLabel);
         myPanel.add(jComboBox);
-        //myPanel.add(Box.createHorizontalStrut(1));
-        //myPanel.add(textFieldLabel);
         
-        //expression = (String) JOptionPane.showInputDialog(myFrame, "Expressão", "Entrada", JOptionPane.PLAIN_MESSAGE, null, templates, templates[0]);
-        //JOptionPane.showMessageDialog(null, jComboBox);
         JOptionPane.showMessageDialog(null, myPanel, "Entrada", -1, null);
         expression = (String) jComboBox.getSelectedItem();
-        
-        //expression = JOptionPane.showInputDialog(null, myPanel, template);
-        /*expression = (String) JOptionPane.showInputDialog(
-                null,
-                myPanel,
-                "Entrada",
-                JOptionPane.PLAIN_MESSAGE,
-                null,
-                null,
-                template
-        );*/
         inputFormat = String.valueOf(jComboBox.getSelectedItem());
     }
 
