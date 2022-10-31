@@ -48,7 +48,8 @@ public final class GUI {
             "1111+0011+1000+0111",
             "1111+0011+1010+0111",
             "111+11+101+01",
-            "15+3+10+7"
+            "15+3+10+7",
+            "0xB754"
         };
         
         UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());

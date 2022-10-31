@@ -104,7 +104,7 @@ public class QuineMcCluskey extends Tools{
             }
             
 /////////////////////////////////////////////////////
-            exp.mergePrimeImplicants(4);
+            exp.mergePrimeImplicants(10);
 /////////////////////////////////////////////////////
     
             writer.print("\n\nImplicantes primos mesclados:\n");
