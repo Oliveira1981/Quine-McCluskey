@@ -1,5 +1,6 @@
 package com.mycompany.quine.mccluskey;
 
+import java.io.PrintWriter;
 import java.util.ArrayList;
 
 /**
@@ -364,6 +365,12 @@ public class Tools {
     
     public static void print(Object obj) {
         System.out.print(obj);
+    }
+    
+    public static Object print(Object obj, PrintWriter w) {
+        //System.out.print(obj);
+        w.print(obj);
+        return obj;
     }
     
     public static void printarr(ArrayList array) {

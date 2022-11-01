@@ -1,5 +1,6 @@
 package com.mycompany.quine.mccluskey;
 
+import java.io.PrintWriter;
 import java.util.ArrayList;
 import java.util.Collections;
 
@@ -390,5 +391,5 @@ public final class SumOfProducts extends Tools {
     public String getOptimizedExpression() {
         return optimizedExpression;
     }
-
+    
 }

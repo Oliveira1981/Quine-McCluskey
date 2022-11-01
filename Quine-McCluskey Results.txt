@@ -1,11 +1,185 @@
-========================================================================
 Formato de Entrada:
- - Decimal
+> Literal
 
 Expressão:
- - 2+4+6+8+9+10+12+13+15
+> abc+cbd
 
-Variáveis: 4
+Variáveis:
+> 4
+
+Mintermos por número de 1s:
+[14]	111_	ABC
+[7]	_111	BCD
+
+Implicantes primos mesclados:
+-14-		111_ 	ABC
+-7-		_111 	BCD
+
+Mintermos e seus produtos (Tabela de Cobertura):
+14 -		ABC	
+7 -		BCD	
+
+Produtos Essenciais:
+> ABC	BCD	
+
+Mintermo 14 está coberto.
+Mintermo 7 está coberto.
+
+Produtos Finais:
+> ABC	BCD	
+
+Expressão otimizada:
+> ABC + BCD
+
+Fim do resultado parcial.
+==================================================
+
+Expressão:
+> a2
+
+Expressão inconsistente.
+
+Fim do resultado parcial.
+==================================================
+
+Formato de Entrada:
+> Binário
+
+Expressão:
+> 1101+0111+0101
+
+Variáveis:
+> 4
+
+Mintermos por número de 1s:
+[5]	0101	!A* B*!C* D
+[13]	1101	 A* B*!C* D
+[7]	0111	!A* B* C* D
+
+Implicantes primos mesclados:
+-5-13-		_101 	 B*!C* D
+-5-7-		01_1 	!A* B* D
+
+Mintermos e seus produtos (Tabela de Cobertura):
+13 -		 B*!C* D
+7 -		!A* B* D
+5 -		 B*!C* D		!A* B* D
+
+Produtos Essenciais:
+>  B*!C* D	!A* B* D	
+
+Mintermo 13 está coberto.
+Mintermo 7 está coberto.
+Mintermo 5 está coberto.
+
+Produtos Finais:
+>  B*!C* D	!A* B* D	
+
+Expressão otimizada:
+>  B*!C* D + !A* B* D
+
+Fim do resultado parcial.
+==================================================
+
+Formato de Entrada:
+> Decimal
+
+Expressão:
+> 0+1+2+3+4+5+6+7
+
+Variáveis:
+> 3
+
+Mintermos por número de 1s:
+[0]	000	!A*!B*!C
+[1]	001	!A*!B* C
+[2]	010	!A* B*!C
+[4]	100	 A*!B*!C
+[3]	011	!A* B* C
+[5]	101	 A*!B* C
+[6]	110	 A* B*!C
+[7]	111	 A* B* C
+
+Expressão redundante:
+> não use portas lógicas, ligue em VDD.
+
+Fim do resultado parcial.
+==================================================
+
+Formato de Entrada:
+> Hexadecimal
+
+Expressão original:
+> 0xA2B2
+
+Formato Convertido:
+> Decimal
+
+Expressão:
+> 1+4+5+7+9+13+15
+
+Variáveis:
+> 4
+
+Mintermos por número de 1s:
+[1]	0001	!A*!B*!C* D
+[4]	0100	!A* B*!C*!D
+[5]	0101	!A* B*!C* D
+[9]	1001	 A*!B*!C* D
+[7]	0111	!A* B* C* D
+[13]	1101	 A* B*!C* D
+[15]	1111	 A* B* C* D
+
+Implicantes primos mesclados:
+-1-5-9-13	__01 	!C* D
+-4-5-		010_ 	!A* B*!C
+-5-7-13-15	_1_1 	 B* D
+
+Mintermos e seus produtos (Tabela de Cobertura):
+1 -		!C* D	
+4 -		!A* B*!C
+5 -		!C* D			!A* B*!C		 B* D	
+7 -		 B* D	
+9 -		!C* D	
+13 -		!C* D			 B* D	
+15 -		 B* D	
+
+Produtos Essenciais:
+> !C* D	!A* B*!C	 B* D	
+
+Mintermo 1 está coberto.
+Mintermo 4 está coberto.
+Mintermo 5 está coberto.
+Mintermo 7 está coberto.
+Mintermo 9 está coberto.
+Mintermo 13 está coberto.
+Mintermo 15 está coberto.
+
+Produtos Finais:
+> !C* D	!A* B*!C	 B* D	
+
+Expressão otimizada:
+> !C* D + !A* B*!C +  B* D
+
+Fim do resultado parcial.
+==================================================
+
+Expressão:
+> 
+
+Expressão inconsistente.
+
+Fim do resultado parcial.
+==================================================
+
+Formato de Entrada:
+> Decimal
+
+Expressão:
+> 2+4+6+8+9+10+12+13+15
+
+Variáveis:
+> 4
 
 Mintermos por número de 1s:
 [2]	0010	!A*!B* C*!D
@@ -39,7 +213,7 @@ Mintermos e seus produtos (Tabela de Cobertura):
 15 -		 A* B* D
 
 Produtos Essenciais:
- A*!C	 A* B* D	
+>  A*!C	 A* B* D	
 
 Mintermo 2  - 
 Mintermo 4  - 
@@ -52,8 +226,13 @@ Mintermo 13 está coberto.
 Mintermo 15 está coberto.
 
 Produtos Finais:
- A*!C	 A* B* D	!B* C*!D	!A* B*!D	
+>  A*!C	 A* B* D	!B* C*!D	!A* B*!D	
 
 Expressão otimizada:
- A*!C +  A* B* D + !B* C*!D + !A* B*!D
+>  A*!C +  A* B* D + !B* C*!D + !A* B*!D
 
+Fim do resultado parcial.
+==================================================
+
+Fim dos resultados.
+==================================================
