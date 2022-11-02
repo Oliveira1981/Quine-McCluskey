@@ -506,5 +506,15 @@ public class Tools {
         
         return false;
     }
+    
+    public static boolean contains(String bitString, ArrayList<Product> productsList) {
+        
+        for (int i=0; i < productsList.size(); i++) {
+            if (productsList.get(i).getBinaryView().equals(bitString)) {
+                return true;
+            }
+        }
+        return false;
+    }
 
 }

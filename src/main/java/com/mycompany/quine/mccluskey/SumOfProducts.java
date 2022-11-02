@@ -157,17 +157,19 @@ public final class SumOfProducts extends Tools {
                         else
                             bitString += productsList.get(i).getBinaryView().charAt(c);
                     }
-                    auxProductsList.add(new Product("Binário", bitString, numberOfVars));
-                    auxProductsList.get(auxProductsList.size()-1).getMinTermsList().clear();
-                    
-                    for(int d=0; d < productsList.get(i).getMinTermsList().size(); d++) {
-                        auxProductsList.get(auxProductsList.size()-1)
-                            .addMinTerm(productsList.get(i).getMinTermsList().get(d));
-                    }
-                    
-                    for(int d=0; d < productsList.get(j).getMinTermsList().size(); d++) {
-                        auxProductsList.get(auxProductsList.size()-1)
-                            .addMinTerm(productsList.get(j).getMinTermsList().get(d));
+                    if (!contains(bitString, auxProductsList)) {
+                        auxProductsList.add(new Product("Binário", bitString, numberOfVars));
+                        auxProductsList.get(auxProductsList.size()-1).getMinTermsList().clear();
+                        
+                        for(int d=0; d < productsList.get(i).getMinTermsList().size(); d++) {
+                            auxProductsList.get(auxProductsList.size()-1)
+                                .addMinTerm(productsList.get(i).getMinTermsList().get(d));
+                        }
+                        
+                        for(int d=0; d < productsList.get(j).getMinTermsList().size(); d++) {
+                            auxProductsList.get(auxProductsList.size()-1)
+                                .addMinTerm(productsList.get(j).getMinTermsList().get(d));
+                        }
                     }
                 }
                 j++;
