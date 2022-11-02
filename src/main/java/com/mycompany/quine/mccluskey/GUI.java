@@ -279,7 +279,7 @@ public final class GUI extends Tools implements KeyListener {
                 result += print(exp.getProductsList().get(i).getLiteralView(), writer);
             }
             
-            if (isDumb(exp.getMinTermsList())) {
+            if (isDumb(exp.getMinTermsList(), exp.getNumberOfVars())) {
                 result += print ("\n\nExpressão redundante:\n> não use portas lógicas, ligue em VDD.\n", writer);
                 result += print("\nFim do resultado parcial.\n", writer);
                 result += print("==================================================\n\n", writer);

@@ -472,7 +472,11 @@ public class Tools {
         return expression;
     }
     
-    public static boolean isDumb(ArrayList<MinTerm> mt) {
+    public static boolean isDumb(ArrayList<MinTerm> mt, int numberOfVars) {
+        int range = (int) Math.pow(2, numberOfVars);
+        if (range != mt.size()) {
+            return false;
+        }
         for (int i=0; i < mt.size(); i++) {
             if (i != mt.get(i).getDecimalView()) {
                 return false;
