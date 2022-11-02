@@ -33,12 +33,10 @@ public final class GUI extends Tools implements KeyListener {
     
     private String inputFormat;
     private String expression;
-    //JFrame myFrame = new JFrame("Quine-McCluskey");
     
     public GUI(){
         inputFormat = "";
         expression  = "";
-        //myFrame.addKeyListener(this);
     }
     
     public String getInputFormat(){
@@ -67,8 +65,6 @@ public final class GUI extends Tools implements KeyListener {
         
         UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
         JFrame myFrame = new JFrame("Quine-McCluskey");
-        //myFrame.addKeyListener(this);
-        //myFrame.setFocusable(true);
         myFrame.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
         myFrame.setMinimumSize(new Dimension(650,350));
         
@@ -232,11 +228,6 @@ public final class GUI extends Tools implements KeyListener {
         
         inputFormat = getInputFormat();
         
-        if(allExpressions == null || allExpressions.length() == 0) {
-            writer.close();
-            System.exit(0);
-        }
-        
         allExpressions = removeSpacesFromExpression(allExpressions);
         
         int begin = 0;
@@ -392,18 +383,18 @@ public final class GUI extends Tools implements KeyListener {
         writer.close();
         return result;
     }
-
+    
     @Override
     public void keyTyped(KeyEvent e) {
     }
-
+    
     @Override
     public void keyPressed(KeyEvent e) {
         if (e.getKeyCode() == KeyEvent.VK_ESCAPE) {
             System.exit(0);
         }
     }
-
+    
     @Override
     public void keyReleased(KeyEvent e) {
     }
