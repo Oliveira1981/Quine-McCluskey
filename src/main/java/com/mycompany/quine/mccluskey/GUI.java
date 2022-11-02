@@ -8,6 +8,8 @@ import java.awt.GridBagLayout;
 import java.awt.Toolkit;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.KeyEvent;
+import java.awt.event.KeyListener;
 import java.io.PrintWriter;
 import java.util.ArrayList;
 import java.util.logging.Level;
@@ -20,20 +22,23 @@ import javax.swing.JFrame;
 import javax.swing.JButton;
 import javax.swing.JScrollPane;
 import javax.swing.JTextArea;
+import javax.swing.JTextField;
 import javax.swing.WindowConstants;
 
 /**
 *
  * @author Rodrigo da Rosa
  */
-public final class GUI extends Tools {
+public final class GUI extends Tools implements KeyListener {
     
     private String inputFormat;
     private String expression;
+    //JFrame myFrame = new JFrame("Quine-McCluskey");
     
     public GUI(){
         inputFormat = "";
         expression  = "";
+        //myFrame.addKeyListener(this);
     }
     
     public String getInputFormat(){
@@ -44,8 +49,7 @@ public final class GUI extends Tools {
         return expression;
     }
     
-    public void showDialog(String template) throws Exception {
-        
+    public void showWindow() throws Exception {
         String[] templates = {
             "abc+cbd;a2;1101+0111+0101;0+1+2+3+4+5+6+7;0xA2B2;;2+4+6+8+9+10+12+13+15",
             "2+4+6+8+9+10+12+13+15",
@@ -62,13 +66,16 @@ public final class GUI extends Tools {
         };
         
         UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
+        JFrame myFrame = new JFrame("Quine-McCluskey");
+        //myFrame.addKeyListener(this);
+        //myFrame.setFocusable(true);
+        myFrame.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
+        myFrame.setMinimumSize(new Dimension(650,350));
+        
         GridBagLayout grid = new GridBagLayout();
         JPanel vPanel = new JPanel(grid);
         GridBagConstraints c = new GridBagConstraints();
         c.fill = GridBagConstraints.HORIZONTAL;
-        JFrame myFrame = new JFrame("Quine-McCluskey");
-        myFrame.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
-        myFrame.setMinimumSize(new Dimension(650,350));
         
         Font font = new Font("Segoe UI", Font.BOLD, 13);
         
@@ -106,6 +113,9 @@ public final class GUI extends Tools {
         
         JComboBox<String> jComboBox = new JComboBox<>(templates);
         jComboBox.setEditable(true);
+        JTextField editor = (JTextField) jComboBox.getEditor().getEditorComponent();
+        editor.addKeyListener(this);
+        jComboBox.setFocusable(true);
 	c.fill = GridBagConstraints.HORIZONTAL;
 	c.gridx = 1;
 	c.gridy = 2;
@@ -116,6 +126,8 @@ public final class GUI extends Tools {
         vPanel.add(jComboBox, c);
         
         JButton okButton = new JButton("Executar");
+        okButton.addKeyListener(this);
+        okButton.setFocusable(true);
         okButton.setBackground(new Color(11, 188, 255));
         okButton.setForeground(new Color(11, 111, 222));
 	c.fill = GridBagConstraints.HORIZONTAL;
@@ -151,6 +163,8 @@ public final class GUI extends Tools {
         vPanel.add(resultLabel, c);
         
         JTextArea textArea = new JTextArea();
+        textArea.addKeyListener(this);
+        textArea.setFocusable(true);
         textArea.setLineWrap(true);
         textArea.setEditable(false);
         textArea.setBackground(new Color(44, 44, 44));
@@ -201,9 +215,8 @@ public final class GUI extends Tools {
             public void actionPerformed(ActionEvent e) {
                 try {
                     textArea.setText(
-                        makeItRain((String) jComboBox.getSelectedItem())
+                        optimizeExpressions((String) jComboBox.getSelectedItem())
                     );
-                    textArea.setCaretPosition(textArea.getDocument().getLength());
                 } catch (Exception ex) {
                     Logger.getLogger(GUI.class.getName()).log(Level.SEVERE, null, ex);
                 }
@@ -213,7 +226,7 @@ public final class GUI extends Tools {
         inputFormat = String.valueOf(jComboBox.getSelectedItem());
     }
     
-    public String makeItRain(String allExpressions) throws Exception {
+    public String optimizeExpressions(String allExpressions) throws Exception {
         PrintWriter writer = new PrintWriter("Quine-McCluskey Results.txt", "UTF-8");
         String result  = "";
         
@@ -288,23 +301,17 @@ public final class GUI extends Tools {
 /////////////////////////////////////////////////////
     
             result += print("\n\nImplicantes primos mesclados:\n", writer);
-            //r += ("\n\nImplicantes primos mesclados:\n");
             for(int i=0; i < exp.getProductsList().size(); i++) {
                 int q = 0;
                 for(; q < exp.getProductsList().get(i).getMinTermsList().size(); q++) {
                     result += print("-"+exp.getProductsList().get(i).getMinTermsList().get(q), writer);
-                    //r += ("-"+exp.getProductsList().get(i).getMinTermsList().get(q));
                 }
                 if(q < 3) {
                     result += print("-\t", writer);
-                    //r += ("-\t");
                 }
                 result += print("\t", writer);
                 result += print(exp.getProductsList().get(i).getBinaryView()+" \t", writer);
                 result += print(exp.getProductsList().get(i).getLiteralView()+"\n", writer);
-                //r += ("\t");
-                //r += (exp.getProductsList().get(i).getBinaryView()+" \t");
-                //r += (exp.getProductsList().get(i).getLiteralView()+"\n");
             }
             
 /////////////////////////////////////////////////////
@@ -312,16 +319,12 @@ public final class GUI extends Tools {
 /////////////////////////////////////////////////////
     
             result += print ("\nMintermos e seus produtos (Tabela de Cobertura):", writer);
-            //r += ("\nMintermos e seus produtos (Tabela de Cobertura):");
             for (int i=0; i < exp.getMinTermsList().size(); i++) {
                 result += print("\n"+exp.getMinTermsList().get(i).getDecimalView()+" -", writer);
-                //r += ("\n"+exp.getMinTermsList().get(i).getDecimalView()+" -");
                 for (int p=0; p < exp.getMinTermsList().get(i).getProductsList().size(); p++) {
                     result += print("\t\t"+exp.getMinTermsList().get(i).getProductsList().get(p), writer);
-                    //r += ("\t\t"+exp.getMinTermsList().get(i).getProductsList().get(p));
                     if (exp.getMinTermsList().get(i).getProductsList().get(p).length() < 8) {
                         result += print("\t", writer);
-                        //r += ("\t");
                     }
                 }
             }
@@ -331,27 +334,21 @@ public final class GUI extends Tools {
 /////////////////////////////////////////////////////
     
             result += print("\n\nProdutos Essenciais:\n> ", writer);
-            //r += ("\n\nProdutos Essenciais:\n> ");
             for (int i=0; i < exp.getFinalProductsList().size(); i++) {
                 result += print(exp.getFinalProductsList().get(i)+"\t", writer);
-                //r += (exp.getFinalProductsList().get(i)+"\t");
             }
             
 /////////////////////////////////////////////////////
             ArrayList<Integer> indexes = exp.getCandidateProductsIndexes();
 /////////////////////////////////////////////////////
             result += print("\n", writer);
-            //r += "\n";
             for (int i=0; i < exp.getMinTermsList().size(); i++) {
                 result += print("\nMintermo "+exp.getMinTermsList().get(i).getDecimalView()+" ", writer);
-                //r += ("\nMintermo "+exp.getMinTermsList().get(i).getDecimalView()+" ");
                 if (exp.getMinTermsList().get(i).isIsCovered()) {
                     result += print("está coberto.", writer);
-                    //r += ("está coberto.");
                 }
                 else {
                     result += print(" - ", writer);
-                    //r += (" - ");
                 }
             }
             
@@ -368,10 +365,8 @@ public final class GUI extends Tools {
 /////////////////////////////////////////////////////
     
             result += print("\n\nProdutos Finais:\n> ", writer);
-            //r += ("\n\nProdutos Finais:\n> ");
             for (int i=0; i < exp.getFinalProductsList().size(); i++) {
                 result += print(exp.getFinalProductsList().get(i)+"\t", writer);
-                //r += (exp.getFinalProductsList().get(i)+"\t");
             }
             
 /////////////////////////////////////////////////////
@@ -380,17 +375,9 @@ public final class GUI extends Tools {
             
             result += print("\n\nExpressão otimizada:\n", writer);
             result += print("> "+exp.getOptimizedExpression()+"\n", writer);
-            //writer.print("\n\nExpressão otimizada:\n");
-            //writer.print("> "+exp.getOptimizedExpression()+"\n");
-            //r += ("\n\nExpressão otimizada:\n");
-            //r += ("> "+exp.getOptimizedExpression()+"\n");
             
             result += print ("\nFim do resultado parcial.\n", writer);
-            //writer.print("\nFim do resultado parcial.\n");
-            //r += "\nFim do resultado parcial.\n";
             result += print("==================================================\n\n", writer);
-            //writer.print("==================================================\n\n");
-            //r += "==================================================\n\n";
             
             begin = end + 1;
             if (begin >= allExpressions.length()) {
@@ -400,14 +387,25 @@ public final class GUI extends Tools {
         while (begin < allExpressions.length());
         
         result += print ("Fim dos resultados.\n", writer);
-        //writer.print("Fim dos resultados.\n");
-        //r += "Fim dos resultados.\n";
         result += print("==================================================\n", writer);
-        //writer.println("==================================================\n");
-        //r += "==================================================\n";
             
         writer.close();
         return result;
+    }
+
+    @Override
+    public void keyTyped(KeyEvent e) {
+    }
+
+    @Override
+    public void keyPressed(KeyEvent e) {
+        if (e.getKeyCode() == KeyEvent.VK_ESCAPE) {
+            System.exit(0);
+        }
+    }
+
+    @Override
+    public void keyReleased(KeyEvent e) {
     }
 
 }
