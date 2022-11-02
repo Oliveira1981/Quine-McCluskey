@@ -22,7 +22,11 @@ public class Tools {
             }
             
             if (Character.isAlphabetic(lit.charAt(c))){
-                
+                if (c > 0) {
+                    if (lit.charAt(c) == lit.charAt(c-1)) {
+                        continue;
+                    }
+                }
                 while (lit.charAt(c) != getAlphabetChar(pos)) {
                     strBin += "_";
                     pos++;

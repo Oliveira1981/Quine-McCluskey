@@ -1,8 +1,5 @@
 package com.mycompany.quine.mccluskey;
 
-import java.io.PrintWriter;
-import java.util.ArrayList;
-
 /**
  *
  * @author Rodrigo da Rosa
