@@ -226,8 +226,7 @@ public final class GUI extends Tools implements KeyListener {
         PrintWriter writer = new PrintWriter("Quine-McCluskey Results.txt", "UTF-8");
         String result  = "";
         
-        inputFormat = getInputFormat();
-        
+        //inputFormat = getInputFormat();
         allExpressions = removeSpacesFromExpression(allExpressions);
         
         int begin = 0;
@@ -240,8 +239,9 @@ public final class GUI extends Tools implements KeyListener {
             expression = allExpressions.substring(begin, end);
             
             inputFormat = detectInputFormat(expression);
-            if (inputFormat.length() == 0 ||
-                inputFormat.equals("ERRO")) {
+            if (inputFormat.length() == 0  ||
+                inputFormat.equals("ERRO") ||
+               (inputFormat.equals("Literal") && hasDuplicate(expression))) {
                 result += print("Expressão:\n> " + expression + "\n", writer);
                 result += print("\nExpressão inconsistente.\n", writer);
                 result += print("\nFim do resultado parcial.\n", writer);

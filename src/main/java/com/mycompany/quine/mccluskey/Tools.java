@@ -484,5 +484,31 @@ public class Tools {
         }
         return true;
     }
+    
+    public static boolean hasDuplicate(String str) {
+        int begin = 0;
+        int end;
+        do {
+            end = str.indexOf('+', begin);
+            if (end < 0) {
+                end = str.length();
+            }
+            String product = str.substring(begin, end);
+            for (int i=0; i < product.length(); i++) {
+                for (int j=i+1; j < product.length(); j++) {
+                    if (product.charAt(i) == product.charAt(j)) {
+                        return true;
+                    }
+                }
+            }
+            begin = end + 1;
+            if (begin >= str.length()) {
+                break;
+            }
+        }
+        while (begin < str.length());
+        
+        return false;
+    }
 
 }
