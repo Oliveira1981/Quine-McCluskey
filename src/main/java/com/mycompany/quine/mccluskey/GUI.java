@@ -242,6 +242,7 @@ public final class GUI extends Tools implements KeyListener {
             if (inputFormat.length() == 0  ||
                 inputFormat.equals("ERRO") ||
                (inputFormat.equals("Literal") && hasDuplicate(expression))) {
+                print(hasDuplicate(expression));
                 result += print("Expressão:\n> " + expression + "\n", writer);
                 result += print("\nExpressão inconsistente.\n", writer);
                 result += print("\nFim do resultado parcial.\n", writer);

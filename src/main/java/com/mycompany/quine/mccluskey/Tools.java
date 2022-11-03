@@ -492,8 +492,10 @@ public class Tools {
             String product = str.substring(begin, end);
             for (int i=0; i < product.length(); i++) {
                 for (int j=i+1; j < product.length(); j++) {
-                    if (product.charAt(i) == product.charAt(j)) {
-                        return true;
+                    if (Character.isAlphabetic(product.charAt(i))) {
+                        if (product.charAt(i) == product.charAt(j)) {
+                            return true;
+                        }
                     }
                 }
             }
