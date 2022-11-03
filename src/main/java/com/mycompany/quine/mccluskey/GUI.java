@@ -66,7 +66,7 @@ public final class GUI extends Tools implements KeyListener {
         UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
         JFrame myFrame = new JFrame("Quine-McCluskey");
         myFrame.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
-        myFrame.setMinimumSize(new Dimension(650,350));
+        myFrame.setMinimumSize(new Dimension(650,400));
         
         GridBagLayout grid = new GridBagLayout();
         JPanel vPanel = new JPanel(grid);
@@ -75,128 +75,265 @@ public final class GUI extends Tools implements KeyListener {
         
         Font font = new Font("Segoe UI", Font.BOLD, 13);
         
-        JLabel vSpaceUp = new JLabel(" ");
-	c.fill = GridBagConstraints.HORIZONTAL;
+        JLabel space1 = new JLabel(" ");
+	c.fill = GridBagConstraints.NONE;
 	c.gridx = 0;
 	c.gridy = 0;
-	c.gridwidth = 4;
+	c.gridwidth = 10;
 	c.gridheight = 1;
-        c.weightx = 1.0;
-        c.weighty = 0.01;
-        vPanel.add(vSpaceUp, c);
+        c.weightx = 100.0;
+        c.weighty = 0.0;
+        vPanel.add(space1, c);
         
-        JLabel hSpaceLeft = new JLabel(" ");
-	c.fill = GridBagConstraints.HORIZONTAL;
+        JLabel space3 = new JLabel(" ");
+	c.fill = GridBagConstraints.NONE;
 	c.gridx = 0;
 	c.gridy = 1;
 	c.gridwidth = 1;
-	c.gridheight = 5;
-        c.weightx = 0.1;
-        c.weighty = 0.98;
-        vPanel.add(hSpaceLeft, c);
+	c.gridheight = 18;
+        c.weightx = 0.0;
+        c.weighty = 100.0;
+        vPanel.add(space3, c);
         
-        JLabel comboBoxLabel = new JLabel("Expressões:");
-        comboBoxLabel.setFont(font);
-        comboBoxLabel.setForeground(new Color(1, 111, 222));
+        JLabel labelExpressions = new JLabel("Expressões:");
+        labelExpressions.setFont(font);
+        labelExpressions.setForeground(new Color(1, 111, 222));
 	c.fill = GridBagConstraints.HORIZONTAL;
         c.gridx = 1;
 	c.gridy = 1;
-	c.gridwidth = 2;
+	c.gridwidth = 5;
 	c.gridheight = 1;
-        c.weightx = 0.8;
-        c.weighty = 0.01;
-        vPanel.add(comboBoxLabel, c);
+        c.weightx = 0.0;
+        c.weighty = 0.0;
+        vPanel.add(labelExpressions, c);
         
-        JComboBox<String> jComboBox = new JComboBox<>(templates);
-        jComboBox.setEditable(true);
-        JTextField editor = (JTextField) jComboBox.getEditor().getEditorComponent();
+        JComboBox<String> comboExpressions = new JComboBox<>(templates);
+        comboExpressions.setEditable(true);
+        JTextField editor = (JTextField) comboExpressions.getEditor().getEditorComponent();
         editor.addKeyListener(this);
-        jComboBox.setFocusable(true);
+        comboExpressions.setFocusable(true);
 	c.fill = GridBagConstraints.HORIZONTAL;
 	c.gridx = 1;
 	c.gridy = 2;
+	c.gridwidth = 5;
+	c.gridheight = 1;
+        c.weightx = 100.0;
+        c.weighty = 0.0;
+        //c.anchor = GridBagConstraints.LINE_END;
+        vPanel.add(comboExpressions, c);
+        
+        /*JLabel space5 = new JLabel("5");
+	c.fill = GridBagConstraints.NONE;
+	c.gridx = 6;
+	c.gridy = 2;
 	c.gridwidth = 1;
 	c.gridheight = 1;
-        c.weightx = 0.7;
-        c.weighty = 0.01;
-        vPanel.add(jComboBox, c);
-        
+        c.weightx = 0.0;
+        c.weighty = 0.0;
+        c.anchor = GridBagConstraints.EAST;
+        vPanel.add(space5, c);
+        */
         JButton okButton = new JButton("Executar");
         okButton.addKeyListener(this);
         okButton.setFocusable(true);
         okButton.setBackground(new Color(11, 188, 255));
         okButton.setForeground(new Color(11, 111, 222));
-	c.fill = GridBagConstraints.HORIZONTAL;
-	c.gridx = 2;
+	c.fill = GridBagConstraints.NONE;
+	c.gridx = 7;
 	c.gridy = 2;
-	c.gridwidth = 1;
+	c.gridwidth = 2;
 	c.gridheight = 1;
-        c.weightx = 0.1;
-        c.weighty = 0.01;
+        c.weightx = 0.0;//0.1
+        c.weighty = 0.0;
+        c.anchor = GridBagConstraints.EAST;
         vPanel.add(okButton, c);
         myFrame.getRootPane().setDefaultButton(okButton);
         
-        JLabel hSpaceCenter = new JLabel(" ");
-	c.fill = GridBagConstraints.HORIZONTAL;
+        JLabel space6 = new JLabel(" ");
+	c.fill = GridBagConstraints.NONE;
 	c.gridx = 1;
 	c.gridy = 3;
-	c.gridwidth = 2;
+	c.gridwidth = 8;
 	c.gridheight = 1;
-        c.weightx = 0.8;
-        c.weighty = 0.01;
-        vPanel.add(hSpaceCenter, c);
+        c.weightx = 100.0;
+        c.weighty = 0.0;
+        vPanel.add(space6, c);
+        
+        JLabel labelViewFormat = new JLabel("Apresentação:");
+        labelViewFormat.setFont(font);
+        labelViewFormat.setForeground(new Color(1, 111, 222));
+	c.fill = GridBagConstraints.HORIZONTAL;
+        c.gridx = 1;
+	c.gridy = 4;
+	c.gridwidth = 3;
+	c.gridheight = 1;
+        c.weightx = 0.0;
+        c.weighty = 0.0;
+        vPanel.add(labelViewFormat, c);
+        
+        JLabel space7 = new JLabel(" ");
+	c.fill = GridBagConstraints.NONE;
+	c.gridx = 4;
+	c.gridy = 4;
+	c.gridwidth = 1;
+	c.gridheight = 1;
+        c.weightx = 0.0;
+        c.weighty = 0.0;
+        vPanel.add(space7, c);
+        
+        JLabel labelWichReport = new JLabel("Exibir:");
+        labelWichReport.setFont(font);
+        labelWichReport.setForeground(new Color(1, 111, 222));
+	c.fill = GridBagConstraints.HORIZONTAL;
+        c.gridx = 5;
+	c.gridy = 4;
+	c.gridwidth = 4;
+	c.gridheight = 1;
+        c.weightx = 0.0;
+        c.weighty = 0.0;
+        vPanel.add(labelWichReport, c);
+        
+        JComboBox<String> comboViewFormat = new JComboBox<>();
+        //comboViewFormat.setEditable(false);
+        JTextField editor2 = (JTextField) comboViewFormat.getEditor().getEditorComponent();
+        editor2.addKeyListener(this);
+        comboViewFormat.setFocusable(true);
+	c.fill = GridBagConstraints.HORIZONTAL;
+	c.gridx = 1;
+	c.gridy = 5;
+	c.gridwidth = 3;
+	c.gridheight = 1;
+        c.weightx = 0.0;
+        c.weighty = 0.0;
+        vPanel.add(comboViewFormat, c);
+        
+        JLabel space8 = new JLabel(" ");
+	c.fill = GridBagConstraints.NONE;
+	c.gridx = 4;
+	c.gridy = 5;
+	c.gridwidth = 1;
+	c.gridheight = 1;
+        c.weightx = 0.0;
+        c.weighty = 0.0;
+        vPanel.add(space8, c);
+        
+        JComboBox<String> comboWichReport = new JComboBox<>();
+        //comboWichReport.setEditable(false);
+        JTextField editor3 = (JTextField) comboWichReport.getEditor().getEditorComponent();
+        editor3.addKeyListener(this);
+        comboWichReport.setFocusable(true);
+	c.fill = GridBagConstraints.HORIZONTAL;
+	c.gridx = 5;
+	c.gridy = 5;
+	c.gridwidth = 4;
+	c.gridheight = 1;
+        c.weightx = 0.0;
+        c.weighty = 0.0;
+        vPanel.add(comboWichReport, c);
+        
+        JLabel space9 = new JLabel(" ");
+	c.fill = GridBagConstraints.NONE;
+	c.gridx = 1;
+	c.gridy = 6;
+	c.gridwidth = 8;
+	c.gridheight = 1;
+        c.weightx = 100.0;
+        c.weighty = 0.0;
+        vPanel.add(space9, c);
         
         JLabel resultLabel = new JLabel("Resultados:");
         resultLabel.setFont(font);
         resultLabel.setForeground(new Color(1, 111, 222));
 	c.fill = GridBagConstraints.HORIZONTAL;
 	c.gridx = 1;
-	c.gridy = 4;
-	c.gridwidth = 2;
+	c.gridy = 7;
+	c.gridwidth = 8;
 	c.gridheight = 1;
-        c.weightx = 0.8;
-        c.weighty = 0.01;
+        c.weightx = 100.0;
+        c.weighty = 0.0;
         vPanel.add(resultLabel, c);
         
-        JTextArea textArea = new JTextArea();
-        textArea.addKeyListener(this);
-        textArea.setFocusable(true);
-        textArea.setLineWrap(true);
-        textArea.setEditable(false);
-        textArea.setBackground(new Color(44, 44, 44));
-        textArea.setForeground(new Color(1, 188, 255));
+        JTextArea textAreaResult = new JTextArea();
+        textAreaResult.addKeyListener(this);
+        textAreaResult.setFocusable(true);
+        textAreaResult.setLineWrap(true);
+        textAreaResult.setEditable(false);
+        textAreaResult.setBackground(new Color(44, 44, 44));
+        textAreaResult.setForeground(new Color(1, 188, 255));
         Font fontResult = new Font("Consolas", Font.PLAIN, 15);
-        textArea.setFont(fontResult);
+        textAreaResult.setFont(fontResult);
         
-        JScrollPane jScroll = new JScrollPane(textArea);
+        JScrollPane jScrollResult = new JScrollPane(textAreaResult);
 	c.fill = GridBagConstraints.BOTH;
         c.gridx = 1;
-	c.gridy = 5;
-	c.gridwidth = 2;
+	c.gridy = 8;
+	c.gridwidth = 8;
 	c.gridheight = 1;
-	c.weightx = 0.8;
-        c.weighty = 0.95;
-        vPanel.add(jScroll, c);
+	c.weightx = 100.0;
+        c.weighty = 0.0;
+        vPanel.add(jScrollResult, c);
         
-        JLabel hSpaceRight = new JLabel(" ");
+        JLabel space10 = new JLabel(" ");
+	c.fill = GridBagConstraints.NONE;
+	c.gridx = 1;
+	c.gridy = 9;
+	c.gridwidth = 8;
+	c.gridheight = 1;
+        c.weightx = 100.0;
+        c.weighty = 0.0;
+        vPanel.add(space10, c);
+        
+        JLabel labelReport = new JLabel("Relatório:");
+        labelReport.setFont(font);
+        labelReport.setForeground(new Color(1, 111, 222));
 	c.fill = GridBagConstraints.HORIZONTAL;
-	c.gridx = 3;
+	c.gridx = 1;
+	c.gridy = 10;
+	c.gridwidth = 8;
+	c.gridheight = 1;
+        c.weightx = 100.0;
+        c.weighty = 0.0;
+        vPanel.add(labelReport, c);
+        
+        JTextArea textAreaReport = new JTextArea();
+        textAreaReport.addKeyListener(this);
+        textAreaReport.setFocusable(true);
+        textAreaReport.setLineWrap(true);
+        textAreaReport.setEditable(false);
+        textAreaReport.setBackground(new Color(44, 44, 44));
+        textAreaReport.setForeground(new Color(1, 188, 255));
+        Font fontReport = new Font("Consolas", Font.PLAIN, 15);
+        textAreaReport.setFont(fontReport);
+        
+        JScrollPane jScrollReport = new JScrollPane(textAreaReport);
+	c.fill = GridBagConstraints.BOTH;
+        c.gridx = 1;
+	c.gridy = 11;
+	c.gridwidth = 8;
+	c.gridheight = 8;
+	c.weightx = 100.0;
+        c.weighty = 0.6;
+        vPanel.add(jScrollReport, c);
+        
+        JLabel space4 = new JLabel(" ");
+	c.fill = GridBagConstraints.NONE;
+	c.gridx = 9;
 	c.gridy = 1;
 	c.gridwidth = 1;
-	c.gridheight = 5;
-        c.weightx = 0.1;
-        c.weighty = 0.98;
-        vPanel.add(hSpaceRight, c);
+	c.gridheight = 18;
+        c.weightx = 0.0;
+        c.weighty = 100.0;
+        vPanel.add(space4, c);
         
-        JLabel hSpaceBottom = new JLabel(" ");
-	c.fill = GridBagConstraints.HORIZONTAL;
+        JLabel space2 = new JLabel(" ");
+	c.fill = GridBagConstraints.NONE;
 	c.gridx = 0;
-	c.gridy = 6;
-	c.gridwidth = 4;
+	c.gridy = 19;
+	c.gridwidth = 10;
 	c.gridheight = 1;
-        c.weightx = 1.0;
-        c.weighty = 0.01;
-        vPanel.add(hSpaceBottom, c);
+        c.weightx = 100.0;
+        c.weighty = 0.0;
+        vPanel.add(space2, c);
         
         myFrame.add(vPanel);
         myFrame.pack();
@@ -210,8 +347,8 @@ public final class GUI extends Tools implements KeyListener {
             @Override
             public void actionPerformed(ActionEvent e) {
                 try {
-                    textArea.setText(
-                        optimizeExpressions((String) jComboBox.getSelectedItem())
+                    textAreaReport.setText(
+                        optimizeExpressions((String) comboExpressions.getSelectedItem())
                     );
                 } catch (Exception ex) {
                     Logger.getLogger(GUI.class.getName()).log(Level.SEVERE, null, ex);
@@ -219,12 +356,12 @@ public final class GUI extends Tools implements KeyListener {
             }
         });
         
-        inputFormat = String.valueOf(jComboBox.getSelectedItem());
+        inputFormat = String.valueOf(comboExpressions.getSelectedItem());
     }
     
     public String optimizeExpressions(String allExpressions) throws Exception {
         PrintWriter writer = new PrintWriter("Quine-McCluskey Results.txt", "UTF-8");
-        String result  = "";
+        String report  = "";
         
         //inputFormat = getInputFormat();
         allExpressions = removeSpacesFromExpression(allExpressions);
@@ -242,48 +379,48 @@ public final class GUI extends Tools implements KeyListener {
             if (inputFormat.length() == 0  ||
                 inputFormat.equals("ERRO") ||
                (inputFormat.equals("Literal") && hasDuplicate(expression))) {
-                print(hasDuplicate(expression));
-                result += print("Expressão:\n> " + expression + "\n", writer);
-                result += print("\nExpressão inconsistente.\n", writer);
-                result += print("\nFim do resultado parcial.\n", writer);
-                result += print("==================================================\n\n", writer);
+                
+                report += print("Expressão:\n> " + expression + "\n", writer);
+                report += print("\nExpressão inconsistente.\n", writer);
+                report += print("\nFim do resultado parcial.\n", writer);
+                report += print("==================================================\n\n", writer);
                 begin = end + 1;
                 continue;
             }
             
-            result += print("Formato de Entrada:\n> " + inputFormat + "\n", writer);
+            report += print("Formato de Entrada:\n> " + inputFormat + "\n", writer);
             
             if (inputFormat.equals("Hexadecimal")) {
-                result += print("\nExpressão original:\n> " + expression + "\n", writer);
+                report += print("\nExpressão original:\n> " + expression + "\n", writer);
                 expression = hexadecimal2expression(expression);
                 inputFormat = "Decimal";
-                result += print("\nFormato Convertido:\n> Decimal\n", writer);
+                report += print("\nFormato Convertido:\n> Decimal\n", writer);
             }
             
-            result += print("\nExpressão:\n> " + expression + "\n", writer);
+            report += print("\nExpressão:\n> " + expression + "\n", writer);
             
 /////////////////////////////////////////////////////
             SumOfProducts exp = new SumOfProducts(inputFormat, expression);
 /////////////////////////////////////////////////////
     
-            result += print("\nVariáveis:\n> " + exp.getNumberOfVars() + "\n", writer);
+            report += print("\nVariáveis:\n> " + exp.getNumberOfVars() + "\n", writer);
             
 /////////////////////////////////////////////////////
             exp.sortByOnesCount();
 /////////////////////////////////////////////////////
             
-            result += print("\nMintermos por número de 1s:", writer);
+            report += print("\nMintermos por número de 1s:", writer);
             for(int i=0; i < exp.getProductsList().size(); i++) {
-                result += print("\n", writer);
-                result += print(exp.getProductsList().get(i).getMinTermsList()+"\t", writer);
-                result += print(exp.getProductsList().get(i).getBinaryView()+"\t", writer);
-                result += print(exp.getProductsList().get(i).getLiteralView(), writer);
+                report += print("\n", writer);
+                report += print(exp.getProductsList().get(i).getMinTermsList()+"\t", writer);
+                report += print(exp.getProductsList().get(i).getBinaryView()+"\t", writer);
+                report += print(exp.getProductsList().get(i).getLiteralView(), writer);
             }
             
             if (isDumb(exp.getMinTermsList(), exp.getNumberOfVars())) {
-                result += print ("\n\nExpressão redundante:\n> não use portas lógicas, ligue em VDD.\n", writer);
-                result += print("\nFim do resultado parcial.\n", writer);
-                result += print("==================================================\n\n", writer);
+                report += print ("\n\nExpressão redundante:\n> não use portas lógicas, ligue em VDD.\n", writer);
+                report += print("\nFim do resultado parcial.\n", writer);
+                report += print("==================================================\n\n", writer);
                 begin = end + 1;
                 continue;
             }
@@ -292,31 +429,31 @@ public final class GUI extends Tools implements KeyListener {
             exp.mergePrimeImplicants(10);
 /////////////////////////////////////////////////////
     
-            result += print("\n\nImplicantes primos mesclados:\n", writer);
+            report += print("\n\nImplicantes primos mesclados:\n", writer);
             for(int i=0; i < exp.getProductsList().size(); i++) {
                 int q = 0;
                 for(; q < exp.getProductsList().get(i).getMinTermsList().size(); q++) {
-                    result += print("-"+exp.getProductsList().get(i).getMinTermsList().get(q), writer);
+                    report += print("-"+exp.getProductsList().get(i).getMinTermsList().get(q), writer);
                 }
                 if(q < 3) {
-                    result += print("-\t", writer);
+                    report += print("-\t", writer);
                 }
-                result += print("\t", writer);
-                result += print(exp.getProductsList().get(i).getBinaryView()+" \t", writer);
-                result += print(exp.getProductsList().get(i).getLiteralView()+"\n", writer);
+                report += print("\t", writer);
+                report += print(exp.getProductsList().get(i).getBinaryView()+" \t", writer);
+                report += print(exp.getProductsList().get(i).getLiteralView()+"\n", writer);
             }
             
 /////////////////////////////////////////////////////
             exp.fillMinTermsList();
 /////////////////////////////////////////////////////
     
-            result += print ("\nMintermos e seus produtos (Tabela de Cobertura):", writer);
+            report += print ("\nMintermos e seus produtos (Tabela de Cobertura):", writer);
             for (int i=0; i < exp.getMinTermsList().size(); i++) {
-                result += print("\n"+exp.getMinTermsList().get(i).getDecimalView()+" -", writer);
+                report += print("\n"+exp.getMinTermsList().get(i).getDecimalView()+" -", writer);
                 for (int p=0; p < exp.getMinTermsList().get(i).getProductsList().size(); p++) {
-                    result += print("\t\t"+exp.getMinTermsList().get(i).getProductsList().get(p), writer);
+                    report += print("\t\t"+exp.getMinTermsList().get(i).getProductsList().get(p), writer);
                     if (exp.getMinTermsList().get(i).getProductsList().get(p).length() < 8) {
-                        result += print("\t", writer);
+                        report += print("\t", writer);
                     }
                 }
             }
@@ -325,22 +462,22 @@ public final class GUI extends Tools implements KeyListener {
             exp.essentialProductsToFinalList();
 /////////////////////////////////////////////////////
     
-            result += print("\n\nProdutos Essenciais:\n> ", writer);
+            report += print("\n\nProdutos Essenciais:\n> ", writer);
             for (int i=0; i < exp.getFinalProductsList().size(); i++) {
-                result += print(exp.getFinalProductsList().get(i)+"\t", writer);
+                report += print(exp.getFinalProductsList().get(i)+"\t", writer);
             }
             
 /////////////////////////////////////////////////////
             ArrayList<Integer> indexes = exp.getCandidateProductsIndexes();
 /////////////////////////////////////////////////////
-            result += print("\n", writer);
+            report += print("\n", writer);
             for (int i=0; i < exp.getMinTermsList().size(); i++) {
-                result += print("\nMintermo "+exp.getMinTermsList().get(i).getDecimalView()+" ", writer);
+                report += print("\nMintermo "+exp.getMinTermsList().get(i).getDecimalView()+" ", writer);
                 if (exp.getMinTermsList().get(i).isIsCovered()) {
-                    result += print("está coberto.", writer);
+                    report += print("está coberto.", writer);
                 }
                 else {
-                    result += print(" - ", writer);
+                    report += print(" - ", writer);
                 }
             }
             
@@ -356,20 +493,20 @@ public final class GUI extends Tools implements KeyListener {
             exp.completeFinalList();
 /////////////////////////////////////////////////////
     
-            result += print("\n\nProdutos Finais:\n> ", writer);
+            report += print("\n\nProdutos Finais:\n> ", writer);
             for (int i=0; i < exp.getFinalProductsList().size(); i++) {
-                result += print(exp.getFinalProductsList().get(i)+"\t", writer);
+                report += print(exp.getFinalProductsList().get(i)+"\t", writer);
             }
             
 /////////////////////////////////////////////////////
             exp.setOptimizedExpression();
 /////////////////////////////////////////////////////
             
-            result += print("\n\nExpressão otimizada:\n", writer);
-            result += print("> "+exp.getOptimizedExpression()+"\n", writer);
+            report += print("\n\nExpressão otimizada:\n", writer);
+            report += print("> "+exp.getOptimizedExpression()+"\n", writer);
             
-            result += print ("\nFim do resultado parcial.\n", writer);
-            result += print("==================================================\n\n", writer);
+            report += print ("\nFim do resultado parcial.\n", writer);
+            report += print("==================================================\n\n", writer);
             
             begin = end + 1;
             if (begin >= allExpressions.length()) {
@@ -378,11 +515,11 @@ public final class GUI extends Tools implements KeyListener {
         }
         while (begin < allExpressions.length());
         
-        result += print ("Fim dos resultados.\n", writer);
-        result += print("==================================================\n", writer);
+        report += print ("Fim dos resultados.\n", writer);
+        report += print("==================================================\n", writer);
             
         writer.close();
-        return result;
+        return report;
     }
     
     @Override
