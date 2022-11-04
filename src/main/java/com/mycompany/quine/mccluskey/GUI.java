@@ -5,6 +5,7 @@ import java.awt.Dimension;
 import java.awt.Font;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
+import java.awt.Insets;
 import java.awt.Toolkit;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -34,11 +35,15 @@ public final class GUI extends Tools implements KeyListener {
     private String inputFormat;
     private String expression;
     private String report;
+    private boolean hasResult;
+    private SumOfProducts exp;
     
     public GUI(){
         inputFormat = "";
         expression  = "";
         report      = "";
+        hasResult = false;
+        exp = null;
     }
     
     public String getInputFormat(){
@@ -51,7 +56,7 @@ public final class GUI extends Tools implements KeyListener {
     
     public void showWindow() throws Exception {
         String[] templates = {
-            "abc+cbd;a2;1101+0111+0101;0+1+2+3+4+5+6+7;0xA2B2;;2+4+6+8+9+10+12+13+15",
+            "2+4+6+8+9+10+12+13+15",
             "!A*!B*!C*!D + !A*!B*!C*D + !A*B*!C*D + !A*B*C*!D + !A*B*C*D",
             "ABCD+!A!BCD+A!B!C!D+!ABCD",
             "A!BCD+!ABC!D+!ABCD+A!B!CD",
@@ -60,7 +65,6 @@ public final class GUI extends Tools implements KeyListener {
             "1111+0011+1000+0111",
             "1111+0011+1010+0111",
             "111+11+101+01",
-            "2+4+6+8+9+10+12+13+15",
             "15+3+10+7",
             "0xB754"
         };
@@ -303,6 +307,8 @@ public final class GUI extends Tools implements KeyListener {
         textAreaResult.setForeground(new Color(1, 188, 255));
         Font fontResult = new Font("Consolas", Font.PLAIN, 15);
         textAreaResult.setFont(fontResult);
+        Insets mResult = new Insets(6, 6, 0, 0);
+        textAreaResult.setMargin(mResult);
         
         JScrollPane jScrollResult = new JScrollPane(textAreaResult);
 	c.fill = GridBagConstraints.BOTH;
@@ -311,7 +317,7 @@ public final class GUI extends Tools implements KeyListener {
 	c.gridwidth = 8;
 	c.gridheight = 6;//4
 	c.weightx = 100.0;
-        c.weighty = 0.1;
+        c.weighty = 0.01;//PARA VÁRIOS RESULTADOS: 0.1
         vPanel.add(jScrollResult, c);
         
         JLabel space10 = new JLabel(" ");
@@ -346,6 +352,8 @@ public final class GUI extends Tools implements KeyListener {
         textAreaReport.setForeground(new Color(1, 188, 255));
         Font fontReport = new Font("Consolas", Font.PLAIN, 15);
         textAreaReport.setFont(fontReport);
+        Insets mReport = new Insets(10, 10, 10, 10);
+        textAreaReport.setMargin(mReport);
         
         JScrollPane jScrollReport = new JScrollPane(textAreaReport);
 	c.fill = GridBagConstraints.BOTH;
@@ -375,6 +383,8 @@ public final class GUI extends Tools implements KeyListener {
 	c.gridheight = 1;
         c.weightx = 0.0;
         c.weighty = 0.0;
+        Font fontBottom = new Font("Segoe UI", Font.PLAIN, 6);
+        space2.setFont(fontBottom);
         vPanel.add(space2, c);
         
         myFrame.add(vPanel);
@@ -389,9 +399,25 @@ public final class GUI extends Tools implements KeyListener {
             @Override
             public void actionPerformed(ActionEvent e) {
                 try {
-                    String results = optimizeExpressions((String) comboExpressions.getSelectedItem());
+                    hasResult = true;
+                    exp = optimizeExpressions((String) comboExpressions.getSelectedItem());
+                    String results = exp.getOptimizedExpression();
                     textAreaResult.setText(results);
-                    textAreaReport.setText(report);
+                    textAreaReport.setText(reportText(comboWichReport));
+                } catch (Exception ex) {
+                    Logger.getLogger(GUI.class.getName()).log(Level.SEVERE, null, ex);
+                }
+            }
+        });
+        
+        comboWichReport.addActionListener(new ActionListener() {
+            
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                try {
+                    if (hasResult) {
+                        textAreaReport.setText(reportText(comboWichReport));
+                    }
                 } catch (Exception ex) {
                     Logger.getLogger(GUI.class.getName()).log(Level.SEVERE, null, ex);
                 }
@@ -401,10 +427,51 @@ public final class GUI extends Tools implements KeyListener {
         inputFormat = String.valueOf(comboExpressions.getSelectedItem());
     }
     
-    public String optimizeExpressions(String allExpressions) throws Exception {
+    public String reportText(JComboBox comboWichReport) {
+        
+        String out = "";
+        switch ((String)comboWichReport.getSelectedItem()) {
+            case "Completo"            -> out = report;
+            case "Tabela Verdade"      -> out = "<Tabela Verdade>";
+            case "Implicantes Primos"  -> {
+                //Colocar como método de sumOfProducts
+                out += "Implicantes primos mesclados:\n";
+                for(int i=0; i < exp.getProductsList().size(); i++) {
+                    int q = 0;
+                    for(; q < exp.getProductsList().get(i).getMinTermsList().size(); q++) {
+                        out += "-"+exp.getProductsList().get(i).getMinTermsList().get(q);
+                    }
+                    if(q < 3) {
+                        out += "-\t";
+                    }
+                    out += "\t";
+                    out += exp.getProductsList().get(i).getBinaryView()+" \t";
+                    out += exp.getProductsList().get(i).getLiteralView()+"\n";
+                }
+            }
+            case "Tabela de Cobertura" -> {
+                //Colocar como método de sumOfProducts
+                out += "Tabela de Cobertura:";
+                for (int i=0; i < exp.getMinTermsList().size(); i++) {
+                    out += "\n"+exp.getMinTermsList().get(i).getDecimalView()+" -";
+                    for (int p=0; p < exp.getMinTermsList().get(i).getProductsList().size(); p++) {
+                        out += "\t\t"+exp.getMinTermsList().get(i).getProductsList().get(p);
+                        if (exp.getMinTermsList().get(i).getProductsList().get(p).length() < 8) {
+                            out += "\t";
+                        }
+                    }
+                }
+            }
+            default -> out = report;
+        }
+        return out;
+    }
+    
+    public SumOfProducts optimizeExpressions(String allExpressions) throws Exception {
         PrintWriter writer = new PrintWriter("Quine-McCluskey Results.txt", "UTF-8");
         String results = "";
         report  = "";
+        SumOfProducts exp = null;
         
         //inputFormat = getInputFormat();
         allExpressions = removeSpacesFromExpression(allExpressions);
@@ -412,7 +479,8 @@ public final class GUI extends Tools implements KeyListener {
         int begin = 0;
         int end;
         do {
-            end = allExpressions.indexOf(';', begin);
+            //end = allExpressions.indexOf(';', begin);
+            end = -1; //ACEITAR APENAS UMA EXPRESSÃO
             if (end < 0) {
                 end = allExpressions.length();
             }
@@ -443,7 +511,7 @@ public final class GUI extends Tools implements KeyListener {
             report += print("\nExpressão:\n> " + expression + "\n", writer);
             
 /////////////////////////////////////////////////////
-            SumOfProducts exp = new SumOfProducts(inputFormat, expression);
+            exp = new SumOfProducts(inputFormat, expression);
 /////////////////////////////////////////////////////
     
             report += print("\nVariáveis:\n> " + exp.getNumberOfVars() + "\n", writer);
@@ -535,7 +603,7 @@ public final class GUI extends Tools implements KeyListener {
 /////////////////////////////////////////////////////
             exp.completeFinalList();
 /////////////////////////////////////////////////////
-    
+            
             report += print("\n\nProdutos Finais:\n> ", writer);
             for (int i=0; i < exp.getFinalProductsList().size(); i++) {
                 report += print(exp.getFinalProductsList().get(i)+"\t", writer);
@@ -567,7 +635,8 @@ public final class GUI extends Tools implements KeyListener {
         report += print("==================================================\n", writer);
             
         writer.close();
-        return results;
+        //return results;
+        return exp;
     }
     
     @Override
