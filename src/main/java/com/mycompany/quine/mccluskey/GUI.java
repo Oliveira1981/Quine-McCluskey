@@ -424,6 +424,19 @@ public final class GUI extends Tools implements KeyListener {
             }
         });
         
+        editor.addActionListener(new ActionListener() {
+            
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                try {
+                    textAreaResult.setText("");
+                    textAreaReport.setText("");
+                } catch (Exception ex) {
+                    Logger.getLogger(GUI.class.getName()).log(Level.SEVERE, null, ex);
+                }
+            }
+        });
+        
         inputFormat = String.valueOf(comboExpressions.getSelectedItem());
     }
     
