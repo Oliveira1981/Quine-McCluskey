@@ -33,10 +33,12 @@ public final class GUI extends Tools implements KeyListener {
     
     private String inputFormat;
     private String expression;
+    private String report;
     
     public GUI(){
         inputFormat = "";
         expression  = "";
+        report      = "";
     }
     
     public String getInputFormat(){
@@ -50,23 +52,36 @@ public final class GUI extends Tools implements KeyListener {
     public void showWindow() throws Exception {
         String[] templates = {
             "abc+cbd;a2;1101+0111+0101;0+1+2+3+4+5+6+7;0xA2B2;;2+4+6+8+9+10+12+13+15",
-            "2+4+6+8+9+10+12+13+15",
+            "!A*!B*!C*!D + !A*!B*!C*D + !A*B*!C*D + !A*B*C*!D + !A*B*C*D",
             "ABCD+!A!BCD+A!B!C!D+!ABCD",
             "A!BCD+!ABC!D+!ABCD+A!B!CD",
-            "!A*!B*!C*!D + !A*!B*!C*D + !A*B*!C*D + !A*B*C*!D + !A*B*C*D",
             "ab!c+a!bc!d+!ab",
             "abc+bcd",
             "1111+0011+1000+0111",
             "1111+0011+1010+0111",
             "111+11+101+01",
+            "2+4+6+8+9+10+12+13+15",
             "15+3+10+7",
             "0xB754"
+        };
+        
+        String[] viewFormats = {
+            "Literal",
+            "Binária",
+            "Decimal"
+        };
+        
+        String[] wichReport = {
+            "Completo",
+            "Tabela Verdade",
+            "Implicantes Primos",
+            "Tabela de Cobertura"
         };
         
         UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
         JFrame myFrame = new JFrame("Quine-McCluskey");
         myFrame.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
-        myFrame.setMinimumSize(new Dimension(650,400));
+        myFrame.setMinimumSize(new Dimension(700,580));
         
         GridBagLayout grid = new GridBagLayout();
         JPanel vPanel = new JPanel(grid);
@@ -75,36 +90,37 @@ public final class GUI extends Tools implements KeyListener {
         
         Font font = new Font("Segoe UI", Font.BOLD, 13);
         
-        JLabel space1 = new JLabel(" ");
+        JLabel space1 = new JLabel("   ");
 	c.fill = GridBagConstraints.NONE;
 	c.gridx = 0;
 	c.gridy = 0;
 	c.gridwidth = 10;
 	c.gridheight = 1;
-        c.weightx = 100.0;
+        c.weightx = 0.0;
         c.weighty = 0.0;
         vPanel.add(space1, c);
         
-        JLabel space3 = new JLabel(" ");
+        JLabel space3 = new JLabel("   ");
 	c.fill = GridBagConstraints.NONE;
 	c.gridx = 0;
 	c.gridy = 1;
 	c.gridwidth = 1;
 	c.gridheight = 18;
         c.weightx = 0.0;
-        c.weighty = 100.0;
+        c.weighty = 0.0;
         vPanel.add(space3, c);
         
         JLabel labelExpressions = new JLabel("Expressões:");
         labelExpressions.setFont(font);
         labelExpressions.setForeground(new Color(1, 111, 222));
-	c.fill = GridBagConstraints.HORIZONTAL;
+	c.fill = GridBagConstraints.NONE;
         c.gridx = 1;
 	c.gridy = 1;
-	c.gridwidth = 5;
+	c.gridwidth = 6;
 	c.gridheight = 1;
         c.weightx = 0.0;
         c.weighty = 0.0;
+        c.anchor = GridBagConstraints.WEST;
         vPanel.add(labelExpressions, c);
         
         JComboBox<String> comboExpressions = new JComboBox<>(templates);
@@ -112,17 +128,17 @@ public final class GUI extends Tools implements KeyListener {
         JTextField editor = (JTextField) comboExpressions.getEditor().getEditorComponent();
         editor.addKeyListener(this);
         comboExpressions.setFocusable(true);
-	c.fill = GridBagConstraints.HORIZONTAL;
+	c.fill = GridBagConstraints.NONE;
 	c.gridx = 1;
 	c.gridy = 2;
 	c.gridwidth = 5;
 	c.gridheight = 1;
-        c.weightx = 100.0;
+        c.weightx = 0.0;
         c.weighty = 0.0;
-        //c.anchor = GridBagConstraints.LINE_END;
+        c.anchor = GridBagConstraints.WEST;
         vPanel.add(comboExpressions, c);
         
-        /*JLabel space5 = new JLabel("5");
+        JLabel space5 = new JLabel("  ");
 	c.fill = GridBagConstraints.NONE;
 	c.gridx = 6;
 	c.gridy = 2;
@@ -130,9 +146,9 @@ public final class GUI extends Tools implements KeyListener {
 	c.gridheight = 1;
         c.weightx = 0.0;
         c.weighty = 0.0;
-        c.anchor = GridBagConstraints.EAST;
+        c.anchor = GridBagConstraints.WEST;
         vPanel.add(space5, c);
-        */
+        
         JButton okButton = new JButton("Executar");
         okButton.addKeyListener(this);
         okButton.setFocusable(true);
@@ -141,13 +157,24 @@ public final class GUI extends Tools implements KeyListener {
 	c.fill = GridBagConstraints.NONE;
 	c.gridx = 7;
 	c.gridy = 2;
-	c.gridwidth = 2;
+	c.gridwidth = 1;
 	c.gridheight = 1;
-        c.weightx = 0.0;//0.1
+        c.weightx = 100.0;
         c.weighty = 0.0;
-        c.anchor = GridBagConstraints.EAST;
+        c.anchor = GridBagConstraints.WEST;
         vPanel.add(okButton, c);
         myFrame.getRootPane().setDefaultButton(okButton);
+        
+        JLabel space5B = new JLabel(" ");
+	c.fill = GridBagConstraints.HORIZONTAL;
+	c.gridx = 8;
+	c.gridy = 2;
+	c.gridwidth = 1;
+	c.gridheight = 1;
+        c.weightx = 100.0;
+        c.weighty = 0.0;
+        c.anchor = GridBagConstraints.EAST;
+        vPanel.add(space5B, c);
         
         JLabel space6 = new JLabel(" ");
 	c.fill = GridBagConstraints.NONE;
@@ -162,16 +189,17 @@ public final class GUI extends Tools implements KeyListener {
         JLabel labelViewFormat = new JLabel("Apresentação:");
         labelViewFormat.setFont(font);
         labelViewFormat.setForeground(new Color(1, 111, 222));
-	c.fill = GridBagConstraints.HORIZONTAL;
+	c.fill = GridBagConstraints.NONE;
         c.gridx = 1;
 	c.gridy = 4;
-	c.gridwidth = 3;
+	c.gridwidth = 3;//3
 	c.gridheight = 1;
         c.weightx = 0.0;
         c.weighty = 0.0;
+        c.anchor = GridBagConstraints.WEST;
         vPanel.add(labelViewFormat, c);
         
-        JLabel space7 = new JLabel(" ");
+        JLabel space7 = new JLabel("     ");
 	c.fill = GridBagConstraints.NONE;
 	c.gridx = 4;
 	c.gridy = 4;
@@ -179,24 +207,24 @@ public final class GUI extends Tools implements KeyListener {
 	c.gridheight = 1;
         c.weightx = 0.0;
         c.weighty = 0.0;
+        c.anchor = GridBagConstraints.EAST;
         vPanel.add(space7, c);
         
-        JLabel labelWichReport = new JLabel("Exibir:");
+        JLabel labelWichReport = new JLabel("Relatório a exibir:");
         labelWichReport.setFont(font);
         labelWichReport.setForeground(new Color(1, 111, 222));
-	c.fill = GridBagConstraints.HORIZONTAL;
+	c.fill = GridBagConstraints.NONE;
         c.gridx = 5;
 	c.gridy = 4;
-	c.gridwidth = 4;
+	c.gridwidth = 4;//4
 	c.gridheight = 1;
         c.weightx = 0.0;
         c.weighty = 0.0;
+        c.anchor = GridBagConstraints.WEST;
         vPanel.add(labelWichReport, c);
         
-        JComboBox<String> comboViewFormat = new JComboBox<>();
-        //comboViewFormat.setEditable(false);
-        JTextField editor2 = (JTextField) comboViewFormat.getEditor().getEditorComponent();
-        editor2.addKeyListener(this);
+        JComboBox<String> comboViewFormat = new JComboBox<>(viewFormats);
+        comboViewFormat.addKeyListener(this);
         comboViewFormat.setFocusable(true);
 	c.fill = GridBagConstraints.HORIZONTAL;
 	c.gridx = 1;
@@ -205,9 +233,10 @@ public final class GUI extends Tools implements KeyListener {
 	c.gridheight = 1;
         c.weightx = 0.0;
         c.weighty = 0.0;
+        c.anchor = GridBagConstraints.WEST;
         vPanel.add(comboViewFormat, c);
         
-        JLabel space8 = new JLabel(" ");
+        JLabel space8 = new JLabel("     ");
 	c.fill = GridBagConstraints.NONE;
 	c.gridx = 4;
 	c.gridy = 5;
@@ -215,21 +244,32 @@ public final class GUI extends Tools implements KeyListener {
 	c.gridheight = 1;
         c.weightx = 0.0;
         c.weighty = 0.0;
+        c.anchor = GridBagConstraints.EAST;
         vPanel.add(space8, c);
         
-        JComboBox<String> comboWichReport = new JComboBox<>();
-        //comboWichReport.setEditable(false);
-        JTextField editor3 = (JTextField) comboWichReport.getEditor().getEditorComponent();
-        editor3.addKeyListener(this);
+        JComboBox<String> comboWichReport = new JComboBox<>(wichReport);
+        comboWichReport.addKeyListener(this);
         comboWichReport.setFocusable(true);
-	c.fill = GridBagConstraints.HORIZONTAL;
+        c.fill = GridBagConstraints.NONE;
 	c.gridx = 5;
 	c.gridy = 5;
-	c.gridwidth = 4;
+	c.gridwidth = 3;
 	c.gridheight = 1;
         c.weightx = 0.0;
         c.weighty = 0.0;
+        c.anchor = GridBagConstraints.WEST;
         vPanel.add(comboWichReport, c);
+        
+        JLabel space8B = new JLabel(" ");
+	c.fill = GridBagConstraints.HORIZONTAL;
+	c.gridx = 8;
+	c.gridy = 5;
+	c.gridwidth = 1;
+	c.gridheight = 1;
+        c.weightx = 100.0;
+        c.weighty = 0.0;
+        c.anchor = GridBagConstraints.EAST;
+        vPanel.add(space8B, c);
         
         JLabel space9 = new JLabel(" ");
 	c.fill = GridBagConstraints.NONE;
@@ -237,20 +277,21 @@ public final class GUI extends Tools implements KeyListener {
 	c.gridy = 6;
 	c.gridwidth = 8;
 	c.gridheight = 1;
-        c.weightx = 100.0;
+        c.weightx = 0.0;
         c.weighty = 0.0;
         vPanel.add(space9, c);
         
         JLabel resultLabel = new JLabel("Resultados:");
         resultLabel.setFont(font);
         resultLabel.setForeground(new Color(1, 111, 222));
-	c.fill = GridBagConstraints.HORIZONTAL;
+	c.fill = GridBagConstraints.NONE;
 	c.gridx = 1;
 	c.gridy = 7;
 	c.gridwidth = 8;
 	c.gridheight = 1;
-        c.weightx = 100.0;
+        c.weightx = 0.0;
         c.weighty = 0.0;
+        c.anchor = GridBagConstraints.WEST;
         vPanel.add(resultLabel, c);
         
         JTextArea textAreaResult = new JTextArea();
@@ -268,31 +309,32 @@ public final class GUI extends Tools implements KeyListener {
         c.gridx = 1;
 	c.gridy = 8;
 	c.gridwidth = 8;
-	c.gridheight = 1;
+	c.gridheight = 6;//4
 	c.weightx = 100.0;
-        c.weighty = 0.0;
+        c.weighty = 0.1;
         vPanel.add(jScrollResult, c);
         
         JLabel space10 = new JLabel(" ");
 	c.fill = GridBagConstraints.NONE;
 	c.gridx = 1;
-	c.gridy = 9;
+	c.gridy = 14;//12
 	c.gridwidth = 8;
 	c.gridheight = 1;
-        c.weightx = 100.0;
+        c.weightx = 0.0;
         c.weighty = 0.0;
         vPanel.add(space10, c);
         
         JLabel labelReport = new JLabel("Relatório:");
         labelReport.setFont(font);
         labelReport.setForeground(new Color(1, 111, 222));
-	c.fill = GridBagConstraints.HORIZONTAL;
+	c.fill = GridBagConstraints.NONE;
 	c.gridx = 1;
-	c.gridy = 10;
+	c.gridy = 15;//13
 	c.gridwidth = 8;
 	c.gridheight = 1;
-        c.weightx = 100.0;
+        c.weightx = 0.0;
         c.weighty = 0.0;
+        c.anchor = GridBagConstraints.WEST;
         vPanel.add(labelReport, c);
         
         JTextArea textAreaReport = new JTextArea();
@@ -308,21 +350,21 @@ public final class GUI extends Tools implements KeyListener {
         JScrollPane jScrollReport = new JScrollPane(textAreaReport);
 	c.fill = GridBagConstraints.BOTH;
         c.gridx = 1;
-	c.gridy = 11;
+	c.gridy = 16;//14
 	c.gridwidth = 8;
-	c.gridheight = 8;
+	c.gridheight = 3;
 	c.weightx = 100.0;
         c.weighty = 0.6;
         vPanel.add(jScrollReport, c);
         
-        JLabel space4 = new JLabel(" ");
+        JLabel space4 = new JLabel("   ");
 	c.fill = GridBagConstraints.NONE;
 	c.gridx = 9;
 	c.gridy = 1;
 	c.gridwidth = 1;
 	c.gridheight = 18;
         c.weightx = 0.0;
-        c.weighty = 100.0;
+        c.weighty = 0.0;
         vPanel.add(space4, c);
         
         JLabel space2 = new JLabel(" ");
@@ -331,13 +373,13 @@ public final class GUI extends Tools implements KeyListener {
 	c.gridy = 19;
 	c.gridwidth = 10;
 	c.gridheight = 1;
-        c.weightx = 100.0;
+        c.weightx = 0.0;
         c.weighty = 0.0;
         vPanel.add(space2, c);
         
         myFrame.add(vPanel);
         myFrame.pack();
-        myFrame.setSize(650, 600);
+        myFrame.setSize(750, 600);
         Dimension dim = Toolkit.getDefaultToolkit().getScreenSize();
         myFrame.setLocation(dim.width/2-myFrame.getSize().width/2, dim.height/2-myFrame.getSize().height/2);
         myFrame.setVisible(true);
@@ -347,9 +389,9 @@ public final class GUI extends Tools implements KeyListener {
             @Override
             public void actionPerformed(ActionEvent e) {
                 try {
-                    textAreaReport.setText(
-                        optimizeExpressions((String) comboExpressions.getSelectedItem())
-                    );
+                    String results = optimizeExpressions((String) comboExpressions.getSelectedItem());
+                    textAreaResult.setText(results);
+                    textAreaReport.setText(report);
                 } catch (Exception ex) {
                     Logger.getLogger(GUI.class.getName()).log(Level.SEVERE, null, ex);
                 }
@@ -361,7 +403,8 @@ public final class GUI extends Tools implements KeyListener {
     
     public String optimizeExpressions(String allExpressions) throws Exception {
         PrintWriter writer = new PrintWriter("Quine-McCluskey Results.txt", "UTF-8");
-        String report  = "";
+        String results = "";
+        report  = "";
         
         //inputFormat = getInputFormat();
         allExpressions = removeSpacesFromExpression(allExpressions);
@@ -508,6 +551,11 @@ public final class GUI extends Tools implements KeyListener {
             report += print ("\nFim do resultado parcial.\n", writer);
             report += print("==================================================\n\n", writer);
             
+            if (results.length() > 0 ) {
+                results += ";\n";
+            }
+            results += exp.getOptimizedExpression();
+            
             begin = end + 1;
             if (begin >= allExpressions.length()) {
                 break;
@@ -519,7 +567,7 @@ public final class GUI extends Tools implements KeyListener {
         report += print("==================================================\n", writer);
             
         writer.close();
-        return report;
+        return results;
     }
     
     @Override
