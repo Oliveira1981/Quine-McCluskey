@@ -432,7 +432,13 @@ public final class GUI extends Tools implements KeyListener {
         String out = "";
         switch ((String)comboWichReport.getSelectedItem()) {
             case "Completo"            -> out = report;
-            case "Tabela Verdade"      -> out = "<Tabela Verdade>";
+            case "Tabela Verdade"      -> {
+                out += "Tabela Verdade";
+                int tableSize = exp.getTruthTable().size();
+                for (int i=0; i < tableSize; i++) {
+                    out += "\n" + exp.getTruthTable().get(i);
+                }
+            }
             case "Implicantes Primos"  -> {
                 //Colocar como método de sumOfProducts
                 out += "Implicantes primos mesclados:\n";
@@ -556,6 +562,8 @@ public final class GUI extends Tools implements KeyListener {
             
 /////////////////////////////////////////////////////
             exp.fillMinTermsList();
+            //exp.sortMinTermsList();
+            exp.fillTruthTable();
 /////////////////////////////////////////////////////
     
             report += print ("\nMintermos e seus produtos (Tabela de Cobertura):", writer);
@@ -630,7 +638,7 @@ public final class GUI extends Tools implements KeyListener {
             }
         }
         while (begin < allExpressions.length());
-        
+        //exp.fillTruthTable();
         report += print ("Fim dos resultados.\n", writer);
         report += print("==================================================\n", writer);
             

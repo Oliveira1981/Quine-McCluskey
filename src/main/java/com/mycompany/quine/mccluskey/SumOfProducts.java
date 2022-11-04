@@ -18,6 +18,7 @@ public final class SumOfProducts extends Tools {
     private ArrayList<String>        finalProductsList;
     private ArrayList<ArrayList<Integer>> permutations;
     private int                           numberOfVars;
+    private ArrayList<String>               truthTable;
     
     public SumOfProducts(String inputFormat, String expression) {
         this.inputFormat = inputFormat;
@@ -30,12 +31,14 @@ public final class SumOfProducts extends Tools {
         }
         
         fillProductsList();
+        fillTruthTable();
     }
     
     public SumOfProducts() {
         this.inputFormat     = "literal";
         this.inputExpression =        "";
         fillProductsList();
+        fillTruthTable();
     }
     
     public void setExpression(String inputFormat, String expression) {
@@ -49,6 +52,7 @@ public final class SumOfProducts extends Tools {
         }
         
         fillProductsList();
+        fillTruthTable();
     }
     
     public String getInputExpression() {
@@ -74,7 +78,11 @@ public final class SumOfProducts extends Tools {
     public int getNumberOfVars() {
         return numberOfVars;
     }
-
+    
+    public ArrayList<String> getTruthTable() {
+        return truthTable;
+    }
+    
     public ArrayList<ArrayList<Integer>> getPermutations() {
         return permutations;
     }
@@ -105,6 +113,36 @@ public final class SumOfProducts extends Tools {
                 break;
         }
         while (begin < inputExpression.length());
+    }
+    
+    public void fillTruthTable() {
+        truthTable = new ArrayList<>();
+        String str = "";
+        for (int i=0; i < numberOfVars; i++) {
+            str += getAlphabetChar(i);
+        }
+        str += " SAÍDA";
+        truthTable.add(str);//HEADER
+        int size = (int) Math.pow(2, numberOfVars);
+        int m = 0;
+        for (int i=1; i <= size; i++) {
+            truthTable.add(decimal2binary(i-1, numberOfVars));
+            str = truthTable.get(truthTable.size()-1);
+            if (m < minTermsList.size()) {
+                if (minTermsList.get(m).getDecimalView() == (i-1)) {
+                    str += " 1";
+                    m++;
+                }
+                else {
+                    str += " 0";
+                }
+            }
+            else {
+                str += " 0";
+            }
+            truthTable.remove(truthTable.size()-1);
+            truthTable.add(str);
+        }
     }
     
     public void sortByOnesCount() {
@@ -222,6 +260,7 @@ public final class SumOfProducts extends Tools {
                 }
             }
         }
+        sortMinTermsList();
     }
     
     public void essentialProductsToFinalList() {
@@ -385,6 +424,21 @@ public final class SumOfProducts extends Tools {
             else {
                 indexes[i] = 0;
                 i++;
+            }
+        }
+    }
+    
+    public void sortMinTermsList() {
+        for(int i=1; i < minTermsList.size(); i++) {
+            int count_k = minTermsList.get(i).getDecimalView();
+            
+            if(count_k < minTermsList.get(i-1).getDecimalView()) {
+                int j = i;
+                do {
+                    j--;
+                    if (j < 1) break;
+                } while(count_k < minTermsList.get(j-1).getDecimalView());
+                minTermsList.add(j, minTermsList.remove(i));
             }
         }
     }
