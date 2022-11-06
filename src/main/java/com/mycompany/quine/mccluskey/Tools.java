@@ -540,5 +540,15 @@ public class Tools {
         }
         return exp;
     }
+    
+    public static int numberOfLiterals(String exp) {
+        int count = 0;
+        for (int i=0; i < exp.length(); i++) {
+            if (Character.isAlphabetic(exp.charAt(i))) {
+                count++;
+            }
+        }
+        return count;
+    }
 
 }

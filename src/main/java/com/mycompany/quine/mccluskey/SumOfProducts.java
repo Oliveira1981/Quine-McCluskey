@@ -130,15 +130,15 @@ public final class SumOfProducts extends Tools {
             str = truthTable.get(truthTable.size()-1);
             if (m < minTermsList.size()) {
                 if (minTermsList.get(m).getDecimalView() == (i-1)) {
-                    str += " 1";
+                    str += "   1";
                     m++;
                 }
                 else {
-                    str += " 0";
+                    str += "   0";
                 }
             }
             else {
-                str += " 0";
+                str += "   0";
             }
             truthTable.remove(truthTable.size()-1);
             truthTable.add(str);
