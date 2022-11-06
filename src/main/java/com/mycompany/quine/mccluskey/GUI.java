@@ -1,5 +1,6 @@
 package com.mycompany.quine.mccluskey;
 
+import static com.mycompany.quine.mccluskey.Tools.generateRandomExpression;
 import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Font;
@@ -36,14 +37,16 @@ public final class GUI extends Tools implements KeyListener {
     private String expression;
     private String report;
     private boolean hasResult;
+    private String errorMsg;
     private SumOfProducts exp;
     
     public GUI(){
         inputFormat = "";
         expression  = "";
         report      = "";
-        hasResult = false;
-        exp = null;
+        hasResult   = false;
+        errorMsg    = "";
+        exp         = null;
     }
     
     public String getInputFormat(){
@@ -67,12 +70,6 @@ public final class GUI extends Tools implements KeyListener {
             "111+11+101+01",
             "15+3+10+7",
             "0xB754"
-        };
-        
-        String[] viewFormats = {
-            "Literal",
-            "Binária",
-            "Decimal"
         };
         
         String[] wichReport = {
@@ -114,7 +111,7 @@ public final class GUI extends Tools implements KeyListener {
         c.weighty = 0.0;
         vPanel.add(space3, c);
         
-        JLabel labelExpressions = new JLabel("Expressões:");
+        JLabel labelExpressions = new JLabel("Expressão:");
         labelExpressions.setFont(font);
         labelExpressions.setForeground(new Color(1, 111, 222));
 	c.fill = GridBagConstraints.NONE;
@@ -128,9 +125,13 @@ public final class GUI extends Tools implements KeyListener {
         vPanel.add(labelExpressions, c);
         
         JComboBox<String> comboExpressions = new JComboBox<>(templates);
+        comboExpressions.setPreferredSize(new Dimension(350, 30));
+        comboExpressions.setMinimumSize(new Dimension(350, 30));
         comboExpressions.setEditable(true);
         JTextField editor = (JTextField) comboExpressions.getEditor().getEditorComponent();
         editor.addKeyListener(this);
+        Font fontExp = new Font("Segoe UI", Font.PLAIN, 12);
+        comboExpressions.setFont(fontExp);
         comboExpressions.setFocusable(true);
 	c.fill = GridBagConstraints.NONE;
 	c.gridx = 1;
@@ -142,7 +143,7 @@ public final class GUI extends Tools implements KeyListener {
         c.anchor = GridBagConstraints.WEST;
         vPanel.add(comboExpressions, c);
         
-        JLabel space5 = new JLabel("  ");
+        JLabel space5 = new JLabel(" ");
 	c.fill = GridBagConstraints.NONE;
 	c.gridx = 6;
 	c.gridy = 2;
@@ -154,10 +155,13 @@ public final class GUI extends Tools implements KeyListener {
         vPanel.add(space5, c);
         
         JButton okButton = new JButton("Executar");
+        okButton.setPreferredSize(new Dimension(90, 32));
+        okButton.setMinimumSize(new Dimension(90, 32));
         okButton.addKeyListener(this);
         okButton.setFocusable(true);
         okButton.setBackground(new Color(11, 188, 255));
         okButton.setForeground(new Color(11, 111, 222));
+        okButton.setFont(font);
 	c.fill = GridBagConstraints.NONE;
 	c.gridx = 7;
 	c.gridy = 2;
@@ -169,9 +173,27 @@ public final class GUI extends Tools implements KeyListener {
         vPanel.add(okButton, c);
         myFrame.getRootPane().setDefaultButton(okButton);
         
+        JButton rndButton = new JButton("Aleatória");
+        rndButton.setPreferredSize(new Dimension(90, 32));
+        rndButton.setMinimumSize(new Dimension(90, 32));
+        rndButton.addKeyListener(this);
+        rndButton.setFocusable(true);
+        rndButton.setBackground(new Color(11, 188, 255));
+        rndButton.setForeground(new Color(11, 111, 222));
+        rndButton.setFont(font);
+	c.fill = GridBagConstraints.NONE;
+	c.gridx = 8;
+	c.gridy = 2;
+	c.gridwidth = 1;
+	c.gridheight = 1;
+        c.weightx = 100.0;
+        c.weighty = 0.0;
+        c.anchor = GridBagConstraints.WEST;
+        vPanel.add(rndButton, c);
+        
         JLabel space5B = new JLabel(" ");
 	c.fill = GridBagConstraints.HORIZONTAL;
-	c.gridx = 8;
+	c.gridx = 9;
 	c.gridy = 2;
 	c.gridwidth = 1;
 	c.gridheight = 1;
@@ -184,114 +206,103 @@ public final class GUI extends Tools implements KeyListener {
 	c.fill = GridBagConstraints.NONE;
 	c.gridx = 1;
 	c.gridy = 3;
-	c.gridwidth = 8;
+	c.gridwidth = 9;
 	c.gridheight = 1;
         c.weightx = 100.0;
         c.weighty = 0.0;
         vPanel.add(space6, c);
         
-        JLabel labelViewFormat = new JLabel("Apresentação:");
-        labelViewFormat.setFont(font);
-        labelViewFormat.setForeground(new Color(1, 111, 222));
-	c.fill = GridBagConstraints.NONE;
-        c.gridx = 1;
-	c.gridy = 4;
-	c.gridwidth = 3;//3
-	c.gridheight = 1;
-        c.weightx = 0.0;
-        c.weighty = 0.0;
-        c.anchor = GridBagConstraints.WEST;
-        vPanel.add(labelViewFormat, c);
-        
-        JLabel space7 = new JLabel("     ");
-	c.fill = GridBagConstraints.NONE;
-	c.gridx = 4;
-	c.gridy = 4;
-	c.gridwidth = 1;
-	c.gridheight = 1;
-        c.weightx = 0.0;
-        c.weighty = 0.0;
-        c.anchor = GridBagConstraints.EAST;
-        vPanel.add(space7, c);
-        
         JLabel labelWichReport = new JLabel("Relatório a exibir:");
         labelWichReport.setFont(font);
         labelWichReport.setForeground(new Color(1, 111, 222));
 	c.fill = GridBagConstraints.NONE;
-        c.gridx = 5;
+        c.gridx = 1;
 	c.gridy = 4;
-	c.gridwidth = 4;//4
+	c.gridwidth = 6;
 	c.gridheight = 1;
         c.weightx = 0.0;
         c.weighty = 0.0;
         c.anchor = GridBagConstraints.WEST;
         vPanel.add(labelWichReport, c);
         
-        JComboBox<String> comboViewFormat = new JComboBox<>(viewFormats);
-        comboViewFormat.addKeyListener(this);
-        comboViewFormat.setFocusable(true);
-	c.fill = GridBagConstraints.HORIZONTAL;
-	c.gridx = 1;
-	c.gridy = 5;
-	c.gridwidth = 3;
-	c.gridheight = 1;
-        c.weightx = 0.0;
-        c.weighty = 0.0;
-        c.anchor = GridBagConstraints.WEST;
-        vPanel.add(comboViewFormat, c);
-        
-        JLabel space8 = new JLabel("     ");
-	c.fill = GridBagConstraints.NONE;
-	c.gridx = 4;
-	c.gridy = 5;
-	c.gridwidth = 1;
-	c.gridheight = 1;
-        c.weightx = 0.0;
-        c.weighty = 0.0;
-        c.anchor = GridBagConstraints.EAST;
-        vPanel.add(space8, c);
-        
         JComboBox<String> comboWichReport = new JComboBox<>(wichReport);
+        comboWichReport.setPreferredSize(new Dimension(250, 30));
+        comboWichReport.setMinimumSize(new Dimension(250, 30));
         comboWichReport.addKeyListener(this);
         comboWichReport.setFocusable(true);
+        Font fontRep = new Font("Segoe UI", Font.PLAIN, 12);
+	comboWichReport.setFont(fontRep);
         c.fill = GridBagConstraints.NONE;
-	c.gridx = 5;
+	c.gridx = 1;
 	c.gridy = 5;
-	c.gridwidth = 3;
+	c.gridwidth = 5;
 	c.gridheight = 1;
         c.weightx = 0.0;
         c.weighty = 0.0;
         c.anchor = GridBagConstraints.WEST;
         vPanel.add(comboWichReport, c);
         
+        JLabel space7 = new JLabel(" ");
+	c.fill = GridBagConstraints.NONE;
+	c.gridx = 6;
+	c.gridy = 5;
+	c.gridwidth = 1;
+	c.gridheight = 1;
+        c.weightx = 0.0;
+        c.weighty = 0.0;
+        c.anchor = GridBagConstraints.WEST;
+        vPanel.add(space7, c);
+        
+        JLabel space8 = new JLabel(" ");
+	c.fill = GridBagConstraints.NONE;
+	c.gridx = 7;
+	c.gridy = 5;
+	c.gridwidth = 1;
+	c.gridheight = 1;
+        c.weightx = 100.0;
+        c.weighty = 0.0;
+        c.anchor = GridBagConstraints.WEST;
+        vPanel.add(space8, c);
+        
         JLabel space8B = new JLabel(" ");
-	c.fill = GridBagConstraints.HORIZONTAL;
+	c.fill = GridBagConstraints.NONE;
 	c.gridx = 8;
+	c.gridy = 5;
+	c.gridwidth = 1;
+	c.gridheight = 1;
+        c.weightx = 0.0;
+        c.weighty = 0.0;
+        c.anchor = GridBagConstraints.WEST;
+        vPanel.add(space8B, c);
+        
+        JLabel space8C = new JLabel(" ");
+	c.fill = GridBagConstraints.HORIZONTAL;
+	c.gridx = 9;
 	c.gridy = 5;
 	c.gridwidth = 1;
 	c.gridheight = 1;
         c.weightx = 100.0;
         c.weighty = 0.0;
         c.anchor = GridBagConstraints.EAST;
-        vPanel.add(space8B, c);
+        vPanel.add(space8C, c);
         
         JLabel space9 = new JLabel(" ");
 	c.fill = GridBagConstraints.NONE;
 	c.gridx = 1;
 	c.gridy = 6;
-	c.gridwidth = 8;
+	c.gridwidth = 9;
 	c.gridheight = 1;
         c.weightx = 0.0;
         c.weighty = 0.0;
         vPanel.add(space9, c);
         
-        JLabel resultLabel = new JLabel("Resultados:");
+        JLabel resultLabel = new JLabel("Resultado:");
         resultLabel.setFont(font);
         resultLabel.setForeground(new Color(1, 111, 222));
 	c.fill = GridBagConstraints.NONE;
 	c.gridx = 1;
 	c.gridy = 7;
-	c.gridwidth = 8;
+	c.gridwidth = 9;
 	c.gridheight = 1;
         c.weightx = 0.0;
         c.weighty = 0.0;
@@ -305,7 +316,7 @@ public final class GUI extends Tools implements KeyListener {
         textAreaResult.setEditable(false);
         textAreaResult.setBackground(new Color(44, 44, 44));
         textAreaResult.setForeground(new Color(1, 188, 255));
-        Font fontResult = new Font("Consolas", Font.PLAIN, 15);
+        Font fontResult = new Font("Consolas", Font.PLAIN, 16);
         textAreaResult.setFont(fontResult);
         Insets mResult = new Insets(6, 6, 0, 0);
         textAreaResult.setMargin(mResult);
@@ -314,7 +325,7 @@ public final class GUI extends Tools implements KeyListener {
 	c.fill = GridBagConstraints.BOTH;
         c.gridx = 1;
 	c.gridy = 8;
-	c.gridwidth = 8;
+	c.gridwidth = 9;
 	c.gridheight = 6;//4
 	c.weightx = 100.0;
         c.weighty = 0.01;//PARA VÁRIOS RESULTADOS: 0.1
@@ -324,7 +335,7 @@ public final class GUI extends Tools implements KeyListener {
 	c.fill = GridBagConstraints.NONE;
 	c.gridx = 1;
 	c.gridy = 14;//12
-	c.gridwidth = 8;
+	c.gridwidth = 9;
 	c.gridheight = 1;
         c.weightx = 0.0;
         c.weighty = 0.0;
@@ -336,7 +347,7 @@ public final class GUI extends Tools implements KeyListener {
 	c.fill = GridBagConstraints.NONE;
 	c.gridx = 1;
 	c.gridy = 15;//13
-	c.gridwidth = 8;
+	c.gridwidth = 9;
 	c.gridheight = 1;
         c.weightx = 0.0;
         c.weighty = 0.0;
@@ -350,7 +361,7 @@ public final class GUI extends Tools implements KeyListener {
         textAreaReport.setEditable(false);
         textAreaReport.setBackground(new Color(44, 44, 44));
         textAreaReport.setForeground(new Color(1, 188, 255));
-        Font fontReport = new Font("Consolas", Font.PLAIN, 15);
+        Font fontReport = new Font("Consolas", Font.PLAIN, 16);
         textAreaReport.setFont(fontReport);
         Insets mReport = new Insets(10, 10, 10, 10);
         textAreaReport.setMargin(mReport);
@@ -359,7 +370,7 @@ public final class GUI extends Tools implements KeyListener {
 	c.fill = GridBagConstraints.BOTH;
         c.gridx = 1;
 	c.gridy = 16;//14
-	c.gridwidth = 8;
+	c.gridwidth = 9;
 	c.gridheight = 3;
 	c.weightx = 100.0;
         c.weighty = 0.6;
@@ -367,7 +378,7 @@ public final class GUI extends Tools implements KeyListener {
         
         JLabel space4 = new JLabel("   ");
 	c.fill = GridBagConstraints.NONE;
-	c.gridx = 9;
+	c.gridx = 10;
 	c.gridy = 1;
 	c.gridwidth = 1;
 	c.gridheight = 18;
@@ -379,7 +390,7 @@ public final class GUI extends Tools implements KeyListener {
 	c.fill = GridBagConstraints.NONE;
 	c.gridx = 0;
 	c.gridy = 19;
-	c.gridwidth = 10;
+	c.gridwidth = 11;
 	c.gridheight = 1;
         c.weightx = 0.0;
         c.weighty = 0.0;
@@ -401,9 +412,40 @@ public final class GUI extends Tools implements KeyListener {
                 try {
                     hasResult = true;
                     exp = optimizeExpressions((String) comboExpressions.getSelectedItem());
-                    String results = exp.getOptimizedExpression();
-                    textAreaResult.setText(results);
-                    textAreaReport.setText(reportText(comboWichReport));
+                    if (errorMsg.isEmpty()) {
+                        String results = exp.getOptimizedExpression();
+                        textAreaResult.setText(results);
+                        textAreaReport.setText(reportText(comboWichReport));
+                    }
+                    else {
+                        textAreaResult.setText(errorMsg);
+                        textAreaReport.setText("-");
+                    }
+                } catch (Exception ex) {
+                    Logger.getLogger(GUI.class.getName()).log(Level.SEVERE, null, ex);
+                }
+            }
+        });
+        
+        rndButton.addActionListener(new ActionListener() {
+            
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                try {
+                    hasResult = true;
+                    String gen = generateRandomExpression(12, 4);
+                    editor.setText(gen);
+                    
+                    exp = optimizeExpressions(gen);
+                    if (errorMsg.isEmpty()) {
+                        String results = exp.getOptimizedExpression();
+                        textAreaResult.setText(results);
+                        textAreaReport.setText(reportText(comboWichReport));
+                    }
+                    else {
+                        textAreaResult.setText(errorMsg);
+                        textAreaReport.setText("-");
+                    }
                 } catch (Exception ex) {
                     Logger.getLogger(GUI.class.getName()).log(Level.SEVERE, null, ex);
                 }
@@ -415,8 +457,13 @@ public final class GUI extends Tools implements KeyListener {
             @Override
             public void actionPerformed(ActionEvent e) {
                 try {
-                    if (hasResult) {
-                        textAreaReport.setText(reportText(comboWichReport));
+                    if (errorMsg.isEmpty()) {
+                        if (hasResult) {
+                            textAreaReport.setText(reportText(comboWichReport));
+                        }
+                    }
+                    else {
+                        textAreaReport.setText("-");
                     }
                 } catch (Exception ex) {
                     Logger.getLogger(GUI.class.getName()).log(Level.SEVERE, null, ex);
@@ -429,8 +476,18 @@ public final class GUI extends Tools implements KeyListener {
             @Override
             public void actionPerformed(ActionEvent e) {
                 try {
-                    textAreaResult.setText("");
-                    textAreaReport.setText("");
+                    hasResult = true;
+                    errorMsg = "";
+                    exp = optimizeExpressions((String) comboExpressions.getSelectedItem());
+                    if (errorMsg.isEmpty()) {
+                        String results = exp.getOptimizedExpression();
+                        textAreaResult.setText(results);
+                        textAreaReport.setText(reportText(comboWichReport));
+                    }
+                    else {
+                        textAreaResult.setText(errorMsg);
+                        textAreaReport.setText("-");
+                    }
                 } catch (Exception ex) {
                     Logger.getLogger(GUI.class.getName()).log(Level.SEVERE, null, ex);
                 }
@@ -510,6 +567,8 @@ public final class GUI extends Tools implements KeyListener {
                 inputFormat.equals("ERRO") ||
                (inputFormat.equals("Literal") && hasDuplicate(expression))) {
                 
+                errorMsg = "Expressão inconsistente.";
+                //exp = new SumOfProducts(errorMsg);
                 report += print("Expressão:\n> " + expression + "\n", writer);
                 report += print("\nExpressão inconsistente.\n", writer);
                 report += print("\nFim do resultado parcial.\n", writer);
@@ -548,6 +607,8 @@ public final class GUI extends Tools implements KeyListener {
             }
             
             if (isDumb(exp.getMinTermsList(), exp.getNumberOfVars())) {
+                errorMsg = "[VDD]";
+                //exp = new SumOfProducts(errorMsg);
                 report += print ("\n\nExpressão redundante:\n> não use portas lógicas, ligue em VDD.\n", writer);
                 report += print("\nFim do resultado parcial.\n", writer);
                 report += print("==================================================\n\n", writer);
@@ -631,7 +692,7 @@ public final class GUI extends Tools implements KeyListener {
             }
             
 /////////////////////////////////////////////////////
-            exp.setOptimizedExpression();
+            exp.buildOptimizedExpression();
 /////////////////////////////////////////////////////
             
             report += print("\n\nExpressão otimizada:\n", writer);
@@ -654,7 +715,7 @@ public final class GUI extends Tools implements KeyListener {
         //exp.fillTruthTable();
         report += print ("Fim dos resultados.\n", writer);
         report += print("==================================================\n", writer);
-            
+        
         writer.close();
         //return results;
         return exp;

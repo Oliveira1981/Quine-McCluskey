@@ -231,7 +231,7 @@ public final class SumOfProducts extends Tools {
         }
     }
     
-    public void setOptimizedExpression() {
+    public void buildOptimizedExpression() {
         optimizedExpression = "";
         
         for (int i=0; i < finalProductsList.size(); i++) {
@@ -239,6 +239,10 @@ public final class SumOfProducts extends Tools {
             if (i < (finalProductsList.size()-1))
                 optimizedExpression += " + ";
         }
+    }
+    
+    public void setOptimizedExpression(String str) {
+        this.optimizedExpression = str;
     }
     
     public void fillMinTermsList() {

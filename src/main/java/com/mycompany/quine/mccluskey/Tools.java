@@ -2,6 +2,8 @@ package com.mycompany.quine.mccluskey;
 
 import java.io.PrintWriter;
 import java.util.ArrayList;
+import java.util.Random;
+import java.util.Set;
 
 /**
  *
@@ -517,6 +519,26 @@ public class Tools {
             }
         }
         return false;
+    }
+    
+    public static String generateRandomExpression(int numberOfProducts, int numberOfVars) {
+        String exp = "";
+        ArrayList<Integer> products = new ArrayList<>();
+        Random random = new Random();
+        int max = (int) Math.pow(2, numberOfVars);
+        for (int i=0; i < numberOfProducts; i++) {
+            if (i > 0) {
+                exp += "+";
+            }
+            int p;
+            do {
+                p = random.nextInt(max);
+            }
+            while (products.contains(p) && (products.size() < max));
+            products.add(p);
+            exp += String.valueOf(p);
+        }
+        return exp;
     }
 
 }
