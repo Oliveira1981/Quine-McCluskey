@@ -1,7 +1,9 @@
 package com.mycompany.quine.mccluskey;
 
+import static com.mycompany.quine.mccluskey.Tools.print;
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.Formatter;
 
 /**
  *
@@ -11,7 +13,7 @@ public final class SumOfProducts extends Tools {
 
     private String                         inputFormat;
     private String                     inputExpression;
-    private String                 optimizedExpression;
+    private String                              result;
     private ArrayList<Product>            productsList; // Linhas da coveringTable
     private ArrayList<Product>         auxProductsList;
     private ArrayList<MinTerm>            minTermsList; // Colunas da coveringTable
@@ -19,6 +21,7 @@ public final class SumOfProducts extends Tools {
     private ArrayList<ArrayList<Integer>> permutations;
     private int                           numberOfVars;
     private ArrayList<String>               truthTable;
+    private String                        errorMessage;
     
     public SumOfProducts(String inputFormat, String expression) {
         this.inputFormat = inputFormat;
@@ -36,7 +39,8 @@ public final class SumOfProducts extends Tools {
     
     public SumOfProducts() {
         this.inputFormat     = "literal";
-        this.inputExpression =        "";
+        this.inputExpression = "";
+        this.errorMessage    = "";
         fillProductsList();
         fillTruthTable();
     }
@@ -232,17 +236,17 @@ public final class SumOfProducts extends Tools {
     }
     
     public void buildOptimizedExpression() {
-        optimizedExpression = "";
+        result = "";
         
         for (int i=0; i < finalProductsList.size(); i++) {
-            optimizedExpression += finalProductsList.get(i);
+            result += finalProductsList.get(i);
             if (i < (finalProductsList.size()-1))
-                optimizedExpression += " + ";
+                result += " + ";
         }
     }
     
-    public void setOptimizedExpression(String str) {
-        this.optimizedExpression = str;
+    public void setResult(String str) {
+        this.result = str;
     }
     
     public void fillMinTermsList() {
@@ -447,8 +451,37 @@ public final class SumOfProducts extends Tools {
         }
     }
     
-    public String getOptimizedExpression() {
-        return optimizedExpression;
+    public String getResult() {
+        return result;
     }
     
+    public String getMinTermsFromProducts() {
+        String str;
+        Formatter fmt = new Formatter();
+        fmt.format("%-20s %-10s %-20s\n", "Mintermos", "Binário", "Produto");
+        for(int i=0; i < productsList.size(); i++) {
+            fmt.format("%-20s %-10s %-20s\n",
+                    productsList.get(i).getMinTermsList(),
+                    productsList.get(i).getBinaryView(),
+                    productsList.get(i).getLiteralView()
+            );
+        }
+        str = "\n" + fmt;
+        return str;
+    }
+    
+    public String getProductsFromMinTerms() {
+        String str;
+        Formatter fmt = new Formatter();
+        fmt.format("%-20s %-20s\n", "Mintermo", "Produtos");
+        for(int i=0; i < minTermsList.size(); i++) {
+            fmt.format("%-20s %-20s\n",
+                    minTermsList.get(i).getDecimalView(),
+                    minTermsList.get(i).getProductsList()
+            );
+        }
+        str = "\n" + fmt;
+        return str;
+    }
+
 }

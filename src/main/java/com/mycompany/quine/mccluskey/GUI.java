@@ -14,6 +14,7 @@ import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
 import java.io.PrintWriter;
 import java.util.ArrayList;
+import java.util.Formatter;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.BorderFactory;
@@ -93,6 +94,9 @@ public final class GUI extends Tools implements KeyListener {
         
         Font font = new Font("Segoe UI", Font.BOLD, 13);
         
+        Color borderColor = new Color(0, 0, 0, 0);
+        //Color borderColor = new Color(0, 0, 0, 255);
+        
         JLabel space1 = new JLabel("   ");
         c.fill = GridBagConstraints.NONE;
 	c.gridx = 0;
@@ -101,7 +105,7 @@ public final class GUI extends Tools implements KeyListener {
 	c.gridheight = 1;
         c.weightx = 0.0;
         c.weighty = 0.0;
-	space1.setBorder(BorderFactory.createLineBorder(Color.BLACK));
+	space1.setBorder(BorderFactory.createLineBorder(borderColor));
         vPanel.add(space1, c);
         
         JLabel space3 = new JLabel("   ");
@@ -112,7 +116,7 @@ public final class GUI extends Tools implements KeyListener {
 	c.gridheight = 18;
         c.weightx = 0.0;
         c.weighty = 0.0;
-	space3.setBorder(BorderFactory.createLineBorder(Color.BLACK));
+	space3.setBorder(BorderFactory.createLineBorder(borderColor));
         vPanel.add(space3, c);
         
         JLabel labelExpressions = new JLabel("Expressão:");
@@ -126,7 +130,7 @@ public final class GUI extends Tools implements KeyListener {
         c.weightx = 0.0;
         c.weighty = 0.0;
         c.anchor = GridBagConstraints.WEST;
-        labelExpressions.setBorder(BorderFactory.createLineBorder(Color.BLACK));
+        labelExpressions.setBorder(BorderFactory.createLineBorder(borderColor));
         vPanel.add(labelExpressions, c);
         
         JComboBox<String> comboExpressions = new JComboBox<>(templates);
@@ -146,7 +150,7 @@ public final class GUI extends Tools implements KeyListener {
         c.weightx = 0.0;
         c.weighty = 0.0;
         c.anchor = GridBagConstraints.WEST;
-	comboExpressions.setBorder(BorderFactory.createLineBorder(Color.BLACK));
+	comboExpressions.setBorder(BorderFactory.createLineBorder(borderColor));
         vPanel.add(comboExpressions, c);
         
         JLabel space5 = new JLabel(" ");
@@ -158,7 +162,7 @@ public final class GUI extends Tools implements KeyListener {
         c.weightx = 0.0;
         c.weighty = 0.0;
         c.anchor = GridBagConstraints.WEST;
-	space5.setBorder(BorderFactory.createLineBorder(Color.BLACK));
+	space5.setBorder(BorderFactory.createLineBorder(borderColor));
         vPanel.add(space5, c);
         
         JButton okButton = new JButton("Executar");
@@ -177,7 +181,7 @@ public final class GUI extends Tools implements KeyListener {
         c.weightx = 0.0;
         c.weighty = 0.0;
         c.anchor = GridBagConstraints.WEST;
-	okButton.setBorder(BorderFactory.createLineBorder(Color.BLACK));
+	//okButton.setBorder(BorderFactory.createLineBorder(borderColor));
         vPanel.add(okButton, c);
         myFrame.getRootPane().setDefaultButton(okButton);
         
@@ -190,7 +194,7 @@ public final class GUI extends Tools implements KeyListener {
         c.weightx = 0.0;
         c.weighty = 0.0;
         c.anchor = GridBagConstraints.WEST;
-	space5A.setBorder(BorderFactory.createLineBorder(Color.BLACK));
+	space5A.setBorder(BorderFactory.createLineBorder(borderColor));
         vPanel.add(space5A, c);
         
         JButton rndButton = new JButton("Aleatória");
@@ -209,20 +213,8 @@ public final class GUI extends Tools implements KeyListener {
         c.weightx = 100.0;
         c.weighty = 0.0;
         c.anchor = GridBagConstraints.WEST;
-	rndButton.setBorder(BorderFactory.createLineBorder(Color.BLACK));
+	//rndButton.setBorder(BorderFactory.createLineBorder(borderColor));
         vPanel.add(rndButton, c);
-        
-        /*JLabel space5B = new JLabel("5B");
-	c.fill = GridBagConstraints.HORIZONTAL;
-	c.gridx = 10;
-	c.gridy = 2;
-	c.gridwidth = 1;
-	c.gridheight = 1;
-        c.weightx = 100.0;
-        c.weighty = 0.0;
-        c.anchor = GridBagConstraints.WEST;
-	space5B.setBorder(BorderFactory.createLineBorder(Color.BLACK));
-        vPanel.add(space5B, c);*/
         
         JLabel space6 = new JLabel(" ");
 	c.fill = GridBagConstraints.NONE;
@@ -232,7 +224,7 @@ public final class GUI extends Tools implements KeyListener {
 	c.gridheight = 1;
         c.weightx = 100.0;
         c.weighty = 0.0;
-	space6.setBorder(BorderFactory.createLineBorder(Color.BLACK));
+	space6.setBorder(BorderFactory.createLineBorder(borderColor));
         vPanel.add(space6, c);
         
         JLabel labelWichReport = new JLabel("Relatório a exibir:");
@@ -246,7 +238,7 @@ public final class GUI extends Tools implements KeyListener {
         c.weightx = 0.0;
         c.weighty = 0.0;
         c.anchor = GridBagConstraints.WEST;
-	labelWichReport.setBorder(BorderFactory.createLineBorder(Color.BLACK));
+	labelWichReport.setBorder(BorderFactory.createLineBorder(borderColor));
         vPanel.add(labelWichReport, c);
         
         JComboBox<String> comboWichReport = new JComboBox<>(wichReport);
@@ -264,57 +256,9 @@ public final class GUI extends Tools implements KeyListener {
         c.weightx = 0.0;
         c.weighty = 0.0;
         c.anchor = GridBagConstraints.WEST;
-	comboWichReport.setBorder(BorderFactory.createLineBorder(Color.BLACK));
+	comboWichReport.setBorder(BorderFactory.createLineBorder(borderColor));
         vPanel.add(comboWichReport, c);
         
-        /*JLabel space7 = new JLabel(" ");
-	c.fill = GridBagConstraints.HORIZONTAL;
-	c.gridx = 6;
-	c.gridy = 5;
-	c.gridwidth = 4;
-	c.gridheight = 1;
-        c.weightx = 0.0;
-        c.weighty = 0.0;
-        c.anchor = GridBagConstraints.WEST;
-	space7.setBorder(BorderFactory.createLineBorder(Color.BLACK));
-        vPanel.add(space7, c);
-        
-        JLabel space8 = new JLabel(" ");
-	c.fill = GridBagConstraints.NONE;
-	c.gridx = 7;
-	c.gridy = 5;
-	c.gridwidth = 1;
-	c.gridheight = 1;
-        c.weightx = 100.0;
-        c.weighty = 0.0;
-        c.anchor = GridBagConstraints.WEST;
-	space8.setBorder(BorderFactory.createLineBorder(Color.BLACK));
-        vPanel.add(space8, c);
-        
-        JLabel space8B = new JLabel(" ");
-	c.fill = GridBagConstraints.NONE;
-	c.gridx = 8;
-	c.gridy = 5;
-	c.gridwidth = 1;
-	c.gridheight = 1;
-        c.weightx = 0.0;
-        c.weighty = 0.0;
-        c.anchor = GridBagConstraints.WEST;
-	space8B.setBorder(BorderFactory.createLineBorder(Color.BLACK));
-        vPanel.add(space8B, c);
-        
-        JLabel space8C = new JLabel(" ");
-	c.fill = GridBagConstraints.HORIZONTAL;
-	c.gridx = 9;
-	c.gridy = 5;
-	c.gridwidth = 1;
-	c.gridheight = 1;
-        c.weightx = 100.0;
-        c.weighty = 0.0;
-        c.anchor = GridBagConstraints.EAST;
-	space8C.setBorder(BorderFactory.createLineBorder(Color.BLACK));
-        vPanel.add(space8C, c);
-        */
         JLabel space9 = new JLabel(" ");
 	c.fill = GridBagConstraints.NONE;
 	c.gridx = 1;
@@ -322,7 +266,7 @@ public final class GUI extends Tools implements KeyListener {
 	c.gridwidth = 9;
 	c.gridheight = 1;
         c.weightx = 0.0;
-	space9.setBorder(BorderFactory.createLineBorder(Color.BLACK));
+	space9.setBorder(BorderFactory.createLineBorder(borderColor));
         c.weighty = 0.0;
         vPanel.add(space9, c);
         
@@ -337,7 +281,7 @@ public final class GUI extends Tools implements KeyListener {
         c.weightx = 0.0;
         c.weighty = 0.0;
         c.anchor = GridBagConstraints.WEST;
-	resultLabel.setBorder(BorderFactory.createLineBorder(Color.BLACK));
+	resultLabel.setBorder(BorderFactory.createLineBorder(borderColor));
         vPanel.add(resultLabel, c);
         
         JTextArea textAreaResult = new JTextArea();
@@ -360,7 +304,7 @@ public final class GUI extends Tools implements KeyListener {
 	c.gridheight = 6;//4
 	c.weightx = 100.0;
         c.weighty = 0.01;//PARA VÁRIOS RESULTADOS: 0.1
-	jScrollResult.setBorder(BorderFactory.createLineBorder(Color.BLACK));
+	jScrollResult.setBorder(BorderFactory.createLineBorder(borderColor));
         vPanel.add(jScrollResult, c);
         
         JLabel space10 = new JLabel(" ");
@@ -371,7 +315,7 @@ public final class GUI extends Tools implements KeyListener {
 	c.gridheight = 1;
         c.weightx = 0.0;
         c.weighty = 0.0;
-	space10.setBorder(BorderFactory.createLineBorder(Color.BLACK));
+	space10.setBorder(BorderFactory.createLineBorder(borderColor));
         vPanel.add(space10, c);
         
         JLabel labelReport = new JLabel("Relatório:");
@@ -385,7 +329,7 @@ public final class GUI extends Tools implements KeyListener {
         c.weightx = 0.0;
         c.weighty = 0.0;
         c.anchor = GridBagConstraints.WEST;
-	labelReport.setBorder(BorderFactory.createLineBorder(Color.BLACK));
+	labelReport.setBorder(BorderFactory.createLineBorder(borderColor));
         vPanel.add(labelReport, c);
         
         JTextArea textAreaReport = new JTextArea();
@@ -408,7 +352,7 @@ public final class GUI extends Tools implements KeyListener {
 	c.gridheight = 3;
 	c.weightx = 100.0;
         c.weighty = 0.6;
-	jScrollReport.setBorder(BorderFactory.createLineBorder(Color.BLACK));
+	jScrollReport.setBorder(BorderFactory.createLineBorder(borderColor));
         vPanel.add(jScrollReport, c);
         
         JLabel space4 = new JLabel("   ");
@@ -419,7 +363,7 @@ public final class GUI extends Tools implements KeyListener {
 	c.gridheight = 18;
         c.weightx = 0.0;
         c.weighty = 0.0;
-	space4.setBorder(BorderFactory.createLineBorder(Color.BLACK));
+	space4.setBorder(BorderFactory.createLineBorder(borderColor));
         vPanel.add(space4, c);
         
         JLabel space2 = new JLabel(" ");
@@ -432,7 +376,7 @@ public final class GUI extends Tools implements KeyListener {
         c.weighty = 0.0;
         Font fontBottom = new Font("Segoe UI", Font.PLAIN, 6);
         space2.setFont(fontBottom);
-	space2.setBorder(BorderFactory.createLineBorder(Color.BLACK));
+	space2.setBorder(BorderFactory.createLineBorder(borderColor));
         vPanel.add(space2, c);
         
         myFrame.add(vPanel);
@@ -450,7 +394,7 @@ public final class GUI extends Tools implements KeyListener {
                     hasResult = true;
                     exp = optimizeExpressions((String) comboExpressions.getSelectedItem());
                     if (errorMsg.isEmpty()) {
-                        String results = exp.getOptimizedExpression();
+                        String results = exp.getResult();
                         textAreaResult.setText(results);
                         textAreaReport.setText(reportText(comboWichReport));
                     }
@@ -475,7 +419,7 @@ public final class GUI extends Tools implements KeyListener {
                     
                     exp = optimizeExpressions(gen);
                     if (errorMsg.isEmpty()) {
-                        String results = exp.getOptimizedExpression();
+                        String results = exp.getResult();
                         textAreaResult.setText(results);
                         textAreaReport.setText(reportText(comboWichReport));
                     }
@@ -517,7 +461,7 @@ public final class GUI extends Tools implements KeyListener {
                     errorMsg = "";
                     exp = optimizeExpressions((String) comboExpressions.getSelectedItem());
                     if (errorMsg.isEmpty()) {
-                        String results = exp.getOptimizedExpression();
+                        String results = exp.getResult();
                         textAreaResult.setText(results);
                         textAreaReport.setText(reportText(comboWichReport));
                     }
@@ -641,12 +585,7 @@ public final class GUI extends Tools implements KeyListener {
 /////////////////////////////////////////////////////
             
             report += print("\nMintermos por número de 1s:", writer);
-            for(int i=0; i < exp.getProductsList().size(); i++) {
-                report += print("\n", writer);
-                report += print(exp.getProductsList().get(i).getMinTermsList()+"\t", writer);
-                report += print(exp.getProductsList().get(i).getBinaryView()+"\t", writer);
-                report += print(exp.getProductsList().get(i).getLiteralView(), writer);
-            }
+            report += print(exp.getMinTermsFromProducts(), writer);
             
             if (isDumb(exp.getMinTermsList(), exp.getNumberOfVars())) {
                 errorMsg = "[VDD]";
@@ -661,37 +600,18 @@ public final class GUI extends Tools implements KeyListener {
 /////////////////////////////////////////////////////
             exp.mergePrimeImplicants(10);
 /////////////////////////////////////////////////////
-    
+            
             report += print("\n\nImplicantes primos mesclados:\n", writer);
-            for(int i=0; i < exp.getProductsList().size(); i++) {
-                int q = 0;
-                for(; q < exp.getProductsList().get(i).getMinTermsList().size(); q++) {
-                    report += print("-"+exp.getProductsList().get(i).getMinTermsList().get(q), writer);
-                }
-                if(q < 3) {
-                    report += print("-\t", writer);
-                }
-                report += print("\t", writer);
-                report += print(exp.getProductsList().get(i).getBinaryView()+" \t", writer);
-                report += print(exp.getProductsList().get(i).getLiteralView()+"\n", writer);
-            }
+            report += print(exp.getMinTermsFromProducts(), writer);
             
 /////////////////////////////////////////////////////
             exp.fillMinTermsList();
             //exp.sortMinTermsList();
             exp.fillTruthTable();
 /////////////////////////////////////////////////////
-    
+            
             report += print ("\nMintermos e seus produtos (Tabela de Cobertura):", writer);
-            for (int i=0; i < exp.getMinTermsList().size(); i++) {
-                report += print("\n"+exp.getMinTermsList().get(i).getDecimalView()+" -", writer);
-                for (int p=0; p < exp.getMinTermsList().get(i).getProductsList().size(); p++) {
-                    report += print("\t\t"+exp.getMinTermsList().get(i).getProductsList().get(p), writer);
-                    if (exp.getMinTermsList().get(i).getProductsList().get(p).length() < 8) {
-                        report += print("\t", writer);
-                    }
-                }
-            }
+            report += print (exp.getProductsFromMinTerms(), writer);
             
 /////////////////////////////////////////////////////
             exp.essentialProductsToFinalList();
@@ -738,10 +658,10 @@ public final class GUI extends Tools implements KeyListener {
 /////////////////////////////////////////////////////
             
             report += print("\n\nQuantidade de Literais na saída:\n", writer);
-            report += print("> " + numberOfLiterals(exp.getOptimizedExpression()) + "\n", writer);
+            report += print("> " + numberOfLiterals(exp.getResult()) + "\n", writer);
             
             report += print("\nExpressão otimizada:\n", writer);
-            report += print("> "+exp.getOptimizedExpression()+"\n", writer);
+            report += print("> "+exp.getResult()+"\n", writer);
             
             report += print ("\nFim do resultado parcial.\n", writer);
             report += print("==================================================\n\n", writer);
@@ -749,7 +669,7 @@ public final class GUI extends Tools implements KeyListener {
             if (results.length() > 0 ) {
                 results += ";\n";
             }
-            results += exp.getOptimizedExpression();
+            results += exp.getResult();
             
             begin = end + 1;
             if (begin >= allExpressions.length()) {
