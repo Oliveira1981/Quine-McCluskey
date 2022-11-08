@@ -17,6 +17,7 @@ public final class Product extends Tools {
     private int                        size;
     private boolean                hasPrime;
     private boolean             isEssential;
+    private boolean                 isFinal;
     
     public Product() {
         minTermsList    = new ArrayList<>();

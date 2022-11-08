@@ -19,6 +19,7 @@ public final class SumOfProducts extends Tools {
     private ArrayList<Product>            productsList; // Linhas da coveringTable
     private ArrayList<Product>         auxProductsList;
     private ArrayList<MinTerm>            minTermsList; // Colunas da coveringTable
+    private ArrayList<String>    essentialProductsList;
     private ArrayList<String>        finalProductsList;
     private ArrayList<ArrayList<Integer>> permutations;
     private int                           numberOfVars;
@@ -124,6 +125,10 @@ public final class SumOfProducts extends Tools {
         return minTermsList;
     }
     
+    public ArrayList<String> getEssentialProductsList() {
+        return essentialProductsList;
+    }
+    
     public ArrayList<String> getFinalProductsList() {
         return finalProductsList;
     }
@@ -132,8 +137,12 @@ public final class SumOfProducts extends Tools {
         return numberOfVars;
     }
     
-    public ArrayList<String> getTruthTable() {
-        return truthTable;
+    public String getTruthTable() {
+        String str = "";
+        for (int i=0; i < truthTable.size(); i++) {
+            str += "\n" + truthTable.get(i);
+        }
+        return str;
     }
     
     public ArrayList<ArrayList<Integer>> getPermutations() {
@@ -338,12 +347,17 @@ public final class SumOfProducts extends Tools {
         //Colocar na essentialProductsList todos os
         //produtos que aparecem apenas uma vez em algum mintermo
         //finalProductsList = new ArrayList<>();
+        essentialProductsList = new ArrayList<>();
         finalProductsList = new ArrayList<>();
         
         for (int m=0; m < minTermsList.size(); m++) {
             
             if (minTermsList.get(m).getProductsList().size() == 1) {
                 String productString = minTermsList.get(m).getProductsList().get(0);
+                
+                if (!essentialProductsList.contains(productString)) {
+                    essentialProductsList.add(productString);
+                }
                 
                 if (!finalProductsList.contains(productString)) {
                     finalProductsList.add(productString);
@@ -521,12 +535,12 @@ public final class SumOfProducts extends Tools {
     public String getMinTermsFromProducts() {
         String str;
         Formatter fmt = new Formatter();
-        fmt.format("%-20s %-10s %-20s\n", "Mintermos", "Binário", "Produto");
+        fmt.format("%-20s %-10s %-20s\n", "Produto", "Binário", "Mintermos");
         for(int i=0; i < productsList.size(); i++) {
             fmt.format("%-20s %-10s %-20s\n",
-                    productsList.get(i).getMinTermsList(),
+                    productsList.get(i).getLiteralView(),
                     productsList.get(i).getBinaryView(),
-                    productsList.get(i).getLiteralView()
+                    productsList.get(i).getMinTermsList()
             );
         }
         str = "\n" + fmt;
@@ -536,10 +550,11 @@ public final class SumOfProducts extends Tools {
     public String getProductsFromMinTerms() {
         String str;
         Formatter fmt = new Formatter();
-        fmt.format("%-20s %-20s\n", "Mintermo", "Produtos");
+        fmt.format("%-20s %-20s %-20s\n", "Mintermo", "Binário", "Produtos");
         for(int i=0; i < minTermsList.size(); i++) {
-            fmt.format("%-20s %-20s\n",
+            fmt.format("%-20s %-20s %-20s\n",
                     minTermsList.get(i).getDecimalView(),
+                    minTermsList.get(i).getBinaryView(),
                     minTermsList.get(i).getProductsList()
             );
         }
@@ -547,8 +562,52 @@ public final class SumOfProducts extends Tools {
         return str;
     }
     
+    public String getCoveringTable() {
+        String str = "";
+        Formatter fmtHeader = new Formatter();
+        //fmtHeader.format("%-6s", " ");
+        for (int i=0; i < numberOfVars; i++) {
+            str += " ";
+        }
+        str += "  |";
+        for (int i=0; i < minTermsList.size(); i++) {
+            fmtHeader.format("%4s", minTermsList.get(i).getDecimalView() + "|");
+        }
+        str = "\n" + str + fmtHeader;
+        
+        for (int i=0; i < productsList.size(); i++) {
+            str += "\n";
+            for (int r=0; r < 3+(numberOfVars+(minTermsList.size())*4); r++) {
+                str += ".";
+            }
+            Formatter fmtRow = new Formatter();
+            fmtRow.format("%-4s", productsList.get(i).getBinaryView() + "  |");
+            //fmtRow.format("%-2s", " ");
+            for (int j=0; j < minTermsList.size(); j++) {
+                if (productsList.get(i)
+                    .getMinTermsList()
+                        .contains(minTermsList.get(j)
+                            .getDecimalView()
+                    )){
+                    fmtRow.format("%-4s", " X |");
+                }
+                else {
+                    fmtRow.format("%-4s", "   |");
+                }
+            }
+            str += "\n" + fmtRow;
+        }
+        /*str += "\n";
+        for (int r=0; r < 3+(numberOfVars+(minTermsList.size())*4); r++) {
+            str += ".";
+        }*/
+        
+        return str + "\n";
+    }
+    
     public String getFullReport() throws FileNotFoundException, UnsupportedEncodingException {
         PrintWriter writer = new PrintWriter("Quine-McCluskey Results.txt", "UTF-8");
+        report = "";
         report += print("\nExpressão de entrada: \n> " + inputExpression + "\n", writer);
         
         if (!isValidInput(convertedExpression)) {
@@ -565,15 +624,18 @@ public final class SumOfProducts extends Tools {
                 numberOfVars,
                 numberOfProducts) + "\n", writer);
         
-        report += print("\nImplicantes primos:\n", writer);
-        report += print(getMinTermsFromProducts(), writer);
-        
-        report += print ("\nTabela de cobertura:\n", writer);
+        report += print ("\nMintermos e seus Produtos:\n", writer);
         report += print (getProductsFromMinTerms(), writer);
         
+        report += print("\nProdutos e seus Mintermos:\n", writer);
+        report += print(getMinTermsFromProducts(), writer);
+        
+        report += print ("\nTabela de Cobertura:\n", writer);
+        report += print (getCoveringTable(), writer);
+        
         report += print("\nProdutos Essenciais:\n> ", writer);
-        for (int i=0; i < finalProductsList.size(); i++) {
-            report += print(finalProductsList.get(i)+"\t", writer);
+        for (int i=0; i < essentialProductsList.size(); i++) {
+            report += print(essentialProductsList.get(i)+"\t", writer);
         }
         report += print("\n", writer);
         

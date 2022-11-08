@@ -79,7 +79,8 @@ public final class GUI extends Tools implements KeyListener {
         String[] wichReport = {
             "Relatório Completo",
             "Tabela Verdade",
-            "Implicantes Primos",
+            "Mintermos e seus Produtos",
+            "Produtos e seus Mintermos",
             "Tabela de Cobertura"
         };
         
@@ -170,7 +171,7 @@ public final class GUI extends Tools implements KeyListener {
         okButton.setPreferredSize(new Dimension(90, 32));
         okButton.setMinimumSize(new Dimension(90, 32));
         okButton.addKeyListener(this);
-        okButton.setFocusable(!true);
+        okButton.setFocusable(true);
         okButton.setBackground(new Color(11, 188, 255));
         okButton.setForeground(new Color(11, 111, 222));
         okButton.setFont(font);
@@ -288,7 +289,7 @@ public final class GUI extends Tools implements KeyListener {
         
         JTextArea textAreaResult = new JTextArea();
         textAreaResult.addKeyListener(this);
-        textAreaResult.setFocusable(!true);
+        textAreaResult.setFocusable(true);
         textAreaResult.setLineWrap(true);
         textAreaResult.setEditable(false);
         textAreaResult.setBackground(new Color(44, 44, 44));
@@ -336,7 +337,7 @@ public final class GUI extends Tools implements KeyListener {
         */
         JTextArea textAreaReport = new JTextArea();
         textAreaReport.addKeyListener(this);
-        textAreaReport.setFocusable(!true);
+        textAreaReport.setFocusable(true);
         textAreaReport.setLineWrap(true);
         textAreaReport.setEditable(false);
         textAreaReport.setBackground(new Color(44, 44, 44));
@@ -416,7 +417,7 @@ public final class GUI extends Tools implements KeyListener {
             public void actionPerformed(ActionEvent e) {
                 try {
                     hasResult = true;
-                    String gen = generateRandomExpression(10, 4);
+                    String gen = generateRandomExpression(10, 8);
                     editor.setText(gen);
                     
                     exp = optimizeExpressions(gen);
@@ -491,44 +492,25 @@ public final class GUI extends Tools implements KeyListener {
                     Logger.getLogger(GUI.class.getName()).log(Level.SEVERE, null, ex);
                 }
             }
-
             case "Tabela Verdade" -> {
-                out += "Tabela Verdade";
-                int tableSize = exp.getTruthTable().size();
-                for (int i=0; i < tableSize; i++) {
-                    out += "\n" + exp.getTruthTable().get(i);
-                }
+                out += exp.getTruthTable();
             }
-            case "Implicantes Primos" -> {
-                //Colocar como método de sumOfProducts
-                out += "Implicantes primos mesclados:\n";
-                for(int i=0; i < exp.getProductsList().size(); i++) {
-                    int q = 0;
-                    for(; q < exp.getProductsList().get(i).getMinTermsList().size(); q++) {
-                        out += "-"+exp.getProductsList().get(i).getMinTermsList().get(q);
-                    }
-                    if(q < 3) {
-                        out += "-\t";
-                    }
-                    out += "\t";
-                    out += exp.getProductsList().get(i).getBinaryView()+" \t";
-                    out += exp.getProductsList().get(i).getLiteralView()+"\n";
-                }
+            case "Mintermos e seus Produtos" -> {
+                out += exp.getProductsFromMinTerms();
+            }
+            case "Produtos e seus Mintermos" -> {
+                out += exp.getMinTermsFromProducts();
             }
             case "Tabela de Cobertura" -> {
-                //Colocar como método de sumOfProducts
-                out += "Tabela de Cobertura:";
-                for (int i=0; i < exp.getMinTermsList().size(); i++) {
-                    out += "\n"+exp.getMinTermsList().get(i).getDecimalView()+" -";
-                    for (int p=0; p < exp.getMinTermsList().get(i).getProductsList().size(); p++) {
-                        out += "\t\t"+exp.getMinTermsList().get(i).getProductsList().get(p);
-                        if (exp.getMinTermsList().get(i).getProductsList().get(p).length() < 8) {
-                            out += "\t";
-                        }
-                    }
+                out += exp.getCoveringTable();
+            }
+            default -> {
+                try {
+                    out = exp.getFullReport();
+                } catch (UnsupportedEncodingException ex) {
+                    Logger.getLogger(GUI.class.getName()).log(Level.SEVERE, null, ex);
                 }
             }
-            default -> out = report;
         }
         return out;
     }
