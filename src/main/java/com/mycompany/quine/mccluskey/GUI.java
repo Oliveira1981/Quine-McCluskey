@@ -77,7 +77,7 @@ public final class GUI extends Tools implements KeyListener {
         };
         
         String[] wichReport = {
-            "Completo",
+            "Relatório Completo",
             "Tabela Verdade",
             "Implicantes Primos",
             "Tabela de Cobertura"
@@ -114,7 +114,7 @@ public final class GUI extends Tools implements KeyListener {
 	c.gridx = 0;
 	c.gridy = 1;
 	c.gridwidth = 1;
-	c.gridheight = 18;
+	c.gridheight = 9;
         c.weightx = 0.0;
         c.weighty = 0.0;
 	space3.setBorder(BorderFactory.createLineBorder(borderColor));
@@ -170,7 +170,7 @@ public final class GUI extends Tools implements KeyListener {
         okButton.setPreferredSize(new Dimension(90, 32));
         okButton.setMinimumSize(new Dimension(90, 32));
         okButton.addKeyListener(this);
-        okButton.setFocusable(true);
+        okButton.setFocusable(!true);
         okButton.setBackground(new Color(11, 188, 255));
         okButton.setForeground(new Color(11, 111, 222));
         okButton.setFont(font);
@@ -227,7 +227,7 @@ public final class GUI extends Tools implements KeyListener {
         c.weighty = 0.0;
 	space6.setBorder(BorderFactory.createLineBorder(borderColor));
         vPanel.add(space6, c);
-        
+        /*
         JLabel labelWichReport = new JLabel("Relatório a exibir:");
         labelWichReport.setFont(font);
         labelWichReport.setForeground(new Color(1, 111, 222));
@@ -241,17 +241,18 @@ public final class GUI extends Tools implements KeyListener {
         c.anchor = GridBagConstraints.WEST;
 	labelWichReport.setBorder(BorderFactory.createLineBorder(borderColor));
         vPanel.add(labelWichReport, c);
-        
+        */
         JComboBox<String> comboWichReport = new JComboBox<>(wichReport);
         comboWichReport.setPreferredSize(new Dimension(250, 30));
         comboWichReport.setMinimumSize(new Dimension(250, 30));
         comboWichReport.addKeyListener(this);
         comboWichReport.setFocusable(true);
-        Font fontRep = new Font("Segoe UI", Font.PLAIN, 12);
+        Font fontRep = new Font("Segoe UI", Font.BOLD, 12);
 	comboWichReport.setFont(fontRep);
+        comboWichReport.setForeground(new Color(1, 111, 222));
         c.fill = GridBagConstraints.NONE;
 	c.gridx = 1;
-	c.gridy = 5;
+	c.gridy = 7;
 	c.gridwidth = 5;
 	c.gridheight = 1;
         c.weightx = 0.0;
@@ -276,7 +277,7 @@ public final class GUI extends Tools implements KeyListener {
         resultLabel.setForeground(new Color(1, 111, 222));
 	c.fill = GridBagConstraints.NONE;
 	c.gridx = 1;
-	c.gridy = 7;
+	c.gridy = 4;
 	c.gridwidth = 9;
 	c.gridheight = 1;
         c.weightx = 0.0;
@@ -287,7 +288,7 @@ public final class GUI extends Tools implements KeyListener {
         
         JTextArea textAreaResult = new JTextArea();
         textAreaResult.addKeyListener(this);
-        textAreaResult.setFocusable(true);
+        textAreaResult.setFocusable(!true);
         textAreaResult.setLineWrap(true);
         textAreaResult.setEditable(false);
         textAreaResult.setBackground(new Color(44, 44, 44));
@@ -300,14 +301,14 @@ public final class GUI extends Tools implements KeyListener {
         JScrollPane jScrollResult = new JScrollPane(textAreaResult);
 	c.fill = GridBagConstraints.BOTH;
         c.gridx = 1;
-	c.gridy = 8;
+	c.gridy = 5;
 	c.gridwidth = 9;
-	c.gridheight = 6;//4
+	c.gridheight = 1;//4
 	c.weightx = 100.0;
         c.weighty = 0.01;//PARA VÁRIOS RESULTADOS: 0.1
 	jScrollResult.setBorder(BorderFactory.createLineBorder(borderColor));
         vPanel.add(jScrollResult, c);
-        
+        /*
         JLabel space10 = new JLabel(" ");
 	c.fill = GridBagConstraints.NONE;
 	c.gridx = 1;
@@ -332,10 +333,10 @@ public final class GUI extends Tools implements KeyListener {
         c.anchor = GridBagConstraints.WEST;
 	labelReport.setBorder(BorderFactory.createLineBorder(borderColor));
         vPanel.add(labelReport, c);
-        
+        */
         JTextArea textAreaReport = new JTextArea();
         textAreaReport.addKeyListener(this);
-        textAreaReport.setFocusable(true);
+        textAreaReport.setFocusable(!true);
         textAreaReport.setLineWrap(true);
         textAreaReport.setEditable(false);
         textAreaReport.setBackground(new Color(44, 44, 44));
@@ -348,9 +349,9 @@ public final class GUI extends Tools implements KeyListener {
         JScrollPane jScrollReport = new JScrollPane(textAreaReport);
 	c.fill = GridBagConstraints.BOTH;
         c.gridx = 1;
-	c.gridy = 16;//14
+	c.gridy = 8;//14
 	c.gridwidth = 9;
-	c.gridheight = 3;
+	c.gridheight = 1;
 	c.weightx = 100.0;
         c.weighty = 0.6;
 	jScrollReport.setBorder(BorderFactory.createLineBorder(borderColor));
@@ -361,7 +362,7 @@ public final class GUI extends Tools implements KeyListener {
 	c.gridx = 10;
 	c.gridy = 1;
 	c.gridwidth = 1;
-	c.gridheight = 18;
+	c.gridheight = 9;
         c.weightx = 0.0;
         c.weighty = 0.0;
 	space4.setBorder(BorderFactory.createLineBorder(borderColor));
@@ -370,7 +371,7 @@ public final class GUI extends Tools implements KeyListener {
         JLabel space2 = new JLabel(" ");
 	c.fill = GridBagConstraints.NONE;
 	c.gridx = 0;
-	c.gridy = 19;
+	c.gridy = 9;
 	c.gridwidth = 11;
 	c.gridheight = 1;
         c.weightx = 0.0;
@@ -483,7 +484,7 @@ public final class GUI extends Tools implements KeyListener {
         
         String out = "";
         switch ((String)comboWichReport.getSelectedItem()) {
-            case "Completo"            -> {
+            case "Relatório Completo" -> {
                 try {
                     out = exp.getFullReport();
                 } catch (UnsupportedEncodingException ex) {
@@ -491,14 +492,14 @@ public final class GUI extends Tools implements KeyListener {
                 }
             }
 
-            case "Tabela Verdade"      -> {
+            case "Tabela Verdade" -> {
                 out += "Tabela Verdade";
                 int tableSize = exp.getTruthTable().size();
                 for (int i=0; i < tableSize; i++) {
                     out += "\n" + exp.getTruthTable().get(i);
                 }
             }
-            case "Implicantes Primos"  -> {
+            case "Implicantes Primos" -> {
                 //Colocar como método de sumOfProducts
                 out += "Implicantes primos mesclados:\n";
                 for(int i=0; i < exp.getProductsList().size(); i++) {

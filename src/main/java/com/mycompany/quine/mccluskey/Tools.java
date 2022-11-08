@@ -542,6 +542,9 @@ public class Tools {
     }
     
     public static int numberOfLiterals(String exp, int numberOfVars, int numberOfProducts) {
+        if (exp.equals("1")) {
+            return 0;
+        }
         if (detectInputFormat(exp).equals("Literal")) {
             int count = 0;
             for (int i=0; i < exp.length(); i++) {
