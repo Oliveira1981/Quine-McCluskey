@@ -1,6 +1,8 @@
 package com.mycompany.quine.mccluskey;
 
-import static com.mycompany.quine.mccluskey.Tools.print;
+import java.io.FileNotFoundException;
+import java.io.PrintWriter;
+import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Formatter;
@@ -13,40 +15,41 @@ public final class SumOfProducts extends Tools {
 
     private String                         inputFormat;
     private String                     inputExpression;
-    private String                              result;
+    private String                 convertedExpression;
     private ArrayList<Product>            productsList; // Linhas da coveringTable
     private ArrayList<Product>         auxProductsList;
     private ArrayList<MinTerm>            minTermsList; // Colunas da coveringTable
     private ArrayList<String>        finalProductsList;
     private ArrayList<ArrayList<Integer>> permutations;
     private int                           numberOfVars;
+    private int                       numberOfProducts;
     private ArrayList<String>               truthTable;
-    private String                        errorMessage;
+    private boolean                            isError;
+    private String                              result;
+    private String                              report;
     
-    public SumOfProducts(String inputFormat, String expression) {
-        this.inputFormat = inputFormat;
-        
-        if (inputFormat.equals("Literal")) {
-            this.inputExpression = cleanUpExpression(expression);
-        }
-        else {
-            this.inputExpression = expression;
-        }
-        
-        fillProductsList();
-        fillTruthTable();
+    public SumOfProducts(String expression) {
+        setExpression(expression);
     }
     
     public SumOfProducts() {
-        this.inputFormat     = "literal";
-        this.inputExpression = "";
-        this.errorMessage    = "";
+        this.inputFormat         = "literal";
+        this.inputExpression     = "";
+        this.convertedExpression = "";
+        this.isError             = false;
+        this.report              = "";
         fillProductsList();
         fillTruthTable();
     }
     
-    public void setExpression(String inputFormat, String expression) {
-        this.inputFormat = inputFormat;
+    public boolean setExpression(String expression) {
+        this.isError         = false;
+        this.report          = "";
+        inputFormat = detectInputFormat(expression);
+        
+        if(!isValidInput(expression)) {
+            return false;
+        }
         
         if (inputFormat.equals("Literal")){
             this.inputExpression = cleanUpExpression(expression);
@@ -55,12 +58,58 @@ public final class SumOfProducts extends Tools {
             this.inputExpression = expression;
         }
         
+        this.convertedExpression = expression;
         fillProductsList();
         fillTruthTable();
+        
+        return true;
+    }
+    
+    public boolean isValidInput(String expression) {
+        
+        if (inputFormat.length() == 0  ||
+            inputFormat.equals("ERRO") ||
+           (inputFormat.equals("Literal") && hasDuplicate(expression))) {
+            
+            isError = true;
+            result = "Expressão inconsistente.";
+            //report += ("Expressão:\n> " + expression + "\n");
+            //report += ("\nExpressão inconsistente.\n");
+            //report += ("\nFim do resultado parcial.\n");
+            //report += ("==================================================\n\n");
+            return false;
+        }
+        
+        //report += ("Formato de Entrada:\n> " + inputFormat + "\n");
+        
+        if (inputFormat.equals("Hexadecimal")) {
+            //report += ("\nExpressão original:\n> " + expression + "\n");
+            convertedExpression = hexadecimal2expression(expression);
+            inputFormat = "Decimal";
+            //report += ("\nFormato Convertido:\n> Decimal\n");
+        }
+        else {
+            convertedExpression = inputExpression;
+        }
+        
+        //report += ("\nExpressão:\n> " + expression + "\n");
+        
+        if (inputFormat.equals("Literal")) {
+            //report += ("\nQuantidade de Literais na entrada:\n");
+            //report += ("> " + numberOfLiterals(expression) + "\n");
+        }
+        
+        
+        //report += ("\nVariáveis:\n> " + numberOfVars + "\n");
+        return true;
     }
     
     public String getInputExpression() {
         return inputExpression;
+    }
+    
+    public String getConvertedExpression() {
+        return convertedExpression;
     }
     
     public ArrayList<Product> getProductsList(){
@@ -90,21 +139,29 @@ public final class SumOfProducts extends Tools {
     public ArrayList<ArrayList<Integer>> getPermutations() {
         return permutations;
     }
+
+    public boolean isError() {
+        return isError;
+    }
+    
+    public String getReport() {
+        return report;
+    }
     
     public void fillProductsList() {
         productsList = new ArrayList<>();
         minTermsList = new ArrayList<>();
         permutations = new ArrayList<>();
-        numberOfVars = detectNumberOfVars(inputFormat, inputExpression);
+        numberOfVars = detectNumberOfVars(inputFormat, convertedExpression);
         int begin    = 0;
         int end;
         
         do {
-            end = inputExpression.indexOf('+', begin);
+            end = convertedExpression.indexOf('+', begin);
             if (end < 0) {
-                end = inputExpression.length();
+                end = convertedExpression.length();
             }
-            String str = inputExpression.substring(begin, end);
+            String str = convertedExpression.substring(begin, end);
             productsList.add(new Product(inputFormat, str, numberOfVars));
             
             minTermsList
@@ -113,10 +170,12 @@ public final class SumOfProducts extends Tools {
                         .getMinTermsList().get(0), numberOfVars));
             
             begin = end+1;
-            if (begin >= inputExpression.length())
+            if (begin >= convertedExpression.length())
                 break;
         }
-        while (begin < inputExpression.length());
+        while (begin < convertedExpression.length());
+        
+        numberOfProducts = productsList.size();
     }
     
     public void fillTruthTable() {
@@ -236,6 +295,10 @@ public final class SumOfProducts extends Tools {
     }
     
     public void buildOptimizedExpression() {
+        if (isDumb(minTermsList, numberOfVars)) {
+            result = "1";
+            return;
+        }
         result = "";
         
         for (int i=0; i < finalProductsList.size(); i++) {
@@ -482,6 +545,49 @@ public final class SumOfProducts extends Tools {
         }
         str = "\n" + fmt;
         return str;
+    }
+    
+    public String getFullReport() throws FileNotFoundException, UnsupportedEncodingException {
+        PrintWriter writer = new PrintWriter("Quine-McCluskey Results.txt", "UTF-8");
+        report += print("\nExpressão de entrada: \n> " + inputExpression + "\n", writer);
+        
+        if (!isValidInput(convertedExpression)) {
+            report += print("\nExpressão inconsistente.\n", writer);
+        }
+        
+        report += print("\nFormato de Entrada:\n> " + inputFormat + "\n", writer);
+        
+        report += print("\nVariáveis:\n> " + numberOfVars + "\n", writer);
+        
+        report += print("\nQuantidade de Literais na entrada:\n", writer);
+        report += print("> " + numberOfLiterals(
+                convertedExpression,
+                numberOfVars,
+                numberOfProducts) + "\n", writer);
+        
+        report += print("\nImplicantes primos:\n", writer);
+        report += print(getMinTermsFromProducts(), writer);
+        
+        report += print ("\nTabela de cobertura:\n", writer);
+        report += print (getProductsFromMinTerms(), writer);
+        
+        report += print("\nProdutos Essenciais:\n> ", writer);
+        for (int i=0; i < finalProductsList.size(); i++) {
+            report += print(finalProductsList.get(i)+"\t", writer);
+        }
+        report += print("\n", writer);
+        
+        report += print("\nExpressão otimizada:\n", writer);
+        report += print("> " + result + "\n", writer);
+        
+        report += print("\nQuantidade de Literais na saída:\n", writer);
+        report += print("> " + numberOfLiterals(result, numberOfVars, numberOfProducts) + "\n", writer);
+        
+        report += print ("\nFim dos resultados.\n", writer);
+        report += print("==================================================\n", writer);
+        
+        writer.close();
+        return report;
     }
 
 }

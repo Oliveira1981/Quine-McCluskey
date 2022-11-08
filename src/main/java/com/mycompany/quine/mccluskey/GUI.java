@@ -12,9 +12,10 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
+import java.io.FileNotFoundException;
 import java.io.PrintWriter;
+import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
-import java.util.Formatter;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.BorderFactory;
@@ -381,7 +382,7 @@ public final class GUI extends Tools implements KeyListener {
         
         myFrame.add(vPanel);
         myFrame.pack();
-        myFrame.setSize(750, 600);
+        myFrame.setSize(750, 680);
         Dimension dim = Toolkit.getDefaultToolkit().getScreenSize();
         myFrame.setLocation(dim.width/2-myFrame.getSize().width/2, dim.height/2-myFrame.getSize().height/2);
         myFrame.setVisible(true);
@@ -478,11 +479,18 @@ public final class GUI extends Tools implements KeyListener {
         inputFormat = String.valueOf(comboExpressions.getSelectedItem());
     }
     
-    public String reportText(JComboBox comboWichReport) {
+    public String reportText(JComboBox comboWichReport) throws FileNotFoundException {
         
         String out = "";
         switch ((String)comboWichReport.getSelectedItem()) {
-            case "Completo"            -> out = report;
+            case "Completo"            -> {
+                try {
+                    out = exp.getFullReport();
+                } catch (UnsupportedEncodingException ex) {
+                    Logger.getLogger(GUI.class.getName()).log(Level.SEVERE, null, ex);
+                }
+            }
+
             case "Tabela Verdade"      -> {
                 out += "Tabela Verdade";
                 int tableSize = exp.getTruthTable().size();
@@ -542,134 +550,19 @@ public final class GUI extends Tools implements KeyListener {
                 end = allExpressions.length();
             }
             expression = allExpressions.substring(begin, end);
-            
-            inputFormat = detectInputFormat(expression);
-            if (inputFormat.length() == 0  ||
-                inputFormat.equals("ERRO") ||
-               (inputFormat.equals("Literal") && hasDuplicate(expression))) {
-                
-                errorMsg = "Expressão inconsistente.";
-                //exp = new SumOfProducts(errorMsg);
-                report += print("Expressão:\n> " + expression + "\n", writer);
-                report += print("\nExpressão inconsistente.\n", writer);
-                report += print("\nFim do resultado parcial.\n", writer);
-                report += print("==================================================\n\n", writer);
-                begin = end + 1;
-                continue;
-            }
-            
-            report += print("Formato de Entrada:\n> " + inputFormat + "\n", writer);
-            
-            if (inputFormat.equals("Hexadecimal")) {
-                report += print("\nExpressão original:\n> " + expression + "\n", writer);
-                expression = hexadecimal2expression(expression);
-                inputFormat = "Decimal";
-                report += print("\nFormato Convertido:\n> Decimal\n", writer);
-            }
-            
-            report += print("\nExpressão:\n> " + expression + "\n", writer);
-            
-/////////////////////////////////////////////////////
-            exp = new SumOfProducts(inputFormat, expression);
-/////////////////////////////////////////////////////
-
-            if (inputFormat.equals("Literal")) {
-                report += print("\nQuantidade de Literais na entrada:\n", writer);
-                report += print("> " + numberOfLiterals(expression) + "\n", writer);
-            }
-            
-            report += print("\nVariáveis:\n> " + exp.getNumberOfVars() + "\n", writer);
-            
-/////////////////////////////////////////////////////
+            exp = new SumOfProducts(expression);
             exp.sortByOnesCount();
-/////////////////////////////////////////////////////
-            
-            report += print("\nMintermos por número de 1s:", writer);
-            report += print(exp.getMinTermsFromProducts(), writer);
-            
-            if (isDumb(exp.getMinTermsList(), exp.getNumberOfVars())) {
-                errorMsg = "[VDD]";
-                //exp = new SumOfProducts(errorMsg);
-                report += print ("\n\nExpressão redundante:\n> não use portas lógicas, ligue em VDD.\n", writer);
-                report += print("\nFim do resultado parcial.\n", writer);
-                report += print("==================================================\n\n", writer);
-                begin = end + 1;
-                continue;
-            }
-            
-/////////////////////////////////////////////////////
             exp.mergePrimeImplicants(10);
-/////////////////////////////////////////////////////
-            
-            report += print("\n\nImplicantes primos mesclados:\n", writer);
-            report += print(exp.getMinTermsFromProducts(), writer);
-            
-/////////////////////////////////////////////////////
             exp.fillMinTermsList();
             //exp.sortMinTermsList();
             exp.fillTruthTable();
-/////////////////////////////////////////////////////
-            
-            report += print ("\nMintermos e seus produtos (Tabela de Cobertura):", writer);
-            report += print (exp.getProductsFromMinTerms(), writer);
-            
-/////////////////////////////////////////////////////
             exp.essentialProductsToFinalList();
-/////////////////////////////////////////////////////
     
-            report += print("\n\nProdutos Essenciais:\n> ", writer);
-            for (int i=0; i < exp.getFinalProductsList().size(); i++) {
-                report += print(exp.getFinalProductsList().get(i)+"\t", writer);
-            }
-            
-/////////////////////////////////////////////////////
             ArrayList<Integer> indexes = exp.getCandidateProductsIndexes();
-/////////////////////////////////////////////////////
-            report += print("\n", writer);
-            for (int i=0; i < exp.getMinTermsList().size(); i++) {
-                report += print("\nMintermo "+exp.getMinTermsList().get(i).getDecimalView()+" ", writer);
-                if (exp.getMinTermsList().get(i).isIsCovered()) {
-                    report += print("está coberto.", writer);
-                }
-                else {
-                    report += print(" - ", writer);
-                }
-            }
-            
-/////////////////////////////////////////////////////
             exp.permute(indexes);
-/////////////////////////////////////////////////////
-    
-            //for (int i=0; i<exp.getPermutations().size(); i++) {
-            //    r += print("\n"+exp.getPermutations().get(i), writer);
-            //}
-            
-/////////////////////////////////////////////////////
             exp.completeFinalList();
-/////////////////////////////////////////////////////
-            
-            report += print("\n\nProdutos Finais:\n> ", writer);
-            for (int i=0; i < exp.getFinalProductsList().size(); i++) {
-                report += print(exp.getFinalProductsList().get(i)+"\t", writer);
-            }
-            
-/////////////////////////////////////////////////////
             exp.buildOptimizedExpression();
-/////////////////////////////////////////////////////
-            
-            report += print("\n\nQuantidade de Literais na saída:\n", writer);
-            report += print("> " + numberOfLiterals(exp.getResult()) + "\n", writer);
-            
-            report += print("\nExpressão otimizada:\n", writer);
-            report += print("> "+exp.getResult()+"\n", writer);
-            
-            report += print ("\nFim do resultado parcial.\n", writer);
-            report += print("==================================================\n\n", writer);
-            
-            if (results.length() > 0 ) {
-                results += ";\n";
-            }
-            results += exp.getResult();
+            //results += exp.getResult();
             
             begin = end + 1;
             if (begin >= allExpressions.length()) {
@@ -677,9 +570,6 @@ public final class GUI extends Tools implements KeyListener {
             }
         }
         while (begin < allExpressions.length());
-        //exp.fillTruthTable();
-        report += print ("Fim dos resultados.\n", writer);
-        report += print("==================================================\n", writer);
         
         writer.close();
         //return results;
