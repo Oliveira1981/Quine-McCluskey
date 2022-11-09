@@ -83,6 +83,35 @@ public final class SumOfProducts extends Tools {
         
         if (inputFormat.equals("Hexadecimal")) {
             //report += ("\nExpressão original:\n> " + expression + "\n");
+            if (expression.length() > 2) {
+                for (int i=2; i < expression.length(); i++) {
+                    if (Character.isAlphabetic(expression.charAt(i))) {
+                        String upExp = expression.toUpperCase();
+                        if (upExp.charAt(i) != 'A' &&
+                            upExp.charAt(i) != 'B' &&
+                            upExp.charAt(i) != 'C' &&
+                            upExp.charAt(i) != 'D' &&
+                            upExp.charAt(i) != 'E' &&
+                            upExp.charAt(i) != 'F') {
+                            isError = true;
+                            result = "Expressão inconsistente.";
+                            return false;
+                        }
+                    }
+                    else {
+                        if (!Character.isDigit(expression.charAt(i))) {
+                            isError = true;
+                            result = "Expressão inconsistente.";
+                            return false;
+                        }
+                    }
+                }
+            }
+            else {
+                isError = true;
+                result = "Expressão inconsistente.";
+                return false;
+            }
             convertedExpression = hexadecimal2expression(expression);
             originalInputFormat = "Hexadecimal";
             inputFormat = "Decimal";
@@ -103,18 +132,6 @@ public final class SumOfProducts extends Tools {
         
         //report += ("\nVariáveis:\n> " + numberOfVars + "\n");
         return true;
-    }
-    
-    public void changeInputFormat(String expression) {
-        if (inputFormat.equals("Hexadecimal")) {
-            convertedExpression = hexadecimal2expression(expression);
-            originalInputFormat = "Hexadecimal";
-            inputFormat = "Decimal";
-        }
-        else {
-            originalInputFormat = inputFormat;
-            convertedExpression = expression;
-        }
     }
     
     public String getOriginalInputExpression() {
@@ -658,9 +675,6 @@ public final class SumOfProducts extends Tools {
         }
         
         report += print("\nFormato de Entrada:\n> " + originalInputFormat + "\n", writer);
-        
-        print("\n"+originalInputFormat);
-        print("\n"+inputFormat);
         
         if (!inputFormat.equals(originalInputFormat)) {
             report += print("\nExpressão convertida: \n> " + convertedExpression + "\n", writer);
