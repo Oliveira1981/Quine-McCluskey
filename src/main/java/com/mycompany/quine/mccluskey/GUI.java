@@ -87,7 +87,7 @@ public final class GUI extends Tools implements KeyListener {
         UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
         JFrame myFrame = new JFrame("Quine-McCluskey");
         myFrame.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
-        myFrame.setMinimumSize(new Dimension(700,580));
+        myFrame.setMinimumSize(new Dimension(750,520));
         
         GridBagLayout grid = new GridBagLayout();
         JPanel vPanel = new JPanel(grid);

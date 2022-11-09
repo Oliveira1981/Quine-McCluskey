@@ -533,12 +533,21 @@ public final class SumOfProducts extends Tools {
     }
     
     public String getMinTermsFromProducts() {
-        String str;
+        String str = "";
         Formatter fmt = new Formatter();
-        fmt.format("%-20s %-10s %-20s\n", "Produto", "Binário", "Mintermos");
+        int size = 2 + numberOfVars*3;
+        for (int j=0; j < size-7; j++) { //"Produto" tem 7 letras
+            str += " ";
+        }
+        fmt.format("%-1s %-10s %-20s\n", "Produto"+str, "Binário", "Mintermos");
         for(int i=0; i < productsList.size(); i++) {
-            fmt.format("%-20s %-10s %-20s\n",
-                    productsList.get(i).getLiteralView(),
+            int literalSize = productsList.get(i).getLiteralView().length();
+            str = "";
+            for (int j=0; j < size-literalSize; j++) {
+                str += " ";
+            }
+            fmt.format("%-1s %-10s %-20s\n",
+                    productsList.get(i).getLiteralView() + str,
                     productsList.get(i).getBinaryView(),
                     productsList.get(i).getMinTermsList()
             );
@@ -565,7 +574,6 @@ public final class SumOfProducts extends Tools {
     public String getCoveringTable() {
         String str = "";
         Formatter fmtHeader = new Formatter();
-        //fmtHeader.format("%-6s", " ");
         for (int i=0; i < numberOfVars; i++) {
             str += " ";
         }
@@ -582,7 +590,6 @@ public final class SumOfProducts extends Tools {
             }
             Formatter fmtRow = new Formatter();
             fmtRow.format("%-4s", productsList.get(i).getBinaryView() + "  |");
-            //fmtRow.format("%-2s", " ");
             for (int j=0; j < minTermsList.size(); j++) {
                 if (productsList.get(i)
                     .getMinTermsList()
@@ -597,10 +604,6 @@ public final class SumOfProducts extends Tools {
             }
             str += "\n" + fmtRow;
         }
-        /*str += "\n";
-        for (int r=0; r < 3+(numberOfVars+(minTermsList.size())*4); r++) {
-            str += ".";
-        }*/
         
         return str + "\n";
     }
