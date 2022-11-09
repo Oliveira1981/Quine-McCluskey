@@ -13,8 +13,9 @@ import java.util.Formatter;
  */
 public final class SumOfProducts extends Tools {
 
+    private String                 originalInputFormat;
     private String                         inputFormat;
-    private String                     inputExpression;
+    private String             originalInputExpression;
     private String                 convertedExpression;
     private ArrayList<Product>            productsList; // Linhas da coveringTable
     private ArrayList<Product>         auxProductsList;
@@ -34,32 +35,29 @@ public final class SumOfProducts extends Tools {
     }
     
     public SumOfProducts() {
-        this.inputFormat         = "literal";
-        this.inputExpression     = "";
-        this.convertedExpression = "";
-        this.isError             = false;
-        this.report              = "";
-        fillProductsList();
-        fillTruthTable();
+        this.originalInputFormat     = "literal";
+        this.inputFormat             = "literal";
+        this.originalInputExpression = "";
+        this.convertedExpression     = "";
+        this.isError                 = false;
+        this.report                  = "";
+        //fillProductsList();
+        //fillTruthTable();
     }
     
     public boolean setExpression(String expression) {
         this.isError         = false;
         this.report          = "";
         inputFormat = detectInputFormat(expression);
+        originalInputExpression = expression;
         
         if(!isValidInput(expression)) {
             return false;
         }
         
         if (inputFormat.equals("Literal")){
-            this.inputExpression = cleanUpExpression(expression);
+            this.convertedExpression = cleanUpExpression(expression);
         }
-        else {
-            this.inputExpression = expression;
-        }
-        
-        this.convertedExpression = expression;
         fillProductsList();
         fillTruthTable();
         
@@ -86,11 +84,13 @@ public final class SumOfProducts extends Tools {
         if (inputFormat.equals("Hexadecimal")) {
             //report += ("\nExpressão original:\n> " + expression + "\n");
             convertedExpression = hexadecimal2expression(expression);
+            originalInputFormat = "Hexadecimal";
             inputFormat = "Decimal";
             //report += ("\nFormato Convertido:\n> Decimal\n");
         }
         else {
-            convertedExpression = inputExpression;
+            originalInputFormat = inputFormat;
+            convertedExpression = expression;
         }
         
         //report += ("\nExpressão:\n> " + expression + "\n");
@@ -105,8 +105,20 @@ public final class SumOfProducts extends Tools {
         return true;
     }
     
-    public String getInputExpression() {
-        return inputExpression;
+    public void changeInputFormat(String expression) {
+        if (inputFormat.equals("Hexadecimal")) {
+            convertedExpression = hexadecimal2expression(expression);
+            originalInputFormat = "Hexadecimal";
+            inputFormat = "Decimal";
+        }
+        else {
+            originalInputFormat = inputFormat;
+            convertedExpression = expression;
+        }
+    }
+    
+    public String getOriginalInputExpression() {
+        return originalInputExpression;
     }
     
     public String getConvertedExpression() {
@@ -138,6 +150,9 @@ public final class SumOfProducts extends Tools {
     }
     
     public String getTruthTable() {
+        if (isError) {
+            return "-";
+        }
         String str = "";
         for (int i=0; i < truthTable.size(); i++) {
             str += "\n" + truthTable.get(i);
@@ -216,11 +231,11 @@ public final class SumOfProducts extends Tools {
                     m++;
                 }
                 else {
-                    str += "|   0";
+                    str += "|   .";
                 }
             }
             else {
-                str += "|   0";
+                str += "|   .";
             }
             truthTable.remove(truthTable.size()-1);
             truthTable.add(str);
@@ -543,6 +558,9 @@ public final class SumOfProducts extends Tools {
     }
     
     public String getMinTermsFromProducts() {
+        if (isError) {
+            return "-";
+        }
         String str = "";
         Formatter fmt = new Formatter();
         int size = 2 + numberOfVars*3;
@@ -571,6 +589,9 @@ public final class SumOfProducts extends Tools {
     }
     
     public String getProductsFromMinTerms() {
+        if (isError) {
+            return "-";
+        }
         String str;
         Formatter fmt = new Formatter();
         fmt.format("%-20s %-20s %-20s\n", "Mintermo", "Binário", "Produtos");
@@ -587,6 +608,9 @@ public final class SumOfProducts extends Tools {
     }
     
     public String getCoveringTable() {
+        if (isError) {
+            return "-";
+        }
         String str = "";
         Formatter fmtHeader = new Formatter();
         for (int i=0; i < numberOfVars; i++) {
@@ -626,13 +650,22 @@ public final class SumOfProducts extends Tools {
     public String getFullReport() throws FileNotFoundException, UnsupportedEncodingException {
         PrintWriter writer = new PrintWriter("Quine-McCluskey Results.txt", "UTF-8");
         report = "";
-        report += print("\nExpressão de entrada: \n> " + inputExpression + "\n", writer);
+        report += print("\nExpressão de entrada: \n> " + originalInputExpression + "\n", writer);
         
-        if (!isValidInput(convertedExpression)) {
+        if (isError) {
             report += print("\nExpressão inconsistente.\n", writer);
+            return report;
         }
         
-        report += print("\nFormato de Entrada:\n> " + inputFormat + "\n", writer);
+        report += print("\nFormato de Entrada:\n> " + originalInputFormat + "\n", writer);
+        
+        print("\n"+originalInputFormat);
+        print("\n"+inputFormat);
+        
+        if (!inputFormat.equals(originalInputFormat)) {
+            report += print("\nExpressão convertida: \n> " + convertedExpression + "\n", writer);
+            report += print("\nFormato de Entrada convertido:\n> " + inputFormat + "\n", writer);
+        }
         
         report += print("\nVariáveis:\n> " + numberOfVars + "\n", writer);
         

@@ -489,7 +489,11 @@ public final class GUI extends Tools implements KeyListener {
                 end = allExpressions.length();
             }
             expression = allExpressions.substring(begin, end);
-            sop = new SumOfProducts(expression);
+            sop = new SumOfProducts();
+            if (!sop.setExpression(expression)) {
+                begin = end + 1;
+                continue;
+            }
             sop.sortByOnesCount();
             sop.mergePrimeImplicants(10);
             sop.fillMinTermsList();

@@ -385,6 +385,12 @@ public class Tools {
     
     public static String detectInputFormat(String inputExp) {
         String in = inputExp.toUpperCase();
+        /*if (in.length() > 2) {
+            if (in.charAt(0) == '0' &&
+                in.charAt(1) == 'X') {
+                in = hexadecimal2expression(in);
+            }
+        }*/
         String detectedFormat = "";
         
         for (int c=0; c < in.length(); c++) {
@@ -468,6 +474,13 @@ public class Tools {
             }
         }
         return expression;
+    }
+    
+    public String expression2hexadecimal(String exp) {
+        String hexa = "0x";
+        
+        
+        return hexa;
     }
     
     public static boolean isDumb(ArrayList<MinTerm> mt, int numberOfVars) {
