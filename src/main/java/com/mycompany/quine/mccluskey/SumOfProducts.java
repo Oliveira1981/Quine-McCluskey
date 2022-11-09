@@ -191,26 +191,36 @@ public final class SumOfProducts extends Tools {
         truthTable = new ArrayList<>();
         String str = "";
         for (int i=0; i < numberOfVars; i++) {
-            str += getAlphabetChar(i);
+            str += getAlphabetChar(i) + " ";
         }
-        str += " SAÍDA";
+        str += "| SAÍDA\n";
+        int strSize = str.length();
+        for (int i=0; i < strSize-1; i++) {
+            str += "-";
+        }
         truthTable.add(str);//HEADER
         int size = (int) Math.pow(2, numberOfVars);
         int m = 0;
         for (int i=1; i <= size; i++) {
-            truthTable.add(decimal2binary(i-1, numberOfVars));
+            String binary = decimal2binary(i-1, numberOfVars);
+            String allBits = "";
+            for (int j=0; j < binary.length(); j++) {
+                allBits += binary.charAt(j) + " ";
+            }
+            
+            truthTable.add(allBits);
             str = truthTable.get(truthTable.size()-1);
             if (m < minTermsList.size()) {
                 if (minTermsList.get(m).getDecimalView() == (i-1)) {
-                    str += "   1";
+                    str += "|   1";
                     m++;
                 }
                 else {
-                    str += "   0";
+                    str += "|   0";
                 }
             }
             else {
-                str += "   0";
+                str += "|   0";
             }
             truthTable.remove(truthTable.size()-1);
             truthTable.add(str);
@@ -539,7 +549,11 @@ public final class SumOfProducts extends Tools {
         for (int j=0; j < size-7; j++) { //"Produto" tem 7 letras
             str += " ";
         }
-        fmt.format("%-1s %-10s %-20s\n", "Produto"+str, "Binário", "Mintermos");
+        fmt.format("%-1s %-10s %-20s\n", "Produto" + str, "Binário", "Mintermos");
+        for (int j=0; j < 21+size; j++) {
+            fmt.format("%s", "-");
+        }
+        fmt.format("%s", "\n");
         for(int i=0; i < productsList.size(); i++) {
             int literalSize = productsList.get(i).getLiteralView().length();
             str = "";
@@ -560,6 +574,7 @@ public final class SumOfProducts extends Tools {
         String str;
         Formatter fmt = new Formatter();
         fmt.format("%-20s %-20s %-20s\n", "Mintermo", "Binário", "Produtos");
+        fmt.format("%s", "--------------------------------------------------\n");
         for(int i=0; i < minTermsList.size(); i++) {
             fmt.format("%-20s %-20s %-20s\n",
                     minTermsList.get(i).getDecimalView(),

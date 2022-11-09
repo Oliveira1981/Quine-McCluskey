@@ -521,7 +521,7 @@ public class Tools {
         return false;
     }
     
-    public static String generateRandomExpression(int numberOfProducts, int numberOfVars) {
+    public String generateRandomExpression(int numberOfProducts, int numberOfVars) {
         String exp = "";
         ArrayList<Integer> products = new ArrayList<>();
         Random random = new Random();

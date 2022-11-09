@@ -1,6 +1,5 @@
 package com.mycompany.quine.mccluskey;
 
-import static com.mycompany.quine.mccluskey.Tools.generateRandomExpression;
 import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Font;
@@ -38,7 +37,6 @@ public final class GUI extends Tools implements KeyListener {
     
     private String inputFormat;
     private String expression;
-    private String report;
     private boolean hasResult;
     private String errorMsg;
     private SumOfProducts exp;
@@ -46,7 +44,6 @@ public final class GUI extends Tools implements KeyListener {
     public GUI(){
         inputFormat = "";
         expression  = "";
-        report      = "";
         hasResult   = false;
         errorMsg    = "";
         exp         = null;
@@ -228,50 +225,6 @@ public final class GUI extends Tools implements KeyListener {
         c.weighty = 0.0;
 	space6.setBorder(BorderFactory.createLineBorder(borderColor));
         vPanel.add(space6, c);
-        /*
-        JLabel labelWichReport = new JLabel("Relatório a exibir:");
-        labelWichReport.setFont(font);
-        labelWichReport.setForeground(new Color(1, 111, 222));
-	c.fill = GridBagConstraints.NONE;
-        c.gridx = 1;
-	c.gridy = 4;
-	c.gridwidth = 6;
-	c.gridheight = 1;
-        c.weightx = 0.0;
-        c.weighty = 0.0;
-        c.anchor = GridBagConstraints.WEST;
-	labelWichReport.setBorder(BorderFactory.createLineBorder(borderColor));
-        vPanel.add(labelWichReport, c);
-        */
-        JComboBox<String> comboWichReport = new JComboBox<>(wichReport);
-        comboWichReport.setPreferredSize(new Dimension(250, 30));
-        comboWichReport.setMinimumSize(new Dimension(250, 30));
-        comboWichReport.addKeyListener(this);
-        comboWichReport.setFocusable(true);
-        Font fontRep = new Font("Segoe UI", Font.BOLD, 12);
-	comboWichReport.setFont(fontRep);
-        comboWichReport.setForeground(new Color(1, 111, 222));
-        c.fill = GridBagConstraints.NONE;
-	c.gridx = 1;
-	c.gridy = 7;
-	c.gridwidth = 5;
-	c.gridheight = 1;
-        c.weightx = 0.0;
-        c.weighty = 0.0;
-        c.anchor = GridBagConstraints.WEST;
-	comboWichReport.setBorder(BorderFactory.createLineBorder(borderColor));
-        vPanel.add(comboWichReport, c);
-        
-        JLabel space9 = new JLabel(" ");
-	c.fill = GridBagConstraints.NONE;
-	c.gridx = 1;
-	c.gridy = 6;
-	c.gridwidth = 9;
-	c.gridheight = 1;
-        c.weightx = 0.0;
-	space9.setBorder(BorderFactory.createLineBorder(borderColor));
-        c.weighty = 0.0;
-        vPanel.add(space9, c);
         
         JLabel resultLabel = new JLabel("Resultado:");
         resultLabel.setFont(font);
@@ -306,35 +259,40 @@ public final class GUI extends Tools implements KeyListener {
 	c.gridwidth = 9;
 	c.gridheight = 1;//4
 	c.weightx = 100.0;
-        c.weighty = 0.01;//PARA VÁRIOS RESULTADOS: 0.1
+        c.weighty = 0.01;
 	jScrollResult.setBorder(BorderFactory.createLineBorder(borderColor));
         vPanel.add(jScrollResult, c);
-        /*
-        JLabel space10 = new JLabel(" ");
+        
+        JLabel space9 = new JLabel(" ");
 	c.fill = GridBagConstraints.NONE;
 	c.gridx = 1;
-	c.gridy = 14;//12
+	c.gridy = 6;
 	c.gridwidth = 9;
 	c.gridheight = 1;
         c.weightx = 0.0;
+	space9.setBorder(BorderFactory.createLineBorder(borderColor));
         c.weighty = 0.0;
-	space10.setBorder(BorderFactory.createLineBorder(borderColor));
-        vPanel.add(space10, c);
+        vPanel.add(space9, c);
         
-        JLabel labelReport = new JLabel("Relatório:");
-        labelReport.setFont(font);
-        labelReport.setForeground(new Color(1, 111, 222));
-	c.fill = GridBagConstraints.NONE;
+        JComboBox<String> comboWichReport = new JComboBox<>(wichReport);
+        comboWichReport.setPreferredSize(new Dimension(250, 30));
+        comboWichReport.setMinimumSize(new Dimension(250, 30));
+        comboWichReport.addKeyListener(this);
+        comboWichReport.setFocusable(true);
+        Font fontRep = new Font("Segoe UI", Font.BOLD, 12);
+	comboWichReport.setFont(fontRep);
+        comboWichReport.setForeground(new Color(1, 111, 222));
+        c.fill = GridBagConstraints.NONE;
 	c.gridx = 1;
-	c.gridy = 15;//13
-	c.gridwidth = 9;
+	c.gridy = 7;
+	c.gridwidth = 5;
 	c.gridheight = 1;
         c.weightx = 0.0;
         c.weighty = 0.0;
         c.anchor = GridBagConstraints.WEST;
-	labelReport.setBorder(BorderFactory.createLineBorder(borderColor));
-        vPanel.add(labelReport, c);
-        */
+	comboWichReport.setBorder(BorderFactory.createLineBorder(borderColor));
+        vPanel.add(comboWichReport, c);
+        
         JTextArea textAreaReport = new JTextArea();
         textAreaReport.addKeyListener(this);
         textAreaReport.setFocusable(true);
@@ -449,7 +407,7 @@ public final class GUI extends Tools implements KeyListener {
                     else {
                         textAreaReport.setText("-");
                     }
-                } catch (Exception ex) {
+                } catch (FileNotFoundException ex) {
                     Logger.getLogger(GUI.class.getName()).log(Level.SEVERE, null, ex);
                 }
             }
@@ -517,9 +475,7 @@ public final class GUI extends Tools implements KeyListener {
     
     public SumOfProducts optimizeExpressions(String allExpressions) throws Exception {
         PrintWriter writer = new PrintWriter("Quine-McCluskey Results.txt", "UTF-8");
-        String results = "";
-        report  = "";
-        SumOfProducts exp = null;
+        SumOfProducts sop = null;
         
         //inputFormat = getInputFormat();
         allExpressions = removeSpacesFromExpression(allExpressions);
@@ -533,19 +489,17 @@ public final class GUI extends Tools implements KeyListener {
                 end = allExpressions.length();
             }
             expression = allExpressions.substring(begin, end);
-            exp = new SumOfProducts(expression);
-            exp.sortByOnesCount();
-            exp.mergePrimeImplicants(10);
-            exp.fillMinTermsList();
-            //exp.sortMinTermsList();
-            exp.fillTruthTable();
-            exp.essentialProductsToFinalList();
+            sop = new SumOfProducts(expression);
+            sop.sortByOnesCount();
+            sop.mergePrimeImplicants(10);
+            sop.fillMinTermsList();
+            sop.fillTruthTable();
+            sop.essentialProductsToFinalList();
     
-            ArrayList<Integer> indexes = exp.getCandidateProductsIndexes();
-            exp.permute(indexes);
-            exp.completeFinalList();
-            exp.buildOptimizedExpression();
-            //results += exp.getResult();
+            ArrayList<Integer> indexes = sop.getCandidateProductsIndexes();
+            sop.permute(indexes);
+            sop.completeFinalList();
+            sop.buildOptimizedExpression();
             
             begin = end + 1;
             if (begin >= allExpressions.length()) {
@@ -555,8 +509,7 @@ public final class GUI extends Tools implements KeyListener {
         while (begin < allExpressions.length());
         
         writer.close();
-        //return results;
-        return exp;
+        return sop;
     }
     
     @Override
