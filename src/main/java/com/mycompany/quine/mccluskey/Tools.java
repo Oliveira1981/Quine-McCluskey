@@ -102,6 +102,37 @@ public class Tools {
         return decimalValue;
     }
     
+    public static String decimalDigit2hexaDigit(int decimalDigit) {
+        if (decimalDigit >= 0 &&
+            decimalDigit <= 9) {
+            return String.valueOf(decimalDigit);
+        }
+        
+        switch (decimalDigit) {
+            case 10 -> {
+                return "A";
+            }
+            case 11 -> {
+                return "B";
+            }
+            case 12 -> {
+                return "C";
+            }
+            case 13 -> {
+                return "D";
+            }
+            case 14 -> {
+                return "E";
+            }
+            case 15 -> {
+                return "F";
+            }
+            default -> {
+                return "";
+            }
+        }
+    }
+    
     public static String decimal2binary(int deci, int size) {
         String str = "";
         int b = 0;
@@ -468,13 +499,6 @@ public class Tools {
             }
         }
         return expression;
-    }
-    
-    public String expression2hexadecimal(String exp) {
-        String hexa = "0x";
-        
-        
-        return hexa;
     }
     
     public static boolean isDumb(ArrayList<MinTerm> mt, int numberOfVars) {

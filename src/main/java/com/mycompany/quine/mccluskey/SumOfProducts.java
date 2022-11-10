@@ -174,6 +174,8 @@ public final class SumOfProducts extends Tools {
         for (int i=0; i < truthTable.size(); i++) {
             str += "\n" + truthTable.get(i);
         }
+        str += "\n\nHexadecimal: " + expression2hexadecimal(convertedExpression);
+        
         return str;
     }
     
@@ -660,34 +662,60 @@ public final class SumOfProducts extends Tools {
             }
             str += "\n" + fmtRow;
         }
-        
+        str += "\n";
+        for (int r=0; r < 3+(numberOfVars+(minTermsList.size())*4); r++) {
+            str += ".";
+        }
         return str + "\n";
+    }
+    
+    public String expression2hexadecimal(String exp) {
+        String hexa = "0x";
+        
+        int i = truthTable.size()-1;
+        while (i > 0) {
+            String fourBits = "";
+            for (int b=0; b < 4; b++) {
+                if (i < 1) {
+                    break;
+                }
+                int last = truthTable.get(i).length() - 1;
+                fourBits += truthTable.get(i).charAt(last);
+                i--;
+            }
+            int decimalDigit = binary2decimal(fourBits, 4);
+            hexa += decimalDigit2hexaDigit(decimalDigit);
+        }
+        
+        return hexa;
     }
     
     public String getFullReport() throws FileNotFoundException, UnsupportedEncodingException {
         PrintWriter writer = new PrintWriter("Quine-McCluskey Results.txt", "UTF-8");
         report = "";
-        report += print("\nExpressão de entrada: \n> " + originalInputExpression + "\n", writer);
+        report += print("\nExpressão de Entrada: \n> " + originalInputExpression + "\n", writer);
         
         if (isError) {
-            report += print("\nExpressão inconsistente.\n", writer);
+            report += print("\nExpressão Inconsistente.\n", writer);
             return report;
         }
         
         report += print("\nFormato de Entrada:\n> " + originalInputFormat + "\n", writer);
         
         if (!inputFormat.equals(originalInputFormat)) {
-            report += print("\nExpressão convertida: \n> " + convertedExpression + "\n", writer);
-            report += print("\nFormato de Entrada convertido:\n> " + inputFormat + "\n", writer);
+            report += print("\nExpressão Convertida: \n> " + convertedExpression + "\n", writer);
+            report += print("\nFormato de Entrada Convertido:\n> " + inputFormat + "\n", writer);
         }
         
         report += print("\nVariáveis:\n> " + numberOfVars + "\n", writer);
         
-        report += print("\nQuantidade de Literais na entrada:\n", writer);
+        report += print("\nQuantidade de Literais na Entrada:\n", writer);
         report += print("> " + numberOfLiterals(
                 convertedExpression,
                 numberOfVars,
                 numberOfProducts) + "\n", writer);
+        
+        report += print("\nSaída Hexadecimal:\n> " + expression2hexadecimal(originalInputExpression) + "\n", writer);
         
         report += print ("\nMintermos e seus Produtos:\n", writer);
         report += print (getProductsFromMinTerms(), writer);
@@ -704,13 +732,13 @@ public final class SumOfProducts extends Tools {
         }
         report += print("\n", writer);
         
-        report += print("\nExpressão otimizada:\n", writer);
+        report += print("\nExpressão Otimizada:\n", writer);
         report += print("> " + result + "\n", writer);
         
-        report += print("\nQuantidade de Literais na saída:\n", writer);
+        report += print("\nQuantidade de Literais na Saída:\n", writer);
         report += print("> " + numberOfLiterals(result, numberOfVars, numberOfProducts) + "\n", writer);
         
-        report += print ("\nFim dos resultados.\n", writer);
+        report += print ("\nFim dos Resultados.\n", writer);
         report += print("==================================================\n", writer);
         
         writer.close();
