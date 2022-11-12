@@ -499,7 +499,7 @@ public final class GUI extends Tools implements KeyListener {
             sop.fillMinTermsList();
             sop.fillTruthTable();
             sop.essentialProductsToFinalList();
-    
+            
             ArrayList<Integer> indexes = sop.getCandidateProductsIndexes();
             sop.permute(indexes);
             sop.completeFinalList();

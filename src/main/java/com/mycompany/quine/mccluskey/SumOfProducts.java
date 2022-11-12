@@ -17,6 +17,7 @@ public final class SumOfProducts extends Tools {
     private String                         inputFormat;
     private String             originalInputExpression;
     private String                 convertedExpression;
+    private ArrayList<String>     originalProductsList;
     private ArrayList<Product>            productsList; // Linhas da coveringTable
     private ArrayList<Product>         auxProductsList;
     private ArrayList<MinTerm>            minTermsList; // Colunas da coveringTable
@@ -201,18 +202,40 @@ public final class SumOfProducts extends Tools {
         
         do {
             end = convertedExpression.indexOf('+', begin);
+            
             if (end < 0) {
                 end = convertedExpression.length();
             }
+            
             String str = convertedExpression.substring(begin, end);
-            productsList.add(new Product(inputFormat, str, numberOfVars));
+            ArrayList<String> originalProductsList = new ArrayList<>();
+            originalProductsList.add(str);
             
-            minTermsList
-                .add(new MinTerm(productsList
-                    .get(productsList.size()-1)
-                        .getMinTermsList().get(0), numberOfVars));
+            //trabalha os dontcare (gera todas as variações)
+            ArrayList<String> allStr;
+            allStr = (ArrayList<String>) getAllVariations(str).clone();
             
-            begin = end+1;
+            for (int a=0; a < allStr.size(); a++) {
+                Product newProduct = new Product(
+                    inputFormat, allStr.get(a), numberOfVars
+                );
+                
+                if (!productsListContains(newProduct.getLiteralView(), productsList)) {
+                    productsList.add(newProduct);
+                }
+                
+                MinTerm newMinTerm = new MinTerm(
+                    productsList.get(
+                        productsList.size()-1
+                    ).getMinTermsList().get(0),numberOfVars
+                );
+                
+                if (!minTermsListContains(newMinTerm.getDecimalView(), minTermsList)) {
+                    minTermsList.add(newMinTerm);
+                }
+            }
+            
+            begin = end + 1;
             if (begin >= convertedExpression.length())
                 break;
         }

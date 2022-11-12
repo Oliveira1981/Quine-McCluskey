@@ -588,5 +588,34 @@ public class Tools {
         
         return numberOfVars * numberOfProducts;
     }
+    
+    public static ArrayList<String> getAllVariations(String prod) {
+        prod = prod.toUpperCase();
+        ArrayList<String> allProducts = new ArrayList<>();
+        
+        //AQUI
+        
+        allProducts.add(prod);
+        
+        return allProducts;
+    }
+    
+    public static boolean productsListContains(String product, ArrayList<Product> pdList) {
+        for (int i=0; i < pdList.size(); i++) {
+            if (product.equals(pdList.get(i).getLiteralView())) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    public static boolean minTermsListContains(int decimal, ArrayList<MinTerm> mtList) {
+        for (int i=0; i < mtList.size(); i++) {
+            if (decimal == mtList.get(i).getDecimalView()) {
+                return true;
+            }
+        }
+        return false;
+    }
 
 }
