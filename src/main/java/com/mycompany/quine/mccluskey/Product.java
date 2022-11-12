@@ -142,7 +142,8 @@ public final class Product extends Tools {
     }
     
     public void setProductFromLiteral(String litInput) {
-        literalView = sortLiteralInput(litInput);
+        //literalView = sortLiteralInput(litInput); //!cb!da+!acb
+        literalView = litInput;
     }
 
     public void setProductFromBinary(String bitString) {
