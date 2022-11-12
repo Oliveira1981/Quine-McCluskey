@@ -210,10 +210,19 @@ public final class SumOfProducts extends Tools {
             String str = convertedExpression.substring(begin, end);
             ArrayList<String> originalProductsList = new ArrayList<>();
             originalProductsList.add(str);
+            //Identificar todas as variáveis e
+            //criar uma lista para usar no lugar de
+            //getAlphabetChar (para aceitar entradas como WXYZ)
             
-            //trabalha os dontcare (gera todas as variações)
+            //Trabalha os Don't Care (gera todas as variações)
             ArrayList<String> allStr;
-            allStr = (ArrayList<String>) getAllVariations(str).clone();
+            if (inputFormat.equals("Literal")) {
+                allStr = (ArrayList<String>) getAllVariations(str, numberOfVars).clone();
+            }
+            else {
+                allStr = new ArrayList<>();
+                allStr.add(str);
+            }
             
             for (int a=0; a < allStr.size(); a++) {
                 Product newProduct = new Product(

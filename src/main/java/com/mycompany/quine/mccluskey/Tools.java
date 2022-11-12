@@ -14,17 +14,18 @@ public class Tools {
     public static String literal2binary(String lit, int size) {
         String strBin = "";
         int pos = 0;
-        
+print("\n---litLength: ---"+lit.length());        
         for (int c = 0; c < lit.length(); c++) {
             boolean isNegate = false;
-            
+
             while(lit.charAt(c) == '!') {
                 isNegate = !isNegate;
                 c++;
             }
-            
+            //       ABCDEFGHI...
+            //      !A B !D
+            //       01_0
             if (Character.isAlphabetic(lit.charAt(c))){
-                
                 while (lit.charAt(c) != getAlphabetChar(pos)) {
                     strBin += "_";
                     pos++;
@@ -249,6 +250,9 @@ public class Tools {
     }
     
     public static char getAlphabetChar(int c) {
+        //if (c > 25) {
+        //    return 'D';
+        //}
         String alphabet =
             "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
         return alphabet.charAt(c);
@@ -589,16 +593,139 @@ public class Tools {
         return numberOfVars * numberOfProducts;
     }
     
-    public static ArrayList<String> getAllVariations(String prod) {
+    public static ArrayList<String> getAllVariations(String prod, int size) {
         prod = prod.toUpperCase();
         ArrayList<String> allProducts = new ArrayList<>();
+        String prodDontCare = includeDontCares(prod, size);
+        int count = countDontCares(prodDontCare);
+        int variations = (int) Math.pow(2, count);
+        
+        for (int i=0; i < variations; i++) {
+            String bitStr = decimal2binary(i, count);
+            allProducts.add(substDontCare(prodDontCare, bitStr));
+        }
         
         //AQUI
-        
-        allProducts.add(prod);
-        
+        /*boolean hadDontCare = false;
+        String prod_0 = "";
+        String prod_1 = "";
+        //String prodDontCare = includeDontCares(prod, size);
+        while (prodDontCare.contains("_")) {
+            for (int i=0; i < prodDontCare.length(); i++) {
+                if (prodDontCare.charAt(i) == '_') {
+                    prodDontCare = substDontCare(prodDontCare, i, false, size);
+                    prod_0 = prodDontCare;
+                    prodDontCare = substDontCare(prodDontCare, i, true, size);
+                    prod_1 = prodDontCare;
+                    hadDontCare = true;  // A_C_  A!BC_   ABC_   ABC!D    ABCD
+                }
+            }
+        }
+        if (hadDontCare) {
+            allProducts.add(prod_0);
+            allProducts.add(prod_1);
+        }
+        else {
+            allProducts.add(prodDontCare);
+        }
+        */
         return allProducts;
     }
+    
+    public static String substDontCare(String product, String bitStr) {
+        int a = 0;
+        int b = 0;
+        for (int i=0; i < product.length(); i++) {
+            if (product.charAt(i) == '!') {
+                continue;
+            }
+            if (product.charAt(i) == '_') {
+                String var = "";
+                if (bitStr.charAt(b) == '0') {
+                    var = "!";
+                }
+                var += getAlphabetChar(a);//VER SE PRODUTO JÁ ESTÁ ORDENADO
+                product =
+                    product.substring(0, i) + var + product.substring(i+1, product.length());
+                b++;
+            }
+            a++;
+        }
+        print("\nproduct: "+product);
+        return product;
+    }
+    
+    /*public static String substDontCare(String product, int pos, boolean b, int size) {
+        
+        //product = includeDontCares(product, size); //aplicar antes de chamar substDontCare
+        
+        String var = "";
+        if (!b) {
+            var = "!";
+        }
+        var += getAlphabetChar(pos);
+        product =
+            product.substring(0, pos) + var + product.substring(pos+1, product.length());
+        
+        for (int i=0; i < product.length(); i++) {
+            if (product.charAt(i) == '_') {
+                product = substDontCare(product, i, false, size);
+                product = substDontCare(product, i, true, size);
+            }
+        }
+        return product;
+    }*/
+    
+    public static String includeDontCares(String product, int size) {
+        String str = "";
+        int pos = 0;
+        int count = 0;
+        
+        for (int c = 0; c < product.length(); c++) {
+            boolean isNegate = false;
+            
+            while(product.charAt(c) == '!') {
+                isNegate = !isNegate;
+                c++;
+            }
+            
+            if (Character.isAlphabetic(product.charAt(c))){
+                
+                while (product.charAt(c) != getAlphabetChar(pos)) {
+                    str += "_";
+                    count++;
+                    pos++;
+                }
+                
+                if(isNegate) {
+                    str += "!";
+                }
+                
+                str += product.charAt(c);
+                
+                pos++;
+            }
+        }
+        
+        while (str.length() < size) {
+            str += "_";
+        }
+        return str;
+    }
+    
+    public static int countDontCares(String product) {
+        int count = 0;
+        for (int i=0; i < product.length(); i++) {
+            if (product.charAt(i) == '_') {
+                count++;
+            }
+        }
+        return count;
+    }
+    
+    /*public static boolean hasDontCare(String product) {
+            return product.contains("_");
+    }*/
     
     public static boolean productsListContains(String product, ArrayList<Product> pdList) {
         for (int i=0; i < pdList.size(); i++) {
