@@ -645,12 +645,12 @@ public final class SumOfProducts extends Tools {
         }
         String str;
         Formatter fmt = new Formatter();
-        fmt.format("%-20s %-20s %-20s\n", "Mintermo", "Binário", "Produtos");
-        fmt.format("%s", "--------------------------------------------------\n");
+        fmt.format("%-20s %-20s\n", "Mintermo", "Produtos");
+        //Falta definir número de "-" de acordo com o tamanho dos produtos
+        fmt.format("%s", "-----------------------------------------\n");
         for(int i=0; i < minTermsList.size(); i++) {
-            fmt.format("%-20s %-20s %-20s\n",
+            fmt.format("%-20s %-20s\n",
                     minTermsList.get(i).getDecimalView(),
-                    minTermsList.get(i).getBinaryView(),
                     minTermsList.get(i).getProductsList()
             );
         }

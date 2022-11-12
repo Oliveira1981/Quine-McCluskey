@@ -3,7 +3,6 @@ package com.mycompany.quine.mccluskey;
 import java.io.PrintWriter;
 import java.util.ArrayList;
 import java.util.Random;
-import java.util.Set;
 
 /**
  *
@@ -14,7 +13,6 @@ public class Tools {
     public static String literal2binary(String lit, int size) {
         String strBin = "";
         int pos = 0;
-print("\n---litLength: ---"+lit.length());        
         for (int c = 0; c < lit.length(); c++) {
             boolean isNegate = false;
 
@@ -638,7 +636,6 @@ print("\n---litLength: ---"+lit.length());
             
             a++;
         }
-        print("\nnewProduct: "+newProduct);
         return newProduct;
     }
     
