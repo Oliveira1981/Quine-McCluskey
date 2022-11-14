@@ -175,7 +175,7 @@ public final class SumOfProducts extends Tools {
         for (int i=0; i < truthTable.size(); i++) {
             str += "\n" + truthTable.get(i);
         }
-        str += "\n\nHexadecimal: " + expression2hexadecimal(convertedExpression);
+        str += "\n\nHexadecimal: " + expression2hexadecimal(convertedExpression) + "\n";
         
         return str;
     }
@@ -197,6 +197,7 @@ public final class SumOfProducts extends Tools {
         minTermsList = new ArrayList<>();
         permutations = new ArrayList<>();
         numberOfVars = detectNumberOfVars(inputFormat, convertedExpression);
+        //numberOfVars = 4;
         int begin    = 0;
         int end;
         
@@ -725,53 +726,54 @@ public final class SumOfProducts extends Tools {
     public String getFullReport() throws FileNotFoundException, UnsupportedEncodingException {
         PrintWriter writer = new PrintWriter("Quine-McCluskey Results.txt", "UTF-8");
         report = "";
-        report += print("\nExpressão de Entrada: \n> " + originalInputExpression + "\n", writer);
+        report += print("\nExpressão de Entrada: \n> " + originalInputExpression + "\n"/*, writer*/);
         
         if (isError) {
-            report += print("\nExpressão Inconsistente.\n", writer);
+            report += print("\nExpressão Inconsistente.\n"/*, writer*/);
             return report;
         }
         
-        report += print("\nFormato de Entrada:\n> " + originalInputFormat + "\n", writer);
+        report += print("\nFormato de Entrada:\n> " + originalInputFormat + "\n"/*, writer*/);
         
         if (!inputFormat.equals(originalInputFormat)) {
-            report += print("\nExpressão Convertida: \n> " + convertedExpression + "\n", writer);
-            report += print("\nFormato de Entrada Convertido:\n> " + inputFormat + "\n", writer);
+            report += print("\nExpressão Convertida: \n> " + convertedExpression + "\n"/*, writer*/);
+            report += print("\nFormato de Entrada Convertido:\n> " + inputFormat + "\n"/*, writer*/);
         }
         
-        report += print("\nVariáveis:\n> " + numberOfVars + "\n", writer);
+        report += print("\nVariáveis:\n> " + numberOfVars + "\n"/*, writer*/);
         
-        report += print("\nQuantidade de Literais na Entrada:\n", writer);
+        report += print("\nQuantidade de Literais na Entrada:\n"/*, writer*/);
         report += print("> " + numberOfLiterals(
                 convertedExpression,
                 numberOfVars,
-                numberOfProducts) + "\n", writer);
+                numberOfProducts) + "\n"/*, writer*/);
         
-        report += print("\nSaída Hexadecimal:\n> " + expression2hexadecimal(originalInputExpression) + "\n", writer);
+        report += print("\nSaída Hexadecimal:\n> " + expression2hexadecimal(originalInputExpression) + "\n"/*, writer*/);
+        //report += print(expression2hexadecimal(originalInputExpression)+"\n", writer);
         
-        report += print ("\nMintermos e seus Produtos:\n", writer);
-        report += print (getProductsFromMinTerms(), writer);
+        report += print ("\nMintermos e seus Produtos:\n"/*, writer*/);
+        report += print (getProductsFromMinTerms()/*, writer*/);
         
-        report += print("\nProdutos e seus Mintermos:\n", writer);
-        report += print(getMinTermsFromProducts(), writer);
+        report += print("\nProdutos e seus Mintermos:\n"/*, writer*/);
+        report += print(getMinTermsFromProducts()/*, writer*/);
         
-        report += print ("\nTabela de Cobertura:\n", writer);
-        report += print (getCoveringTable(), writer);
+        report += print ("\nTabela de Cobertura:\n"/*, writer*/);
+        report += print (getCoveringTable()/*, writer*/);
         
-        report += print("\nProdutos Essenciais:\n> ", writer);
+        report += print("\nProdutos Essenciais:\n> "/*, writer*/);
         for (int i=0; i < essentialProductsList.size(); i++) {
-            report += print(essentialProductsList.get(i)+"\t", writer);
+            report += print(essentialProductsList.get(i)+"\t"/*, writer*/);
         }
-        report += print("\n", writer);
+        report += print("\n"/*, writer*/);
         
-        report += print("\nExpressão Otimizada:\n", writer);
-        report += print("> " + result + "\n", writer);
+        report += print("\nExpressão Otimizada:\n"/*, writer*/);
+        report += print("> " + result + "\n"/*, writer*/);
         
-        report += print("\nQuantidade de Literais na Saída:\n", writer);
-        report += print("> " + numberOfLiterals(result, numberOfVars, numberOfProducts) + "\n", writer);
+        report += print("\nQuantidade de Literais na Saída:\n"/*, writer*/);
+        report += print("> " + numberOfLiterals(result, numberOfVars, numberOfProducts) + "\n"/*, writer*/);
         
-        report += print ("\nFim dos Resultados.\n", writer);
-        report += print("==================================================\n", writer);
+        //report += print ("\nFim dos Resultados.\n"/*, writer*/);
+        report += print("\n==================================================\n"/*, writer*/);
         
         writer.close();
         return report;
