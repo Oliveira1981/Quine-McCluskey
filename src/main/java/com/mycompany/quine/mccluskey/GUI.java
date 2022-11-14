@@ -39,7 +39,7 @@ public final class GUI extends Tools implements KeyListener {
     private String expression;
     private boolean hasResult;
     private String errorMsg;
-    private SumOfProducts exp;
+    private ArrayList<SumOfProducts> exp;
     
     public GUI(){
         inputFormat = "";
@@ -353,9 +353,17 @@ public final class GUI extends Tools implements KeyListener {
             public void actionPerformed(ActionEvent e) {
                 try {
                     hasResult = true;
-                    exp = optimizeExpressions((String) comboExpressions.getSelectedItem());
+                    //PRA MUITAS EXPRESSÕES NÃO DÁ (200 deu OK)
+                    //MELHOR LER UMA, IMPRIMIR E DESCARTAR, PRA DEPOIS LER A PRÓXIMA
+                    exp = (ArrayList<SumOfProducts>) optimizeExpressions((String) comboExpressions.getSelectedItem()).clone();
                     if (errorMsg.isEmpty()) {
-                        String results = exp.getResult();
+                        String results;
+                        if (exp.size() > 1) {
+                            results = "-";
+                        }
+                        else {
+                            results = exp.get(0).getResult();
+                        }
                         textAreaResult.setText(results);
                         textAreaReport.setText(reportText(comboWichReport));
                     }
@@ -380,7 +388,13 @@ public final class GUI extends Tools implements KeyListener {
                     
                     exp = optimizeExpressions(gen);
                     if (errorMsg.isEmpty()) {
-                        String results = exp.getResult();
+                        String results;
+                        if (exp.size() > 1) {
+                            results = "-";
+                        }
+                        else {
+                            results = exp.get(0).getResult();
+                        }
                         textAreaResult.setText(results);
                         textAreaReport.setText(reportText(comboWichReport));
                     }
@@ -401,7 +415,11 @@ public final class GUI extends Tools implements KeyListener {
                 try {
                     if (errorMsg.isEmpty()) {
                         if (hasResult) {
-                            textAreaReport.setText(reportText(comboWichReport));
+                            try {
+                                textAreaReport.setText(reportText(comboWichReport));
+                            } catch (UnsupportedEncodingException ex) {
+                                Logger.getLogger(GUI.class.getName()).log(Level.SEVERE, null, ex);
+                            }
                         }
                     }
                     else {
@@ -422,7 +440,13 @@ public final class GUI extends Tools implements KeyListener {
                     errorMsg = "";
                     exp = optimizeExpressions((String) comboExpressions.getSelectedItem());
                     if (errorMsg.isEmpty()) {
-                        String results = exp.getResult();
+                        String results;
+                        if (exp.size() > 1) {
+                            results = "-";
+                        }
+                        else {
+                            results = exp.get(0).getResult();
+                        }
                         textAreaResult.setText(results);
                         textAreaReport.setText(reportText(comboWichReport));
                     }
@@ -439,43 +463,58 @@ public final class GUI extends Tools implements KeyListener {
         inputFormat = String.valueOf(comboExpressions.getSelectedItem());
     }
     
-    public String reportText(JComboBox comboWichReport) throws FileNotFoundException {
-        
+    public String reportText(JComboBox comboWichReport) throws FileNotFoundException, UnsupportedEncodingException {
+        PrintWriter writer = new PrintWriter("Quine-McCluskey Results.txt", "UTF-8");
         String out = "";
         switch ((String)comboWichReport.getSelectedItem()) {
             case "Relatório Completo" -> {
                 try {
-                    out = exp.getFullReport();
+                    for (int r=0; r < exp.size(); r++) {
+                        out += exp.get(r).getFullReport();
+                        print(exp.get(r).expression2hexadecimal(exp.get(r).getOriginalInputExpression())+"\n", writer);
+                    }
                 } catch (UnsupportedEncodingException ex) {
                     Logger.getLogger(GUI.class.getName()).log(Level.SEVERE, null, ex);
                 }
             }
             case "Tabela Verdade" -> {
-                out += exp.getTruthTable();
+                for (int r=0; r < exp.size(); r++) {
+                    out += exp.get(r).getTruthTable();
+                }
             }
             case "Mintermos e seus Produtos" -> {
-                out += exp.getProductsFromMinTerms();
+                for (int r=0; r < exp.size(); r++) {
+                    out += exp.get(r).getProductsFromMinTerms();
+                }
             }
             case "Produtos e seus Mintermos" -> {
-                out += exp.getMinTermsFromProducts();
+                for (int r=0; r < exp.size(); r++) {
+                    out += exp.get(r).getMinTermsFromProducts();
+                }
             }
             case "Tabela de Cobertura" -> {
-                out += exp.getCoveringTable();
+                for (int r=0; r < exp.size(); r++) {
+                    out += exp.get(r).getCoveringTable();
+                }
             }
             default -> {
                 try {
-                    out = exp.getFullReport();
+                    for (int r=0; r < exp.size(); r++) {
+                        out = exp.get(r).getFullReport();
+                    }
                 } catch (UnsupportedEncodingException ex) {
                     Logger.getLogger(GUI.class.getName()).log(Level.SEVERE, null, ex);
                 }
             }
         }
+        //print (out, writer);
+        writer.close();
         return out;
     }
     
-    public SumOfProducts optimizeExpressions(String allExpressions) throws Exception {
-        PrintWriter writer = new PrintWriter("Quine-McCluskey Results.txt", "UTF-8");
-        SumOfProducts sop = null;
+    public ArrayList<SumOfProducts> optimizeExpressions(String allExpressions) throws Exception {
+        ArrayList<SumOfProducts> sop = new ArrayList<>();
+        //ArrayList<SumOfProducts> sop = null;
         
         //inputFormat = getInputFormat();
         allExpressions = removeSpacesFromExpression(allExpressions);
@@ -483,27 +522,30 @@ public final class GUI extends Tools implements KeyListener {
         int begin = 0;
         int end;
         do {
-            //end = allExpressions.indexOf(';', begin);
-            end = -1; //ACEITAR APENAS UMA EXPRESSÃO
+            end = allExpressions.indexOf(';', begin);
+            //end = allExpressions.indexOf('\n', begin);
+            //end = -1; //ACEITAR APENAS UMA EXPRESSÃO
             if (end < 0) {
                 end = allExpressions.length();
             }
             expression = allExpressions.substring(begin, end);
-            sop = new SumOfProducts();
-            if (!sop.setExpression(expression)) {
+            //sop = new SumOfProducts();
+            sop.add(new SumOfProducts());
+            int lastSOPIndex = sop.size()-1;
+            if (!sop.get(lastSOPIndex).setExpression(expression)) {
                 begin = end + 1;
                 continue;
             }
-            sop.sortByOnesCount();
-            sop.mergePrimeImplicants(10);
-            sop.fillMinTermsList();
-            sop.fillTruthTable();
-            sop.essentialProductsToFinalList();
+            sop.get(lastSOPIndex).sortByOnesCount();
+            sop.get(lastSOPIndex).mergePrimeImplicants(10);
+            sop.get(lastSOPIndex).fillMinTermsList();
+            sop.get(lastSOPIndex).fillTruthTable();
+            sop.get(lastSOPIndex).essentialProductsToFinalList();
             
-            ArrayList<Integer> indexes = sop.getCandidateProductsIndexes();
-            sop.permute(indexes);
-            sop.completeFinalList();
-            sop.buildOptimizedExpression();
+            ArrayList<Integer> indexes = sop.get(lastSOPIndex).getCandidateProductsIndexes();
+            sop.get(lastSOPIndex).permute(indexes);
+            sop.get(lastSOPIndex).completeFinalList();
+            sop.get(lastSOPIndex).buildOptimizedExpression();
             
             begin = end + 1;
             if (begin >= allExpressions.length()) {
@@ -512,7 +554,6 @@ public final class GUI extends Tools implements KeyListener {
         }
         while (begin < allExpressions.length());
         
-        writer.close();
         return sop;
     }
     
