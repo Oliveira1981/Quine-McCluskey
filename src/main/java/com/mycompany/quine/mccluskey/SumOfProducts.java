@@ -17,6 +17,7 @@ public final class SumOfProducts extends Tools {
     private String                         inputFormat;
     private String             originalInputExpression;
     private String                 convertedExpression;
+    private ArrayList<String>            variablesList;
     private ArrayList<String>     originalProductsList;
     private ArrayList<Product>            productsList; // Linhas da coveringTable
     private ArrayList<Product>         auxProductsList;
@@ -220,6 +221,8 @@ public final class SumOfProducts extends Tools {
             //Trabalha os Don't Care (gera todas as variações)
             ArrayList<String> allStr;
             if (inputFormat.equals("Literal")) {
+                //Preenche a lista de variáveis
+                //aqui
                 allStr = (ArrayList<String>) getAllVariations(str, numberOfVars).clone();
             }
             else {
