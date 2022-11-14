@@ -196,10 +196,10 @@ public final class SumOfProducts extends Tools {
         productsList = new ArrayList<>();
         minTermsList = new ArrayList<>();
         permutations = new ArrayList<>();
-        //numberOfVars = detectNumberOfVars(inputFormat, convertedExpression);
+        numberOfVars = detectNumberOfVars(inputFormat, convertedExpression);
+        //numberOfVars = 3;
         //PRECISO SALVAR UMA LISTA DE VARIÁVEIS
         //EXEMPLO: A*C*D não deve ser lido como A*_*C*D
-        numberOfVars = 3;
         int begin    = 0;
         int end;
         
