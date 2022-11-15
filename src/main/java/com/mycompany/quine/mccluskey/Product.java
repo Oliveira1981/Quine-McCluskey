@@ -143,7 +143,7 @@ public final class Product extends Tools {
     }
     
     public void setProductFromLiteral(String litInput) {
-        //literalView = sortLiteralInput(litInput); //!cb!da+!acb
+        //literalView = sortLiteralInput(litInput);
         literalView = litInput;
     }
 

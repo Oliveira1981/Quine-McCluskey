@@ -1,7 +1,7 @@
 package com.mycompany.quine.mccluskey;
 
 import java.io.FileNotFoundException;
-import java.io.PrintWriter;
+//import java.io.PrintWriter;
 import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -45,9 +45,6 @@ public final class SumOfProducts extends Tools {
         this.variablesList           = "";
         this.isError                 = false;
         this.report                  = "";
-        //fillVariablesList("");
-        //fillProductsList();
-        //fillTruthTable();
     }
     
     public boolean setExpression(String expression) {
@@ -81,14 +78,8 @@ public final class SumOfProducts extends Tools {
             
             isError = true;
             result = "Expressão inconsistente.";
-            //report += ("Expressão:\n> " + expression + "\n");
-            //report += ("\nExpressão inconsistente.\n");
-            //report += ("\nFim do resultado parcial.\n");
-            //report += ("==================================================\n\n");
             return false;
         }
-        
-        //report += ("Formato de Entrada:\n> " + inputFormat + "\n");
         
         if (inputFormat.equals("Hexadecimal")) {
             //report += ("\nExpressão original:\n> " + expression + "\n");
@@ -124,22 +115,12 @@ public final class SumOfProducts extends Tools {
             convertedExpression = hexadecimal2expression(expression);
             originalInputFormat = "Hexadecimal";
             inputFormat = "Decimal";
-            //report += ("\nFormato Convertido:\n> Decimal\n");
         }
         else {
             originalInputFormat = inputFormat;
             convertedExpression = expression;
         }
         
-        //report += ("\nExpressão:\n> " + expression + "\n");
-        
-        if (inputFormat.equals("Literal")) {
-            //report += ("\nQuantidade de Literais na entrada:\n");
-            //report += ("> " + numberOfLiterals(expression) + "\n");
-        }
-        
-        
-        //report += ("\nVariáveis:\n> " + numberOfVars + "\n");
         return true;
     }
     
@@ -206,8 +187,6 @@ public final class SumOfProducts extends Tools {
         permutations = new ArrayList<>();
         numberOfVars = detectNumberOfVars(inputFormat, convertedExpression);
         //numberOfVars = 3;
-        //PRECISO SALVAR UMA LISTA DE VARIÁVEIS
-        //EXEMPLO: A*C*D não deve ser lido como A*_*C*D
         int begin    = 0;
         int end;
         do {
@@ -220,9 +199,6 @@ public final class SumOfProducts extends Tools {
             String str = convertedExpression.substring(begin, end);
             ArrayList<String> originalProductsList = new ArrayList<>();
             originalProductsList.add(str);
-            //Identificar todas as variáveis e
-            //criar uma lista para usar no lugar de
-            //getAlphabetChar (para aceitar entradas como WXYZ)
             
             //Trabalha os Don't Care (gera todas as variações)
             ArrayList<String> allStr;
@@ -267,7 +243,7 @@ public final class SumOfProducts extends Tools {
         truthTable = new ArrayList<>();
         String str = "";
         for (int i=0; i < numberOfVars; i++) {
-            str += getAlphabetChar(i) + " ";
+            str += variablesList.charAt(i) + " ";
         }
         str += "| SAÍDA\n";
         int strSize = str.length();

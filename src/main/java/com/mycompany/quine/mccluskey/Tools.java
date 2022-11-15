@@ -21,7 +21,6 @@ public class Tools {
                 c++;
             }
             if (Character.isAlphabetic(lit.charAt(c))){
-                //while (lit.charAt(c) != getAlphabetChar(pos)) {
                 while (lit.charAt(c) != vars.charAt(pos)) {
                     strBin += "_";
                     pos++;
@@ -181,7 +180,6 @@ public class Tools {
                     lit += " ";
                 }
                 
-                //lit += getAlphabetChar(c);
                 lit += vars.charAt(c);
             }
             
@@ -247,9 +245,6 @@ public class Tools {
     }
     
     public static char getAlphabetChar(int c) {
-        //if (c > 25) {
-        //    return 'D';
-        //}
         String alphabet =
             "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
         return alphabet.charAt(c);
@@ -331,13 +326,11 @@ public class Tools {
             //Determina o tamanho de cada produto
             switch(inputFormat) {
                 case "Literal" -> {
-                    //currSize = 0;
                     for (int c=0; c < str.length(); c++) {
                         
                         if (Character.isAlphabetic(str.charAt(c))) {
                             
                             if (isNewVar(str.charAt(c), vars)) {
-                                //currSize++;
                                 vars += str.charAt(c);
                             }
                             
@@ -397,7 +390,7 @@ public class Tools {
         return true;
     }
     
-    public static void printq(Object obj) {
+    public static void printt(Object obj) {
         System.out.print(obj);
     }
     
@@ -629,10 +622,8 @@ public class Tools {
                 if (bitStr.charAt(b) == '0') {
                     v = "!";
                 }
-                //var += getAlphabetChar(a);//VER SE PRODUTO JÁ ESTÁ ORDENADO
-                v += vars.charAt(a);//VER SE PRODUTO JÁ ESTÁ ORDENADO
+                v += vars.charAt(a);
                 newProduct += v;
-                    //product.substring(0, i) + var + product.substring(i+1, product.length());
                 b++;
             }
             else {
@@ -660,7 +651,6 @@ public class Tools {
             
             if (Character.isAlphabetic(product.charAt(c))){
                 
-                //while (product.charAt(c) != getAlphabetChar(pos)) {
                 while (product.charAt(c) != vars.charAt(pos)) {
                     str += "_";
                     count++;
