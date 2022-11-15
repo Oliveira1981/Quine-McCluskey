@@ -24,15 +24,15 @@ public final class MinTerm extends Tools {
         isCovered    =             false;
     }
     
-    public MinTerm(int decimal, int size) {
-        setMinTerm(decimal, size);
+    public MinTerm(int decimal, String vars, int size) {
+        setMinTerm(decimal, vars, size);
     }
     
-    public void setMinTerm(int decimal, int size) {
+    public void setMinTerm(int decimal, String vars, int size) {
         this.size        = size;
         this.decimalView = decimal;
         this.binaryView  = decimal2binary(decimal, size);
-        this.literalView = binary2literal(this.binaryView, size);
+        this.literalView = binary2literal(this.binaryView, vars, size);
         isCovered        = false;
         productsList     = new ArrayList<>();
     }
@@ -61,21 +61,21 @@ public final class MinTerm extends Tools {
         return isCovered;
     }
     
-    public void setMinTermFromDecimal(int decimalView) {
+    public void setMinTermFromDecimal(int decimalView, String vars) {
         this.decimalView = decimalView;
         this.binaryView  = decimal2binary(decimalView, size);
-        this.literalView = binary2literal(binaryView, size);
+        this.literalView = binary2literal(binaryView, vars, size);
     }
     
-    public void setMinTermFromLiteral(String literalView) {
+    public void setMinTermFromLiteral(String literalView, String vars) {
         this.literalView = literalView;
-        this.binaryView  = literal2binary(literalView, size);
+        this.binaryView  = literal2binary(literalView, vars, size);
         this.decimalView = binary2decimal(binaryView, size);
     }
     
-    public void setMinTermFromBinary(String binaryView) {
+    public void setMinTermFromBinary(String binaryView, String vars) {
         this.binaryView  = binaryView;
-        this.literalView = binary2literal(binaryView, size);
+        this.literalView = binary2literal(binaryView, vars, size);
         this.decimalView = binary2decimal(binaryView, size);
     }
     

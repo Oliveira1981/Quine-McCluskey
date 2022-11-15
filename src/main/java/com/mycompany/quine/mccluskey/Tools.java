@@ -10,7 +10,7 @@ import java.util.Random;
  */
 public class Tools {
     
-    public static String literal2binary(String lit, int size) {
+    public static String literal2binary(String lit, String vars, int size) {
         String strBin = "";
         int pos = 0;
         for (int c = 0; c < lit.length(); c++) {
@@ -20,11 +20,9 @@ public class Tools {
                 isNegate = !isNegate;
                 c++;
             }
-            //       ABCDEFGHI...
-            //      !A B !D
-            //       01_0
             if (Character.isAlphabetic(lit.charAt(c))){
-                while (lit.charAt(c) != getAlphabetChar(pos)) {
+                //while (lit.charAt(c) != getAlphabetChar(pos)) {
+                while (lit.charAt(c) != vars.charAt(pos)) {
                     strBin += "_";
                     pos++;
                 }
@@ -159,7 +157,7 @@ public class Tools {
         return reversedStr.toString();
     }
     
-    public static String binary2literal(String bits, int size) {
+    public static String binary2literal(String bits, String vars, int size) {
         while (bits.length() < size) {
             bits = "0" + bits;
         }
@@ -183,7 +181,8 @@ public class Tools {
                     lit += " ";
                 }
                 
-                lit += getAlphabetChar(c);
+                //lit += getAlphabetChar(c);
+                lit += vars.charAt(c);
             }
             
             c++;
@@ -597,27 +596,26 @@ public class Tools {
         return numberOfVars * numberOfProducts;
     }
     
-    public static ArrayList<String> getAllVariations(String prod, int size) {
+    public static ArrayList<String> getAllVariations(String prod, String vars, int size) {
         prod = prod.toUpperCase();
         prod = sortLiteralInput(prod);
         ArrayList<String> allProducts = new ArrayList<>();
-        String prodDontCare = includeDontCares(prod, size);
+        String prodDontCare = includeDontCares(prod, vars, size);
         int count = countDontCares(prodDontCare);
         if (count == 0) {
             allProducts.add(prod);
         }
         else {
             int variations = (int) Math.pow(2, count);
-            
             for (int i=0; i < variations; i++) {
                 String bitStr = decimal2binary(i, count);
-                allProducts.add(substDontCare(prodDontCare, bitStr));
+                allProducts.add(substDontCare(prodDontCare, bitStr, vars));
             }
         }
         return allProducts;
     }
     
-    public static String substDontCare(String product, String bitStr) {
+    public static String substDontCare(String product, String bitStr, String vars) {
         int a = 0;
         int b = 0;
         String newProduct = "";
@@ -627,12 +625,13 @@ public class Tools {
                 continue;
             }
             if (product.charAt(i) == '_') {
-                String var = "";
+                String v = "";
                 if (bitStr.charAt(b) == '0') {
-                    var = "!";
+                    v = "!";
                 }
-                var += getAlphabetChar(a);//VER SE PRODUTO JÁ ESTÁ ORDENADO
-                newProduct += var;
+                //var += getAlphabetChar(a);//VER SE PRODUTO JÁ ESTÁ ORDENADO
+                v += vars.charAt(a);//VER SE PRODUTO JÁ ESTÁ ORDENADO
+                newProduct += v;
                     //product.substring(0, i) + var + product.substring(i+1, product.length());
                 b++;
             }
@@ -645,7 +644,7 @@ public class Tools {
         return newProduct;
     }
     
-    public static String includeDontCares(String product, int size) {
+    public static String includeDontCares(String product, String vars, int size) {
         String str = "";
         int pos = 0;
         int count = 0;
@@ -661,7 +660,8 @@ public class Tools {
             
             if (Character.isAlphabetic(product.charAt(c))){
                 
-                while (product.charAt(c) != getAlphabetChar(pos)) {
+                //while (product.charAt(c) != getAlphabetChar(pos)) {
+                while (product.charAt(c) != vars.charAt(pos)) {
                     str += "_";
                     count++;
                     pos++;

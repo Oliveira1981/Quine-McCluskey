@@ -4,6 +4,7 @@ import java.io.FileNotFoundException;
 import java.io.PrintWriter;
 import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.Formatter;
 
@@ -17,7 +18,7 @@ public final class SumOfProducts extends Tools {
     private String                         inputFormat;
     private String             originalInputExpression;
     private String                 convertedExpression;
-    private ArrayList<String>            variablesList;
+    private String                       variablesList;
     private ArrayList<String>     originalProductsList;
     private ArrayList<Product>            productsList; // Linhas da coveringTable
     private ArrayList<Product>         auxProductsList;
@@ -41,8 +42,10 @@ public final class SumOfProducts extends Tools {
         this.inputFormat             = "literal";
         this.originalInputExpression = "";
         this.convertedExpression     = "";
+        this.variablesList           = "";
         this.isError                 = false;
         this.report                  = "";
+        //fillVariablesList("");
         //fillProductsList();
         //fillTruthTable();
     }
@@ -59,6 +62,10 @@ public final class SumOfProducts extends Tools {
         
         if (inputFormat.equals("Literal")){
             this.convertedExpression = cleanUpExpression(expression);
+            fillVariablesList(convertedExpression);
+        }
+        else {
+            fillVariablesList("ABCDEFGHIJKLMNOPQRSTUVWXYZ");
         }
         fillProductsList();
         fillTruthTable();
@@ -203,7 +210,6 @@ public final class SumOfProducts extends Tools {
         //EXEMPLO: A*C*D não deve ser lido como A*_*C*D
         int begin    = 0;
         int end;
-        
         do {
             end = convertedExpression.indexOf('+', begin);
             
@@ -221,9 +227,7 @@ public final class SumOfProducts extends Tools {
             //Trabalha os Don't Care (gera todas as variações)
             ArrayList<String> allStr;
             if (inputFormat.equals("Literal")) {
-                //Preenche a lista de variáveis
-                //aqui
-                allStr = (ArrayList<String>) getAllVariations(str, numberOfVars).clone();
+                allStr = (ArrayList<String>) getAllVariations(str, variablesList, numberOfVars).clone();
             }
             else {
                 allStr = new ArrayList<>();
@@ -232,7 +236,7 @@ public final class SumOfProducts extends Tools {
             
             for (int a=0; a < allStr.size(); a++) {
                 Product newProduct = new Product(
-                    inputFormat, allStr.get(a), numberOfVars
+                    inputFormat, allStr.get(a), variablesList, numberOfVars
                 );
                 
                 if (!productsListContains(newProduct.getLiteralView(), productsList)) {
@@ -242,7 +246,7 @@ public final class SumOfProducts extends Tools {
                 MinTerm newMinTerm = new MinTerm(
                     productsList.get(
                         productsList.size()-1
-                    ).getMinTermsList().get(0),numberOfVars
+                    ).getMinTermsList().get(0), variablesList, numberOfVars
                 );
                 
                 if (!minTermsListContains(newMinTerm.getDecimalView(), minTermsList)) {
@@ -350,7 +354,7 @@ public final class SumOfProducts extends Tools {
                             bitString += productsList.get(i).getBinaryView().charAt(c);
                     }
                     if (!contains(bitString, auxProductsList)) {
-                        auxProductsList.add(new Product("Binário", bitString, numberOfVars));
+                        auxProductsList.add(new Product("Binário", bitString, variablesList, numberOfVars));
                         auxProductsList.get(auxProductsList.size()-1).getMinTermsList().clear();
                         
                         for(int d=0; d < productsList.get(i).getMinTermsList().size(); d++) {
@@ -708,6 +712,9 @@ public final class SumOfProducts extends Tools {
     }
     
     public String expression2hexadecimal(String exp) {
+        if (isError) {
+            return "-";
+        }
         String hexa = "0x";
         
         int i = truthTable.size()-1;
@@ -726,6 +733,21 @@ public final class SumOfProducts extends Tools {
         }
         
         return hexa;
+    }
+    
+    public void fillVariablesList(String expression) {
+        expression = expression.toUpperCase();
+        for (int i=0; i < expression.length(); i++) {
+            char lit = expression.charAt(i);
+            if (Character.isAlphabetic(lit)) {
+                if (!variablesList.contains(lit+"")) {
+                    variablesList += lit;
+                }
+            }
+        }
+        char[] charList = variablesList.toCharArray();
+        Arrays.sort(charList);
+        variablesList = new String(charList);
     }
     
     public String getFullReport() throws FileNotFoundException, UnsupportedEncodingException {

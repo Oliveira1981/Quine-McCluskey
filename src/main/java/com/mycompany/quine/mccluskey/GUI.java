@@ -59,6 +59,7 @@ public final class GUI extends Tools implements KeyListener {
     
     public void showWindow() throws Exception {
         String[] templates = {
+            "",
             "2+4+6+8+9+10+12+13+15",
             "4+5+6+7+9+11+12+13+14+15",
             "!A*!B*!C*!D + !A*!B*!C*D + !A*B*!C*D + !A*B*C*!D + !A*B*C*D",
@@ -353,7 +354,7 @@ public final class GUI extends Tools implements KeyListener {
             public void actionPerformed(ActionEvent e) {
                 try {
                     hasResult = true;
-                    //PRA MUITAS EXPRESSÕES NÃO DÁ (200 deu OK)
+                    //PRA MUITAS EXPRESSÕES NÃO DÁ (750 deu OK)
                     //MELHOR LER UMA, IMPRIMIR E DESCARTAR, PRA DEPOIS LER A PRÓXIMA
                     //sopsList = (ArrayList<SumOfProducts>) optimizeExpressions((String) comboExpressions.getSelectedItem()).clone();
                     optimizeExpressions((String) comboExpressions.getSelectedItem());
@@ -472,7 +473,7 @@ public final class GUI extends Tools implements KeyListener {
                 try {
                     for (int r=0; r < sopsList.size(); r++) {
                         out += sopsList.get(r).getFullReport();
-                        print(sopsList.get(r).expression2hexadecimal(sopsList.get(r).getOriginalInputExpression())+"\n", writer);
+                            print(sopsList.get(r).expression2hexadecimal(sopsList.get(r).getOriginalInputExpression())+"\n", writer);
                     }
                 } catch (UnsupportedEncodingException ex) {
                     Logger.getLogger(GUI.class.getName()).log(Level.SEVERE, null, ex);

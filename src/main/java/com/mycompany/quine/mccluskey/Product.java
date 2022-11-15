@@ -31,17 +31,17 @@ public final class Product extends Tools {
         isEssential     =              true;
     }
     
-    public Product(String inputFormat, String inputExp, int size) {
-        setProduct(inputFormat, inputExp, size);
+    public Product(String inputFormat, String inputExp, String vars, int size) {
+        setProduct(inputFormat, inputExp, vars, size);
     }
     
-    public void setProduct(String inputFormat, String inputExp, int size) {
+    public void setProduct(String inputFormat, String inputExp, String vars, int size) {
         this.size = size;
         
         switch(inputFormat) {
             case "Literal" -> {
                 setProductFromLiteral(inputExp);
-                binaryView     = literal2binary(literalView, size);
+                binaryView     = literal2binary(literalView, vars, size);
                 decimalView    = binary2decimal(binaryView, size);
                 minTermsList   = new ArrayList<>();
                 int newDecimal = binary2decimal(binaryView, size);
@@ -53,11 +53,12 @@ public final class Product extends Tools {
                 setProductFromDecimal(Integer.parseInt(inputExp));
                 decimalView = Integer.parseInt(inputExp);
                 binaryView  = decimal2binary(Integer.parseInt(inputExp), size);
-                literalView = binary2literal(binaryView, size);
+                literalView = binary2literal(binaryView, vars, size);
+                //RESOLVER: SE VIER DE DECIMAL TEM QUE PREENCHER VARS COM ALPHABETCHAR
             }
             case "Binário" -> {
                 setProductFromBinary(inputExp);
-                literalView    = binary2literal(binaryView, size);
+                literalView    = binary2literal(binaryView, vars, size);
                 decimalView    = binary2decimal(binaryView, size);
                 minTermsList   = new ArrayList<>();
                 int newDecimal = binary2decimal(binaryView, size);
