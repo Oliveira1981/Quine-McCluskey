@@ -164,7 +164,9 @@ public final class SumOfProducts extends Tools {
         for (int i=0; i < truthTable.size(); i++) {
             str += "\n" + truthTable.get(i);
         }
-        str += "\n\nHexadecimal: " + expression2hexadecimal(convertedExpression) + "\n";
+        str += "\n\nSaída Hexadecimal:\n> ";
+        str += expression2hexadecimal(convertedExpression);
+        str += "\n";
         
         return str;
     }
@@ -751,8 +753,11 @@ public final class SumOfProducts extends Tools {
                 numberOfVars,
                 numberOfProducts) + "\n"/*, writer*/);
         
-        report += print("\nSaída Hexadecimal:\n> " + expression2hexadecimal(originalInputExpression) + "\n"/*, writer*/);
+        //report += print("\nSaída Hexadecimal:\n> " + expression2hexadecimal(originalInputExpression) + "\n"/*, writer*/);
         //print(expression2hexadecimal(originalInputExpression)+"\n", writer);
+        
+        report += print ("\nTabela Verdade:\n"/*, writer*/);
+        report += print(getTruthTable()/*, writer*/);
         
         report += print ("\nMintermos e seus Produtos:\n"/*, writer*/);
         report += print (getProductsFromMinTerms()/*, writer*/);
