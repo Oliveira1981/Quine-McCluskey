@@ -25,6 +25,7 @@ import javax.swing.UIManager;
 import javax.swing.JFrame;
 import javax.swing.JButton;
 import javax.swing.JScrollPane;
+import javax.swing.JTabbedPane;
 import javax.swing.JTextArea;
 import javax.swing.JTextField;
 import javax.swing.WindowConstants;
@@ -83,12 +84,25 @@ public final class GUI extends Tools implements KeyListener {
         };
         
         UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
-        JFrame myFrame = new JFrame("Quine-McCluskey");
+        JFrame myFrame = new JFrame("ROSA Binary");
         myFrame.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
         myFrame.setMinimumSize(new Dimension(750,520));
         
         GridBagLayout grid = new GridBagLayout();
         JPanel vPanel = new JPanel(grid);
+        JTabbedPane tabbedPane = new JTabbedPane(1);
+        tabbedPane.setName("qm");
+        tabbedPane.setForeground(Color.BLUE);
+        Font fontTab = new Font("Segoe UI", Font.PLAIN, 14);
+        tabbedPane.setFont(fontTab);
+        tabbedPane.add("Quine-McCluskey", vPanel);
+        tabbedPane.getComponent(0).setBackground(new Color(170, 170, 170));
+        tabbedPane.add("Fatoração", new JPanel());
+        tabbedPane.getComponent(1).setBackground(Color.LIGHT_GRAY);
+        tabbedPane.add("Composição Funcional", new JPanel());
+        tabbedPane.getComponent(2).setBackground(Color.LIGHT_GRAY);
+        tabbedPane.addKeyListener(this);
+        tabbedPane.setFocusable(true);
         GridBagConstraints c = new GridBagConstraints();
         vPanel.setBorder(BorderFactory.createEmptyBorder(2,2,2,2));
         
@@ -121,7 +135,7 @@ public final class GUI extends Tools implements KeyListener {
         
         JLabel labelExpressions = new JLabel("Expressão:");
         labelExpressions.setFont(font);
-        labelExpressions.setForeground(new Color(1, 111, 222));
+        labelExpressions.setForeground(new Color(1, 90, 190));
 	c.fill = GridBagConstraints.NONE;
         c.gridx = 1;
 	c.gridy = 1;
@@ -171,7 +185,7 @@ public final class GUI extends Tools implements KeyListener {
         okButton.addKeyListener(this);
         okButton.setFocusable(true);
         okButton.setBackground(new Color(11, 188, 255));
-        okButton.setForeground(new Color(11, 111, 222));
+        okButton.setForeground(new Color(1, 90, 190));
         okButton.setFont(font);
 	c.fill = GridBagConstraints.NONE;
 	c.gridx = 7;
@@ -203,7 +217,7 @@ public final class GUI extends Tools implements KeyListener {
         rndButton.addKeyListener(this);
         rndButton.setFocusable(true);
         rndButton.setBackground(new Color(11, 188, 255));
-        rndButton.setForeground(new Color(11, 111, 222));
+        rndButton.setForeground(new Color(1, 90, 190));
         rndButton.setFont(font);
 	c.fill = GridBagConstraints.NONE;
 	c.gridx = 9;
@@ -229,7 +243,7 @@ public final class GUI extends Tools implements KeyListener {
         
         JLabel resultLabel = new JLabel("Resultado:");
         resultLabel.setFont(font);
-        resultLabel.setForeground(new Color(1, 111, 222));
+        resultLabel.setForeground(new Color(1, 90, 190));
 	c.fill = GridBagConstraints.NONE;
 	c.gridx = 1;
 	c.gridy = 4;
@@ -282,7 +296,7 @@ public final class GUI extends Tools implements KeyListener {
         comboWichReport.setFocusable(true);
         Font fontRep = new Font("Segoe UI", Font.BOLD, 12);
 	comboWichReport.setFont(fontRep);
-        comboWichReport.setForeground(new Color(1, 111, 222));
+        comboWichReport.setForeground(new Color(1, 90, 190));
         c.fill = GridBagConstraints.NONE;
 	c.gridx = 1;
 	c.gridy = 7;
@@ -341,7 +355,8 @@ public final class GUI extends Tools implements KeyListener {
 	space2.setBorder(BorderFactory.createLineBorder(borderColor));
         vPanel.add(space2, c);
         
-        myFrame.add(vPanel);
+        //myFrame.add(vPanel);
+        myFrame.add(tabbedPane);
         myFrame.pack();
         myFrame.setSize(750, 680);
         Dimension dim = Toolkit.getDefaultToolkit().getScreenSize();
@@ -385,7 +400,7 @@ public final class GUI extends Tools implements KeyListener {
             public void actionPerformed(ActionEvent e) {
                 try {
                     hasResult = true;
-                    String gen = generateRandomExpression(10, 8);
+                    String gen = generateRandomExpression(30, 10); //(numberOfProducts, numberOfVars)
                     editor.setText(gen);
                     
                     /*sopsList =*/ optimizeExpressions(gen);
@@ -473,7 +488,7 @@ public final class GUI extends Tools implements KeyListener {
                 try {
                     for (int r=0; r < sopsList.size(); r++) {
                         out += sopsList.get(r).getFullReport();
-                            print(sopsList.get(r).expression2hexadecimal(sopsList.get(r).getOriginalInputExpression())+"\n", writer);
+                        print(sopsList.get(r).expression2hexadecimal(sopsList.get(r).getOriginalInputExpression())+"\n", writer);
                     }
                 } catch (UnsupportedEncodingException ex) {
                     Logger.getLogger(GUI.class.getName()).log(Level.SEVERE, null, ex);
