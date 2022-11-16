@@ -6,6 +6,7 @@ import java.awt.Font;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.Insets;
+import java.awt.Robot;
 import java.awt.Toolkit;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -362,6 +363,8 @@ public final class GUI extends Tools implements KeyListener {
         Dimension dim = Toolkit.getDefaultToolkit().getScreenSize();
         myFrame.setLocation(dim.width/2-myFrame.getSize().width/2, dim.height/2-myFrame.getSize().height/2);
         myFrame.setVisible(true);
+        Robot robot = new Robot();
+        robot.keyPress(KeyEvent.VK_TAB);
         
         okButton.addActionListener(new ActionListener() {
             
