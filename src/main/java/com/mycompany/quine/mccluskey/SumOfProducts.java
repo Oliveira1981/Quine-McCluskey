@@ -1,7 +1,7 @@
 package com.mycompany.quine.mccluskey;
 
 import java.io.FileNotFoundException;
-//import java.io.PrintWriter;
+import java.io.PrintWriter;
 import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -65,7 +65,7 @@ public final class SumOfProducts extends Tools {
             fillVariablesList("ABCDEFGHIJKLMNOPQRSTUVWXYZ");
         }
         fillProductsList();
-        fillTruthTable();
+        //fillTruthTable();
         
         return true;
     }
@@ -82,7 +82,6 @@ public final class SumOfProducts extends Tools {
         }
         
         if (inputFormat.equals("Hexadecimal")) {
-            //report += ("\nExpressão original:\n> " + expression + "\n");
             if (expression.length() > 2) {
                 for (int i=2; i < expression.length(); i++) {
                     if (Character.isAlphabetic(expression.charAt(i))) {
@@ -187,8 +186,13 @@ public final class SumOfProducts extends Tools {
         productsList = new ArrayList<>();
         minTermsList = new ArrayList<>();
         permutations = new ArrayList<>();
+        
+        // P4 //////////////////////////////////////////////////////////////////
         numberOfVars = detectNumberOfVars(inputFormat, convertedExpression);
-        //numberOfVars = 3;
+        
+        // NPN5 ////////////////////////////////////////////////////////////////
+        //numberOfVars = 5;
+        
         int begin    = 0;
         int end;
         do {
@@ -205,6 +209,7 @@ public final class SumOfProducts extends Tools {
             //Trabalha os Don't Care (gera todas as variações)
             ArrayList<String> allStr;
             if (inputFormat.equals("Literal")) {
+                variablesList = completeVarsList(variablesList, numberOfVars);
                 allStr = (ArrayList<String>) getAllVariations(str, variablesList, numberOfVars).clone();
             }
             else {
@@ -216,7 +221,6 @@ public final class SumOfProducts extends Tools {
                 Product newProduct = new Product(
                     inputFormat, allStr.get(a), variablesList, numberOfVars
                 );
-                
                 if (!productsListContains(newProduct.getLiteralView(), productsList)) {
                     productsList.add(newProduct);
                 }
@@ -231,13 +235,11 @@ public final class SumOfProducts extends Tools {
                     minTermsList.add(newMinTerm);
                 }
             }
-            
             begin = end + 1;
             if (begin >= convertedExpression.length())
                 break;
         }
         while (begin < convertedExpression.length());
-        
         numberOfProducts = productsList.size();
     }
     
@@ -245,7 +247,9 @@ public final class SumOfProducts extends Tools {
         truthTable = new ArrayList<>();
         String str = "";
         for (int i=0; i < numberOfVars; i++) {
-            str += variablesList.charAt(i) + " ";
+            if (i < variablesList.length()) {
+                str += variablesList.charAt(i) + " ";
+            }
         }
         str += "| SAÍDA\n";
         int strSize = str.length();
@@ -776,6 +780,7 @@ public final class SumOfProducts extends Tools {
         
         report += print("\nExpressão Otimizada:\n"/*, writer*/);
         report += print("> " + result + "\n"/*, writer*/);
+        //print(result + "\n", writer);
         
         report += print("\nQuantidade de Literais na Saída:\n"/*, writer*/);
         report += print("> " + numberOfLiterals(result, numberOfVars, numberOfProducts) + "\n"/*, writer*/);

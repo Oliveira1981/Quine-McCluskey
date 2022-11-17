@@ -179,8 +179,9 @@ public class Tools {
                 else {
                     lit += " ";
                 }
-                
-                lit += vars.charAt(c);
+                if (c < vars.length()) {
+                    lit += vars.charAt(c);
+                }
             }
             
             c++;
@@ -248,6 +249,16 @@ public class Tools {
         String alphabet =
             "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
         return alphabet.charAt(c);
+    }
+    
+    public static char getNextAlphabetChar(char c) {
+        String alphabet =
+            "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
+        int nextChar = 1 + alphabet.indexOf(c);
+        if (nextChar >= alphabet.length()) {
+            return 'A';
+        }
+        return alphabet.charAt(nextChar);
     }
     
     //Retorna a posição do bit variante ou:
@@ -602,13 +613,13 @@ public class Tools {
             int variations = (int) Math.pow(2, count);
             for (int i=0; i < variations; i++) {
                 String bitStr = decimal2binary(i, count);
-                allProducts.add(substDontCare(prodDontCare, bitStr, vars));
+                allProducts.add(substDontCare(prodDontCare, bitStr, vars, size));
             }
         }
         return allProducts;
     }
     
-    public static String substDontCare(String product, String bitStr, String vars) {
+    public static String substDontCare(String product, String bitStr, String vars, int size) {
         int a = 0;
         int b = 0;
         String newProduct = "";
@@ -622,9 +633,11 @@ public class Tools {
                 if (bitStr.charAt(b) == '0') {
                     v = "!";
                 }
-                v += vars.charAt(a);
-                newProduct += v;
-                b++;
+                if(a < vars.length()) {
+                    v += vars.charAt(a);
+                    newProduct += v;
+                    b++;
+                }
             }
             else {
                 newProduct +=product.charAt(i);
@@ -633,6 +646,17 @@ public class Tools {
             a++;
         }
         return newProduct;
+    }
+    
+    public static String completeVarsList(String varsList, int numberOfVars) {
+        if (varsList.length() < numberOfVars) {
+            int numberOfMissingVars = numberOfVars - varsList.length();
+            for (int i=0; i < numberOfMissingVars; i++) {
+                char lastVar = varsList.charAt(varsList.length()-1);
+                varsList += getNextAlphabetChar(lastVar);
+            }
+        }
+        return varsList;
     }
     
     public static String includeDontCares(String product, String vars, int size) {

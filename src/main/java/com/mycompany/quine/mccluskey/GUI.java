@@ -12,10 +12,12 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
+//import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.PrintWriter;
 import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
+//import java.util.Scanner;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.BorderFactory;
@@ -60,6 +62,20 @@ public final class GUI extends Tools implements KeyListener {
     }
     
     public void showWindow() throws Exception {
+        
+        /*
+        File file = new File(
+            "D:\\Users\\Rodrigo\\OneDrive - rzpy\\Documents\\Mestrado\\FerCAD\\Expressões\\NPN_5_QuineMcCluskey_FULL.txt");
+        Scanner sc = new Scanner(file);
+        PrintWriter writer = new PrintWriter("Quine-McCluskey Results.txt", "UTF-8");
+        
+        while (sc.hasNextLine()) {
+            optimizeExpressions(sc.nextLine(), writer);
+        }
+        writer.close();
+        System.exit(0);
+        */
+        
         String[] templates = {
             "",
             "2+4+6+8+9+10+12+13+15",
@@ -491,7 +507,8 @@ public final class GUI extends Tools implements KeyListener {
                 try {
                     for (int r=0; r < sopsList.size(); r++) {
                         out += sopsList.get(r).getFullReport();
-                        print(sopsList.get(r).expression2hexadecimal(sopsList.get(r).getOriginalInputExpression())+"\n", writer);
+                        //print(sopsList.get(r).expression2hexadecimal(sopsList.get(r).getOriginalInputExpression())+"\n", writer);
+                        print(sopsList.get(r).getResult()+"\n", writer);
                     }
                 } catch (UnsupportedEncodingException ex) {
                     Logger.getLogger(GUI.class.getName()).log(Level.SEVERE, null, ex);
@@ -534,8 +551,6 @@ public final class GUI extends Tools implements KeyListener {
     
     public /*ArrayList<SumOfProducts>*/void optimizeExpressions(String allExpressions) throws Exception {
         sopsList = new ArrayList<>();
-        //ArrayList<SumOfProducts> sop = new ArrayList<>();
-        //ArrayList<SumOfProducts> sop = null;
         
         //inputFormat = getInputFormat();
         allExpressions = removeSpacesFromExpression(allExpressions);
@@ -544,13 +559,11 @@ public final class GUI extends Tools implements KeyListener {
         int end;
         do {
             end = allExpressions.indexOf(';', begin);
-            //end = allExpressions.indexOf('\n', begin);
             //end = -1; //ACEITAR APENAS UMA EXPRESSÃO
             if (end < 0) {
                 end = allExpressions.length();
             }
             expression = allExpressions.substring(begin, end);
-            //sop = new SumOfProducts();
             sopsList.add(new SumOfProducts());
             int lastSOPIndex = sopsList.size()-1;
             if (!sopsList.get(lastSOPIndex).setExpression(expression)) {
