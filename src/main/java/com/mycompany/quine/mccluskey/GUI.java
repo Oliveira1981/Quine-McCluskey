@@ -108,16 +108,16 @@ public final class GUI extends Tools implements KeyListener {
         GridBagLayout grid = new GridBagLayout();
         JPanel vPanel = new JPanel(grid);
         JTabbedPane tabbedPane = new JTabbedPane(1);
-        tabbedPane.setName("qm");
-        tabbedPane.setForeground(Color.BLUE);
-        Font fontTab = new Font("Segoe UI", Font.PLAIN, 14);
+        tabbedPane.setName("main");
+        tabbedPane.setForeground(new Color(1, 90, 190));
+        Font fontTab = new Font("Segoe UI", Font.BOLD, 14);
         tabbedPane.setFont(fontTab);
         tabbedPane.add("Quine-McCluskey", vPanel);
         tabbedPane.getComponent(0).setBackground(new Color(170, 170, 170));
         tabbedPane.add("Fatoração", new JPanel());
-        tabbedPane.getComponent(1).setBackground(Color.LIGHT_GRAY);
+        tabbedPane.getComponent(1).setBackground(new Color(170, 170, 170));
         tabbedPane.add("Composição Funcional", new JPanel());
-        tabbedPane.getComponent(2).setBackground(Color.LIGHT_GRAY);
+        tabbedPane.getComponent(2).setBackground(new Color(170, 170, 170));
         tabbedPane.addKeyListener(this);
         tabbedPane.setFocusable(true);
         GridBagConstraints c = new GridBagConstraints();
@@ -388,14 +388,11 @@ public final class GUI extends Tools implements KeyListener {
             public void actionPerformed(ActionEvent e) {
                 try {
                     hasResult = true;
-                    //PRA MUITAS EXPRESSÕES NÃO DÁ (750 deu OK)
-                    //MELHOR LER UMA, IMPRIMIR E DESCARTAR, PRA DEPOIS LER A PRÓXIMA
-                    //sopsList = (ArrayList<SumOfProducts>) optimizeExpressions((String) comboExpressions.getSelectedItem()).clone();
                     optimizeExpressions((String) comboExpressions.getSelectedItem());
                     if (errorMsg.isEmpty()) {
                         String results;
                         if (sopsList.size() > 1) {
-                            results = "-";
+                            results = "";
                         }
                         else {
                             results = sopsList.get(0).getResult();
@@ -426,7 +423,7 @@ public final class GUI extends Tools implements KeyListener {
                     if (errorMsg.isEmpty()) {
                         String results;
                         if (sopsList.size() > 1) {
-                            results = "-";
+                            results = "";
                         }
                         else {
                             results = sopsList.get(0).getResult();
@@ -478,7 +475,7 @@ public final class GUI extends Tools implements KeyListener {
                     if (errorMsg.isEmpty()) {
                         String results;
                         if (sopsList.size() > 1) {
-                            results = "-";
+                            results = "";
                         }
                         else {
                             results = sopsList.get(0).getResult();
@@ -508,6 +505,7 @@ public final class GUI extends Tools implements KeyListener {
                     for (int r=0; r < sopsList.size(); r++) {
                         out += sopsList.get(r).getFullReport();
                         //print(sopsList.get(r).expression2hexadecimal(sopsList.get(r).getOriginalInputExpression())+"\n", writer);
+                        print(sopsList.get(r).getOriginalInputExpression()+"; ", writer);
                         print(sopsList.get(r).getResult()+"\n", writer);
                     }
                 } catch (UnsupportedEncodingException ex) {
@@ -515,23 +513,55 @@ public final class GUI extends Tools implements KeyListener {
                 }
             }
             case "Tabela Verdade" -> {
-                for (int r=0; r < sopsList.size(); r++) {
-                    out += sopsList.get(r).getTruthTable();
+                if (sopsList.size() == 1) {
+                    out += sopsList.get(0).getTruthTable();
+                }
+                else {
+                    for (int r=0; r < sopsList.size(); r++) {
+                        out += "Expressão de Entrada: \n> ";
+                        out += sopsList.get(r).getOriginalInputExpression() + "\n";
+                        out += sopsList.get(r).getTruthTable();
+                        out += "\n==================================================\n";
+                    }
                 }
             }
             case "Mintermos e seus Produtos" -> {
-                for (int r=0; r < sopsList.size(); r++) {
-                    out += sopsList.get(r).getProductsFromMinTerms();
+                if (sopsList.size() == 1) {
+                    out += sopsList.get(0).getProductsFromMinTerms();
+                }
+                else{
+                    for (int r=0; r < sopsList.size(); r++) {
+                        out += "Expressão de Entrada: \n> ";
+                        out += sopsList.get(r).getOriginalInputExpression() + "\n";
+                        out += sopsList.get(r).getProductsFromMinTerms();
+                        out += "\n==================================================\n";
+                    }
                 }
             }
             case "Produtos e seus Mintermos" -> {
-                for (int r=0; r < sopsList.size(); r++) {
-                    out += sopsList.get(r).getMinTermsFromProducts();
+                if (sopsList.size() == 1) {
+                    out += sopsList.get(0).getMinTermsFromProducts();
+                }
+                else {
+                    for (int r=0; r < sopsList.size(); r++) {
+                        out += "Expressão de Entrada: \n> ";
+                        out += sopsList.get(r).getOriginalInputExpression() + "\n";
+                        out += sopsList.get(r).getMinTermsFromProducts();
+                        out += "\n==================================================\n";
+                    }
                 }
             }
             case "Tabela de Cobertura" -> {
-                for (int r=0; r < sopsList.size(); r++) {
-                    out += sopsList.get(r).getCoveringTable();
+                if (sopsList.size() == 1) {
+                    out += sopsList.get(0).getCoveringTable();
+                }
+                else {
+                    for (int r=0; r < sopsList.size(); r++) {
+                        out += "Expressão de Entrada: \n> ";
+                        out += sopsList.get(r).getOriginalInputExpression() + "\n";
+                        out += sopsList.get(r).getCoveringTable();
+                        out += "\n==================================================\n";
+                    }
                 }
             }
             default -> {
