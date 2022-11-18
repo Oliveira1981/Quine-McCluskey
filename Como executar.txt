@@ -1,0 +1,1 @@
+java -cp Quine-McCluskey-1.0-SNAPSHOT.jar com.mycompany.quine.mccluskey.QuineMcCluskey
