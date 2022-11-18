@@ -1,5 +1,6 @@
 package com.mycompany.quine.mccluskey;
 
+import com.formdev.flatlaf.FlatDarkLaf;
 import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Font;
@@ -100,7 +101,8 @@ public final class GUI extends Tools implements KeyListener {
             "Tabela de Cobertura"
         };
         
-        UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
+        //UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
+        UIManager.setLookAndFeel( new FlatDarkLaf());
         JFrame myFrame = new JFrame("ROSA Binary");
         myFrame.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
         myFrame.setMinimumSize(new Dimension(750,520));
@@ -113,11 +115,11 @@ public final class GUI extends Tools implements KeyListener {
         Font fontTab = new Font("Segoe UI", Font.BOLD, 14);
         tabbedPane.setFont(fontTab);
         tabbedPane.add("Quine-McCluskey", vPanel);
-        tabbedPane.getComponent(0).setBackground(new Color(170, 170, 170));
+        //tabbedPane.getComponent(0).setBackground(new Color(170, 170, 170));
         tabbedPane.add("Fatoração", new JPanel());
-        tabbedPane.getComponent(1).setBackground(new Color(170, 170, 170));
+        //tabbedPane.getComponent(1).setBackground(new Color(170, 170, 170));
         tabbedPane.add("Composição Funcional", new JPanel());
-        tabbedPane.getComponent(2).setBackground(new Color(170, 170, 170));
+        //tabbedPane.getComponent(2).setBackground(new Color(170, 170, 170));
         tabbedPane.addKeyListener(this);
         tabbedPane.setFocusable(true);
         GridBagConstraints c = new GridBagConstraints();
@@ -126,7 +128,7 @@ public final class GUI extends Tools implements KeyListener {
         Font font = new Font("Segoe UI", Font.BOLD, 13);
         
         Color borderColor = new Color(0, 0, 0, 0);
-        //Color borderColor = new Color(0, 0, 0, 255);
+        //Color borderColor = new Color(55, 111, 155, 155);
         
         JLabel space1 = new JLabel("   ");
         c.fill = GridBagConstraints.NONE;
@@ -136,7 +138,7 @@ public final class GUI extends Tools implements KeyListener {
 	c.gridheight = 1;
         c.weightx = 0.0;
         c.weighty = 0.0;
-	space1.setBorder(BorderFactory.createLineBorder(borderColor));
+	//space1.setBorder(BorderFactory.createLineBorder(borderColor));
         vPanel.add(space1, c);
         
         JLabel space3 = new JLabel("   ");
@@ -147,7 +149,7 @@ public final class GUI extends Tools implements KeyListener {
 	c.gridheight = 9;
         c.weightx = 0.0;
         c.weighty = 0.0;
-	space3.setBorder(BorderFactory.createLineBorder(borderColor));
+	//space3.setBorder(BorderFactory.createLineBorder(borderColor));
         vPanel.add(space3, c);
         
         JLabel labelExpressions = new JLabel("Expressão:");
@@ -161,7 +163,7 @@ public final class GUI extends Tools implements KeyListener {
         c.weightx = 0.0;
         c.weighty = 0.0;
         c.anchor = GridBagConstraints.WEST;
-        labelExpressions.setBorder(BorderFactory.createLineBorder(borderColor));
+        //labelExpressions.setBorder(BorderFactory.createLineBorder(borderColor));
         vPanel.add(labelExpressions, c);
         
         JComboBox<String> comboExpressions = new JComboBox<>(templates);
@@ -181,7 +183,7 @@ public final class GUI extends Tools implements KeyListener {
         c.weightx = 0.0;
         c.weighty = 0.0;
         c.anchor = GridBagConstraints.WEST;
-	comboExpressions.setBorder(BorderFactory.createLineBorder(borderColor));
+	//comboExpressions.setBorder(BorderFactory.createLineBorder(borderColor));
         vPanel.add(comboExpressions, c);
         
         JLabel space5 = new JLabel(" ");
@@ -193,7 +195,7 @@ public final class GUI extends Tools implements KeyListener {
         c.weightx = 0.0;
         c.weighty = 0.0;
         c.anchor = GridBagConstraints.WEST;
-	space5.setBorder(BorderFactory.createLineBorder(borderColor));
+	//space5.setBorder(BorderFactory.createLineBorder(borderColor));
         vPanel.add(space5, c);
         
         JButton okButton = new JButton("Executar");
@@ -225,7 +227,7 @@ public final class GUI extends Tools implements KeyListener {
         c.weightx = 0.0;
         c.weighty = 0.0;
         c.anchor = GridBagConstraints.WEST;
-	space5A.setBorder(BorderFactory.createLineBorder(borderColor));
+	//space5A.setBorder(BorderFactory.createLineBorder(borderColor));
         vPanel.add(space5A, c);
         
         JButton rndButton = new JButton("Aleatória");
@@ -233,8 +235,7 @@ public final class GUI extends Tools implements KeyListener {
         rndButton.setMinimumSize(new Dimension(90, 32));
         rndButton.addKeyListener(this);
         rndButton.setFocusable(true);
-        rndButton.setBackground(new Color(11, 188, 255));
-        rndButton.setForeground(new Color(1, 90, 190));
+        rndButton.setForeground(new Color(133, 0, 0));
         rndButton.setFont(font);
 	c.fill = GridBagConstraints.NONE;
 	c.gridx = 9;
@@ -255,7 +256,7 @@ public final class GUI extends Tools implements KeyListener {
 	c.gridheight = 1;
         c.weightx = 100.0;
         c.weighty = 0.0;
-	space6.setBorder(BorderFactory.createLineBorder(borderColor));
+	//space6.setBorder(BorderFactory.createLineBorder(borderColor));
         vPanel.add(space6, c);
         
         JLabel resultLabel = new JLabel("Resultado:");
@@ -269,7 +270,7 @@ public final class GUI extends Tools implements KeyListener {
         c.weightx = 0.0;
         c.weighty = 0.0;
         c.anchor = GridBagConstraints.WEST;
-	resultLabel.setBorder(BorderFactory.createLineBorder(borderColor));
+	//resultLabel.setBorder(BorderFactory.createLineBorder(borderColor));
         vPanel.add(resultLabel, c);
         
         JTextArea textAreaResult = new JTextArea();
@@ -302,7 +303,7 @@ public final class GUI extends Tools implements KeyListener {
 	c.gridwidth = 9;
 	c.gridheight = 1;
         c.weightx = 0.0;
-	space9.setBorder(BorderFactory.createLineBorder(borderColor));
+	//space9.setBorder(BorderFactory.createLineBorder(borderColor));
         c.weighty = 0.0;
         vPanel.add(space9, c);
         
@@ -322,7 +323,7 @@ public final class GUI extends Tools implements KeyListener {
         c.weightx = 0.0;
         c.weighty = 0.0;
         c.anchor = GridBagConstraints.WEST;
-	comboWichReport.setBorder(BorderFactory.createLineBorder(borderColor));
+	//comboWichReport.setBorder(BorderFactory.createLineBorder(borderColor));
         vPanel.add(comboWichReport, c);
         
         JTextArea textAreaReport = new JTextArea();
@@ -356,7 +357,7 @@ public final class GUI extends Tools implements KeyListener {
 	c.gridheight = 9;
         c.weightx = 0.0;
         c.weighty = 0.0;
-	space4.setBorder(BorderFactory.createLineBorder(borderColor));
+	//space4.setBorder(BorderFactory.createLineBorder(borderColor));
         vPanel.add(space4, c);
         
         JLabel space2 = new JLabel(" ");
@@ -369,7 +370,7 @@ public final class GUI extends Tools implements KeyListener {
         c.weighty = 0.0;
         Font fontBottom = new Font("Segoe UI", Font.PLAIN, 6);
         space2.setFont(fontBottom);
-	space2.setBorder(BorderFactory.createLineBorder(borderColor));
+	//space2.setBorder(BorderFactory.createLineBorder(borderColor));
         vPanel.add(space2, c);
         
         //myFrame.add(vPanel);
@@ -505,7 +506,7 @@ public final class GUI extends Tools implements KeyListener {
                     for (int r=0; r < sopsList.size(); r++) {
                         out += sopsList.get(r).getFullReport();
                         //print(sopsList.get(r).expression2hexadecimal(sopsList.get(r).getOriginalInputExpression())+"\n", writer);
-                        print(sopsList.get(r).getOriginalInputExpression()+"; ", writer);
+                        //print(sopsList.get(r).getOriginalInputExpression()+"; ", writer);
                         print(sopsList.get(r).getResult()+"\n", writer);
                     }
                 } catch (UnsupportedEncodingException ex) {
