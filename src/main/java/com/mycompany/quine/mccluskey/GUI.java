@@ -111,7 +111,8 @@ public final class GUI extends Tools implements KeyListener {
         JPanel vPanel = new JPanel(grid);
         JTabbedPane tabbedPane = new JTabbedPane(1);
         tabbedPane.setName("main");
-        tabbedPane.setForeground(new Color(1, 90, 190));
+        //tabbedPane.setForeground(new Color(1, 90, 190));
+        tabbedPane.setForeground(new Color(30, 130, 230));
         Font fontTab = new Font("Segoe UI", Font.BOLD, 14);
         tabbedPane.setFont(fontTab);
         tabbedPane.add("Quine-McCluskey", vPanel);
@@ -154,8 +155,9 @@ public final class GUI extends Tools implements KeyListener {
         
         JLabel labelExpressions = new JLabel("Expressão:");
         labelExpressions.setFont(font);
-        labelExpressions.setForeground(new Color(1, 90, 190));
-	c.fill = GridBagConstraints.NONE;
+        //labelExpressions.setForeground(new Color(1, 90, 190));
+        labelExpressions.setForeground(new Color(30, 130, 230));
+        c.fill = GridBagConstraints.NONE;
         c.gridx = 1;
 	c.gridy = 1;
 	c.gridwidth = 6;
@@ -199,12 +201,13 @@ public final class GUI extends Tools implements KeyListener {
         vPanel.add(space5, c);
         
         JButton okButton = new JButton("Executar");
-        okButton.setPreferredSize(new Dimension(90, 32));
-        okButton.setMinimumSize(new Dimension(90, 32));
+        okButton.setPreferredSize(new Dimension(90, 30));
+        okButton.setMinimumSize(new Dimension(90, 30));
         okButton.addKeyListener(this);
         okButton.setFocusable(true);
-        okButton.setBackground(new Color(11, 188, 255));
-        okButton.setForeground(new Color(1, 90, 190));
+        okButton.setBackground(new Color(30, 50, 100));
+        okButton.setForeground(new Color(50, 150, 250));
+        //okButton.setForeground(new Color(30, 130, 230));
         okButton.setFont(font);
 	c.fill = GridBagConstraints.NONE;
 	c.gridx = 7;
@@ -231,11 +234,12 @@ public final class GUI extends Tools implements KeyListener {
         vPanel.add(space5A, c);
         
         JButton rndButton = new JButton("Aleatória");
-        rndButton.setPreferredSize(new Dimension(90, 32));
-        rndButton.setMinimumSize(new Dimension(90, 32));
+        rndButton.setPreferredSize(new Dimension(90, 30));
+        rndButton.setMinimumSize(new Dimension(90, 30));
         rndButton.addKeyListener(this);
         rndButton.setFocusable(true);
-        rndButton.setForeground(new Color(133, 0, 0));
+        rndButton.setBackground(new Color(70, 40, 40));
+        rndButton.setForeground(new Color(200, 10, 10));
         rndButton.setFont(font);
 	c.fill = GridBagConstraints.NONE;
 	c.gridx = 9;
@@ -254,14 +258,15 @@ public final class GUI extends Tools implements KeyListener {
 	c.gridy = 3;
 	c.gridwidth = 9;
 	c.gridheight = 1;
-        c.weightx = 100.0;
+        c.weightx = 0.0;
         c.weighty = 0.0;
 	//space6.setBorder(BorderFactory.createLineBorder(borderColor));
         vPanel.add(space6, c);
         
         JLabel resultLabel = new JLabel("Resultado:");
         resultLabel.setFont(font);
-        resultLabel.setForeground(new Color(1, 90, 190));
+        //resultLabel.setForeground(new Color(1, 90, 190));
+        resultLabel.setForeground(new Color(30, 130, 230));
 	c.fill = GridBagConstraints.NONE;
 	c.gridx = 1;
 	c.gridy = 4;
@@ -279,22 +284,21 @@ public final class GUI extends Tools implements KeyListener {
         textAreaResult.setLineWrap(true);
         textAreaResult.setEditable(false);
         textAreaResult.setBackground(new Color(44, 44, 44));
-        textAreaResult.setForeground(new Color(1, 188, 255));
+        //textAreaResult.setForeground(new Color(1, 188, 255));
+        textAreaResult.setForeground(new Color(50, 150, 250));
         Font fontResult = new Font("Consolas", Font.PLAIN, 16);
         textAreaResult.setFont(fontResult);
-        Insets mResult = new Insets(6, 6, 0, 0);
+        Insets mResult = new Insets(12, 8, 4, 6);
         textAreaResult.setMargin(mResult);
-        
-        JScrollPane jScrollResult = new JScrollPane(textAreaResult);
-	c.fill = GridBagConstraints.BOTH;
+	c.fill = GridBagConstraints.HORIZONTAL;
         c.gridx = 1;
 	c.gridy = 5;
 	c.gridwidth = 9;
-	c.gridheight = 1;//4
-	c.weightx = 100.0;
-        c.weighty = 0.01;
-	jScrollResult.setBorder(BorderFactory.createLineBorder(borderColor));
-        vPanel.add(jScrollResult, c);
+	c.gridheight = 1;
+	c.weightx = 0.0;
+        c.weighty = 0.0;
+        c.anchor = GridBagConstraints.WEST;
+        vPanel.add(textAreaResult, c);
         
         JLabel space9 = new JLabel(" ");
 	c.fill = GridBagConstraints.NONE;
@@ -303,8 +307,8 @@ public final class GUI extends Tools implements KeyListener {
 	c.gridwidth = 9;
 	c.gridheight = 1;
         c.weightx = 0.0;
-	//space9.setBorder(BorderFactory.createLineBorder(borderColor));
         c.weighty = 0.0;
+	//space9.setBorder(BorderFactory.createLineBorder(borderColor));
         vPanel.add(space9, c);
         
         JComboBox<String> comboWichReport = new JComboBox<>(wichReport);
@@ -314,7 +318,8 @@ public final class GUI extends Tools implements KeyListener {
         comboWichReport.setFocusable(true);
         Font fontRep = new Font("Segoe UI", Font.BOLD, 12);
 	comboWichReport.setFont(fontRep);
-        comboWichReport.setForeground(new Color(1, 90, 190));
+        //comboWichReport.setForeground(new Color(1, 90, 190));
+        comboWichReport.setForeground(new Color(30, 130, 230));
         c.fill = GridBagConstraints.NONE;
 	c.gridx = 1;
 	c.gridy = 7;
@@ -332,7 +337,8 @@ public final class GUI extends Tools implements KeyListener {
         textAreaReport.setLineWrap(true);
         textAreaReport.setEditable(false);
         textAreaReport.setBackground(new Color(44, 44, 44));
-        textAreaReport.setForeground(new Color(1, 188, 255));
+        //textAreaReport.setForeground(new Color(1, 188, 255));
+        textAreaReport.setForeground(new Color(50, 150, 250));
         Font fontReport = new Font("Consolas", Font.PLAIN, 16);
         textAreaReport.setFont(fontReport);
         Insets mReport = new Insets(10, 10, 10, 10);
