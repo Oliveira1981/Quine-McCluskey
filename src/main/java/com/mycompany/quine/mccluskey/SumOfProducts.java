@@ -33,8 +33,8 @@ public final class SumOfProducts extends Tools {
     private String                              result;
     private String                              report;
     
-    public SumOfProducts(String expression) {
-        setExpression(expression);
+    public SumOfProducts(String expression, int numVars) {
+        setExpression(expression, numVars);
     }
     
     public SumOfProducts() {
@@ -45,15 +45,16 @@ public final class SumOfProducts extends Tools {
         this.variablesList           = "";
         this.isError                 = false;
         this.report                  = "";
+        this.numberOfVars            = 0; //Auto
     }
     
-    public boolean setExpression(String expression) {
+    public boolean setExpression(String expression, int numVars) {
         this.isError         = false;
         this.report          = "";
         inputFormat = detectInputFormat(expression);
         originalInputExpression = expression;
         
-        if(!isValidInput(expression)) {
+        if(!isValidInput(expression)) {//vai precisar testar o número de variáveis também
             return false;
         }
         
@@ -64,13 +65,13 @@ public final class SumOfProducts extends Tools {
         else {
             fillVariablesList("ABCDEFGHIJKLMNOPQRSTUVWXYZ");
         }
-        fillProductsList();
+        fillProductsList(numVars);
         //fillTruthTable();
         
         return true;
     }
     
-    public boolean isValidInput(String expression) {
+    public boolean isValidInput(String expression) {//vai precisar testar o número de variáveis também
         
         if (inputFormat.length() == 0  ||
             inputFormat.equals("ERRO") ||
@@ -182,16 +183,20 @@ public final class SumOfProducts extends Tools {
         return report;
     }
     
-    public void fillProductsList() {
+    public void fillProductsList(int numVars) {
         productsList = new ArrayList<>();
         minTermsList = new ArrayList<>();
         permutations = new ArrayList<>();
         
-        // P4 //////////////////////////////////////////////////////////////////
-        numberOfVars = detectNumberOfVars(inputFormat, convertedExpression);
-        
-        // NPN5 ////////////////////////////////////////////////////////////////
-        //numberOfVars = 5;
+        if (numVars == 0) {
+            // P4 //////////////////////////////////////////////////////////////
+            numberOfVars = detectNumberOfVars(inputFormat, convertedExpression);
+        }
+        else {
+            // NPN5 ////////////////////////////////////////////////////////////
+            //numberOfVars = 5;
+            numberOfVars = numVars;
+        }
         
         int begin    = 0;
         int end;
