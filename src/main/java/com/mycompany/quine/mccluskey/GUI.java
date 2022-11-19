@@ -478,7 +478,17 @@ public final class GUI extends Tools implements KeyListener, ChangeListener {
             public void actionPerformed(ActionEvent e) {
                 try {
                     hasResult = true;
-                    String gen = generateRandomExpression(30, 10); //(numberOfProducts, numberOfVars)
+                    String gen;
+                    int vars = slider.getValue();
+                    if (vars == 0) {
+                        gen = generateRandomExpression(8, 4);
+                    }
+                    else {
+                        gen = generateRandomExpression(
+                            vars*2, //numberOfProducts 
+                            vars    //numberOfVars
+                        );
+                    }
                     editor.setText(gen);
                     
                     optimizeExpressions(
