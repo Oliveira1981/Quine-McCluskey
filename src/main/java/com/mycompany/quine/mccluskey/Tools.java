@@ -21,7 +21,6 @@ public class Tools {
                 c++;
             }
             if (Character.isAlphabetic(lit.charAt(c))){
-                //printt("\nc: "+c+"\t"+lit.charAt(c));
                 while (lit.charAt(c) != vars.charAt(pos)) {
                     strBin += "_";
                     pos++;
@@ -35,9 +34,7 @@ public class Tools {
                 pos++;
             }
         }
-        int w=0;
         while (strBin.length() < size) {
-            //printt("\nW: " + w++);
             strBin += "_";
         }
         

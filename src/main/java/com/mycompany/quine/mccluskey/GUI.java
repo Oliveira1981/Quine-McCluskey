@@ -284,12 +284,12 @@ public final class GUI extends Tools implements KeyListener, ChangeListener {
         
         JSlider slider = new JSlider(JSlider.HORIZONTAL, 0, 16, 0); // min, max, inicial
         slider.addKeyListener(this);
-        slider.addChangeListener(this);
+        //slider.addChangeListener(this);
         slider.setMajorTickSpacing(4);
         slider.setMinorTickSpacing(1);
-        slider.setPaintTicks(true);
+        //slider.setPaintTicks(true);
         slider.setSnapToTicks(true);
-        slider.setPaintLabels(true);  
+        //slider.setPaintLabels(true);  
         slider.setMinimumSize(new Dimension(200, 40));
         slider.setLabelTable(labelTable);
 	c.fill = GridBagConstraints.NONE;

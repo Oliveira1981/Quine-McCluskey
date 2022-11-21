@@ -48,14 +48,19 @@ public final class SumOfProducts extends Tools {
         this.numberOfVars            = 0; //Auto
     }
     
-    public boolean setExpression(String expression, int numVars) {
+    public boolean setExpression(String expression, int selectedNumberOfVars) {
         this.isError         = false;
         this.report          = "";
         inputFormat = detectInputFormat(expression);
+        numberOfVars = detectNumberOfVars(inputFormat, expression);
         originalInputExpression = expression;
         
-        if(!isValidInput(expression)) {//vai precisar testar o número de variáveis também
+        if(!isValidInput(expression, selectedNumberOfVars)) {
             return false;
+        }
+        
+        if (selectedNumberOfVars > 0) {
+            numberOfVars = selectedNumberOfVars;
         }
         
         if (inputFormat.equals("Literal")){
@@ -65,14 +70,13 @@ public final class SumOfProducts extends Tools {
         else {
             fillVariablesList("ABCDEFGHIJKLMNOPQRSTUVWXYZ");
         }
-        fillProductsList(numVars);
+        fillProductsList(selectedNumberOfVars);
         //fillTruthTable();
         
         return true;
     }
     
-    public boolean isValidInput(String expression) {//vai precisar testar o número de variáveis também
-        
+    public boolean isValidInput(String expression, int selectedNumberOfVars) {//vai precisar testar o número de variáveis também
         if (inputFormat.length() == 0  ||
             inputFormat.equals("ERRO") ||
            (inputFormat.equals("Literal") && hasDuplicate(expression))) {
@@ -119,6 +123,14 @@ public final class SumOfProducts extends Tools {
         else {
             originalInputFormat = inputFormat;
             convertedExpression = expression;
+        }
+        
+        if (selectedNumberOfVars > 0) {
+            if (selectedNumberOfVars < numberOfVars) {
+                isError = true;
+                result = "A expressão tem mais variáveis do que o número selecionado.";
+                return false;
+            }
         }
         
         return true;
@@ -183,20 +195,10 @@ public final class SumOfProducts extends Tools {
         return report;
     }
     
-    public void fillProductsList(int numVars) {
+    public void fillProductsList(int selectedNumberofVars) {
         productsList = new ArrayList<>();
         minTermsList = new ArrayList<>();
         permutations = new ArrayList<>();
-        
-        if (numVars == 0) {
-            // P4 //////////////////////////////////////////////////////////////
-            numberOfVars = detectNumberOfVars(inputFormat, convertedExpression);
-        }
-        else {
-            // NPN5 ////////////////////////////////////////////////////////////
-            //numberOfVars = 5;
-            numberOfVars = numVars;
-        }
         
         int begin    = 0;
         int end;
