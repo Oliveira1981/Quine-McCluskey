@@ -176,11 +176,11 @@ public final class GUI extends Tools implements KeyListener, ChangeListener {
         labelExpressions.setBorder(BorderFactory.createLineBorder(borderColor));
         vPanel.add(labelExpressions, c);
         
-        JLabel labelVariables = new JLabel("Número de variáveis:");
+        JLabel labelVariables = new JLabel("Número de variáveis: Auto");
         labelVariables.setFont(font);
         //labelExpressions.setForeground(new Color(1, 90, 190));
         labelVariables.setForeground(new Color(30, 130, 230));
-        c.fill = GridBagConstraints.NONE;
+        c.fill = GridBagConstraints.HORIZONTAL;
         c.gridx = 10;
 	c.gridy = 1;
 	c.gridwidth = 1;
@@ -440,6 +440,32 @@ public final class GUI extends Tools implements KeyListener, ChangeListener {
         myFrame.setVisible(true);
         Robot robot = new Robot();
         robot.keyPress(KeyEvent.VK_TAB);
+        
+        slider.addChangeListener(new ChangeListener() {
+            
+            @Override
+            public void stateChanged(ChangeEvent e) {
+                JSlider source = (JSlider)e.getSource();
+                numVars = (int)source.getValue();
+                vPanel.remove(labelVariables);
+                if (numVars == 0) {
+                    labelVariables.setText("Número de variáveis: Auto");
+                }
+                else {
+                    labelVariables.setText("Número de variáveis: " + numVars);
+                }
+                c.fill = GridBagConstraints.HORIZONTAL;
+                c.gridx = 10;
+                c.gridy = 1;
+                c.gridwidth = 1;
+                c.gridheight = 1;
+                c.weightx = 0.0;
+                c.weighty = 0.0;
+                c.anchor = GridBagConstraints.WEST;
+                vPanel.add(labelVariables, c);
+                vPanel.repaint();
+            }
+        });
         
         okButton.addActionListener(new ActionListener() {
             
@@ -716,13 +742,17 @@ public final class GUI extends Tools implements KeyListener, ChangeListener {
     public void keyReleased(KeyEvent e) {
     }
 
-    @Override
+    /*@Override
     public void stateChanged(ChangeEvent e) {
         JSlider source = (JSlider)e.getSource();
         if (!source.getValueIsAdjusting()) {
-            int currentSelection = (int)source.getValue();
-            //printt("\n"+currentSelection);
+            numVars += (int)source.getValue();
         }
+    }*/
+
+    @Override
+    public void stateChanged(ChangeEvent e) {
+        
     }
 
 }
