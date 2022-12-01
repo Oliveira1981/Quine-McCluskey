@@ -74,12 +74,24 @@ public final class GUI extends Tools implements KeyListener, ChangeListener {
         
         /*
         File file = new File(
-            "D:\\Users\\Rodrigo\\OneDrive - rzpy\\Documents\\Mestrado\\FerCAD\\Expressões\\NPN_5_QuineMcCluskey_FULL.txt");
+            "D:\\Users\\Rodrigo\\OneDrive - rzpy\\Documents\\Mestrado\\FerCAD\\Expressões\\P_4_RO.txt");
         Scanner sc = new Scanner(file);
         PrintWriter writer = new PrintWriter("Quine-McCluskey Results.txt", "UTF-8");
         
-        while (sc.hasNextLine()) {
-            optimizeExpressions(sc.nextLine(), writer);
+        //while (sc.hasNextLine()) {
+        int startLine = 1;
+        int lastLine = 13;
+        
+        int line = 1;
+        while (line < startLine) {
+            sc.nextLine();
+            line++;
+        }
+        
+        while (line <= lastLine) {
+            printt("\nLinha " + line + "\t");
+            optimizeExpressions(sc.nextLine(), numVars, writer);
+            line++;
         }
         writer.close();
         System.exit(0);
@@ -475,7 +487,8 @@ public final class GUI extends Tools implements KeyListener, ChangeListener {
                     hasResult = true;
                     optimizeExpressions(
                         (String) comboExpressions.getSelectedItem(),
-                        (int) slider.getValue()
+                        (int) slider.getValue()//,
+                        //writer
                     );
                     if (errorMsg.isEmpty()) {
                         String results;
@@ -486,7 +499,7 @@ public final class GUI extends Tools implements KeyListener, ChangeListener {
                             results = sopsList.get(0).getResult();
                         }
                         textAreaResult.setText(results);
-                        textAreaReport.setText(reportText(comboWichReport));
+                        textAreaReport.setText(reportText(comboWichReport/*, writer*/));
                     }
                     else {
                         textAreaResult.setText(errorMsg);
@@ -519,7 +532,8 @@ public final class GUI extends Tools implements KeyListener, ChangeListener {
                     
                     optimizeExpressions(
                         gen,
-                        (int) slider.getValue()
+                        (int) slider.getValue()//,
+                        //writer
                     );
                     if (errorMsg.isEmpty()) {
                         String results;
@@ -530,7 +544,7 @@ public final class GUI extends Tools implements KeyListener, ChangeListener {
                             results = sopsList.get(0).getResult();
                         }
                         textAreaResult.setText(results);
-                        textAreaReport.setText(reportText(comboWichReport));
+                        textAreaReport.setText(reportText(comboWichReport/*, writer*/));
                     }
                     else {
                         textAreaResult.setText(errorMsg);
@@ -542,8 +556,6 @@ public final class GUI extends Tools implements KeyListener, ChangeListener {
             }
         });
         
-        //slider.addChangeListener(this);
-        
         comboWichReport.addActionListener(new ActionListener() {
             
             @Override
@@ -552,7 +564,7 @@ public final class GUI extends Tools implements KeyListener, ChangeListener {
                     if (errorMsg.isEmpty()) {
                         if (hasResult) {
                             try {
-                                textAreaReport.setText(reportText(comboWichReport));
+                                textAreaReport.setText(reportText(comboWichReport/*, writer*/));
                             } catch (UnsupportedEncodingException ex) {
                                 Logger.getLogger(GUI.class.getName()).log(Level.SEVERE, null, ex);
                             }
@@ -576,7 +588,8 @@ public final class GUI extends Tools implements KeyListener, ChangeListener {
                     errorMsg = "";
                     optimizeExpressions(
                         (String) comboExpressions.getSelectedItem(),
-                        (int) slider.getValue()
+                        (int) slider.getValue()//,
+                        //writer
                     );
                     if (errorMsg.isEmpty()) {
                         String results;
@@ -587,7 +600,7 @@ public final class GUI extends Tools implements KeyListener, ChangeListener {
                             results = sopsList.get(0).getResult();
                         }
                         textAreaResult.setText(results);
-                        textAreaReport.setText(reportText(comboWichReport));
+                        textAreaReport.setText(reportText(comboWichReport/*, writer*/));
                     }
                     else {
                         textAreaResult.setText(errorMsg);
@@ -611,6 +624,7 @@ public final class GUI extends Tools implements KeyListener, ChangeListener {
                     for (int r=0; r < sopsList.size(); r++) {
                         out += sopsList.get(r).getFullReport();
                         //print(sopsList.get(r).expression2hexadecimal(sopsList.get(r).getOriginalInputExpression())+"\n", writer);
+                        //print(sopsList.get(r).expression2hexadecimal(sopsList.get(r).getResult())+"\n", writer);
                         //print(sopsList.get(r).getOriginalInputExpression()+"; ", writer);
                         print(sopsList.get(r).getResult()+"\n", writer);
                     }
@@ -685,8 +699,9 @@ public final class GUI extends Tools implements KeyListener, ChangeListener {
         return out;
     }
     
-    public /*ArrayList<SumOfProducts>*/void optimizeExpressions(String allExpressions, int numVars) throws Exception {
+    public void optimizeExpressions(String allExpressions, int numVars/*, PrintWriter writer*/) throws Exception {
         sopsList = new ArrayList<>();
+        //SumOfProducts sopsList = new SumOfProducts();
         
         //inputFormat = getInputFormat();
         allExpressions = removeSpacesFromExpression(allExpressions);
@@ -700,8 +715,10 @@ public final class GUI extends Tools implements KeyListener, ChangeListener {
                 end = allExpressions.length();
             }
             expression = allExpressions.substring(begin, end);
+            //expression = allExpressions;
             sopsList.add(new SumOfProducts());
             int lastSOPIndex = sopsList.size()-1;
+            //sopsList.get(lastSOPIndex).setExpression(expression, numVars);
             if (!sopsList.get(lastSOPIndex).setExpression(expression, numVars)) {
                 begin = end + 1;
                 continue;
@@ -717,14 +734,14 @@ public final class GUI extends Tools implements KeyListener, ChangeListener {
             sopsList.get(lastSOPIndex).completeFinalList();
             sopsList.get(lastSOPIndex).buildOptimizedExpression();
             
+            //print(sopsList.get(lastSOPIndex).getResult()+"\n", writer);
+            print(sopsList.get(lastSOPIndex).expression2hexadecimal(sopsList.get(lastSOPIndex).getResult())+"\n"/*, writer*/);
             begin = end + 1;
             if (begin >= allExpressions.length()) {
                 break;
             }
         }
         while (begin < allExpressions.length());
-        
-        //return sopsList;
     }
     
     @Override
@@ -741,14 +758,6 @@ public final class GUI extends Tools implements KeyListener, ChangeListener {
     @Override
     public void keyReleased(KeyEvent e) {
     }
-
-    /*@Override
-    public void stateChanged(ChangeEvent e) {
-        JSlider source = (JSlider)e.getSource();
-        if (!source.getValueIsAdjusting()) {
-            numVars += (int)source.getValue();
-        }
-    }*/
 
     @Override
     public void stateChanged(ChangeEvent e) {

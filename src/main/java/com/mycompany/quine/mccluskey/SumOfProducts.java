@@ -1,7 +1,7 @@
 package com.mycompany.quine.mccluskey;
 
 import java.io.FileNotFoundException;
-import java.io.PrintWriter;
+//import java.io.PrintWriter;
 import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -19,7 +19,7 @@ public final class SumOfProducts extends Tools {
     private String             originalInputExpression;
     private String                 convertedExpression;
     private String                       variablesList;
-    private ArrayList<String>     originalProductsList;
+    //private ArrayList<String>     originalProductsList;
     private ArrayList<Product>            productsList; // Linhas da coveringTable
     private ArrayList<Product>         auxProductsList;
     private ArrayList<MinTerm>            minTermsList; // Colunas da coveringTable
@@ -210,8 +210,8 @@ public final class SumOfProducts extends Tools {
             }
             
             String str = convertedExpression.substring(begin, end);
-            ArrayList<String> originalProductsList = new ArrayList<>();
-            originalProductsList.add(str);
+            //ArrayList<String> originalProductsList = new ArrayList<>();
+            //originalProductsList.add(str);
             
             //Trabalha os Don't Care (gera todas as variações)
             ArrayList<String> allStr;
@@ -419,7 +419,7 @@ public final class SumOfProducts extends Tools {
     }
     
     public void essentialProductsToFinalList() {
-        //Colocar na essentialProductsList todos os
+        //Coloca na essentialProductsList todos os
         //produtos que aparecem apenas uma vez em algum mintermo
         //finalProductsList = new ArrayList<>();
         essentialProductsList = new ArrayList<>();
@@ -476,6 +476,7 @@ public final class SumOfProducts extends Tools {
     
     public void completeFinalList() {
         if (isAllCovered()) {
+            //printt("\tNo permutations. All covered.");
             return;
         }
         
@@ -484,7 +485,14 @@ public final class SumOfProducts extends Tools {
         int smaller = getCandidateProductsIndexes().size();
         int addedProducts;
         
+        printt("Permutations List Size: " + permutations.size() + "\t");
+        //int x = 0;
         for (int p=0; p < permutations.size(); p++) {
+            //if (p-x == 100000) {
+            //    printt("\nPermutation #" + (p+1));
+            //    x = p;
+            //}
+            
             setIsCovered();
             addedProducts =
                 completeFinalListCandidate(p, smaller);
@@ -495,11 +503,15 @@ public final class SumOfProducts extends Tools {
             }
             
             if (addedProducts == 1) {
+                //printt("Added 1 product and is all covered." + (p+1) + "\t");
+                //printt("return 1");
                 return;
             }
             
             if (p == permutations.size()-1 &&
                 smaller == getCandidateProductsIndexes().size()) {
+                //printt("All permutations tested. All products needed." + "\t");
+                //printt("return 2");
                 return;
             }
             else {
@@ -509,6 +521,9 @@ public final class SumOfProducts extends Tools {
         }
         
         finalProductsList = (ArrayList) finalListCandidate.clone();
+        finalListCandidate.clear();
+        //printt("All permutations tested." + "\t");
+        //printt("return 3");
     }
     
     public int completeFinalListCandidate(int candidate, int smaller) {
@@ -573,11 +588,25 @@ public final class SumOfProducts extends Tools {
         permutations.add((ArrayList) elements.clone());
         int i = 0;
         
+        int p = 1;
+        //int x = 1;
         while (i < n) {
-            
+
             if (indexes[i] < i) {
                 Collections.swap(elements, i % 2 == 0 ?  0: indexes[i], i);
                 permutations.add((ArrayList) elements.clone());
+                p++;
+                //if(p - x == 100000) {
+                //    printt("\n" + q);
+                //    x = q;
+                //}
+                //printt("\n" + q);
+////////////////// TEMP WORKAROUND !!! ////////////////////////////////////
+                if (p > 3629000) { // 10! == 3.628.800, 11! == 39.916.800
+                    //printt("\tMais de 3 milhões de permutações!\t");
+                    break;
+                }
+///////////////////////////////////////////////////////////////////////////
                 indexes[i]++;
                 i = 0;
             }
