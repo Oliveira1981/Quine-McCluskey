@@ -1,1 +1,1 @@
- A*!C +  A* B* D + !B* C*!D + !A* B*!D
+!B*!C + !A*!D +  B* D +  A* C

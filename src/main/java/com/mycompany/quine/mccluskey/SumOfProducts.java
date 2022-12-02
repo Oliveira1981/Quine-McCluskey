@@ -24,6 +24,7 @@ public final class SumOfProducts extends Tools {
     private ArrayList<Product>         auxProductsList;
     private ArrayList<MinTerm>            minTermsList; // Colunas da coveringTable
     private ArrayList<String>    essentialProductsList;
+    private ArrayList<String> notEssentialProductsList;
     private ArrayList<String>        finalProductsList;
     private ArrayList<ArrayList<Integer>> permutations;
     private int                           numberOfVars;
@@ -418,17 +419,19 @@ public final class SumOfProducts extends Tools {
         sortMinTermsList();
     }
     
-    public void essentialProductsToFinalList() {
+    public void fillFinalProductsLists() {
         //Coloca na essentialProductsList todos os
         //produtos que aparecem apenas uma vez em algum mintermo
         //finalProductsList = new ArrayList<>();
         essentialProductsList = new ArrayList<>();
+        notEssentialProductsList = new ArrayList<>();
         finalProductsList = new ArrayList<>();
+        String productString;
         
         for (int m=0; m < minTermsList.size(); m++) {
             
             if (minTermsList.get(m).getProductsList().size() == 1) {
-                String productString = minTermsList.get(m).getProductsList().get(0);
+                productString = minTermsList.get(m).getProductsList().get(0);
                 
                 if (!essentialProductsList.contains(productString)) {
                     essentialProductsList.add(productString);
@@ -440,6 +443,28 @@ public final class SumOfProducts extends Tools {
             }
         }
         
+        for (int p = 0; p < productsList.size(); p++) {
+            productString = productsList.get(p).getLiteralView();
+            
+            if (!essentialProductsList.contains(productString)) {
+                //if (!notEssentialProductsList.contains(productString)) {
+                    notEssentialProductsList.add(productString);
+                //}
+            }
+        }
+        
+        /*printt("\nNot Essential: ");
+        for (int e=0; e < notEssentialProductsList.size(); e++) {
+            printt("\n"+notEssentialProductsList.get(e));
+        }
+        printt("\nEssential: ");
+        for (int e=0; e < essentialProductsList.size(); e++) {
+            printt("\n"+essentialProductsList.get(e));
+        }
+        printt("\nFinal: ");
+        for (int e=0; e < finalProductsList.size(); e++) {
+            printt("\n"+finalProductsList.get(e));
+        }*/
         setIsCovered();
     }
     
@@ -485,7 +510,7 @@ public final class SumOfProducts extends Tools {
         int smaller = getCandidateProductsIndexes().size();
         int addedProducts;
         
-        printt("Permutations List Size: " + permutations.size() + "\t");
+        //printt("Permutations List Size: " + permutations.size() + "\t");
         //int x = 0;
         for (int p=0; p < permutations.size(); p++) {
             //if (p-x == 100000) {
@@ -524,6 +549,63 @@ public final class SumOfProducts extends Tools {
         finalListCandidate.clear();
         //printt("All permutations tested." + "\t");
         //printt("return 3");
+    }
+    
+    //stack overflow user935714
+    public void combinations2(int len, int startPosition, String[] candidateCombination) {
+        if (len == 0) {
+            ArrayList<String> finalListBackup = (ArrayList) finalProductsList.clone();
+            //printt("\n");
+            for(int x=0; x < candidateCombination.length; x++) {
+                //printt("\nStart Final Products List: ");
+                //for (int e=0; e < finalProductsList.size(); e++) {
+                //    printt("\n"+finalProductsList.get(e));
+                //}
+                //printt("\nCombination: " + candidateCombination[x]+"\t");
+                finalProductsList.add(candidateCombination[x]);
+                //printt("\nUpdated Final Products List: ");
+                //for (int e=0; e < finalProductsList.size(); e++) {
+                //    printt("\n"+finalProductsList.get(e));
+                //}
+            }
+            setIsCovered();
+            if (isAllCovered()) {
+                return;
+            }
+            else {
+                finalProductsList = (ArrayList) finalListBackup.clone();
+            }
+            return;
+        }
+        for (int i = startPosition; i <= notEssentialProductsList.size()-len; i++) {
+            candidateCombination[candidateCombination.length - len] = notEssentialProductsList.get(i);
+            if (isAllCovered()) {
+                return;
+            }
+            combinations2(len-1, i+1, candidateCombination);
+        }
+    }
+    
+    public void completeFinalList_NEW() {
+        //printt("\n");
+        //for(int x=0; x < notEssentialProductsList.size(); x++) {
+        //    printt(notEssentialProductsList.get(x)+"\t");
+        //}
+        int i = 1;
+        while (i <= notEssentialProductsList.size()) {
+            String[] candidateCombination = new String[i];
+            //printt("\n========== " + i + " ==========");
+            combinations2(i, 0, candidateCombination);
+            if (isAllCovered()) {
+                //printt("\nBLZ");
+                //printt("\nFinal Products List: ");
+                //for (int e=0; e < finalProductsList.size(); e++) {
+                    //printt("\n"+finalProductsList.get(e));
+                //}
+                return;
+            }
+            i++;
+        }
     }
     
     public int completeFinalListCandidate(int candidate, int smaller) {

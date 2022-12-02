@@ -727,11 +727,12 @@ public final class GUI extends Tools implements KeyListener, ChangeListener {
             sopsList.get(lastSOPIndex).mergePrimeImplicants(10);
             sopsList.get(lastSOPIndex).fillMinTermsList();
             sopsList.get(lastSOPIndex).fillTruthTable();
-            sopsList.get(lastSOPIndex).essentialProductsToFinalList();
+            sopsList.get(lastSOPIndex).fillFinalProductsLists();
+            sopsList.get(lastSOPIndex).completeFinalList_NEW();
             
-            ArrayList<Integer> indexes = sopsList.get(lastSOPIndex).getCandidateProductsIndexes();
-            sopsList.get(lastSOPIndex).permute(indexes);
-            sopsList.get(lastSOPIndex).completeFinalList();
+            //ArrayList<Integer> indexes = sopsList.get(lastSOPIndex).getCandidateProductsIndexes();
+            //sopsList.get(lastSOPIndex).permute(indexes);
+            //sopsList.get(lastSOPIndex).completeFinalList();
             sopsList.get(lastSOPIndex).buildOptimizedExpression();
             
             //print(sopsList.get(lastSOPIndex).getResult()+"\n", writer);
