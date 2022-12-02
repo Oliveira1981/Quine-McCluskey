@@ -14,14 +14,14 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
-//import java.io.File;
+import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.PrintWriter;
 import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
 import java.util.Dictionary;
 import java.util.Hashtable;
-//import java.util.Scanner;
+import java.util.Scanner;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.BorderFactory;
@@ -56,7 +56,8 @@ public final class GUI extends Tools implements KeyListener, ChangeListener {
     public GUI(){
         inputFormat = "";
         expression  = "";
-        numVars     = 0; //Auto
+        numVars     = 0; //Auto //P_4
+        //numVars     = 5; //NPN_5
         hasResult   = false;
         errorMsg    = "";
         sopsList    = null;
@@ -74,12 +75,15 @@ public final class GUI extends Tools implements KeyListener, ChangeListener {
         
         /*
         File file = new File(
-            "D:\\Users\\Rodrigo\\OneDrive - rzpy\\Documents\\Mestrado\\FerCAD\\Expressões\\P_4_RO.txt");
+            "D:\\Users\\Rodrigo\\OneDrive - rzpy\\Documents\\Mestrado\\FerCAD\\Expressões\\"
+          + "NPN_5_QuineMcCluskey_FULL.txt");
         Scanner sc = new Scanner(file);
         PrintWriter writer = new PrintWriter("Quine-McCluskey Results.txt", "UTF-8");
         
-        //while (sc.hasNextLine()) {
-        int startLine = 1;
+        while (sc.hasNextLine()) {
+            optimizeExpressions(sc.nextLine(), numVars, writer);
+        }
+        /*int startLine = 1;
         int lastLine = 13;
         
         int line = 1;
@@ -92,7 +96,7 @@ public final class GUI extends Tools implements KeyListener, ChangeListener {
             printt("\nLinha " + line + "\t");
             optimizeExpressions(sc.nextLine(), numVars, writer);
             line++;
-        }
+        }*//*
         writer.close();
         System.exit(0);
         */
@@ -487,8 +491,8 @@ public final class GUI extends Tools implements KeyListener, ChangeListener {
                     hasResult = true;
                     optimizeExpressions(
                         (String) comboExpressions.getSelectedItem(),
-                        (int) slider.getValue()//,
-                        //writer
+                        (int) slider.getValue()
+                        //,writer
                     );
                     if (errorMsg.isEmpty()) {
                         String results;
@@ -532,8 +536,8 @@ public final class GUI extends Tools implements KeyListener, ChangeListener {
                     
                     optimizeExpressions(
                         gen,
-                        (int) slider.getValue()//,
-                        //writer
+                        (int) slider.getValue()
+                        //,writer
                     );
                     if (errorMsg.isEmpty()) {
                         String results;
@@ -588,8 +592,8 @@ public final class GUI extends Tools implements KeyListener, ChangeListener {
                     errorMsg = "";
                     optimizeExpressions(
                         (String) comboExpressions.getSelectedItem(),
-                        (int) slider.getValue()//,
-                        //writer
+                        (int) slider.getValue()
+                        //,writer
                     );
                     if (errorMsg.isEmpty()) {
                         String results;
@@ -699,11 +703,12 @@ public final class GUI extends Tools implements KeyListener, ChangeListener {
         return out;
     }
     
-    public void optimizeExpressions(String allExpressions, int numVars/*, PrintWriter writer*/) throws Exception {
+    public void optimizeExpressions(String allExpressions, int numVars
+        //, PrintWriter writer
+        ) throws Exception {
         sopsList = new ArrayList<>();
         //SumOfProducts sopsList = new SumOfProducts();
         
-        //inputFormat = getInputFormat();
         allExpressions = removeSpacesFromExpression(allExpressions);
         
         int begin = 0;
@@ -732,11 +737,12 @@ public final class GUI extends Tools implements KeyListener, ChangeListener {
             
             //ArrayList<Integer> indexes = sopsList.get(lastSOPIndex).getCandidateProductsIndexes();
             //sopsList.get(lastSOPIndex).permute(indexes);
-            //sopsList.get(lastSOPIndex).completeFinalList();
+            //sopsList.get(lastSOPIndex).completeFinalList_OLD();
             sopsList.get(lastSOPIndex).buildOptimizedExpression();
             
             //print(sopsList.get(lastSOPIndex).getResult()+"\n", writer);
-            print(sopsList.get(lastSOPIndex).expression2hexadecimal(sopsList.get(lastSOPIndex).getResult())+"\n"/*, writer*/);
+            //print(sopsList.get(lastSOPIndex).expression2hexadecimal(sopsList.get(lastSOPIndex).getResult())+"\n", writer);
+            //print(SumOfProducts.numberOfLiterals(sopsList.get(lastSOPIndex).getResult(), sopsList.get(lastSOPIndex).getNumberOfVars(), sopsList.get(lastSOPIndex).getNumberOfProducts())+"\n", writer);
             begin = end + 1;
             if (begin >= allExpressions.length()) {
                 break;

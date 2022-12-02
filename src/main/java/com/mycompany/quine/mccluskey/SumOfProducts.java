@@ -169,6 +169,10 @@ public final class SumOfProducts extends Tools {
         return numberOfVars;
     }
     
+    public int getNumberOfProducts() {
+        return numberOfProducts;
+    }
+    
     public String getTruthTable() {
         if (isError) {
             return "-";
@@ -499,7 +503,45 @@ public final class SumOfProducts extends Tools {
         }
     }
     
-    public void completeFinalList() {
+    //stack overflow user935714
+    public void combinations(int len, int startPosition, String[] candidateCombination) {
+        if (len == 0) {
+            ArrayList<String> finalListBackup = (ArrayList) finalProductsList.clone();
+            //for(int x=0; x < candidateCombination.length; x++) {
+            //    finalProductsList.add(candidateCombination[x]);
+            //}
+            finalProductsList.addAll(Arrays.asList(candidateCombination));
+            setIsCovered();
+            if (isAllCovered()) {
+                return;
+            }
+            else {
+                finalProductsList = (ArrayList) finalListBackup.clone();
+            }
+            return;
+        }
+        for (int i = startPosition; i <= notEssentialProductsList.size()-len; i++) {
+            candidateCombination[candidateCombination.length - len] = notEssentialProductsList.get(i);
+            if (isAllCovered()) {
+                return;
+            }
+            combinations(len-1, i+1, candidateCombination);
+        }
+    }
+    
+    public void completeFinalList_NEW() {
+        int i = 1;
+        while (i <= notEssentialProductsList.size()) {
+            String[] candidateCombination = new String[i];
+            combinations(i, 0, candidateCombination);
+            if (isAllCovered()) {
+                return;
+            }
+            i++;
+        }
+    }
+    
+    /*public void completeFinalList_OLD() {
         if (isAllCovered()) {
             //printt("\tNo permutations. All covered.");
             return;
@@ -549,66 +591,9 @@ public final class SumOfProducts extends Tools {
         finalListCandidate.clear();
         //printt("All permutations tested." + "\t");
         //printt("return 3");
-    }
+    }*/
     
-    //stack overflow user935714
-    public void combinations2(int len, int startPosition, String[] candidateCombination) {
-        if (len == 0) {
-            ArrayList<String> finalListBackup = (ArrayList) finalProductsList.clone();
-            //printt("\n");
-            for(int x=0; x < candidateCombination.length; x++) {
-                //printt("\nStart Final Products List: ");
-                //for (int e=0; e < finalProductsList.size(); e++) {
-                //    printt("\n"+finalProductsList.get(e));
-                //}
-                //printt("\nCombination: " + candidateCombination[x]+"\t");
-                finalProductsList.add(candidateCombination[x]);
-                //printt("\nUpdated Final Products List: ");
-                //for (int e=0; e < finalProductsList.size(); e++) {
-                //    printt("\n"+finalProductsList.get(e));
-                //}
-            }
-            setIsCovered();
-            if (isAllCovered()) {
-                return;
-            }
-            else {
-                finalProductsList = (ArrayList) finalListBackup.clone();
-            }
-            return;
-        }
-        for (int i = startPosition; i <= notEssentialProductsList.size()-len; i++) {
-            candidateCombination[candidateCombination.length - len] = notEssentialProductsList.get(i);
-            if (isAllCovered()) {
-                return;
-            }
-            combinations2(len-1, i+1, candidateCombination);
-        }
-    }
-    
-    public void completeFinalList_NEW() {
-        //printt("\n");
-        //for(int x=0; x < notEssentialProductsList.size(); x++) {
-        //    printt(notEssentialProductsList.get(x)+"\t");
-        //}
-        int i = 1;
-        while (i <= notEssentialProductsList.size()) {
-            String[] candidateCombination = new String[i];
-            //printt("\n========== " + i + " ==========");
-            combinations2(i, 0, candidateCombination);
-            if (isAllCovered()) {
-                //printt("\nBLZ");
-                //printt("\nFinal Products List: ");
-                //for (int e=0; e < finalProductsList.size(); e++) {
-                    //printt("\n"+finalProductsList.get(e));
-                //}
-                return;
-            }
-            i++;
-        }
-    }
-    
-    public int completeFinalListCandidate(int candidate, int smaller) {
+    /*public int completeFinalListCandidate(int candidate, int smaller) {
         int addedProductsCount = 0;
         
         for (int r=0; r < permutations.get(candidate).size(); r++) {
@@ -643,9 +628,9 @@ public final class SumOfProducts extends Tools {
         }
         
         return addedProductsCount;
-    }
+    }*/
     
-    public ArrayList getCandidateProductsIndexes() {
+    /*public ArrayList getCandidateProductsIndexes() {
         ArrayList<Integer> indexes = new ArrayList<>();
         
         for (int p=0; p < productsList.size(); p++) {
@@ -657,9 +642,9 @@ public final class SumOfProducts extends Tools {
         }
         
         return indexes;
-    }
+    }*/
     
-    public void permute(ArrayList elements) {
+    /*public void permute(ArrayList elements) {
         int n = elements.size();
         int[] indexes = new int[n];
         
@@ -671,21 +656,14 @@ public final class SumOfProducts extends Tools {
         int i = 0;
         
         int p = 1;
-        //int x = 1;
         while (i < n) {
 
             if (indexes[i] < i) {
                 Collections.swap(elements, i % 2 == 0 ?  0: indexes[i], i);
                 permutations.add((ArrayList) elements.clone());
                 p++;
-                //if(p - x == 100000) {
-                //    printt("\n" + q);
-                //    x = q;
-                //}
-                //printt("\n" + q);
 ////////////////// TEMP WORKAROUND !!! ////////////////////////////////////
                 if (p > 3629000) { // 10! == 3.628.800, 11! == 39.916.800
-                    //printt("\tMais de 3 milhões de permutações!\t");
                     break;
                 }
 ///////////////////////////////////////////////////////////////////////////
@@ -697,7 +675,7 @@ public final class SumOfProducts extends Tools {
                 i++;
             }
         }
-    }
+    }*/
     
     public void sortMinTermsList() {
         for(int i=1; i < minTermsList.size(); i++) {
