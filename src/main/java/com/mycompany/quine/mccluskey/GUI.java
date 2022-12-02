@@ -740,7 +740,9 @@ public final class GUI extends Tools implements KeyListener, ChangeListener {
             //sopsList.get(lastSOPIndex).completeFinalList_OLD();
             sopsList.get(lastSOPIndex).buildOptimizedExpression();
             
-            //print(sopsList.get(lastSOPIndex).getResult()+"\n", writer);
+            print(sopsList.get(lastSOPIndex).getResult()+"\n"
+            //    , writer
+            );
             //print(sopsList.get(lastSOPIndex).expression2hexadecimal(sopsList.get(lastSOPIndex).getResult())+"\n", writer);
             //print(SumOfProducts.numberOfLiterals(sopsList.get(lastSOPIndex).getResult(), sopsList.get(lastSOPIndex).getNumberOfVars(), sopsList.get(lastSOPIndex).getNumberOfProducts())+"\n", writer);
             begin = end + 1;
