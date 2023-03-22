@@ -26,9 +26,11 @@ public final class SumOfProducts extends Tools {
     private ArrayList<String>    essentialProductsList;
     private ArrayList<String> notEssentialProductsList;
     private ArrayList<String>        finalProductsList;
-    private ArrayList<ArrayList<Integer>> permutations;
+    //private ArrayList<ArrayList<Integer>> permutations;
     private int                           numberOfVars;
     private int                       numberOfProducts;
+    private int                       numberOfLiterals;
+    private int               smallestNumberOfLiterals;
     private ArrayList<String>               truthTable;
     private boolean                            isError;
     private String                              result;
@@ -188,9 +190,9 @@ public final class SumOfProducts extends Tools {
         return str;
     }
     
-    public ArrayList<ArrayList<Integer>> getPermutations() {
+    /*public ArrayList<ArrayList<Integer>> getPermutations() {
         return permutations;
-    }
+    }*/
 
     public boolean isError() {
         return isError;
@@ -203,7 +205,7 @@ public final class SumOfProducts extends Tools {
     public void fillProductsList(int selectedNumberofVars) {
         productsList = new ArrayList<>();
         minTermsList = new ArrayList<>();
-        permutations = new ArrayList<>();
+        //permutations = new ArrayList<>();
         
         int begin    = 0;
         int end;
@@ -502,14 +504,62 @@ public final class SumOfProducts extends Tools {
             minTermsList.get(i).setIsCovered(false);
         }
     }
+/*
+    public void combinations(int len, int startPosition, String[] candidateCombination) {
+        ArrayList<String> finalListBackup = (ArrayList) finalProductsList.clone();
+        if (len == 0) {
+//            printt(" len == 0\t");
+//            for(int x=0; x < candidateCombination.length; x++) {
+//                finalProductsList.add(candidateCombination[x]);
+//            }
+            finalProductsList.addAll(Arrays.asList(candidateCombination));
+            setIsCovered();
+            if (isAllCovered()) {
+//                printt(" ALL COVERED\t");
+//                numberOfLiterals = 0;
+//                printt(" FPLsize: "+finalProductsList.size()+"] ");
+//                for (int p=0; p < finalProductsList.size(); p++) {
+                    //printt("\nQQQ num of lit: " + numberOfLiterals);
+//                    numberOfLiterals += numberOfLiterals2(finalProductsList.get(p));
+//                    if (numberOfLiterals >= smallestNumberOfLiterals) {
+//                        finalProductsList = (ArrayList) finalListBackup.clone();
+//                        printt(" numberOfLiterals >= smallest ");
+                        return;
+//                    }
+//                }
+//                smallestNumberOfLiterals = numberOfLiterals;
+//                printt(" SNL: ["+smallestNumberOfLiterals+"] ");
+//                return;
+            }
+            else {
+//                printt(" NOT all covered\t");
+                finalProductsList = (ArrayList) finalListBackup.clone();
+            }
+            return;
+        }
+        //printt(" len > 0\t");
+        //printt("\nstartPos: "+ startPosition+"\t");
+        for (int i = startPosition; i <= notEssentialProductsList.size()-len; i++) {
+//            printt("\ni: "+i+"\t");
+            candidateCombination[candidateCombination.length - len] = notEssentialProductsList.get(i);
+            if (isAllCovered()) {
+                return;
+            }
+            combinations(len-1, i+1, candidateCombination);
+        }
+    }
+*/
+    // TESTAR:
+    // SELECIONAR PRIMEIRO AS COMBINAÇÕES COM PRODUTOS DE MENOR NÚMERO DE LITERAIS.
+    // Exemplo.: entre A!BC!D, ABCD, B!CD,
+    // selecionar primeiro conjuntos que contenham B!CD
+    // VAI TER QUE ORDENAR O CONJUNTO ANTES
+    // Conjunto: notEssentialProductsList
     
     //stack overflow user935714
     public void combinations(int len, int startPosition, String[] candidateCombination) {
+        ArrayList<String> finalListBackup = (ArrayList) finalProductsList.clone();
         if (len == 0) {
-            ArrayList<String> finalListBackup = (ArrayList) finalProductsList.clone();
-            //for(int x=0; x < candidateCombination.length; x++) {
-            //    finalProductsList.add(candidateCombination[x]);
-            //}
             finalProductsList.addAll(Arrays.asList(candidateCombination));
             setIsCovered();
             if (isAllCovered()) {
@@ -530,8 +580,11 @@ public final class SumOfProducts extends Tools {
     }
     
     public void completeFinalList_NEW() {
+//        smallestNumberOfLiterals = numberOfLiterals(convertedExpression, numberOfVars, numberOfProducts);
+        sortProductsSet(notEssentialProductsList);
         int i = 1;
         while (i <= notEssentialProductsList.size()) {
+//            printt("\n\nnotEssentialProduct "+i+": ");
             String[] candidateCombination = new String[i];
             combinations(i, 0, candidateCombination);
             if (isAllCovered()) {

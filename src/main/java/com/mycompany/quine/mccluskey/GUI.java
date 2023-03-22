@@ -14,14 +14,14 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
-import java.io.File;
+//import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.PrintWriter;
 import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
 import java.util.Dictionary;
 import java.util.Hashtable;
-import java.util.Scanner;
+//import java.util.Scanner;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.BorderFactory;
@@ -75,13 +75,23 @@ public final class GUI extends Tools implements KeyListener, ChangeListener {
         
         /*
         File file = new File(
-            "D:\\Users\\Rodrigo\\OneDrive - rzpy\\Documents\\Mestrado\\FerCAD\\Expressões\\"
-          + "NPN_5_QuineMcCluskey_FULL.txt");
+            "D:\\Users\\Rodrigo\\OneDrive - rzpy\\Documents\\Mestrado\\Expressões\\"
+          + "P_4_QMC.txt");
         Scanner sc = new Scanner(file);
         PrintWriter writer = new PrintWriter("Quine-McCluskey Results.txt", "UTF-8");
         
         while (sc.hasNextLine()) {
-            optimizeExpressions(sc.nextLine(), numVars, writer);
+            //optimizeExpressions(sc.nextLine(), numVars, writer);
+            
+            String exp = sc.nextLine();
+            int count = 0;
+            for (int i=0; i < exp.length(); i++) {
+                if (Character.isAlphabetic(exp.charAt(i))) {
+                    count++;
+                }
+            }
+            print(count+"\n", writer);
+            
         }
         /*int startLine = 1;
         int lastLine = 13;
@@ -740,9 +750,7 @@ public final class GUI extends Tools implements KeyListener, ChangeListener {
             //sopsList.get(lastSOPIndex).completeFinalList_OLD();
             sopsList.get(lastSOPIndex).buildOptimizedExpression();
             
-            print(sopsList.get(lastSOPIndex).getResult()+"\n"
-            //    , writer
-            );
+            //print(sopsList.get(lastSOPIndex).getResult()+"\n", writer);
             //print(sopsList.get(lastSOPIndex).expression2hexadecimal(sopsList.get(lastSOPIndex).getResult())+"\n", writer);
             //print(SumOfProducts.numberOfLiterals(sopsList.get(lastSOPIndex).getResult(), sopsList.get(lastSOPIndex).getNumberOfVars(), sopsList.get(lastSOPIndex).getNumberOfProducts())+"\n", writer);
             begin = end + 1;

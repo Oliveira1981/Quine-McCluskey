@@ -599,6 +599,19 @@ public class Tools {
         return numberOfVars * numberOfProducts;
     }
     
+    public static int numberOfLiterals2(String exp) {
+        if (exp.equals("1")) {
+            return 0;
+        }
+        int count = 0;
+        for (int i=0; i < exp.length(); i++) {
+            if (Character.isAlphabetic(exp.charAt(i))) {
+                count++;
+            }
+        }
+        return count;
+    }
+    
     public static ArrayList<String> getAllVariations(String prod, String vars, int size) {
         prod = prod.toUpperCase();
         prod = sortLiteralInput(prod);
@@ -722,6 +735,23 @@ public class Tools {
             }
         }
         return false;
+    }
+    
+    //Sort a set o products (of literals) by number of literals
+    //from the smallest to the biggest
+    public static void sortProductsSet(ArrayList<String> productsSet) {
+        for(int i=1; i < productsSet.size(); i++) {
+            int count_k = numberOfLiterals2(productsSet.get(i));
+            
+            if(count_k < numberOfLiterals2(productsSet.get(i-1))) {
+                int j = i;
+                do {
+                    j--;
+                    if (j < 1) break;
+                } while(count_k < numberOfLiterals2(productsSet.get(j-1)));
+                productsSet.add(j, productsSet.remove(i));
+            }
+        }
     }
 
 }
