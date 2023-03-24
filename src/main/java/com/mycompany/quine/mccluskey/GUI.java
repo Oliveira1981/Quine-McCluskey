@@ -56,8 +56,8 @@ public final class GUI extends Tools implements KeyListener, ChangeListener {
     public GUI(){
         inputFormat = "";
         expression  = "";
-        numVars     = 0; //Auto //P_4
-        //numVars     = 5; //NPN_5
+        //numVars     = 0; //Auto //P_4
+        numVars     = 5; //NPN_5
         hasResult   = false;
         errorMsg    = "";
         sopsList    = null;
@@ -75,8 +75,8 @@ public final class GUI extends Tools implements KeyListener, ChangeListener {
         
         /*
         File file = new File(
-            "D:\\Users\\Rodrigo\\OneDrive - rzpy\\Documents\\Mestrado\\Expressões\\"
-          + "P_4_QMC.txt");
+            "D:\\Users\\Rodrigo\\OneDrive - rzpy\\Documents\\Mestrado\\Projeto\\#Expressões\\"
+          + "NPN_5_QuineMcCluskey_FULL.txt");
         Scanner sc = new Scanner(file);
         PrintWriter writer = new PrintWriter("Quine-McCluskey Results.txt", "UTF-8");
         
@@ -97,14 +97,20 @@ public final class GUI extends Tools implements KeyListener, ChangeListener {
         int lastLine = 13;
         
         int line = 1;
+        if (line < startLine) {
+            printt("\nSkipping line(s)...\n");
+        }
         while (line < startLine) {
             sc.nextLine();
             line++;
         }
         
+        printt("\nGo!");
+        
         while (line <= lastLine) {
             printt("\nLinha " + line + "\t");
             optimizeExpressions(sc.nextLine(), numVars, writer);
+            //optimizeExpressions("0x"+sc.nextLine(), numVars, writer);
             line++;
         }*//*
         writer.close();

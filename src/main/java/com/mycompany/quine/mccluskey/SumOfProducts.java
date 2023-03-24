@@ -5,7 +5,7 @@ import java.io.FileNotFoundException;
 import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Collections;
+//import java.util.Collections;
 import java.util.Formatter;
 
 /**
@@ -29,8 +29,8 @@ public final class SumOfProducts extends Tools {
     //private ArrayList<ArrayList<Integer>> permutations;
     private int                           numberOfVars;
     private int                       numberOfProducts;
-    private int                       numberOfLiterals;
-    private int               smallestNumberOfLiterals;
+    //private int                       numberOfLiterals;
+    //private int               smallestNumberOfLiterals;
     private ArrayList<String>               truthTable;
     private boolean                            isError;
     private String                              result;
@@ -458,19 +458,6 @@ public final class SumOfProducts extends Tools {
                 //}
             }
         }
-        
-        /*printt("\nNot Essential: ");
-        for (int e=0; e < notEssentialProductsList.size(); e++) {
-            printt("\n"+notEssentialProductsList.get(e));
-        }
-        printt("\nEssential: ");
-        for (int e=0; e < essentialProductsList.size(); e++) {
-            printt("\n"+essentialProductsList.get(e));
-        }
-        printt("\nFinal: ");
-        for (int e=0; e < finalProductsList.size(); e++) {
-            printt("\n"+finalProductsList.get(e));
-        }*/
         setIsCovered();
     }
     
@@ -504,57 +491,6 @@ public final class SumOfProducts extends Tools {
             minTermsList.get(i).setIsCovered(false);
         }
     }
-/*
-    public void combinations(int len, int startPosition, String[] candidateCombination) {
-        ArrayList<String> finalListBackup = (ArrayList) finalProductsList.clone();
-        if (len == 0) {
-//            printt(" len == 0\t");
-//            for(int x=0; x < candidateCombination.length; x++) {
-//                finalProductsList.add(candidateCombination[x]);
-//            }
-            finalProductsList.addAll(Arrays.asList(candidateCombination));
-            setIsCovered();
-            if (isAllCovered()) {
-//                printt(" ALL COVERED\t");
-//                numberOfLiterals = 0;
-//                printt(" FPLsize: "+finalProductsList.size()+"] ");
-//                for (int p=0; p < finalProductsList.size(); p++) {
-                    //printt("\nQQQ num of lit: " + numberOfLiterals);
-//                    numberOfLiterals += numberOfLiterals2(finalProductsList.get(p));
-//                    if (numberOfLiterals >= smallestNumberOfLiterals) {
-//                        finalProductsList = (ArrayList) finalListBackup.clone();
-//                        printt(" numberOfLiterals >= smallest ");
-                        return;
-//                    }
-//                }
-//                smallestNumberOfLiterals = numberOfLiterals;
-//                printt(" SNL: ["+smallestNumberOfLiterals+"] ");
-//                return;
-            }
-            else {
-//                printt(" NOT all covered\t");
-                finalProductsList = (ArrayList) finalListBackup.clone();
-            }
-            return;
-        }
-        //printt(" len > 0\t");
-        //printt("\nstartPos: "+ startPosition+"\t");
-        for (int i = startPosition; i <= notEssentialProductsList.size()-len; i++) {
-//            printt("\ni: "+i+"\t");
-            candidateCombination[candidateCombination.length - len] = notEssentialProductsList.get(i);
-            if (isAllCovered()) {
-                return;
-            }
-            combinations(len-1, i+1, candidateCombination);
-        }
-    }
-*/
-    // TESTAR:
-    // SELECIONAR PRIMEIRO AS COMBINAÇÕES COM PRODUTOS DE MENOR NÚMERO DE LITERAIS.
-    // Exemplo.: entre A!BC!D, ABCD, B!CD,
-    // selecionar primeiro conjuntos que contenham B!CD
-    // VAI TER QUE ORDENAR O CONJUNTO ANTES
-    // Conjunto: notEssentialProductsList
     
     //stack overflow user935714
     public void combinations(int len, int startPosition, String[] candidateCombination) {
@@ -579,156 +515,56 @@ public final class SumOfProducts extends Tools {
         }
     }
     
+    // ENJAMNBRE TEMPORÁRIO
+    // para resolver diferença entre o uso de combinações
+    // COM ou SEM ordenação prévia:
+    // Faz um e depois o outro e usa o que deu menos literais
     public void completeFinalList_NEW() {
-//        smallestNumberOfLiterals = numberOfLiterals(convertedExpression, numberOfVars, numberOfProducts);
-        sortProductsSet(notEssentialProductsList);
+        ArrayList<String> finalListOriginal = (ArrayList) finalProductsList.clone();
+        
+        //NO SORTING
+        ArrayList<String> finalListTake1 = (ArrayList) finalProductsList.clone();
+        int numberOfLiteralsTake1 = 0;
         int i = 1;
         while (i <= notEssentialProductsList.size()) {
-//            printt("\n\nnotEssentialProduct "+i+": ");
             String[] candidateCombination = new String[i];
             combinations(i, 0, candidateCombination);
             if (isAllCovered()) {
-                return;
+                //return;
+                finalListTake1 = (ArrayList) finalProductsList.clone();
+                for (int t=0; t < finalListTake1.size(); t++) {
+                    numberOfLiteralsTake1 += numberOfLiterals2(finalListTake1.get(t));
+                }
+                printt("Take1: "+numberOfLiteralsTake1+"\n");
+                break;
             }
             i++;
         }
+        
+        //SORTING
+        finalProductsList = (ArrayList) finalListOriginal.clone();
+        setIsCovered();
+        sortProductsSet(notEssentialProductsList);
+        int numberOfLiteralsTake2 = 0;
+        i = 1;
+        while (i <= notEssentialProductsList.size()) {
+            String[] candidateCombination = new String[i];
+            combinations(i, 0, candidateCombination);
+            if (isAllCovered()) {
+                //return;
+                for (int t=0; t < finalProductsList.size(); t++) {
+                    numberOfLiteralsTake2 += numberOfLiterals2(finalProductsList.get(t));
+                }
+                printt("Take2: "+numberOfLiteralsTake2+"\n");
+                break;
+            }
+            i++;
+        }
+        if (numberOfLiteralsTake1 < numberOfLiteralsTake2) {
+            printt("\n in \n");
+            finalProductsList = (ArrayList) finalListTake1.clone();
+        }
     }
-    
-    /*public void completeFinalList_OLD() {
-        if (isAllCovered()) {
-            //printt("\tNo permutations. All covered.");
-            return;
-        }
-        
-        ArrayList<String> finalListBackup = (ArrayList) finalProductsList.clone();
-        ArrayList<String> finalListCandidate = (ArrayList) finalProductsList.clone();
-        int smaller = getCandidateProductsIndexes().size();
-        int addedProducts;
-        
-        //printt("Permutations List Size: " + permutations.size() + "\t");
-        //int x = 0;
-        for (int p=0; p < permutations.size(); p++) {
-            //if (p-x == 100000) {
-            //    printt("\nPermutation #" + (p+1));
-            //    x = p;
-            //}
-            
-            setIsCovered();
-            addedProducts =
-                completeFinalListCandidate(p, smaller);
-            
-            if (addedProducts < smaller) {
-                smaller = addedProducts;
-                finalListCandidate = (ArrayList) finalProductsList.clone();
-            }
-            
-            if (addedProducts == 1) {
-                //printt("Added 1 product and is all covered." + (p+1) + "\t");
-                //printt("return 1");
-                return;
-            }
-            
-            if (p == permutations.size()-1 &&
-                smaller == getCandidateProductsIndexes().size()) {
-                //printt("All permutations tested. All products needed." + "\t");
-                //printt("return 2");
-                return;
-            }
-            else {
-                finalProductsList = (ArrayList) finalListBackup.clone();
-            }
-            
-        }
-        
-        finalProductsList = (ArrayList) finalListCandidate.clone();
-        finalListCandidate.clear();
-        //printt("All permutations tested." + "\t");
-        //printt("return 3");
-    }*/
-    
-    /*public int completeFinalListCandidate(int candidate, int smaller) {
-        int addedProductsCount = 0;
-        
-        for (int r=0; r < permutations.get(candidate).size(); r++) {
-            int p = permutations.get(candidate).get(r);
-            String productString = productsList.get(p).getLiteralView();
-            
-            if (!finalProductsList.contains(productString)) {
-                finalProductsList.add(productString);
-                addedProductsCount++;
-                
-                if (addedProductsCount >= smaller) {
-                    return addedProductsCount;
-                }
-                
-                for (int d=0; d < productsList.get(p).getMinTermsList().size(); d++) {
-                    int decimal = productsList.get(p).getMinTermsList().get(d);
-                    
-                    for (int m=0; m < minTermsList.size(); m++) {
-                        
-                        if (decimal == minTermsList.get(m).getDecimalView()){
-                            minTermsList.get(m).setIsCovered(true);
-                        }
-                        
-                    }
-                    
-                }
-                
-                if (isAllCovered()) {
-                    return addedProductsCount;
-                }
-            }
-        }
-        
-        return addedProductsCount;
-    }*/
-    
-    /*public ArrayList getCandidateProductsIndexes() {
-        ArrayList<Integer> indexes = new ArrayList<>();
-        
-        for (int p=0; p < productsList.size(); p++) {
-            String productString = productsList.get(p).getLiteralView();
-            
-            if (!finalProductsList.contains(productString)) {
-                indexes.add(p);
-            }
-        }
-        
-        return indexes;
-    }*/
-    
-    /*public void permute(ArrayList elements) {
-        int n = elements.size();
-        int[] indexes = new int[n];
-        
-        for (int i = 0; i < n; i++) {
-            indexes[i] = 0;
-        }
-        
-        permutations.add((ArrayList) elements.clone());
-        int i = 0;
-        
-        int p = 1;
-        while (i < n) {
-
-            if (indexes[i] < i) {
-                Collections.swap(elements, i % 2 == 0 ?  0: indexes[i], i);
-                permutations.add((ArrayList) elements.clone());
-                p++;
-////////////////// TEMP WORKAROUND !!! ////////////////////////////////////
-                if (p > 3629000) { // 10! == 3.628.800, 11! == 39.916.800
-                    break;
-                }
-///////////////////////////////////////////////////////////////////////////
-                indexes[i]++;
-                i = 0;
-            }
-            else {
-                indexes[i] = 0;
-                i++;
-            }
-        }
-    }*/
     
     public void sortMinTermsList() {
         for(int i=1; i < minTermsList.size(); i++) {
