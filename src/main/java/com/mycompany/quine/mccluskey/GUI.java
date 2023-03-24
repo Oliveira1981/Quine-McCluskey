@@ -14,14 +14,14 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
-//import java.io.File;
+import java.io.File; ///////////////////////////////// LER E ESCREVER EM ARQUIVO
 import java.io.FileNotFoundException;
 import java.io.PrintWriter;
 import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
 import java.util.Dictionary;
 import java.util.Hashtable;
-//import java.util.Scanner;
+import java.util.Scanner; //////////////////////////// LER E ESCREVER EM ARQUIVO
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.BorderFactory;
@@ -56,8 +56,8 @@ public final class GUI extends Tools implements KeyListener, ChangeListener {
     public GUI(){
         inputFormat = "";
         expression  = "";
-        //numVars     = 0; //Auto //P_4
-        numVars     = 5; //NPN_5
+        numVars     = 0; //Auto //P_4   ////////////// LER E ESCREVER EM ARQUIVO
+        //numVars     = 5; //NPN_5      ////////////// LER E ESCREVER EM ARQUIVO
         hasResult   = false;
         errorMsg    = "";
         sopsList    = null;
@@ -72,29 +72,16 @@ public final class GUI extends Tools implements KeyListener, ChangeListener {
     }
     
     public void showWindow() throws Exception {
-        
-        /*
+/*        
+////////////// LER E ESCREVER EM ARQUIVO [BLOCK START] /////////////////////////
         File file = new File(
             "D:\\Users\\Rodrigo\\OneDrive - rzpy\\Documents\\Mestrado\\Projeto\\#Expressões\\"
           + "NPN_5_QuineMcCluskey_FULL.txt");
         Scanner sc = new Scanner(file);
         PrintWriter writer = new PrintWriter("Quine-McCluskey Results.txt", "UTF-8");
         
-        while (sc.hasNextLine()) {
-            //optimizeExpressions(sc.nextLine(), numVars, writer);
-            
-            String exp = sc.nextLine();
-            int count = 0;
-            for (int i=0; i < exp.length(); i++) {
-                if (Character.isAlphabetic(exp.charAt(i))) {
-                    count++;
-                }
-            }
-            print(count+"\n", writer);
-            
-        }
-        /*int startLine = 1;
-        int lastLine = 13;
+        int startLine = 1;
+        int lastLine = 123225;
         
         int line = 1;
         if (line < startLine) {
@@ -108,15 +95,15 @@ public final class GUI extends Tools implements KeyListener, ChangeListener {
         printt("\nGo!");
         
         while (line <= lastLine) {
-            printt("\nLinha " + line + "\t");
+            //printt("\nLine " + line + "\t"); //LEVA MUITO MAIS TEMPO SE FICAR MOSTRANDO A LINHA
             optimizeExpressions(sc.nextLine(), numVars, writer);
             //optimizeExpressions("0x"+sc.nextLine(), numVars, writer);
             line++;
-        }*//*
+        }
         writer.close();
         System.exit(0);
-        */
-        
+////////////// LER E ESCREVER EM ARQUIVO [BLOCK END] ///////////////////////////
+*/        
         String[] templates = {
             "",
             "2+4+6+8+9+10+12+13+15",
@@ -508,7 +495,9 @@ public final class GUI extends Tools implements KeyListener, ChangeListener {
                     optimizeExpressions(
                         (String) comboExpressions.getSelectedItem(),
                         (int) slider.getValue()
-                        //,writer
+////////////// LER E ESCREVER EM ARQUIVO [BLOCK START] /////////////////////////
+//                        ,writer
+////////////// LER E ESCREVER EM ARQUIVO [BLOCK END] ///////////////////////////
                     );
                     if (errorMsg.isEmpty()) {
                         String results;
@@ -553,7 +542,9 @@ public final class GUI extends Tools implements KeyListener, ChangeListener {
                     optimizeExpressions(
                         gen,
                         (int) slider.getValue()
-                        //,writer
+////////////// LER E ESCREVER EM ARQUIVO [BLOCK START] /////////////////////////
+//                        ,writer
+////////////// LER E ESCREVER EM ARQUIVO [BLOCK END] ///////////////////////////
                     );
                     if (errorMsg.isEmpty()) {
                         String results;
@@ -609,7 +600,9 @@ public final class GUI extends Tools implements KeyListener, ChangeListener {
                     optimizeExpressions(
                         (String) comboExpressions.getSelectedItem(),
                         (int) slider.getValue()
-                        //,writer
+////////////// LER E ESCREVER EM ARQUIVO [BLOCK START] /////////////////////////
+//                        ,writer
+////////////// LER E ESCREVER EM ARQUIVO [BLOCK END] ///////////////////////////
                     );
                     if (errorMsg.isEmpty()) {
                         String results;
@@ -720,7 +713,9 @@ public final class GUI extends Tools implements KeyListener, ChangeListener {
     }
     
     public void optimizeExpressions(String allExpressions, int numVars
-        //, PrintWriter writer
+////////////// LER E ESCREVER EM ARQUIVO [BLOCK START] /////////////////////////
+//        , PrintWriter writer
+////////////// LER E ESCREVER EM ARQUIVO [BLOCK END] ///////////////////////////
         ) throws Exception {
         sopsList = new ArrayList<>();
         //SumOfProducts sopsList = new SumOfProducts();
@@ -730,8 +725,11 @@ public final class GUI extends Tools implements KeyListener, ChangeListener {
         int begin = 0;
         int end;
         do {
+////////////// LER E ESCREVER EM ARQUIVO [BLOCK START] /////////////////////////
+            // Inverter comentado/não comentado //
             end = allExpressions.indexOf(';', begin);
             //end = -1; //ACEITAR APENAS UMA EXPRESSÃO
+////////////// LER E ESCREVER EM ARQUIVO [BLOCK END] ///////////////////////////
             if (end < 0) {
                 end = allExpressions.length();
             }
@@ -756,9 +754,12 @@ public final class GUI extends Tools implements KeyListener, ChangeListener {
             //sopsList.get(lastSOPIndex).completeFinalList_OLD();
             sopsList.get(lastSOPIndex).buildOptimizedExpression();
             
+////////////// LER E ESCREVER EM ARQUIVO [BLOCK START] /////////////////////////
             //print(sopsList.get(lastSOPIndex).getResult()+"\n", writer);
             //print(sopsList.get(lastSOPIndex).expression2hexadecimal(sopsList.get(lastSOPIndex).getResult())+"\n", writer);
             //print(SumOfProducts.numberOfLiterals(sopsList.get(lastSOPIndex).getResult(), sopsList.get(lastSOPIndex).getNumberOfVars(), sopsList.get(lastSOPIndex).getNumberOfProducts())+"\n", writer);
+////////////// LER E ESCREVER EM ARQUIVO  [BLOCK END] ///////////////////////////
+            
             begin = end + 1;
             if (begin >= allExpressions.length()) {
                 break;

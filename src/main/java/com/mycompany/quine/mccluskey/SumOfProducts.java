@@ -523,19 +523,19 @@ public final class SumOfProducts extends Tools {
         ArrayList<String> finalListOriginal = (ArrayList) finalProductsList.clone();
         
         //NO SORTING
-        ArrayList<String> finalListTake1 = (ArrayList) finalProductsList.clone();
-        int numberOfLiteralsTake1 = 0;
+        ArrayList<String> finalList_NO_Sorting = (ArrayList) finalProductsList.clone();
+        int numberOfLiterals_NO_Sorting = 0;
         int i = 1;
         while (i <= notEssentialProductsList.size()) {
             String[] candidateCombination = new String[i];
             combinations(i, 0, candidateCombination);
             if (isAllCovered()) {
                 //return;
-                finalListTake1 = (ArrayList) finalProductsList.clone();
-                for (int t=0; t < finalListTake1.size(); t++) {
-                    numberOfLiteralsTake1 += numberOfLiterals2(finalListTake1.get(t));
+                finalList_NO_Sorting = (ArrayList) finalProductsList.clone();
+                for (int t=0; t < finalList_NO_Sorting.size(); t++) {
+                    numberOfLiterals_NO_Sorting += numberOfLiterals2(finalList_NO_Sorting.get(t));
                 }
-                printt("Take1: "+numberOfLiteralsTake1+"\n");
+                //printt("\nsem pré-ordenação: "+numberOfLiterals_NO_Sorting+"\n");
                 break;
             }
             i++;
@@ -545,7 +545,7 @@ public final class SumOfProducts extends Tools {
         finalProductsList = (ArrayList) finalListOriginal.clone();
         setIsCovered();
         sortProductsSet(notEssentialProductsList);
-        int numberOfLiteralsTake2 = 0;
+        int numberOfLiterals_Sorting = 0;
         i = 1;
         while (i <= notEssentialProductsList.size()) {
             String[] candidateCombination = new String[i];
@@ -553,16 +553,16 @@ public final class SumOfProducts extends Tools {
             if (isAllCovered()) {
                 //return;
                 for (int t=0; t < finalProductsList.size(); t++) {
-                    numberOfLiteralsTake2 += numberOfLiterals2(finalProductsList.get(t));
+                    numberOfLiterals_Sorting += numberOfLiterals2(finalProductsList.get(t));
                 }
-                printt("Take2: "+numberOfLiteralsTake2+"\n");
+                //printt("\nCOM pré-ordenação: "+numberOfLiterals_Sorting+"\n");
                 break;
             }
             i++;
         }
-        if (numberOfLiteralsTake1 < numberOfLiteralsTake2) {
-            printt("\n in \n");
-            finalProductsList = (ArrayList) finalListTake1.clone();
+        if (numberOfLiterals_NO_Sorting < numberOfLiterals_Sorting) {
+            //printt("\n in \n");
+            finalProductsList = (ArrayList) finalList_NO_Sorting.clone();
         }
     }
     
