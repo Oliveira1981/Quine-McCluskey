@@ -371,7 +371,7 @@ public class Tools {
                         biggestSize = currSize;
                     }
                 
-                default -> {
+                default -> { // or "Hexadecimal"
                     biggestSize = 4;
                 }
             }

@@ -41,8 +41,8 @@ public final class SumOfProducts extends Tools {
     }
     
     public SumOfProducts() {
-        this.originalInputFormat     = "literal";
-        this.inputFormat             = "literal";
+        this.originalInputFormat     = "Literal";
+        this.inputFormat             = "Literal";
         this.originalInputExpression = "";
         this.convertedExpression     = "";
         this.variablesList           = "";
@@ -54,11 +54,26 @@ public final class SumOfProducts extends Tools {
     public boolean setExpression(String expression, int selectedNumberOfVars) {
         this.isError         = false;
         this.report          = "";
-        inputFormat = detectInputFormat(expression);
-        numberOfVars = detectNumberOfVars(inputFormat, expression);
-        originalInputExpression = expression;
+        originalInputFormat = detectInputFormat(expression);
+        inputFormat = originalInputFormat;
         
         if(!isValidInput(expression, selectedNumberOfVars)) {
+            return false;
+        }
+        
+        originalInputExpression = expression;
+        if (inputFormat.equals("Hexadecimal")) {
+            convertedExpression = hexadecimal2expression(expression);
+            originalInputFormat = "Hexadecimal";
+            inputFormat = "Decimal";
+            expression = convertedExpression;
+        }
+        else {
+            convertedExpression = expression;
+        }
+        
+        numberOfVars = detectNumberOfVars(inputFormat, expression);
+        if(!isValidNumberOfVars(selectedNumberOfVars)) {
             return false;
         }
         
@@ -119,23 +134,18 @@ public final class SumOfProducts extends Tools {
                 result = "Expressão inconsistente.";
                 return false;
             }
-            convertedExpression = hexadecimal2expression(expression);
-            originalInputFormat = "Hexadecimal";
-            inputFormat = "Decimal";
-        }
-        else {
-            originalInputFormat = inputFormat;
-            convertedExpression = expression;
         }
         
-        if (selectedNumberOfVars > 0) {
-            if (selectedNumberOfVars < numberOfVars) {
-                isError = true;
-                result = "A expressão tem mais variáveis do que o número selecionado.";
-                return false;
-            }
+        return isValidNumberOfVars(selectedNumberOfVars);
+    }
+    
+    public boolean isValidNumberOfVars(int selectedNumberOfVars) {
+        if (selectedNumberOfVars > 0
+         && selectedNumberOfVars < numberOfVars) {
+            isError = true;
+            result = "A expressão tem mais variáveis do que o número selecionado.";
+            return false;
         }
-        
         return true;
     }
     
@@ -717,7 +727,7 @@ public final class SumOfProducts extends Tools {
         variablesList = new String(charList);
     }
     
-    public String getFullReport() throws FileNotFoundException, UnsupportedEncodingException {
+    public String getBasicReport() throws FileNotFoundException, UnsupportedEncodingException {
         //PrintWriter writer = new PrintWriter("Quine-McCluskey Results.txt", "UTF-8");
         report = "";
         report += print("\nExpressão de Entrada: \n> " + originalInputExpression + "\n"/*, writer*/);
@@ -727,14 +737,15 @@ public final class SumOfProducts extends Tools {
             return report;
         }
         
-        report += print("\nFormato de Entrada:\n> " + originalInputFormat + "\n"/*, writer*/);
+        //report += print("\nFormato de Entrada:\n> " + originalInputFormat + "\n"/*, writer*/);
+        report += print("> " + originalInputFormat + "\n"/*, writer*/);
         
         if (!inputFormat.equals(originalInputFormat)) {
             report += print("\nExpressão Convertida: \n> " + convertedExpression + "\n"/*, writer*/);
-            report += print("\nFormato de Entrada Convertido:\n> " + inputFormat + "\n"/*, writer*/);
+            report += print("> " + inputFormat + "\n"/*, writer*/);
         }
         
-        report += print("\nVariáveis:\n> " + numberOfVars + "\n"/*, writer*/);
+        report += print("> " + numberOfVars + " variáveis\n"/*, writer*/);
         
         report += print("\nQuantidade de Literais na Entrada:\n"/*, writer*/);
         report += print("> " + numberOfLiterals(
@@ -745,17 +756,17 @@ public final class SumOfProducts extends Tools {
         //report += print("\nSaída Hexadecimal:\n> " + expression2hexadecimal(originalInputExpression) + "\n"/*, writer*/);
         //print(expression2hexadecimal(originalInputExpression)+"\n", writer);
         
-        report += print ("\nTabela Verdade:\n"/*, writer*/);
-        report += print(getTruthTable()/*, writer*/);
+        //report += print ("\nTabela Verdade:\n"/*, writer*/);
+        //report += print(getTruthTable()/*, writer*/);
         
-        report += print ("\nMintermos e seus Produtos:\n"/*, writer*/);
-        report += print (getProductsFromMinTerms()/*, writer*/);
+        //report += print ("\nMintermos e seus Produtos:\n"/*, writer*/);
+        //report += print (getProductsFromMinTerms()/*, writer*/);
         
-        report += print("\nProdutos e seus Mintermos:\n"/*, writer*/);
-        report += print(getMinTermsFromProducts()/*, writer*/);
+        //report += print("\nProdutos e seus Mintermos:\n"/*, writer*/);
+        //report += print(getMinTermsFromProducts()/*, writer*/);
         
-        report += print ("\nTabela de Cobertura:\n"/*, writer*/);
-        report += print (getCoveringTable()/*, writer*/);
+        //report += print ("\nTabela de Cobertura:\n"/*, writer*/);
+        //report += print (getCoveringTable()/*, writer*/);
         
         report += print("\nProdutos Essenciais:\n> "/*, writer*/);
         for (int i=0; i < essentialProductsList.size(); i++) {
@@ -766,7 +777,7 @@ public final class SumOfProducts extends Tools {
         report += print("\nExpressão Otimizada:\n"/*, writer*/);
         report += print("> " + result + "\n"/*, writer*/);
         //print(result + "\n", writer);
-        
+            
         report += print("\nQuantidade de Literais na Saída:\n"/*, writer*/);
         report += print("> " + numberOfLiterals(result, numberOfVars, numberOfProducts) + "\n"/*, writer*/);
         

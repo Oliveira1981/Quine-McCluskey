@@ -3,8 +3,11 @@ package com.mycompany.quine.mccluskey;
 import com.formdev.flatlaf.FlatDarkLaf;
 import java.awt.Color;
 import java.awt.Component;
+import java.awt.Desktop;
 import java.awt.Dimension;
+import java.awt.FileDialog;
 import java.awt.Font;
+import java.awt.Frame;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.Insets;
@@ -14,14 +17,15 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
-import java.io.File; ///////////////////////////////// LER E ESCREVER EM ARQUIVO
+import java.io.File;
 import java.io.FileNotFoundException;
+import java.io.IOException;
 import java.io.PrintWriter;
 import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
 import java.util.Dictionary;
 import java.util.Hashtable;
-import java.util.Scanner; //////////////////////////// LER E ESCREVER EM ARQUIVO
+import java.util.Scanner;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.BorderFactory;
@@ -52,6 +56,7 @@ public final class GUI extends Tools implements KeyListener, ChangeListener {
     private boolean hasResult;
     private String errorMsg;
     private ArrayList<SumOfProducts> sopsList;
+    private PrintWriter outputFile;
     
     public GUI(){
         inputFormat = "";
@@ -71,17 +76,19 @@ public final class GUI extends Tools implements KeyListener, ChangeListener {
         return expression;
     }
     
-    public void showWindow() throws Exception {
-/*        
-////////////// LER E ESCREVER EM ARQUIVO [BLOCK START] /////////////////////////
-        File file = new File(
-            "D:\\Users\\Rodrigo\\OneDrive - rzpy\\Documents\\Mestrado\\Projeto\\#Expressões\\"
-          + "NPN_5_QuineMcCluskey_FULL.txt");
-        Scanner sc = new Scanner(file);
-        PrintWriter writer = new PrintWriter("Quine-McCluskey Results.txt", "UTF-8");
+    public void readFromFile(int startLine, int endLine) throws
+        FileNotFoundException,
+        UnsupportedEncodingException,
+        Exception {
         
-        int startLine = 1;
-        int lastLine = 123225;
+        FileDialog dialog = new FileDialog((Frame)null, "Selecione um arquivo");
+        dialog.setMode(FileDialog.LOAD);
+        dialog.setVisible(true);
+        String inputFilePath = dialog.getDirectory();
+        String inputFileName = dialog.getFile();
+        dialog.dispose();
+        File file = new File(inputFilePath + inputFileName);
+        Scanner sc = new Scanner(file);
         
         int line = 1;
         if (line < startLine) {
@@ -91,19 +98,45 @@ public final class GUI extends Tools implements KeyListener, ChangeListener {
             sc.nextLine();
             line++;
         }
-        
-        printt("\nGo!");
-        
-        while (line <= lastLine) {
+        printt("\nReading...");
+        setFileToWrite("Quine-McCluskey Results.txt");
+        while (line <= endLine) {
             //printt("\nLine " + line + "\t"); //LEVA MUITO MAIS TEMPO SE FICAR MOSTRANDO A LINHA
-            optimizeExpressions(sc.nextLine(), numVars, writer);
+            optimizeExpressions(sc.nextLine(), numVars/*, outputFile*/);
             //optimizeExpressions("0x"+sc.nextLine(), numVars, writer);
             line++;
         }
-        writer.close();
-        System.exit(0);
-////////////// LER E ESCREVER EM ARQUIVO [BLOCK END] ///////////////////////////
-*/        
+        outputFile.close();
+    }
+    
+    public void setFileToWrite(String outputFileName) throws
+        FileNotFoundException,
+        UnsupportedEncodingException {
+        outputFile = new PrintWriter(outputFileName);
+    }
+    
+    public void openOutputFile(String outputFileName)  throws
+        FileNotFoundException,
+        UnsupportedEncodingException {
+        
+        File fileOut = new File(
+        //    "D:\\Users\\Rodrigo\\OneDrive - rzpy\\Documents\\Mestrado\\"
+        //  + "Projeto\\Quine-McCluskey\\Quine-McCluskey\\"
+            outputFileName
+        );
+        try {
+            Desktop.getDesktop().open(fileOut);
+        } catch (IOException ex) {
+            Logger.getLogger(GUI.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }
+    
+    public void showWindow() throws Exception {
+        
+        //readFromFile(1, 10);
+        // ===== OR =====
+        setFileToWrite("Quine-McCluskey Results.txt");
+        
         String[] templates = {
             "",
             "2+4+6+8+9+10+12+13+15",
@@ -121,7 +154,7 @@ public final class GUI extends Tools implements KeyListener, ChangeListener {
         };
         
         String[] wichReport = {
-            "Relatório Completo",
+            "Relatório Básico",
             "Tabela Verdade",
             "Mintermos e seus Produtos",
             "Produtos e seus Mintermos",
@@ -180,7 +213,7 @@ public final class GUI extends Tools implements KeyListener, ChangeListener {
 	space3.setBorder(BorderFactory.createLineBorder(borderColor));
         vPanel.add(space3, c);
         
-        JLabel labelExpressions = new JLabel("Expressão:");
+        JLabel labelExpressions = new JLabel("Expressão de Entrada:");
         labelExpressions.setFont(font);
         //labelExpressions.setForeground(new Color(1, 90, 190));
         labelExpressions.setForeground(new Color(30, 130, 230));
@@ -333,7 +366,7 @@ public final class GUI extends Tools implements KeyListener, ChangeListener {
 	space6.setBorder(BorderFactory.createLineBorder(borderColor));
         vPanel.add(space6, c);
         
-        JLabel resultLabel = new JLabel("Resultado:");
+        JLabel resultLabel = new JLabel("Expressão Minimizada:");
         resultLabel.setFont(font);
         //resultLabel.setForeground(new Color(1, 90, 190));
         resultLabel.setForeground(new Color(30, 130, 230));
@@ -487,17 +520,16 @@ public final class GUI extends Tools implements KeyListener, ChangeListener {
         });
         
         okButton.addActionListener(new ActionListener() {
-            
+
             @Override
             public void actionPerformed(ActionEvent e) {
                 try {
+                    //openOutputFile("Quine-McCluskey Results.txt");
                     hasResult = true;
                     optimizeExpressions(
                         (String) comboExpressions.getSelectedItem(),
-                        (int) slider.getValue()
-////////////// LER E ESCREVER EM ARQUIVO [BLOCK START] /////////////////////////
-//                        ,writer
-////////////// LER E ESCREVER EM ARQUIVO [BLOCK END] ///////////////////////////
+                        (int) slider.getValue()/*,
+                        outputFile*/
                     );
                     if (errorMsg.isEmpty()) {
                         String results;
@@ -514,6 +546,7 @@ public final class GUI extends Tools implements KeyListener, ChangeListener {
                         textAreaResult.setText(errorMsg);
                         textAreaReport.setText("-");
                     }
+                    outputFile.close();
                 } catch (Exception ex) {
                     Logger.getLogger(GUI.class.getName()).log(Level.SEVERE, null, ex);
                 }
@@ -541,10 +574,8 @@ public final class GUI extends Tools implements KeyListener, ChangeListener {
                     
                     optimizeExpressions(
                         gen,
-                        (int) slider.getValue()
-////////////// LER E ESCREVER EM ARQUIVO [BLOCK START] /////////////////////////
-//                        ,writer
-////////////// LER E ESCREVER EM ARQUIVO [BLOCK END] ///////////////////////////
+                        (int) slider.getValue()/*,
+                        outputFile*/
                     );
                     if (errorMsg.isEmpty()) {
                         String results;
@@ -561,6 +592,7 @@ public final class GUI extends Tools implements KeyListener, ChangeListener {
                         textAreaResult.setText(errorMsg);
                         textAreaReport.setText("-");
                     }
+                    outputFile.close();
                 } catch (Exception ex) {
                     Logger.getLogger(GUI.class.getName()).log(Level.SEVERE, null, ex);
                 }
@@ -595,14 +627,13 @@ public final class GUI extends Tools implements KeyListener, ChangeListener {
             @Override
             public void actionPerformed(ActionEvent e) {
                 try {
+                    //openOutputFile("Quine-McCluskey Results.txt");
                     hasResult = true;
                     errorMsg = "";
                     optimizeExpressions(
                         (String) comboExpressions.getSelectedItem(),
-                        (int) slider.getValue()
-////////////// LER E ESCREVER EM ARQUIVO [BLOCK START] /////////////////////////
-//                        ,writer
-////////////// LER E ESCREVER EM ARQUIVO [BLOCK END] ///////////////////////////
+                        (int) slider.getValue()/*,
+                        outputFile*/
                     );
                     if (errorMsg.isEmpty()) {
                         String results;
@@ -619,6 +650,7 @@ public final class GUI extends Tools implements KeyListener, ChangeListener {
                         textAreaResult.setText(errorMsg);
                         textAreaReport.setText("-");
                     }
+                    outputFile.close();
                 } catch (Exception ex) {
                     Logger.getLogger(GUI.class.getName()).log(Level.SEVERE, null, ex);
                 }
@@ -629,17 +661,17 @@ public final class GUI extends Tools implements KeyListener, ChangeListener {
     }
     
     public String reportText(JComboBox comboWichReport) throws FileNotFoundException, UnsupportedEncodingException {
-        PrintWriter writer = new PrintWriter("Quine-McCluskey Results.txt", "UTF-8");
+        //PrintWriter writer = new PrintWriter("Quine-McCluskey Results 1.txt", "UTF-8");
         String out = "";
         switch ((String)comboWichReport.getSelectedItem()) {
-            case "Relatório Completo" -> {
+            case "Relatório Básico" -> {
                 try {
                     for (int r=0; r < sopsList.size(); r++) {
-                        out += sopsList.get(r).getFullReport();
+                        out += sopsList.get(r).getBasicReport();
                         //print(sopsList.get(r).expression2hexadecimal(sopsList.get(r).getOriginalInputExpression())+"\n", writer);
                         //print(sopsList.get(r).expression2hexadecimal(sopsList.get(r).getResult())+"\n", writer);
                         //print(sopsList.get(r).getOriginalInputExpression()+"; ", writer);
-                        print(sopsList.get(r).getResult()+"\n", writer);
+                        //print(sopsList.get(r).getResult()+"\n", /*writer*/outputFile);
                     }
                 } catch (UnsupportedEncodingException ex) {
                     Logger.getLogger(GUI.class.getName()).log(Level.SEVERE, null, ex);
@@ -700,7 +732,7 @@ public final class GUI extends Tools implements KeyListener, ChangeListener {
             default -> {
                 try {
                     for (int r=0; r < sopsList.size(); r++) {
-                        out = sopsList.get(r).getFullReport();
+                        out = sopsList.get(r).getBasicReport();
                     }
                 } catch (UnsupportedEncodingException ex) {
                     Logger.getLogger(GUI.class.getName()).log(Level.SEVERE, null, ex);
@@ -708,28 +740,26 @@ public final class GUI extends Tools implements KeyListener, ChangeListener {
             }
         }
         //print (out, writer);
-        writer.close();
+        //writer.close();
+        //outputFile.close();
+//        outputFile.close();
         return out;
     }
     
-    public void optimizeExpressions(String allExpressions, int numVars
-////////////// LER E ESCREVER EM ARQUIVO [BLOCK START] /////////////////////////
-//        , PrintWriter writer
-////////////// LER E ESCREVER EM ARQUIVO [BLOCK END] ///////////////////////////
-        ) throws Exception {
+    public void optimizeExpressions(
+        String allExpressions,
+        int numVars/*,
+        PrintWriter writer*/) throws Exception {
+        
         sopsList = new ArrayList<>();
         //SumOfProducts sopsList = new SumOfProducts();
         
         allExpressions = removeSpacesFromExpression(allExpressions);
-        
         int begin = 0;
         int end;
         do {
-////////////// LER E ESCREVER EM ARQUIVO [BLOCK START] /////////////////////////
-            // Inverter comentado/não comentado //
             end = allExpressions.indexOf(';', begin);
-            //end = -1; //ACEITAR APENAS UMA EXPRESSÃO
-////////////// LER E ESCREVER EM ARQUIVO [BLOCK END] ///////////////////////////
+            //end = -1; //ACEITAR APENAS UMA EXPRESSÃO POR LINHA
             if (end < 0) {
                 end = allExpressions.length();
             }
@@ -755,9 +785,9 @@ public final class GUI extends Tools implements KeyListener, ChangeListener {
             sopsList.get(lastSOPIndex).buildOptimizedExpression();
             
 ////////////// LER E ESCREVER EM ARQUIVO [BLOCK START] /////////////////////////
-            //print(sopsList.get(lastSOPIndex).getResult()+"\n", writer);
-            //print(sopsList.get(lastSOPIndex).expression2hexadecimal(sopsList.get(lastSOPIndex).getResult())+"\n", writer);
-            //print(SumOfProducts.numberOfLiterals(sopsList.get(lastSOPIndex).getResult(), sopsList.get(lastSOPIndex).getNumberOfVars(), sopsList.get(lastSOPIndex).getNumberOfProducts())+"\n", writer);
+            print(sopsList.get(lastSOPIndex).getResult()+"\t", /*writer*/outputFile);
+            print(sopsList.get(lastSOPIndex).expression2hexadecimal(sopsList.get(lastSOPIndex).getResult())+"\t", /*writer*/outputFile);
+            print(SumOfProducts.numberOfLiterals(sopsList.get(lastSOPIndex).getResult(), sopsList.get(lastSOPIndex).getNumberOfVars(), sopsList.get(lastSOPIndex).getNumberOfProducts())+"\n", /*writer*/outputFile);
 ////////////// LER E ESCREVER EM ARQUIVO  [BLOCK END] ///////////////////////////
             
             begin = end + 1;
@@ -766,6 +796,8 @@ public final class GUI extends Tools implements KeyListener, ChangeListener {
             }
         }
         while (begin < allExpressions.length());
+        //outputFile.close();
+        //openOutputFile("Quine-McCluskey Results.txt");
     }
     
     @Override
