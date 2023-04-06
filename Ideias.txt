@@ -1,0 +1,29 @@
+entrada de expressão interna ÚNICA:
+- resultado interno: dropdown seleciona o que mostrar*
+- resultado externo: caixas de seleção (marcadas antes) dizem o que imprimir**
+                 OU: apenas relatório completo
+
+entrada de expressões internas EM SEQUÊNCIA:
+- resultados internos: dropdown seleciona o que mostrar*, com resultados em sequência
+- resultados externos: caixas de seleção (marcadas antes) dizem o que imprimir**
+
+entrada de expressões externas (arquivo de texto):
+- resultado(s) interno(s): dropdown seleciona o que mostrar*, com resultados em sequência
+- resultado externo: caixas de seleção [marcadas antes] dizem o que imprimir**
+
+=============================
+*
+ relatório básico:
+   (exp. de entrada em literais e quant. literias, exp. minimizada e quant. literais)
+ tabela verdade e respectiva representação hexadecimal
+ mintermos e seus produtos,
+ produtos e seus mintermos,
+ tabela de cobertura, com evidência dos produtos essenciais
+
+**
+ expressão de entrada original
+ expressão de entrada em literais
+ quantidade de literais da entrada em literais
+ representação hexadecimal da tabela verdade
+ expressão minimizada
+ quantidade de literais da expressão minimizada

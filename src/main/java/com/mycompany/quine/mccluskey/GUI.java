@@ -88,6 +88,10 @@ public final class GUI extends Tools implements KeyListener, ChangeListener {
         String inputFileName = dialog.getFile();
         dialog.dispose();
         File file = new File(inputFilePath + inputFileName);
+        if(!file.exists()){
+            printt("\nNo file selected.\n");
+            System.exit(0);
+        }
         Scanner sc = new Scanner(file);
         
         int line = 1;
@@ -99,11 +103,9 @@ public final class GUI extends Tools implements KeyListener, ChangeListener {
             line++;
         }
         printt("\nReading...");
-        setFileToWrite("Quine-McCluskey Results.txt");
         while (line <= endLine) {
             //printt("\nLine " + line + "\t"); //LEVA MUITO MAIS TEMPO SE FICAR MOSTRANDO A LINHA
             optimizeExpressions(sc.nextLine(), numVars/*, outputFile*/);
-            //optimizeExpressions("0x"+sc.nextLine(), numVars, writer);
             line++;
         }
         outputFile.close();
@@ -120,8 +122,6 @@ public final class GUI extends Tools implements KeyListener, ChangeListener {
         UnsupportedEncodingException {
         
         File fileOut = new File(
-        //    "D:\\Users\\Rodrigo\\OneDrive - rzpy\\Documents\\Mestrado\\"
-        //  + "Projeto\\Quine-McCluskey\\Quine-McCluskey\\"
             outputFileName
         );
         try {
@@ -133,9 +133,8 @@ public final class GUI extends Tools implements KeyListener, ChangeListener {
     
     public void showWindow() throws Exception {
         
-        //readFromFile(1, 10);
-        // ===== OR =====
         setFileToWrite("Quine-McCluskey Results.txt");
+        //readFromFile(1, 10); System.exit(0);
         
         String[] templates = {
             "",
@@ -533,11 +532,9 @@ public final class GUI extends Tools implements KeyListener, ChangeListener {
                     );
                     if (errorMsg.isEmpty()) {
                         String results;
-                        if (sopsList.size() > 1) {
-                            results = "";
-                        }
-                        else {
-                            results = sopsList.get(0).getResult();
+                        results = sopsList.get(0).getResult();
+                        for (int r = 1; r < sopsList.size(); r++) {
+                            results += ";\n" + sopsList.get(r).getResult();
                         }
                         textAreaResult.setText(results);
                         textAreaReport.setText(reportText(comboWichReport/*, writer*/));

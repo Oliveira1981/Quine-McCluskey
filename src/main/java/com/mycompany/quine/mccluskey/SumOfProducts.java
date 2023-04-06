@@ -193,7 +193,7 @@ public final class SumOfProducts extends Tools {
         for (int i=0; i < truthTable.size(); i++) {
             str += "\n" + truthTable.get(i);
         }
-        str += "\n\nSaída Hexadecimal:\n> ";
+        str += "\n\nRepresentação Hexadecimal:\n> ";
         str += expression2hexadecimal(convertedExpression);
         str += "\n";
         
@@ -645,6 +645,13 @@ public final class SumOfProducts extends Tools {
         return str;
     }
     
+    /*public String getCoveringTable() {
+        String str = "";
+        for (int i=0; i<1500; i++){
+            str += i + "\t" + (char) i + "\n";
+        }
+        return str;
+    }*/
     public String getCoveringTable() {
         if (isError) {
             return "-";
@@ -673,7 +680,14 @@ public final class SumOfProducts extends Tools {
                         .contains(minTermsList.get(j)
                             .getDecimalView()
                     )){
-                    fmtRow.format("%-4s", " X |");
+                    if (minTermsList.get(j).getProductsList().size() == 1){
+                        //Implicante primo essencial
+                        fmtRow.format("%-4s", " " + (char) 1028 + " |");
+                    }
+                    else {
+                        //Implicante primo comum
+                        fmtRow.format("%-4s", " " + (char) 1161 + " |");
+                    }
                 }
                 else {
                     fmtRow.format("%-4s", "   |");
@@ -747,13 +761,13 @@ public final class SumOfProducts extends Tools {
         
         report += print("> " + numberOfVars + " variáveis\n"/*, writer*/);
         
-        report += print("\nQuantidade de Literais na Entrada:\n"/*, writer*/);
+        //report += print("\nQuantidade de Literais na Entrada:\n"/*, writer*/);
         report += print("> " + numberOfLiterals(
                 convertedExpression,
                 numberOfVars,
-                numberOfProducts) + "\n"/*, writer*/);
+                numberOfProducts) + " literais\n"/*, writer*/);
         
-        //report += print("\nSaída Hexadecimal:\n> " + expression2hexadecimal(originalInputExpression) + "\n"/*, writer*/);
+        //report += print("\nRepresentação Hexadecimal:\n> " + expression2hexadecimal(originalInputExpression) + "\n"/*, writer*/);
         //print(expression2hexadecimal(originalInputExpression)+"\n", writer);
         
         //report += print ("\nTabela Verdade:\n"/*, writer*/);
@@ -778,8 +792,11 @@ public final class SumOfProducts extends Tools {
         report += print("> " + result + "\n"/*, writer*/);
         //print(result + "\n", writer);
             
-        report += print("\nQuantidade de Literais na Saída:\n"/*, writer*/);
-        report += print("> " + numberOfLiterals(result, numberOfVars, numberOfProducts) + "\n"/*, writer*/);
+        //report += print("\nQuantidade de Literais na Saída:\n"/*, writer*/);
+        report += print("> " + numberOfLiterals(
+                result,
+                numberOfVars,
+                numberOfProducts) + " literais\n"/*, writer*/);
         
         //report += print ("\nFim dos Resultados.\n"/*, writer*/);
         report += print("\n==================================================\n"/*, writer*/);
