@@ -153,9 +153,6 @@ public final class GUI extends Tools implements KeyListener {
     
     public void showWindow() throws Exception {
         
-        //setFileToWrite("Quine-McCluskey Results.txt");
-        //readFromFile(1, 10); System.exit(0);
-        
         String[] wichInput = {
             "Digitar expressão",
             "Gerar expressão aleatória",
@@ -188,19 +185,19 @@ public final class GUI extends Tools implements KeyListener {
         
         //UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
         UIManager.setLookAndFeel( new FlatDarkLaf());
-        JFrame myFrame = new JFrame("ROSA Binary");
-        myFrame.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
-        myFrame.setMinimumSize(new Dimension(930,520));
+        JFrame mainFrame = new JFrame("ROSA Binary");
+        mainFrame.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
+        mainFrame.setMinimumSize(new Dimension(930,520));
         
         GridBagLayout grid = new GridBagLayout();
-        JPanel vPanel = new JPanel(grid);
+        JPanel qmPanel = new JPanel(grid);
         JTabbedPane tabbedPane = new JTabbedPane(1);
-        tabbedPane.setName("main");
+        tabbedPane.setName("mainTabbedPane");
         //tabbedPane.setForeground(new Color(1, 90, 190));
         tabbedPane.setForeground(new Color(30, 130, 230));
         Font fontTab = new Font("Segoe UI", Font.BOLD, 14);
         tabbedPane.setFont(fontTab);
-        tabbedPane.add("Quine-McCluskey", vPanel);
+        tabbedPane.add("Quine-McCluskey", qmPanel);
         //tabbedPane.getComponent(0).setBackground(new Color(170, 170, 170));
         tabbedPane.add("Maze Router", new JPanel());
         //tabbedPane.getComponent(1).setBackground(new Color(170, 170, 170));
@@ -211,7 +208,7 @@ public final class GUI extends Tools implements KeyListener {
         tabbedPane.addKeyListener(this);
         tabbedPane.setFocusable(true);
         GridBagConstraints c = new GridBagConstraints();
-        vPanel.setBorder(BorderFactory.createEmptyBorder(2,2,2,2));
+        qmPanel.setBorder(BorderFactory.createEmptyBorder(2,2,2,2));
         
         Font font = new Font("Segoe UI", Font.BOLD, 13);
         
@@ -227,7 +224,7 @@ public final class GUI extends Tools implements KeyListener {
         c.weightx = 0.0;
         c.weighty = 0.0;
 	space1.setBorder(BorderFactory.createLineBorder(borderColor));
-        vPanel.add(space1, c);
+        qmPanel.add(space1, c);
         
         JLabel space3 = new JLabel("   ");
 	c.fill = GridBagConstraints.VERTICAL;
@@ -238,7 +235,7 @@ public final class GUI extends Tools implements KeyListener {
         c.weightx = 0.0;
         c.weighty = 0.0;
 	space3.setBorder(BorderFactory.createLineBorder(borderColor));
-        vPanel.add(space3, c);
+        qmPanel.add(space3, c);
         
         JComboBox<String> comboWichInput = new JComboBox<>(wichInput);
         //comboWichInput.setPreferredSize(new Dimension(150, 30));
@@ -258,7 +255,7 @@ public final class GUI extends Tools implements KeyListener {
         c.weighty = 0.0;
         c.anchor = GridBagConstraints.WEST;
 	//comboWichInput.setBorder(BorderFactory.createLineBorder(borderColor));
-        vPanel.add(comboWichInput, c);
+        qmPanel.add(comboWichInput, c);
         
         JLabel space4a = new JLabel(" ");
 	c.fill = GridBagConstraints.HORIZONTAL;
@@ -270,7 +267,7 @@ public final class GUI extends Tools implements KeyListener {
         c.weighty = 0.0;
         c.anchor = GridBagConstraints.WEST;
 	space4a.setBorder(BorderFactory.createLineBorder(borderColor));
-        vPanel.add(space4a, c);
+        qmPanel.add(space4a, c);
         
         JCheckBox checkReadEntireFile = new JCheckBox("Inteiro");
         checkReadEntireFile.setFont(font);
@@ -372,7 +369,7 @@ public final class GUI extends Tools implements KeyListener {
         c.weighty = 0.0;
         c.anchor = GridBagConstraints.WEST;
         labelVariables.setBorder(BorderFactory.createLineBorder(borderColor));
-        vPanel.add(labelVariables, c);
+        qmPanel.add(labelVariables, c);
         
         JComboBox<String> comboExpressions = new JComboBox<>(templates);
         comboExpressions.setPreferredSize(new Dimension(500, 30));
@@ -392,7 +389,7 @@ public final class GUI extends Tools implements KeyListener {
         c.weighty = 0.0;
         c.anchor = GridBagConstraints.WEST;
 	//comboExpressions.setBorder(BorderFactory.createLineBorder(borderColor));
-        vPanel.add(comboExpressions, c);
+        qmPanel.add(comboExpressions, c);
         
         JLabel space5 = new JLabel(" ");
 	c.fill = GridBagConstraints.NONE;
@@ -404,7 +401,7 @@ public final class GUI extends Tools implements KeyListener {
         c.weighty = 0.0;
         c.anchor = GridBagConstraints.WEST;
 	space5.setBorder(BorderFactory.createLineBorder(borderColor));
-        vPanel.add(space5, c);
+        qmPanel.add(space5, c);
         
         JButton okButton = new JButton("Executar");
         okButton.setPreferredSize(new Dimension(90, 30));
@@ -424,8 +421,8 @@ public final class GUI extends Tools implements KeyListener {
         c.weighty = 0.0;
         c.anchor = GridBagConstraints.WEST;
 	//okButton.setBorder(BorderFactory.createLineBorder(borderColor));
-        vPanel.add(okButton, c);
-        myFrame.getRootPane().setDefaultButton(okButton);
+        qmPanel.add(okButton, c);
+        mainFrame.getRootPane().setDefaultButton(okButton);
         
         JLabel space5B = new JLabel(" ");
 	c.fill = GridBagConstraints.NONE;
@@ -437,7 +434,7 @@ public final class GUI extends Tools implements KeyListener {
         c.weighty = 0.0;
         c.anchor = GridBagConstraints.WEST;
 	space5B.setBorder(BorderFactory.createLineBorder(borderColor));
-        vPanel.add(space5B, c);
+        qmPanel.add(space5B, c);
         
         Dictionary<Integer, Component> labelTable = new Hashtable<>();
         labelTable.put(0, new JLabel("Auto"));
@@ -465,7 +462,7 @@ public final class GUI extends Tools implements KeyListener {
         c.weighty = 0.0;
         c.anchor = GridBagConstraints.WEST;
         //slider.setBorder(BorderFactory.createLineBorder(borderColor));
-        vPanel.add(slider, c);
+        qmPanel.add(slider, c);
         
         JLabel space6 = new JLabel(" ");
 	c.fill = GridBagConstraints.HORIZONTAL;
@@ -476,7 +473,7 @@ public final class GUI extends Tools implements KeyListener {
         c.weightx = 0.0;
         c.weighty = 0.0;
 	space6.setBorder(BorderFactory.createLineBorder(borderColor));
-        vPanel.add(space6, c);
+        qmPanel.add(space6, c);
         
         JLabel resultLabel = new JLabel("Expressão Minimizada:");
         resultLabel.setFont(font);
@@ -491,7 +488,7 @@ public final class GUI extends Tools implements KeyListener {
         c.weighty = 0.0;
         c.anchor = GridBagConstraints.WEST;
 	resultLabel.setBorder(BorderFactory.createLineBorder(borderColor));
-        vPanel.add(resultLabel, c);
+        qmPanel.add(resultLabel, c);
         
         JTextArea textAreaResult = new JTextArea();
         textAreaResult.addKeyListener(this);
@@ -514,7 +511,7 @@ public final class GUI extends Tools implements KeyListener {
         c.weighty = 0.0;
         c.anchor = GridBagConstraints.WEST;
 	//textAreaResult.setBorder(BorderFactory.createLineBorder(borderColor));
-        vPanel.add(textAreaResult, c);
+        qmPanel.add(textAreaResult, c);
         
         JLabel space9 = new JLabel(" ");
 	c.fill = GridBagConstraints.HORIZONTAL;
@@ -525,7 +522,7 @@ public final class GUI extends Tools implements KeyListener {
         c.weightx = 0.0;
         c.weighty = 0.0;
 	space9.setBorder(BorderFactory.createLineBorder(borderColor));
-        vPanel.add(space9, c);
+        qmPanel.add(space9, c);
         
         JComboBox<String> comboWichReport = new JComboBox<>(wichReport);
         comboWichReport.setPreferredSize(new Dimension(250, 30));
@@ -545,7 +542,7 @@ public final class GUI extends Tools implements KeyListener {
         c.weighty = 0.0;
         c.anchor = GridBagConstraints.WEST;
 	//comboWichReport.setBorder(BorderFactory.createLineBorder(borderColor));
-        vPanel.add(comboWichReport, c);
+        qmPanel.add(comboWichReport, c);
         
         JTextArea textAreaReport = new JTextArea();
         textAreaReport.addKeyListener(this);
@@ -569,7 +566,7 @@ public final class GUI extends Tools implements KeyListener {
 	c.weightx = 100.0;
         c.weighty = 0.6;
 	jScrollReport.setBorder(BorderFactory.createLineBorder(borderColor));
-        vPanel.add(jScrollReport, c);
+        qmPanel.add(jScrollReport, c);
         
         JLabel space4 = new JLabel("   ");
 	c.fill = GridBagConstraints.VERTICAL;
@@ -580,7 +577,7 @@ public final class GUI extends Tools implements KeyListener {
         c.weightx = 0.0;
         c.weighty = 0.0;
 	space4.setBorder(BorderFactory.createLineBorder(borderColor));
-        vPanel.add(space4, c);
+        qmPanel.add(space4, c);
         
         JLabel space2 = new JLabel(" ");
 	c.fill = GridBagConstraints.HORIZONTAL;
@@ -593,15 +590,15 @@ public final class GUI extends Tools implements KeyListener {
         Font fontBottom = new Font("Segoe UI", Font.PLAIN, 6);
         space2.setFont(fontBottom);
 	space2.setBorder(BorderFactory.createLineBorder(borderColor));
-        vPanel.add(space2, c);
+        qmPanel.add(space2, c);
         
         //myFrame.add(vPanel);
-        myFrame.add(tabbedPane);
-        myFrame.pack();
-        myFrame.setSize(750, 680);
+        mainFrame.add(tabbedPane);
+        mainFrame.pack();
+        mainFrame.setSize(750, 680);
         Dimension dim = Toolkit.getDefaultToolkit().getScreenSize();
-        myFrame.setLocation(dim.width/2-myFrame.getSize().width/2, dim.height/2-myFrame.getSize().height/2);
-        myFrame.setVisible(true);
+        mainFrame.setLocation(dim.width/2-mainFrame.getSize().width/2, dim.height/2-mainFrame.getSize().height/2);
+        mainFrame.setVisible(true);
         KeyboardFocusManager.getCurrentKeyboardFocusManager().focusNextComponent(labelVariables);
         
         comboWichInput.addActionListener(new ActionListener() {
@@ -611,18 +608,20 @@ public final class GUI extends Tools implements KeyListener {
                 errorMsg = "";
                 switch (comboWichInput.getSelectedIndex()) {
                     case 0 -> { // input: digitar
-                        vPanel.remove(checkReadEntireFile);
-                        vPanel.remove(labelStartLine);
-                        vPanel.remove(textStartLine);
-                        vPanel.remove(labelEndLine);
-                        vPanel.remove(textEndLine);
+                        qmPanel.remove(checkReadEntireFile);
+                        qmPanel.remove(labelStartLine);
+                        qmPanel.remove(textStartLine);
+                        qmPanel.remove(labelEndLine);
+                        qmPanel.remove(textEndLine);
+                        mainFrame.repaint();
                     }
                     case 1 -> { // input: aleatória
-                        vPanel.remove(checkReadEntireFile);
-                        vPanel.remove(labelStartLine);
-                        vPanel.remove(textStartLine);
-                        vPanel.remove(labelEndLine);
-                        vPanel.remove(textEndLine);
+                        qmPanel.remove(checkReadEntireFile);
+                        qmPanel.remove(labelStartLine);
+                        qmPanel.remove(textStartLine);
+                        qmPanel.remove(labelEndLine);
+                        qmPanel.remove(textEndLine);
+                        mainFrame.repaint();
                         hasResult = true;
                         String gen;
                         int vars = slider.getValue();
@@ -648,7 +647,7 @@ public final class GUI extends Tools implements KeyListener {
                         c.weighty = 0.0;
                         c.anchor = GridBagConstraints.WEST;
                         //checkReadEntireFile.setSelected(true);
-                        vPanel.add(checkReadEntireFile, c);
+                        qmPanel.add(checkReadEntireFile, c);
                         
                         c.fill = GridBagConstraints.HORIZONTAL;
                         c.gridx = 4;
@@ -658,7 +657,7 @@ public final class GUI extends Tools implements KeyListener {
                         c.weightx = 0.0;
                         c.weighty = 0.0;
                         c.anchor = GridBagConstraints.WEST;
-                        vPanel.add(labelStartLine, c);
+                        qmPanel.add(labelStartLine, c);
                         
                         textStartLine.setText("");
                         c.fill = GridBagConstraints.HORIZONTAL;
@@ -671,7 +670,7 @@ public final class GUI extends Tools implements KeyListener {
                         c.anchor = GridBagConstraints.WEST;
                         textStartLine.setEnabled(false);
                         textStartLine.setEditable(false);
-                        vPanel.add(textStartLine, c);
+                        qmPanel.add(textStartLine, c);
                         
                         c.fill = GridBagConstraints.HORIZONTAL;
                         c.gridx = 6;
@@ -681,7 +680,7 @@ public final class GUI extends Tools implements KeyListener {
                         c.weightx = 0.0;
                         c.weighty = 0.0;
                         c.anchor = GridBagConstraints.WEST;
-                        vPanel.add(labelEndLine, c);
+                        qmPanel.add(labelEndLine, c);
                         
                         textEndLine.setText("");
                         c.fill = GridBagConstraints.HORIZONTAL;
@@ -694,7 +693,9 @@ public final class GUI extends Tools implements KeyListener {
                         c.anchor = GridBagConstraints.WEST;
                         textEndLine.setEnabled(false);
                         textEndLine.setEditable(false);
-                        vPanel.add(textEndLine, c);
+                        qmPanel.add(textEndLine, c);
+                        
+                        mainFrame.repaint();
                         
                         try {
                             editor.setText(selectFile());
@@ -742,13 +743,13 @@ public final class GUI extends Tools implements KeyListener {
             }
         });
         
-        labelStartLine.addMouseListener(new MouseListener() {
-            
+        MouseListener mouseListener = new MouseListener() {
+        
             @Override
             public void mouseClicked(MouseEvent e) {
                 printt("clicked\n");
                 if (checkReadEntireFile.isSelected()) {
-                    textStartLine.setText("1");
+                    //textStartLine.setText("1");
                     textEndLine.setText("1");
                 }
                 checkReadEntireFile.setSelected(false);
@@ -777,115 +778,15 @@ public final class GUI extends Tools implements KeyListener {
             @Override
             public void mouseExited(MouseEvent e) {
             }
-        });
+        };
         
-        textStartLine.addMouseListener(new MouseListener() {
-            
-            @Override
-            public void mouseClicked(MouseEvent e) {
-                if (checkReadEntireFile.isSelected()) {
-                    textStartLine.setText("1");
-                    textEndLine.setText("1");
-                }
-                checkReadEntireFile.setSelected(false);
-                checkReadEntireFile.setForeground(new Color(110, 110, 110));
-                labelStartLine.setForeground(new Color(30, 130, 230));
-                labelEndLine.setForeground(new Color(30, 130, 230));
-                textStartLine.setEnabled(true);
-                textStartLine.setEditable(true);
-                textEndLine.setEnabled(true);
-                textEndLine.setEditable(true);
-                KeyboardFocusManager.getCurrentKeyboardFocusManager().focusNextComponent(checkReadEntireFile);
-            }
-            
-            @Override
-            public void mousePressed(MouseEvent e) {
-            }
-            
-            @Override
-            public void mouseReleased(MouseEvent e) {
-            }
-            
-            @Override
-            public void mouseEntered(MouseEvent e) {
-            }
-            
-            @Override
-            public void mouseExited(MouseEvent e) {
-            }
-        });
+        labelStartLine.addMouseListener(mouseListener);
+        textStartLine.addMouseListener(mouseListener);
         
-        labelEndLine.addMouseListener(new MouseListener() {
-            
-            @Override
-            public void mouseClicked(MouseEvent e) {
-                if (checkReadEntireFile.isSelected()) {
-                    textStartLine.setText("1");
-                    textEndLine.setText("1");
-                }
-                checkReadEntireFile.setSelected(false);
-                checkReadEntireFile.setForeground(new Color(110, 110, 110));
-                labelStartLine.setForeground(new Color(30, 130, 230));
-                labelEndLine.setForeground(new Color(30, 130, 230));
-                textStartLine.setEnabled(true);
-                textStartLine.setEditable(true);
-                textEndLine.setEnabled(true);
-                textEndLine.setEditable(true);
-                KeyboardFocusManager.getCurrentKeyboardFocusManager().focusNextComponent(textStartLine);
-            }
-            
-            @Override
-            public void mousePressed(MouseEvent e) {
-            }
-            
-            @Override
-            public void mouseReleased(MouseEvent e) {
-            }
-            
-            @Override
-            public void mouseEntered(MouseEvent e) {
-            }
-            
-            @Override
-            public void mouseExited(MouseEvent e) {
-            }
-        });
-        
-        textEndLine.addMouseListener(new MouseListener() {
-            
-            @Override
-            public void mouseClicked(MouseEvent e) {
-                if (checkReadEntireFile.isSelected()) {
-                    textStartLine.setText("1");
-                    textEndLine.setText("1");
-                }
-                checkReadEntireFile.setSelected(false);
-                checkReadEntireFile.setForeground(new Color(110, 110, 110));
-                labelStartLine.setForeground(new Color(30, 130, 230));
-                labelEndLine.setForeground(new Color(30, 130, 230));
-                textStartLine.setEnabled(true);
-                textStartLine.setEditable(true);
-                textEndLine.setEnabled(true);
-                textEndLine.setEditable(true);
-                KeyboardFocusManager.getCurrentKeyboardFocusManager().focusNextComponent(textStartLine);
-            }
-            
-            @Override
-            public void mousePressed(MouseEvent e) {
-            }
-            
-            @Override
-            public void mouseReleased(MouseEvent e) {
-            }
-            
-            @Override
-            public void mouseEntered(MouseEvent e) {
-            }
-            
-            @Override
-            public void mouseExited(MouseEvent e) {
-            }
-        });
+        //NESTES, O mouseListener precisará ser diferente:
+        //foco e preenchimento dos campos
+        labelEndLine.addMouseListener(mouseListener);
+        textEndLine.addMouseListener(mouseListener);
         
         slider.addChangeListener(new ChangeListener() {
             
@@ -893,7 +794,7 @@ public final class GUI extends Tools implements KeyListener {
             public void stateChanged(ChangeEvent e) {
                 JSlider source = (JSlider)e.getSource();
                 numVars = (int)source.getValue();
-                vPanel.remove(labelVariables);
+                qmPanel.remove(labelVariables);
                 if (numVars == 0) {
                     labelVariables.setText("Número de variáveis: Auto");
                 }
@@ -908,8 +809,8 @@ public final class GUI extends Tools implements KeyListener {
                 c.weightx = 0.0;
                 c.weighty = 0.0;
                 c.anchor = GridBagConstraints.WEST;
-                vPanel.add(labelVariables, c);
-                vPanel.repaint();
+                qmPanel.add(labelVariables, c);
+                qmPanel.repaint();
             }
         });
         
