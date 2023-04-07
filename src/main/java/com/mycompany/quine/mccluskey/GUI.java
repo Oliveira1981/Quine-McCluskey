@@ -11,7 +11,7 @@ import java.awt.Frame;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.Insets;
-import java.awt.Robot;
+import java.awt.KeyboardFocusManager;
 import java.awt.Toolkit;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -35,6 +35,7 @@ import javax.swing.JPanel;
 import javax.swing.UIManager;
 import javax.swing.JFrame;
 import javax.swing.JButton;
+import javax.swing.JCheckBox;
 import javax.swing.JScrollPane;
 import javax.swing.JSlider;
 import javax.swing.JTabbedPane;
@@ -61,8 +62,7 @@ public final class GUI extends Tools implements KeyListener, ChangeListener {
     public GUI(){
         inputFormat = "";
         expression  = "";
-        numVars     = 0; //Auto //P_4   ////////////// LER E ESCREVER EM ARQUIVO
-        //numVars     = 5; //NPN_5      ////////////// LER E ESCREVER EM ARQUIVO
+        numVars     = 0;
         hasResult   = false;
         errorMsg    = "";
         sopsList    = null;
@@ -76,7 +76,7 @@ public final class GUI extends Tools implements KeyListener, ChangeListener {
         return expression;
     }
     
-    public void readFromFile(int startLine, int endLine) throws
+    public String selectFile() throws
         FileNotFoundException,
         UnsupportedEncodingException,
         Exception {
@@ -87,28 +87,46 @@ public final class GUI extends Tools implements KeyListener, ChangeListener {
         String inputFilePath = dialog.getDirectory();
         String inputFileName = dialog.getFile();
         dialog.dispose();
-        File file = new File(inputFilePath + inputFileName);
-        if(!file.exists()){
-            printt("\nNo file selected.\n");
-            System.exit(0);
+        if (inputFilePath == null || inputFileName == null) {
+            return "";
         }
-        Scanner sc = new Scanner(file);
+        return inputFilePath + inputFileName;
+    }
+    
+    public int readFromFile(String filePath, int startLine, int endLine) throws Exception {
         
-        int line = 1;
-        if (line < startLine) {
-            printt("\nSkipping line(s)...\n");
+        setFileToWrite("Quine-McCluskey Results.txt");
+        File selectedFile = new File(filePath);
+        if(!selectedFile.exists()){
+            printt("\nNo file selected.\n");
+            return 1;
         }
-        while (line < startLine) {
-            sc.nextLine();
-            line++;
+        Scanner sc = new Scanner(selectedFile);
+        
+        if (endLine == -1) { // LER ARQUIVO INTEIRO
+            while (sc.hasNext()) {
+                optimizeExpressions(sc.nextLine(), numVars/*, outputFile*/);
+            }
         }
-        printt("\nReading...");
-        while (line <= endLine) {
-            //printt("\nLine " + line + "\t"); //LEVA MUITO MAIS TEMPO SE FICAR MOSTRANDO A LINHA
-            optimizeExpressions(sc.nextLine(), numVars/*, outputFile*/);
-            line++;
+        else { // LER LINHAS INFORMADAS
+            int line = 1;
+            if (line < startLine) {
+                printt("\nSkipping line(s)...\n");
+            }
+            while (line < startLine) {
+                sc.nextLine();
+                line++;
+            }
+            printt("\nReading...");
+            
+            while (line <= endLine) {
+                //printt("\nLine " + line + "\t"); //LEVA MUITO MAIS TEMPO SE FICAR MOSTRANDO A LINHA
+                optimizeExpressions(sc.nextLine(), numVars/*, outputFile*/);
+                line++;
+            }
         }
         outputFile.close();
+        return 0;
     }
     
     public void setFileToWrite(String outputFileName) throws
@@ -133,8 +151,14 @@ public final class GUI extends Tools implements KeyListener, ChangeListener {
     
     public void showWindow() throws Exception {
         
-        setFileToWrite("Quine-McCluskey Results.txt");
+        //setFileToWrite("Quine-McCluskey Results.txt");
         //readFromFile(1, 10); System.exit(0);
+        
+        String[] wichInput = {
+            "Digitar expressão",
+            "Gerar expressão aleatória",
+            "Carregar expressões de um arquivo..."
+        };
         
         String[] templates = {
             "",
@@ -164,7 +188,7 @@ public final class GUI extends Tools implements KeyListener, ChangeListener {
         UIManager.setLookAndFeel( new FlatDarkLaf());
         JFrame myFrame = new JFrame("ROSA Binary");
         myFrame.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
-        myFrame.setMinimumSize(new Dimension(750,520));
+        myFrame.setMinimumSize(new Dimension(930,520));
         
         GridBagLayout grid = new GridBagLayout();
         JPanel vPanel = new JPanel(grid);
@@ -176,10 +200,12 @@ public final class GUI extends Tools implements KeyListener, ChangeListener {
         tabbedPane.setFont(fontTab);
         tabbedPane.add("Quine-McCluskey", vPanel);
         //tabbedPane.getComponent(0).setBackground(new Color(170, 170, 170));
-        tabbedPane.add("Fatoração", new JPanel());
+        tabbedPane.add("Maze Router", new JPanel());
         //tabbedPane.getComponent(1).setBackground(new Color(170, 170, 170));
-        tabbedPane.add("Composição Funcional", new JPanel());
+        tabbedPane.add("Fatoração", new JPanel());
         //tabbedPane.getComponent(2).setBackground(new Color(170, 170, 170));
+        tabbedPane.add("Composição Funcional", new JPanel());
+        //tabbedPane.getComponent(3).setBackground(new Color(170, 170, 170));
         tabbedPane.addKeyListener(this);
         tabbedPane.setFocusable(true);
         GridBagConstraints c = new GridBagConstraints();
@@ -191,10 +217,10 @@ public final class GUI extends Tools implements KeyListener, ChangeListener {
         //Color borderColor = new Color(55, 111, 155, 155);
         
         JLabel space1 = new JLabel("   ");
-        c.fill = GridBagConstraints.NONE;
+        c.fill = GridBagConstraints.HORIZONTAL;
 	c.gridx = 0;
 	c.gridy = 0;
-	c.gridwidth = 12;
+	c.gridwidth = 15;
 	c.gridheight = 1;
         c.weightx = 0.0;
         c.weighty = 0.0;
@@ -202,39 +228,139 @@ public final class GUI extends Tools implements KeyListener, ChangeListener {
         vPanel.add(space1, c);
         
         JLabel space3 = new JLabel("   ");
-	c.fill = GridBagConstraints.NONE;
+	c.fill = GridBagConstraints.VERTICAL;
 	c.gridx = 0;
 	c.gridy = 1;
 	c.gridwidth = 1;
-	c.gridheight = 9;
+	c.gridheight = 8;
         c.weightx = 0.0;
         c.weighty = 0.0;
 	space3.setBorder(BorderFactory.createLineBorder(borderColor));
         vPanel.add(space3, c);
         
-        JLabel labelExpressions = new JLabel("Expressão de Entrada:");
-        labelExpressions.setFont(font);
-        //labelExpressions.setForeground(new Color(1, 90, 190));
-        labelExpressions.setForeground(new Color(30, 130, 230));
+        JComboBox<String> comboWichInput = new JComboBox<>(wichInput);
+        //comboWichInput.setPreferredSize(new Dimension(150, 30));
+        //comboWichInput.setMinimumSize(new Dimension(150, 30));
+        comboWichInput.addKeyListener(this);
+        comboWichInput.setFocusable(true);
+        Font fontWichInput = new Font("Segoe UI", Font.BOLD, 12);
+	comboWichInput.setFont(fontWichInput);
+        //comboWichInput.setForeground(new Color(1, 90, 190));
+        comboWichInput.setForeground(new Color(30, 130, 230));
         c.fill = GridBagConstraints.NONE;
-        c.gridx = 1;
+	c.gridx = 1;
 	c.gridy = 1;
-	c.gridwidth = 6;
+	c.gridwidth = 1;
 	c.gridheight = 1;
         c.weightx = 0.0;
         c.weighty = 0.0;
         c.anchor = GridBagConstraints.WEST;
-        labelExpressions.setBorder(BorderFactory.createLineBorder(borderColor));
-        vPanel.add(labelExpressions, c);
+	//comboWichInput.setBorder(BorderFactory.createLineBorder(borderColor));
+        vPanel.add(comboWichInput, c);
+        
+        JLabel space4a = new JLabel(" ");
+	c.fill = GridBagConstraints.HORIZONTAL;
+	c.gridx = 2;
+	c.gridy = 1;
+	c.gridwidth = 1;
+	c.gridheight = 1;
+        c.weightx = 0.0;
+        c.weighty = 0.0;
+        c.anchor = GridBagConstraints.WEST;
+	space4a.setBorder(BorderFactory.createLineBorder(borderColor));
+        vPanel.add(space4a, c);
+        
+        JCheckBox checkReadWholeFile = new JCheckBox("Inteiro");
+        checkReadWholeFile.setFont(font);
+        //labelInteiro.setForeground(new Color(1, 90, 190));
+        checkReadWholeFile.setForeground(new Color(30, 130, 230));
+        checkReadWholeFile.addKeyListener(this);
+        checkReadWholeFile.setFocusable(true);
+        checkReadWholeFile.setSelected(true);
+        c.fill = GridBagConstraints.HORIZONTAL;
+        c.gridx = 3;
+	c.gridy = 1;
+	c.gridwidth = 1;
+	c.gridheight = 1;
+        c.weightx = 0.0;
+        c.weighty = 0.0;
+        c.anchor = GridBagConstraints.WEST;
+        checkReadWholeFile.setBorder(BorderFactory.createLineBorder(borderColor));
+        //vPanel.add(checkReadWholeFile, c);
+        
+        JLabel labelStartLine = new JLabel("     Linha inicial: ");
+        labelStartLine.setFont(font);
+        //labelStartLine.setForeground(new Color(30, 130, 230));
+        labelStartLine.setForeground(new Color(110, 110, 110));
+        c.fill = GridBagConstraints.HORIZONTAL;
+        c.gridx = 4;
+	c.gridy = 1;
+	c.gridwidth = 1;
+	c.gridheight = 1;
+        c.weightx = 0.0;
+        c.weighty = 0.0;
+        c.anchor = GridBagConstraints.WEST;
+        labelStartLine.setBorder(BorderFactory.createLineBorder(borderColor));
+        //vPanel.add(labelStartLine, c);
+        
+        JTextField textStartLine = new JTextField();
+        //textStartLine.setForeground(new Color(30, 130, 230));
+        textStartLine.setPreferredSize(new Dimension(55, 20));
+        textStartLine.setMinimumSize(new Dimension(55, 20));
+        Font fontStartLine = new Font("Segoe UI", Font.PLAIN, 12);
+        textStartLine.setFont(fontStartLine);
+        c.fill = GridBagConstraints.HORIZONTAL;
+        c.gridx = 5;
+	c.gridy = 1;
+	c.gridwidth = 1;
+	c.gridheight = 1;
+        c.weightx = 0.0;
+        c.weighty = 0.0;
+        c.anchor = GridBagConstraints.WEST;
+        //textStartLine.setBorder(BorderFactory.createLineBorder(borderColor));
+        //vPanel.add(textStartLine, c);
+        
+        JLabel labelEndLine = new JLabel("     Linha final: ");
+        labelEndLine.setFont(font);
+        //labelEndLine.setForeground(new Color(30, 130, 230));
+        labelEndLine.setForeground(new Color(110, 110, 110));
+        c.fill = GridBagConstraints.HORIZONTAL;
+        c.gridx = 6;
+	c.gridy = 1;
+	c.gridwidth = 1;
+	c.gridheight = 1;
+        c.weightx = 0.0;
+        c.weighty = 0.0;
+        c.anchor = GridBagConstraints.WEST;
+        labelEndLine.setBorder(BorderFactory.createLineBorder(borderColor));
+        //vPanel.add(labelEndLine, c);
+        
+        JTextField textEndLine = new JTextField();
+        //textEndLine.setForeground(new Color(1, 90, 190));
+        //textEndLine.setForeground(new Color(30, 130, 230));
+        textEndLine.setPreferredSize(new Dimension(55, 20));
+        textEndLine.setMinimumSize(new Dimension(55, 20));
+        Font fontEndLine = new Font("Segoe UI", Font.PLAIN, 12);
+        textEndLine.setFont(fontEndLine);
+        c.fill = GridBagConstraints.HORIZONTAL;
+        c.gridx = 7;
+	c.gridy = 1;
+	c.gridwidth = 1;
+	c.gridheight = 1;
+        c.weightx = 0.0;
+        c.weighty = 0.0;
+        c.anchor = GridBagConstraints.WEST;
+        //textEndLine.setBorder(BorderFactory.createLineBorder(borderColor));
+        //vPanel.add(textEndLine, c);
         
         JLabel labelVariables = new JLabel("Número de variáveis: Auto");
         labelVariables.setFont(font);
         //labelExpressions.setForeground(new Color(1, 90, 190));
         labelVariables.setForeground(new Color(30, 130, 230));
         c.fill = GridBagConstraints.HORIZONTAL;
-        c.gridx = 10;
+        c.gridx = 11;
 	c.gridy = 1;
-	c.gridwidth = 1;
+	c.gridwidth = 3;
 	c.gridheight = 1;
         c.weightx = 0.0;
         c.weighty = 0.0;
@@ -243,28 +369,28 @@ public final class GUI extends Tools implements KeyListener, ChangeListener {
         vPanel.add(labelVariables, c);
         
         JComboBox<String> comboExpressions = new JComboBox<>(templates);
-        comboExpressions.setPreferredSize(new Dimension(350, 30));
-        comboExpressions.setMinimumSize(new Dimension(350, 30));
+        comboExpressions.setPreferredSize(new Dimension(500, 30));
+        comboExpressions.setMinimumSize(new Dimension(500, 30));
         comboExpressions.setEditable(true);
         JTextField editor = (JTextField) comboExpressions.getEditor().getEditorComponent();
         editor.addKeyListener(this);
         Font fontExp = new Font("Segoe UI", Font.PLAIN, 12);
         comboExpressions.setFont(fontExp);
         comboExpressions.setFocusable(true);
-	c.fill = GridBagConstraints.NONE;
+	c.fill = GridBagConstraints.HORIZONTAL;
 	c.gridx = 1;
 	c.gridy = 2;
-	c.gridwidth = 5;
+	c.gridwidth = 7;
 	c.gridheight = 1;
         c.weightx = 0.0;
         c.weighty = 0.0;
         c.anchor = GridBagConstraints.WEST;
-	comboExpressions.setBorder(BorderFactory.createLineBorder(borderColor));
+	//comboExpressions.setBorder(BorderFactory.createLineBorder(borderColor));
         vPanel.add(comboExpressions, c);
         
         JLabel space5 = new JLabel(" ");
 	c.fill = GridBagConstraints.NONE;
-	c.gridx = 6;
+	c.gridx = 8;
 	c.gridy = 2;
 	c.gridwidth = 1;
 	c.gridheight = 1;
@@ -284,7 +410,7 @@ public final class GUI extends Tools implements KeyListener, ChangeListener {
         //okButton.setForeground(new Color(30, 130, 230));
         okButton.setFont(font);
 	c.fill = GridBagConstraints.NONE;
-	c.gridx = 7;
+	c.gridx = 9;
 	c.gridy = 2;
 	c.gridwidth = 1;
 	c.gridheight = 1;
@@ -295,36 +421,17 @@ public final class GUI extends Tools implements KeyListener, ChangeListener {
         vPanel.add(okButton, c);
         myFrame.getRootPane().setDefaultButton(okButton);
         
-        JLabel space5A = new JLabel(" ");
+        JLabel space5B = new JLabel(" ");
 	c.fill = GridBagConstraints.NONE;
-	c.gridx = 8;
+	c.gridx = 10;
 	c.gridy = 2;
 	c.gridwidth = 1;
 	c.gridheight = 1;
         c.weightx = 0.0;
         c.weighty = 0.0;
         c.anchor = GridBagConstraints.WEST;
-	space5A.setBorder(BorderFactory.createLineBorder(borderColor));
-        vPanel.add(space5A, c);
-        
-        JButton rndButton = new JButton("Aleatória");
-        rndButton.setPreferredSize(new Dimension(90, 30));
-        rndButton.setMinimumSize(new Dimension(90, 30));
-        rndButton.addKeyListener(this);
-        rndButton.setFocusable(true);
-        rndButton.setBackground(new Color(70, 40, 40));
-        rndButton.setForeground(new Color(200, 10, 10));
-        rndButton.setFont(font);
-	c.fill = GridBagConstraints.NONE;
-	c.gridx = 9;
-	c.gridy = 2;
-	c.gridwidth = 1;
-	c.gridheight = 1;
-        c.weightx = 0.0;
-        c.weighty = 0.0;
-        c.anchor = GridBagConstraints.WEST;
-	//rndButton.setBorder(BorderFactory.createLineBorder(borderColor));
-        vPanel.add(rndButton, c);
+	space5B.setBorder(BorderFactory.createLineBorder(borderColor));
+        vPanel.add(space5B, c);
         
         Dictionary<Integer, Component> labelTable = new Hashtable<>();
         labelTable.put(0, new JLabel("Auto"));
@@ -344,21 +451,21 @@ public final class GUI extends Tools implements KeyListener, ChangeListener {
         slider.setMinimumSize(new Dimension(200, 40));
         slider.setLabelTable(labelTable);
 	c.fill = GridBagConstraints.NONE;
-	c.gridx = 10;
+	c.gridx = 11;
 	c.gridy = 2;
-	c.gridwidth = 1;
+	c.gridwidth = 3;
 	c.gridheight = 1;
-        c.weightx = 100.0;
+        c.weightx = 0.0;
         c.weighty = 0.0;
         c.anchor = GridBagConstraints.WEST;
         //slider.setBorder(BorderFactory.createLineBorder(borderColor));
         vPanel.add(slider, c);
         
         JLabel space6 = new JLabel(" ");
-	c.fill = GridBagConstraints.NONE;
+	c.fill = GridBagConstraints.HORIZONTAL;
 	c.gridx = 1;
 	c.gridy = 3;
-	c.gridwidth = 10;
+	c.gridwidth = 13;
 	c.gridheight = 1;
         c.weightx = 0.0;
         c.weighty = 0.0;
@@ -372,7 +479,7 @@ public final class GUI extends Tools implements KeyListener, ChangeListener {
 	c.fill = GridBagConstraints.NONE;
 	c.gridx = 1;
 	c.gridy = 4;
-	c.gridwidth = 10;
+	c.gridwidth = 13;
 	c.gridheight = 1;
         c.weightx = 0.0;
         c.weighty = 0.0;
@@ -395,7 +502,7 @@ public final class GUI extends Tools implements KeyListener, ChangeListener {
 	c.fill = GridBagConstraints.HORIZONTAL;
         c.gridx = 1;
 	c.gridy = 5;
-	c.gridwidth = 10;
+	c.gridwidth = 13;
 	c.gridheight = 1;
 	c.weightx = 0.0;
         c.weighty = 0.0;
@@ -404,10 +511,10 @@ public final class GUI extends Tools implements KeyListener, ChangeListener {
         vPanel.add(textAreaResult, c);
         
         JLabel space9 = new JLabel(" ");
-	c.fill = GridBagConstraints.NONE;
+	c.fill = GridBagConstraints.HORIZONTAL;
 	c.gridx = 1;
 	c.gridy = 6;
-	c.gridwidth = 10;
+	c.gridwidth = 13;
 	c.gridheight = 1;
         c.weightx = 0.0;
         c.weighty = 0.0;
@@ -451,7 +558,7 @@ public final class GUI extends Tools implements KeyListener, ChangeListener {
 	c.fill = GridBagConstraints.BOTH;
         c.gridx = 1;
 	c.gridy = 8;//14
-	c.gridwidth = 10;
+	c.gridwidth = 13;
 	c.gridheight = 1;
 	c.weightx = 100.0;
         c.weighty = 0.6;
@@ -459,21 +566,21 @@ public final class GUI extends Tools implements KeyListener, ChangeListener {
         vPanel.add(jScrollReport, c);
         
         JLabel space4 = new JLabel("   ");
-	c.fill = GridBagConstraints.NONE;
-	c.gridx = 11;
+	c.fill = GridBagConstraints.VERTICAL;
+	c.gridx = 14;
 	c.gridy = 1;
 	c.gridwidth = 1;
-	c.gridheight = 9;
+	c.gridheight = 8;
         c.weightx = 0.0;
         c.weighty = 0.0;
 	space4.setBorder(BorderFactory.createLineBorder(borderColor));
         vPanel.add(space4, c);
         
         JLabel space2 = new JLabel(" ");
-	c.fill = GridBagConstraints.NONE;
+	c.fill = GridBagConstraints.HORIZONTAL;
 	c.gridx = 0;
 	c.gridy = 9;
-	c.gridwidth = 12;
+	c.gridwidth = 15;
 	c.gridheight = 1;
         c.weightx = 0.0;
         c.weighty = 0.0;
@@ -489,9 +596,144 @@ public final class GUI extends Tools implements KeyListener, ChangeListener {
         Dimension dim = Toolkit.getDefaultToolkit().getScreenSize();
         myFrame.setLocation(dim.width/2-myFrame.getSize().width/2, dim.height/2-myFrame.getSize().height/2);
         myFrame.setVisible(true);
-        Robot robot = new Robot();
-        robot.keyPress(KeyEvent.VK_TAB);
+        KeyboardFocusManager.getCurrentKeyboardFocusManager().focusNextComponent(labelVariables);
         
+        comboWichInput.addActionListener(new ActionListener() {
+            
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                errorMsg = "";
+                switch (comboWichInput.getSelectedIndex()) {
+                    case 0 -> { // input: digitar
+                        vPanel.remove(checkReadWholeFile);
+                        vPanel.remove(labelStartLine);
+                        vPanel.remove(textStartLine);
+                        vPanel.remove(labelEndLine);
+                        vPanel.remove(textEndLine);
+                    }
+                    case 1 -> { // input: aleatória
+                        vPanel.remove(checkReadWholeFile);
+                        vPanel.remove(labelStartLine);
+                        vPanel.remove(textStartLine);
+                        vPanel.remove(labelEndLine);
+                        vPanel.remove(textEndLine);
+                        hasResult = true;
+                        String gen;
+                        int vars = slider.getValue();
+                        if (vars == 0) {
+                            gen = generateRandomExpression(8, 4);
+                        }
+                        else {
+                            gen = generateRandomExpression(
+                                vars*2, //numberOfProducts 
+                                vars    //numberOfVars
+                            );
+                        }
+                        editor.setText(gen);
+                    }
+                    case 2 -> { // input: arquivo
+                        
+                        c.fill = GridBagConstraints.HORIZONTAL;
+                        c.gridx = 3;
+                	c.gridy = 1;
+                        c.gridwidth = 1;
+                        c.gridheight = 1;
+                        c.weightx = 0.0;
+                        c.weighty = 0.0;
+                        c.anchor = GridBagConstraints.WEST;
+                        //checkReadWholeFile.setSelected(true);
+                        vPanel.add(checkReadWholeFile, c);
+                        
+                        c.fill = GridBagConstraints.HORIZONTAL;
+                        c.gridx = 4;
+                        c.gridy = 1;
+                        c.gridwidth = 1;
+                        c.gridheight = 1;
+                        c.weightx = 0.0;
+                        c.weighty = 0.0;
+                        c.anchor = GridBagConstraints.WEST;
+                        vPanel.add(labelStartLine, c);
+                        
+                        textStartLine.setText("");
+                        c.fill = GridBagConstraints.HORIZONTAL;
+                        c.gridx = 5;
+                        c.gridy = 1;
+                        c.gridwidth = 1;
+                        c.gridheight = 1;
+                        c.weightx = 0.0;
+                        c.weighty = 0.0;
+                        c.anchor = GridBagConstraints.WEST;
+                        textStartLine.setEnabled(false);
+                        textStartLine.setEditable(false);
+                        vPanel.add(textStartLine, c);
+                        
+                        c.fill = GridBagConstraints.HORIZONTAL;
+                        c.gridx = 6;
+                        c.gridy = 1;
+                        c.gridwidth = 1;
+                        c.gridheight = 1;
+                        c.weightx = 0.0;
+                        c.weighty = 0.0;
+                        c.anchor = GridBagConstraints.WEST;
+                        vPanel.add(labelEndLine, c);
+                        
+                        textEndLine.setText("");
+                        c.fill = GridBagConstraints.HORIZONTAL;
+                        c.gridx = 7;
+                        c.gridy = 1;
+                        c.gridwidth = 1;
+                        c.gridheight = 1;
+                        c.weightx = 0.0;
+                        c.weighty = 0.0;
+                        c.anchor = GridBagConstraints.WEST;
+                        textEndLine.setEnabled(false);
+                        textEndLine.setEditable(false);
+                        vPanel.add(textEndLine, c);
+                        
+                        try {
+                            editor.setText(selectFile());
+                        } catch (UnsupportedEncodingException ex) {
+                            Logger.getLogger(GUI.class.getName()).log(Level.SEVERE, null, ex);
+                        } catch (Exception ex) {
+                            Logger.getLogger(GUI.class.getName()).log(Level.SEVERE, null, ex);
+                        }
+                    }
+                    default -> {
+                        return;
+                    }
+                }
+            }
+        });
+        
+        checkReadWholeFile.addActionListener(new ActionListener() {
+            
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                if (!checkReadWholeFile.isSelected()) {
+                    labelStartLine.setForeground(new Color(30, 130, 230));
+                    labelEndLine.setForeground(new Color(30, 130, 230));
+                    textStartLine.setEnabled(true);
+                    textStartLine.setEditable(true);
+                    textStartLine.setText("1");
+                    textEndLine.setEnabled(true);
+                    textEndLine.setEditable(true);
+                    textEndLine.setText("1");
+                    KeyboardFocusManager.getCurrentKeyboardFocusManager().focusNextComponent(checkReadWholeFile);
+                }
+                else {
+                    labelStartLine.setForeground(new Color(110, 110, 110));
+                    labelEndLine.setForeground(new Color(110, 110, 110));
+                    textStartLine.setEnabled(!true);
+                    textStartLine.setEditable(!true);
+                    textStartLine.setText("");
+                    textEndLine.setEnabled(!true);
+                    textEndLine.setEditable(!true);
+                    textEndLine.setText("");
+                }
+                
+            }
+        });
+            
         slider.addChangeListener(new ChangeListener() {
             
             @Override
@@ -506,7 +748,7 @@ public final class GUI extends Tools implements KeyListener, ChangeListener {
                     labelVariables.setText("Número de variáveis: " + numVars);
                 }
                 c.fill = GridBagConstraints.HORIZONTAL;
-                c.gridx = 10;
+                c.gridx = 13;
                 c.gridy = 1;
                 c.gridwidth = 1;
                 c.gridheight = 1;
@@ -524,63 +766,47 @@ public final class GUI extends Tools implements KeyListener, ChangeListener {
             public void actionPerformed(ActionEvent e) {
                 try {
                     //openOutputFile("Quine-McCluskey Results.txt");
+                    setFileToWrite("Quine-McCluskey Results.txt");
                     hasResult = true;
-                    optimizeExpressions(
-                        (String) comboExpressions.getSelectedItem(),
-                        (int) slider.getValue()/*,
-                        outputFile*/
-                    );
+                    switch (comboWichInput.getSelectedIndex()) {
+                        case 0 -> { // input: digitar
+                            optimizeExpressions(
+                                (String) comboExpressions.getSelectedItem(),
+                                (int) slider.getValue()/*,
+                                outputFile*/
+                            );
+                        }
+                        case 1 -> { // input: aleatória
+                            optimizeExpressions(
+                                editor.getText(),
+                                (int) slider.getValue()/*,
+                                outputFile*/
+                            );
+                        }
+                        case 2 -> { // input: arquivo
+                            int startLine;
+                            int endLine;
+                            if (checkReadWholeFile.isSelected()) {
+                                startLine = 1;
+                                endLine = -1;
+                            }
+                            else {
+                                startLine = Integer.parseInt(textStartLine.getText());
+                                endLine = Integer.parseInt(textEndLine.getText());
+                            }
+                            if (readFromFile(editor.getText(),
+                                    startLine,
+                                    endLine
+                                ) != 0) {
+                                errorMsg = "Nenhum arquivo selecionado";
+                            }
+                        }
+                    }
                     if (errorMsg.isEmpty()) {
                         String results;
                         results = sopsList.get(0).getResult();
                         for (int r = 1; r < sopsList.size(); r++) {
                             results += ";\n" + sopsList.get(r).getResult();
-                        }
-                        textAreaResult.setText(results);
-                        textAreaReport.setText(reportText(comboWichReport/*, writer*/));
-                    }
-                    else {
-                        textAreaResult.setText(errorMsg);
-                        textAreaReport.setText("-");
-                    }
-                    outputFile.close();
-                } catch (Exception ex) {
-                    Logger.getLogger(GUI.class.getName()).log(Level.SEVERE, null, ex);
-                }
-            }
-        });
-        
-        rndButton.addActionListener(new ActionListener() {
-            
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                try {
-                    hasResult = true;
-                    String gen;
-                    int vars = slider.getValue();
-                    if (vars == 0) {
-                        gen = generateRandomExpression(8, 4);
-                    }
-                    else {
-                        gen = generateRandomExpression(
-                            vars*2, //numberOfProducts 
-                            vars    //numberOfVars
-                        );
-                    }
-                    editor.setText(gen);
-                    
-                    optimizeExpressions(
-                        gen,
-                        (int) slider.getValue()/*,
-                        outputFile*/
-                    );
-                    if (errorMsg.isEmpty()) {
-                        String results;
-                        if (sopsList.size() > 1) {
-                            results = "";
-                        }
-                        else {
-                            results = sopsList.get(0).getResult();
                         }
                         textAreaResult.setText(results);
                         textAreaReport.setText(reportText(comboWichReport/*, writer*/));
@@ -624,6 +850,7 @@ public final class GUI extends Tools implements KeyListener, ChangeListener {
             @Override
             public void actionPerformed(ActionEvent e) {
                 try {
+                    setFileToWrite("Quine-McCluskey Results.txt");
                     //openOutputFile("Quine-McCluskey Results.txt");
                     hasResult = true;
                     errorMsg = "";
