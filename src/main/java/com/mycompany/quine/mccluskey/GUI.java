@@ -105,22 +105,22 @@ public final class GUI extends Tools implements KeyListener {
         }
         Scanner sc = new Scanner(selectedFile);
         
-        if (endLine == -1) { // LER ARQUIVO INTEIRO
+        int line = 1;
+        if (line < startLine) {
+            printt("\nSkipping line(s)...\n");
+        }
+        while (line < startLine) {
+            sc.nextLine();
+            line++;
+        }
+        printt("\nReading...");
+        
+        if (endLine == -1) { // LER ATÉ O FINAL DO ARQUIVO
             while (sc.hasNext()) {
                 optimizeExpressions(sc.nextLine(), numVars/*, outputFile*/);
             }
         }
-        else { // LER LINHAS INFORMADAS
-            int line = 1;
-            if (line < startLine) {
-                printt("\nSkipping line(s)...\n");
-            }
-            while (line < startLine) {
-                sc.nextLine();
-                line++;
-            }
-            printt("\nReading...");
-            
+        else {
             while (line <= endLine) {
                 //printt("\nLine " + line + "\t"); //LEVA MUITO MAIS TEMPO SE FICAR MOSTRANDO A LINHA
                 optimizeExpressions(sc.nextLine(), numVars/*, outputFile*/);
