@@ -17,6 +17,8 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
+import java.awt.event.MouseEvent;
+import java.awt.event.MouseListener;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
@@ -49,7 +51,7 @@ import javax.swing.event.ChangeListener;
 *
  * @author Rodrigo da Rosa
  */
-public final class GUI extends Tools implements KeyListener, ChangeListener {
+public final class GUI extends Tools implements KeyListener {
     
     private String inputFormat;
     private String expression;
@@ -270,13 +272,13 @@ public final class GUI extends Tools implements KeyListener, ChangeListener {
 	space4a.setBorder(BorderFactory.createLineBorder(borderColor));
         vPanel.add(space4a, c);
         
-        JCheckBox checkReadWholeFile = new JCheckBox("Inteiro");
-        checkReadWholeFile.setFont(font);
+        JCheckBox checkReadEntireFile = new JCheckBox("Inteiro");
+        checkReadEntireFile.setFont(font);
         //labelInteiro.setForeground(new Color(1, 90, 190));
-        checkReadWholeFile.setForeground(new Color(30, 130, 230));
-        checkReadWholeFile.addKeyListener(this);
-        checkReadWholeFile.setFocusable(true);
-        checkReadWholeFile.setSelected(true);
+        checkReadEntireFile.setForeground(new Color(30, 130, 230));
+        checkReadEntireFile.addKeyListener(this);
+        checkReadEntireFile.setFocusable(true);
+        checkReadEntireFile.setSelected(true);
         c.fill = GridBagConstraints.HORIZONTAL;
         c.gridx = 3;
 	c.gridy = 1;
@@ -285,13 +287,14 @@ public final class GUI extends Tools implements KeyListener, ChangeListener {
         c.weightx = 0.0;
         c.weighty = 0.0;
         c.anchor = GridBagConstraints.WEST;
-        checkReadWholeFile.setBorder(BorderFactory.createLineBorder(borderColor));
-        //vPanel.add(checkReadWholeFile, c);
+        checkReadEntireFile.setBorder(BorderFactory.createLineBorder(borderColor));
+        //vPanel.add(checkReadEntireFile, c);
         
         JLabel labelStartLine = new JLabel("     Linha inicial: ");
         labelStartLine.setFont(font);
         //labelStartLine.setForeground(new Color(30, 130, 230));
         labelStartLine.setForeground(new Color(110, 110, 110));
+        labelStartLine.addKeyListener(this);
         c.fill = GridBagConstraints.HORIZONTAL;
         c.gridx = 4;
 	c.gridy = 1;
@@ -309,6 +312,7 @@ public final class GUI extends Tools implements KeyListener, ChangeListener {
         textStartLine.setMinimumSize(new Dimension(55, 20));
         Font fontStartLine = new Font("Segoe UI", Font.PLAIN, 12);
         textStartLine.setFont(fontStartLine);
+        textStartLine.addKeyListener(this);
         c.fill = GridBagConstraints.HORIZONTAL;
         c.gridx = 5;
 	c.gridy = 1;
@@ -324,6 +328,7 @@ public final class GUI extends Tools implements KeyListener, ChangeListener {
         labelEndLine.setFont(font);
         //labelEndLine.setForeground(new Color(30, 130, 230));
         labelEndLine.setForeground(new Color(110, 110, 110));
+        labelEndLine.addKeyListener(this);
         c.fill = GridBagConstraints.HORIZONTAL;
         c.gridx = 6;
 	c.gridy = 1;
@@ -342,6 +347,7 @@ public final class GUI extends Tools implements KeyListener, ChangeListener {
         textEndLine.setMinimumSize(new Dimension(55, 20));
         Font fontEndLine = new Font("Segoe UI", Font.PLAIN, 12);
         textEndLine.setFont(fontEndLine);
+        textEndLine.addKeyListener(this);
         c.fill = GridBagConstraints.HORIZONTAL;
         c.gridx = 7;
 	c.gridy = 1;
@@ -605,14 +611,14 @@ public final class GUI extends Tools implements KeyListener, ChangeListener {
                 errorMsg = "";
                 switch (comboWichInput.getSelectedIndex()) {
                     case 0 -> { // input: digitar
-                        vPanel.remove(checkReadWholeFile);
+                        vPanel.remove(checkReadEntireFile);
                         vPanel.remove(labelStartLine);
                         vPanel.remove(textStartLine);
                         vPanel.remove(labelEndLine);
                         vPanel.remove(textEndLine);
                     }
                     case 1 -> { // input: aleatória
-                        vPanel.remove(checkReadWholeFile);
+                        vPanel.remove(checkReadEntireFile);
                         vPanel.remove(labelStartLine);
                         vPanel.remove(textStartLine);
                         vPanel.remove(labelEndLine);
@@ -641,8 +647,8 @@ public final class GUI extends Tools implements KeyListener, ChangeListener {
                         c.weightx = 0.0;
                         c.weighty = 0.0;
                         c.anchor = GridBagConstraints.WEST;
-                        //checkReadWholeFile.setSelected(true);
-                        vPanel.add(checkReadWholeFile, c);
+                        //checkReadEntireFile.setSelected(true);
+                        vPanel.add(checkReadEntireFile, c);
                         
                         c.fill = GridBagConstraints.HORIZONTAL;
                         c.gridx = 4;
@@ -705,11 +711,12 @@ public final class GUI extends Tools implements KeyListener, ChangeListener {
             }
         });
         
-        checkReadWholeFile.addActionListener(new ActionListener() {
+        checkReadEntireFile.addActionListener(new ActionListener() {
             
             @Override
             public void actionPerformed(ActionEvent e) {
-                if (!checkReadWholeFile.isSelected()) {
+                if (!checkReadEntireFile.isSelected()) {
+                    checkReadEntireFile.setForeground(new Color(110, 110, 110));
                     labelStartLine.setForeground(new Color(30, 130, 230));
                     labelEndLine.setForeground(new Color(30, 130, 230));
                     textStartLine.setEnabled(true);
@@ -718,9 +725,10 @@ public final class GUI extends Tools implements KeyListener, ChangeListener {
                     textEndLine.setEnabled(true);
                     textEndLine.setEditable(true);
                     textEndLine.setText("1");
-                    KeyboardFocusManager.getCurrentKeyboardFocusManager().focusNextComponent(checkReadWholeFile);
+                    KeyboardFocusManager.getCurrentKeyboardFocusManager().focusNextComponent(checkReadEntireFile);
                 }
                 else {
+                    checkReadEntireFile.setForeground(new Color(30, 130, 230));
                     labelStartLine.setForeground(new Color(110, 110, 110));
                     labelEndLine.setForeground(new Color(110, 110, 110));
                     textStartLine.setEnabled(!true);
@@ -733,7 +741,152 @@ public final class GUI extends Tools implements KeyListener, ChangeListener {
                 
             }
         });
+        
+        labelStartLine.addMouseListener(new MouseListener() {
             
+            @Override
+            public void mouseClicked(MouseEvent e) {
+                printt("clicked\n");
+                if (checkReadEntireFile.isSelected()) {
+                    textStartLine.setText("1");
+                    textEndLine.setText("1");
+                }
+                checkReadEntireFile.setSelected(false);
+                checkReadEntireFile.setForeground(new Color(110, 110, 110));
+                labelStartLine.setForeground(new Color(30, 130, 230));
+                labelEndLine.setForeground(new Color(30, 130, 230));
+                textStartLine.setEnabled(true);
+                textStartLine.setEditable(true);
+                textEndLine.setEnabled(true);
+                textEndLine.setEditable(true);
+                KeyboardFocusManager.getCurrentKeyboardFocusManager().focusNextComponent(checkReadEntireFile);
+            }
+            
+            @Override
+            public void mousePressed(MouseEvent e) {
+            }
+            
+            @Override
+            public void mouseReleased(MouseEvent e) {
+            }
+            
+            @Override
+            public void mouseEntered(MouseEvent e) {
+            }
+            
+            @Override
+            public void mouseExited(MouseEvent e) {
+            }
+        });
+        
+        textStartLine.addMouseListener(new MouseListener() {
+            
+            @Override
+            public void mouseClicked(MouseEvent e) {
+                if (checkReadEntireFile.isSelected()) {
+                    textStartLine.setText("1");
+                    textEndLine.setText("1");
+                }
+                checkReadEntireFile.setSelected(false);
+                checkReadEntireFile.setForeground(new Color(110, 110, 110));
+                labelStartLine.setForeground(new Color(30, 130, 230));
+                labelEndLine.setForeground(new Color(30, 130, 230));
+                textStartLine.setEnabled(true);
+                textStartLine.setEditable(true);
+                textEndLine.setEnabled(true);
+                textEndLine.setEditable(true);
+                KeyboardFocusManager.getCurrentKeyboardFocusManager().focusNextComponent(checkReadEntireFile);
+            }
+            
+            @Override
+            public void mousePressed(MouseEvent e) {
+            }
+            
+            @Override
+            public void mouseReleased(MouseEvent e) {
+            }
+            
+            @Override
+            public void mouseEntered(MouseEvent e) {
+            }
+            
+            @Override
+            public void mouseExited(MouseEvent e) {
+            }
+        });
+        
+        labelEndLine.addMouseListener(new MouseListener() {
+            
+            @Override
+            public void mouseClicked(MouseEvent e) {
+                if (checkReadEntireFile.isSelected()) {
+                    textStartLine.setText("1");
+                    textEndLine.setText("1");
+                }
+                checkReadEntireFile.setSelected(false);
+                checkReadEntireFile.setForeground(new Color(110, 110, 110));
+                labelStartLine.setForeground(new Color(30, 130, 230));
+                labelEndLine.setForeground(new Color(30, 130, 230));
+                textStartLine.setEnabled(true);
+                textStartLine.setEditable(true);
+                textEndLine.setEnabled(true);
+                textEndLine.setEditable(true);
+                KeyboardFocusManager.getCurrentKeyboardFocusManager().focusNextComponent(textStartLine);
+            }
+            
+            @Override
+            public void mousePressed(MouseEvent e) {
+            }
+            
+            @Override
+            public void mouseReleased(MouseEvent e) {
+            }
+            
+            @Override
+            public void mouseEntered(MouseEvent e) {
+            }
+            
+            @Override
+            public void mouseExited(MouseEvent e) {
+            }
+        });
+        
+        textEndLine.addMouseListener(new MouseListener() {
+            
+            @Override
+            public void mouseClicked(MouseEvent e) {
+                if (checkReadEntireFile.isSelected()) {
+                    textStartLine.setText("1");
+                    textEndLine.setText("1");
+                }
+                checkReadEntireFile.setSelected(false);
+                checkReadEntireFile.setForeground(new Color(110, 110, 110));
+                labelStartLine.setForeground(new Color(30, 130, 230));
+                labelEndLine.setForeground(new Color(30, 130, 230));
+                textStartLine.setEnabled(true);
+                textStartLine.setEditable(true);
+                textEndLine.setEnabled(true);
+                textEndLine.setEditable(true);
+                KeyboardFocusManager.getCurrentKeyboardFocusManager().focusNextComponent(textStartLine);
+            }
+            
+            @Override
+            public void mousePressed(MouseEvent e) {
+            }
+            
+            @Override
+            public void mouseReleased(MouseEvent e) {
+            }
+            
+            @Override
+            public void mouseEntered(MouseEvent e) {
+            }
+            
+            @Override
+            public void mouseExited(MouseEvent e) {
+            }
+        });
+        
         slider.addChangeListener(new ChangeListener() {
             
             @Override
@@ -786,7 +939,7 @@ public final class GUI extends Tools implements KeyListener, ChangeListener {
                         case 2 -> { // input: arquivo
                             int startLine;
                             int endLine;
-                            if (checkReadWholeFile.isSelected()) {
+                            if (checkReadEntireFile.isSelected()) {
                                 startLine = 1;
                                 endLine = -1;
                             }
@@ -1037,11 +1190,6 @@ public final class GUI extends Tools implements KeyListener, ChangeListener {
     
     @Override
     public void keyReleased(KeyEvent e) {
-    }
-
-    @Override
-    public void stateChanged(ChangeEvent e) {
-        
     }
 
 }

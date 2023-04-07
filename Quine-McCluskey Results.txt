@@ -1,1 +1,1 @@
- B +  A* D	0xFAF0	3
+!A*!C*!D + !A* B* C* D +  A*!B* C +  A*!C* D + !A*!B*!C	0x2E93	16
