@@ -722,10 +722,10 @@ public final class GUI extends Tools implements KeyListener {
                     labelEndLine.setForeground(new Color(30, 130, 230));
                     textStartLine.setEnabled(true);
                     textStartLine.setEditable(true);
-                    textStartLine.setText("1");
+                    //textStartLine.setText("1");
                     textEndLine.setEnabled(true);
                     textEndLine.setEditable(true);
-                    textEndLine.setText("1");
+                    //textEndLine.setText("1");
                     KeyboardFocusManager.getCurrentKeyboardFocusManager().focusNextComponent(checkReadEntireFile);
                 }
                 else {
@@ -743,15 +743,9 @@ public final class GUI extends Tools implements KeyListener {
             }
         });
         
-        MouseListener mouseListener = new MouseListener() {
-        
+        MouseListener mouseListenerStartLine = new MouseListener() {
             @Override
             public void mouseClicked(MouseEvent e) {
-                printt("clicked\n");
-                if (checkReadEntireFile.isSelected()) {
-                    //textStartLine.setText("1");
-                    textEndLine.setText("1");
-                }
                 checkReadEntireFile.setSelected(false);
                 checkReadEntireFile.setForeground(new Color(110, 110, 110));
                 labelStartLine.setForeground(new Color(30, 130, 230));
@@ -779,14 +773,44 @@ public final class GUI extends Tools implements KeyListener {
             public void mouseExited(MouseEvent e) {
             }
         };
+        labelStartLine.addMouseListener(mouseListenerStartLine);
+        textStartLine.addMouseListener(mouseListenerStartLine);
         
-        labelStartLine.addMouseListener(mouseListener);
-        textStartLine.addMouseListener(mouseListener);
-        
-        //NESTES, O mouseListener precisará ser diferente:
-        //foco e preenchimento dos campos
-        labelEndLine.addMouseListener(mouseListener);
-        textEndLine.addMouseListener(mouseListener);
+        MouseListener mouseListenerEndLine = new MouseListener() {
+            @Override
+            public void mouseClicked(MouseEvent e) {
+                if (checkReadEntireFile.isSelected()) {
+                    textStartLine.setText("1");
+                }
+                checkReadEntireFile.setSelected(false);
+                checkReadEntireFile.setForeground(new Color(110, 110, 110));
+                labelStartLine.setForeground(new Color(30, 130, 230));
+                labelEndLine.setForeground(new Color(30, 130, 230));
+                textStartLine.setEnabled(true);
+                textStartLine.setEditable(true);
+                textEndLine.setEnabled(true);
+                textEndLine.setEditable(true);
+                KeyboardFocusManager.getCurrentKeyboardFocusManager().focusNextComponent(labelEndLine);
+            }
+            
+            @Override
+            public void mousePressed(MouseEvent e) {
+            }
+            
+            @Override
+            public void mouseReleased(MouseEvent e) {
+            }
+            
+            @Override
+            public void mouseEntered(MouseEvent e) {
+            }
+            
+            @Override
+            public void mouseExited(MouseEvent e) {
+            }
+        };
+        labelEndLine.addMouseListener(mouseListenerEndLine);
+        textEndLine.addMouseListener(mouseListenerEndLine);
         
         slider.addChangeListener(new ChangeListener() {
             
