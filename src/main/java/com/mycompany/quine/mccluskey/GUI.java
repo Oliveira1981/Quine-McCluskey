@@ -862,15 +862,21 @@ public final class GUI extends Tools implements KeyListener {
                             );
                         }
                         case 2 -> { // input: arquivo
-                            int startLine;
-                            int endLine;
-                            if (checkReadEntireFile.isSelected()) {
-                                startLine = 1;
-                                endLine = -1;
-                            }
-                            else {
-                                startLine = Integer.parseInt(textStartLine.getText());
-                                endLine = Integer.parseInt(textEndLine.getText());
+                            int startLine = 1;
+                            int endLine = -1;
+                            if (!checkReadEntireFile.isSelected()) {
+                                if (textStartLine.getText().equals("")) {
+                                    startLine = 1;
+                                }
+                                else {
+                                    startLine = Integer.parseInt(textStartLine.getText());
+                                }
+                                if (textEndLine.getText().equals("")) {
+                                    endLine = -1;
+                                }
+                                else {
+                                    endLine = Integer.parseInt(textEndLine.getText());
+                                }
                             }
                             if (readFromFile(editor.getText(),
                                     startLine,
