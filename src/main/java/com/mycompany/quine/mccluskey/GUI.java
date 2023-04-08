@@ -94,7 +94,7 @@ public final class GUI extends Tools implements KeyListener {
         }
         return inputFilePath + inputFileName;
     }
-    
+    /*
     public int readFromFile(String filePath, int startLine, int endLine) throws Exception {
         
         setFileToWrite("Quine-McCluskey Results.txt");
@@ -117,20 +117,20 @@ public final class GUI extends Tools implements KeyListener {
         
         if (endLine == -1) { // LER ATÉ O FINAL DO ARQUIVO
             while (sc.hasNext()) {
-                optimizeExpressions(sc.nextLine(), numVars/*, outputFile*/);
+                optimizeExpressions(sc.nextLine(), numVars);
             }
         }
         else {
             while (line <= endLine) {
                 //printt("\nLine " + line + "\t"); //LEVA MUITO MAIS TEMPO SE FICAR MOSTRANDO A LINHA
-                optimizeExpressions(sc.nextLine(), numVars/*, outputFile*/);
+                optimizeExpressions(sc.nextLine(), numVars);
                 line++;
             }
         }
         outputFile.close();
         return 0;
     }
-    
+    */
     public void setFileToWrite(String outputFileName) throws
         FileNotFoundException,
         UnsupportedEncodingException {
@@ -231,15 +231,15 @@ public final class GUI extends Tools implements KeyListener {
 	c.gridx = 0;
 	c.gridy = 1;
 	c.gridwidth = 1;
-	c.gridheight = 8;
+	c.gridheight = 9;
         c.weightx = 0.0;
         c.weighty = 0.0;
 	space3.setBorder(BorderFactory.createLineBorder(borderColor));
         qmPanel.add(space3, c);
         
         JComboBox<String> comboWichInput = new JComboBox<>(wichInput);
-        //comboWichInput.setPreferredSize(new Dimension(150, 30));
-        //comboWichInput.setMinimumSize(new Dimension(150, 30));
+        comboWichInput.setPreferredSize(new Dimension(220, 30));
+        comboWichInput.setMinimumSize(new Dimension(220, 30));
         comboWichInput.addKeyListener(this);
         comboWichInput.setFocusable(true);
         Font fontWichInput = new Font("Segoe UI", Font.BOLD, 12);
@@ -371,6 +371,20 @@ public final class GUI extends Tools implements KeyListener {
         labelVariables.setBorder(BorderFactory.createLineBorder(borderColor));
         qmPanel.add(labelVariables, c);
         
+        Font f = new Font("Consolas", Font.PLAIN, 1);
+        JLabel space3a = new JLabel();
+        space3a.setFont(f);
+        space3a.setText(" ");
+	c.fill = GridBagConstraints.HORIZONTAL;
+	c.gridx = 1;
+	c.gridy = 2;
+	c.gridwidth = 13;
+	c.gridheight = 1;
+        c.weightx = 0.0;
+        c.weighty = 0.0;
+	space3a.setBorder(BorderFactory.createLineBorder(borderColor));
+        qmPanel.add(space3a, c);
+        
         JComboBox<String> comboExpressions = new JComboBox<>(templates);
         comboExpressions.setPreferredSize(new Dimension(500, 30));
         comboExpressions.setMinimumSize(new Dimension(500, 30));
@@ -382,7 +396,7 @@ public final class GUI extends Tools implements KeyListener {
         comboExpressions.setFocusable(true);
 	c.fill = GridBagConstraints.HORIZONTAL;
 	c.gridx = 1;
-	c.gridy = 2;
+	c.gridy = 3;
 	c.gridwidth = 7;
 	c.gridheight = 1;
         c.weightx = 0.0;
@@ -394,7 +408,7 @@ public final class GUI extends Tools implements KeyListener {
         JLabel space5 = new JLabel(" ");
 	c.fill = GridBagConstraints.NONE;
 	c.gridx = 8;
-	c.gridy = 2;
+	c.gridy = 3;
 	c.gridwidth = 1;
 	c.gridheight = 1;
         c.weightx = 0.0;
@@ -414,7 +428,7 @@ public final class GUI extends Tools implements KeyListener {
         okButton.setFont(font);
 	c.fill = GridBagConstraints.NONE;
 	c.gridx = 9;
-	c.gridy = 2;
+	c.gridy = 3;
 	c.gridwidth = 1;
 	c.gridheight = 1;
         c.weightx = 0.0;
@@ -427,7 +441,7 @@ public final class GUI extends Tools implements KeyListener {
         JLabel space5B = new JLabel(" ");
 	c.fill = GridBagConstraints.NONE;
 	c.gridx = 10;
-	c.gridy = 2;
+	c.gridy = 3;
 	c.gridwidth = 1;
 	c.gridheight = 1;
         c.weightx = 0.0;
@@ -455,7 +469,7 @@ public final class GUI extends Tools implements KeyListener {
         slider.setLabelTable(labelTable);
 	c.fill = GridBagConstraints.NONE;
 	c.gridx = 11;
-	c.gridy = 2;
+	c.gridy = 3;
 	c.gridwidth = 3;
 	c.gridheight = 1;
         c.weightx = 0.0;
@@ -467,7 +481,7 @@ public final class GUI extends Tools implements KeyListener {
         JLabel space6 = new JLabel(" ");
 	c.fill = GridBagConstraints.HORIZONTAL;
 	c.gridx = 1;
-	c.gridy = 3;
+	c.gridy = 4;
 	c.gridwidth = 13;
 	c.gridheight = 1;
         c.weightx = 0.0;
@@ -481,7 +495,7 @@ public final class GUI extends Tools implements KeyListener {
         resultLabel.setForeground(new Color(30, 130, 230));
 	c.fill = GridBagConstraints.NONE;
 	c.gridx = 1;
-	c.gridy = 4;
+	c.gridy = 5;
 	c.gridwidth = 13;
 	c.gridheight = 1;
         c.weightx = 0.0;
@@ -504,7 +518,7 @@ public final class GUI extends Tools implements KeyListener {
         textAreaResult.setMargin(mResult);
 	c.fill = GridBagConstraints.HORIZONTAL;
         c.gridx = 1;
-	c.gridy = 5;
+	c.gridy = 6;
 	c.gridwidth = 13;
 	c.gridheight = 1;
 	c.weightx = 0.0;
@@ -516,7 +530,7 @@ public final class GUI extends Tools implements KeyListener {
         JLabel space9 = new JLabel(" ");
 	c.fill = GridBagConstraints.HORIZONTAL;
 	c.gridx = 1;
-	c.gridy = 6;
+	c.gridy = 7;
 	c.gridwidth = 13;
 	c.gridheight = 1;
         c.weightx = 0.0;
@@ -535,7 +549,7 @@ public final class GUI extends Tools implements KeyListener {
         comboWichReport.setForeground(new Color(30, 130, 230));
         c.fill = GridBagConstraints.NONE;
 	c.gridx = 1;
-	c.gridy = 7;
+	c.gridy = 8;
 	c.gridwidth = 5;
 	c.gridheight = 1;
         c.weightx = 0.0;
@@ -570,7 +584,7 @@ public final class GUI extends Tools implements KeyListener {
         JScrollPane jScrollReport = new JScrollPane(textAreaReport);
 	c.fill = GridBagConstraints.BOTH;
         c.gridx = 1;
-	c.gridy = 8;//14
+	c.gridy = 9;//14
 	c.gridwidth = 13;
 	c.gridheight = 1;
 	c.weightx = 100.0;
@@ -592,7 +606,7 @@ public final class GUI extends Tools implements KeyListener {
         JLabel space2 = new JLabel(" ");
 	c.fill = GridBagConstraints.HORIZONTAL;
 	c.gridx = 0;
-	c.gridy = 9;
+	c.gridy = 10;
 	c.gridwidth = 15;
 	c.gridheight = 1;
         c.weightx = 0.0;
@@ -624,8 +638,17 @@ public final class GUI extends Tools implements KeyListener {
                         qmPanel.remove(labelEndLine);
                         qmPanel.remove(textEndLine);
                         qmPanel.remove(labelResultsFromFile);
-                        //o último 'c' deve ter as mesmos parâmetros
+                        
+                        c.fill = GridBagConstraints.NONE;
+                        c.gridx = 1;
+                        c.gridy = 8;
+                        c.gridwidth = 5;
+                        c.gridheight = 1;
+                        c.weightx = 0.0;
+                        c.weighty = 0.0;
+                        c.anchor = GridBagConstraints.WEST;
                         qmPanel.add(comboWichReport, c);
+                        
                         mainFrame.repaint();
                     }
                     case 1 -> { // input: aleatória
@@ -635,8 +658,17 @@ public final class GUI extends Tools implements KeyListener {
                         qmPanel.remove(labelEndLine);
                         qmPanel.remove(textEndLine);
                         qmPanel.remove(labelResultsFromFile);
-                        //o último 'c' deve ter as mesmos parâmetros
+                        
+                        c.fill = GridBagConstraints.NONE;
+                        c.gridx = 1;
+                        c.gridy = 8;
+                        c.gridwidth = 5;
+                        c.gridheight = 1;
+                        c.weightx = 0.0;
+                        c.weighty = 0.0;
+                        c.anchor = GridBagConstraints.WEST;
                         qmPanel.add(comboWichReport, c);
+                        
                         mainFrame.repaint();
                         hasResult = true;
                         String gen;
@@ -714,7 +746,7 @@ public final class GUI extends Tools implements KeyListener {
                         qmPanel.remove(comboWichReport);
                         c.fill = GridBagConstraints.NONE;
                 	c.gridx = 1;
-                	c.gridy = 7;
+                	c.gridy = 8;
                 	c.gridwidth = 5;
                         c.gridheight = 1;
                         c.weightx = 0.0;
