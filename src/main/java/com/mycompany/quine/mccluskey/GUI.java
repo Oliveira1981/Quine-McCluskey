@@ -544,6 +544,16 @@ public final class GUI extends Tools implements KeyListener {
 	//comboWichReport.setBorder(BorderFactory.createLineBorder(borderColor));
         qmPanel.add(comboWichReport, c);
         
+        JLabel labelResultsFromFile = new JLabel("Resultados:");
+        labelResultsFromFile.setPreferredSize(new Dimension(250, 30));
+        labelResultsFromFile.setMinimumSize(new Dimension(250, 30));
+        //labelResultsFromFile.addKeyListener(this);
+        labelResultsFromFile.setFocusable(true);
+        Font fontRFF = new Font("Segoe UI", Font.BOLD, 12);
+     	labelResultsFromFile.setFont(fontRFF);
+        //labelResultsFromFile.setForeground(new Color(1, 90, 190));
+        labelResultsFromFile.setForeground(new Color(30, 130, 230));
+                        
         JTextArea textAreaReport = new JTextArea();
         textAreaReport.addKeyListener(this);
         textAreaReport.setFocusable(true);
@@ -613,6 +623,9 @@ public final class GUI extends Tools implements KeyListener {
                         qmPanel.remove(textStartLine);
                         qmPanel.remove(labelEndLine);
                         qmPanel.remove(textEndLine);
+                        qmPanel.remove(labelResultsFromFile);
+                        //o último 'c' deve ter as mesmos parâmetros
+                        qmPanel.add(comboWichReport, c);
                         mainFrame.repaint();
                     }
                     case 1 -> { // input: aleatória
@@ -621,6 +634,9 @@ public final class GUI extends Tools implements KeyListener {
                         qmPanel.remove(textStartLine);
                         qmPanel.remove(labelEndLine);
                         qmPanel.remove(textEndLine);
+                        qmPanel.remove(labelResultsFromFile);
+                        //o último 'c' deve ter as mesmos parâmetros
+                        qmPanel.add(comboWichReport, c);
                         mainFrame.repaint();
                         hasResult = true;
                         String gen;
@@ -695,6 +711,18 @@ public final class GUI extends Tools implements KeyListener {
                         textEndLine.setEditable(false);
                         qmPanel.add(textEndLine, c);
                         
+                        qmPanel.remove(comboWichReport);
+                        c.fill = GridBagConstraints.NONE;
+                	c.gridx = 1;
+                	c.gridy = 7;
+                	c.gridwidth = 5;
+                        c.gridheight = 1;
+                        c.weightx = 0.0;
+                        c.weighty = 0.0;
+                        c.anchor = GridBagConstraints.WEST;
+                        //labelResultsFromFile.setBorder(BorderFactory.createLineBorder(borderColor));
+                        qmPanel.add(labelResultsFromFile, c);
+                            
                         mainFrame.repaint();
                         
                         try {
@@ -878,29 +906,120 @@ public final class GUI extends Tools implements KeyListener {
                                     endLine = Integer.parseInt(textEndLine.getText());
                                 }
                             }
-                            if (readFromFile(editor.getText(),
+                            setFileToWrite("Quine-McCluskey Results.txt");
+                            File selectedFile = new File(editor.getText());
+                            if(!selectedFile.exists()){
+                                printt("\nNo file selected.\n");
+                                errorMsg = "Nenhum arquivo selecionado.";
+                                textAreaReport.setText(errorMsg);
+                                return;
+                            }
+                            Scanner sc = new Scanner(selectedFile);
+                            
+                            int line = 1;
+                            if (line < startLine) {
+                                printt("\nSkipping line(s)...\n");
+                            }
+                            while (line < startLine) {
+                                sc.nextLine();
+                                line++;
+                            }
+                            printt("\nReading...");
+                            
+                            mainFrame.setMinimumSize(new Dimension(1000,520));
+                            Font fileResultsFont = new Font("Consolas", Font.PLAIN, 14);
+                            textAreaReport.setFont(fileResultsFont);
+                            textAreaReport.setText("");
+                            int count = line;
+                            if (endLine == -1) { // LER ATÉ O FINAL DO ARQUIVO
+                                while (sc.hasNext()) {
+                                    optimizeExpressions(sc.nextLine(), numVars/*, outputFile*/);
+                                    textAreaReport.append(count++ + "\t");
+                                    
+                                    String result = sopsList.get(0).getResult();
+                                    String formattedResult = result + ' ';
+                                    for (int c = result.length(); c < 80; c++) {
+                                        formattedResult = formattedResult + '.';
+                                    }
+                                    textAreaReport.append(formattedResult + " ");
+                                    
+                                    String hexa = sopsList.get(0).expression2hexadecimal(sopsList.get(0).getResult());
+                                    String formattedHexa = hexa + ' ';
+                                    for (int c = hexa.length(); c < 20; c++) {
+                                        formattedHexa = formattedHexa + '.';
+                                    }
+                                    textAreaReport.append(formattedHexa + " ");
+                                    
+                                    String numLit = String.valueOf(SumOfProducts.numberOfLiterals(sopsList.get(0).getResult(), sopsList.get(0).getNumberOfVars(), sopsList.get(0).getNumberOfProducts()));
+                                    String formattedNumLit = "";
+                                    for (int c = 0; c < (3 - numLit.length()); c++) {
+                                        formattedNumLit = formattedNumLit + ' ';
+                                    }
+                                    formattedNumLit = formattedNumLit + numLit;
+                                    textAreaReport.append(formattedNumLit + "\n");
+                                }
+                            }
+                            else {
+                                while (line <= endLine) {
+                                    optimizeExpressions(sc.nextLine(), numVars/*, outputFile*/);
+                                    
+                                    textAreaReport.append(count++ + "\t");
+                                    
+                                    String result = sopsList.get(0).getResult();
+                                    String formattedResult = result + ' ';
+                                    for (int c = result.length(); c < 80; c++) {
+                                        formattedResult = formattedResult + '.';
+                                    }
+                                    textAreaReport.append(formattedResult + " ");
+                                    
+                                    String hexa = sopsList.get(0).expression2hexadecimal(sopsList.get(0).getResult());
+                                    String formattedHexa = hexa + ' ';
+                                    for (int c = hexa.length(); c < 20; c++) {
+                                        formattedHexa = formattedHexa + '.';
+                                    }
+                                    textAreaReport.append(formattedHexa + " ");
+                                    
+                                    String numLit = String.valueOf(SumOfProducts.numberOfLiterals(sopsList.get(0).getResult(), sopsList.get(0).getNumberOfVars(), sopsList.get(0).getNumberOfProducts()));
+                                    String formattedNumLit = "";
+                                    for (int c = 0; c < (3 - numLit.length()); c++) {
+                                        formattedNumLit = formattedNumLit + ' ';
+                                    }
+                                    formattedNumLit = formattedNumLit + numLit;
+                                    textAreaReport.append(formattedNumLit + "\n");
+                                    line++;
+                                }
+                            }
+                            qmPanel.repaint();
+                            outputFile.close();
+                            /*if (readFromFile(editor.getText(),
                                     startLine,
                                     endLine
                                 ) != 0) {
                                 errorMsg = "Nenhum arquivo selecionado";
-                            }
+                            }*/
                         }
                     }
-                    if (errorMsg.isEmpty()) {
-                        String results;
-                        results = sopsList.get(0).getResult();
-                        for (int r = 1; r < sopsList.size(); r++) {
-                            results += ";\n" + sopsList.get(r).getResult();
-                        }
-                        textAreaResult.setText(results);
-                        textAreaReport.setText(reportText(comboWichReport/*, writer*/));
+                    if (comboWichInput.getSelectedIndex() == 2) {
+                        
                     }
                     else {
-                        textAreaResult.setText(errorMsg);
-                        textAreaReport.setText("-");
+                        if (errorMsg.isEmpty()) {
+                            String results;
+                            results = sopsList.get(0).getResult();
+                            for (int r = 1; r < sopsList.size(); r++) {
+                                results += ";\n" + sopsList.get(r).getResult();
+                            }
+                            textAreaResult.setText(results);
+                            textAreaReport.setText(reportText(comboWichReport/*, writer*/));
+                        }
+                        else {
+                            textAreaResult.setText(errorMsg);
+                            textAreaReport.setText("-");
+                        }
                     }
                     outputFile.close();
-                } catch (Exception ex) {
+                }
+                catch (Exception ex) {
                     Logger.getLogger(GUI.class.getName()).log(Level.SEVERE, null, ex);
                 }
             }
@@ -1047,10 +1166,6 @@ public final class GUI extends Tools implements KeyListener {
                 }
             }
         }
-        //print (out, writer);
-        //writer.close();
-        //outputFile.close();
-//        outputFile.close();
         return out;
     }
     
@@ -1096,7 +1211,7 @@ public final class GUI extends Tools implements KeyListener {
             print(sopsList.get(lastSOPIndex).getResult()+"\t", /*writer*/outputFile);
             print(sopsList.get(lastSOPIndex).expression2hexadecimal(sopsList.get(lastSOPIndex).getResult())+"\t", /*writer*/outputFile);
             print(SumOfProducts.numberOfLiterals(sopsList.get(lastSOPIndex).getResult(), sopsList.get(lastSOPIndex).getNumberOfVars(), sopsList.get(lastSOPIndex).getNumberOfProducts())+"\n", /*writer*/outputFile);
-////////////// LER E ESCREVER EM ARQUIVO  [BLOCK END] ///////////////////////////
+////////////// LER E ESCREVER EM ARQUIVO [BLOCK END] ///////////////////////////
             
             begin = end + 1;
             if (begin >= allExpressions.length()) {
