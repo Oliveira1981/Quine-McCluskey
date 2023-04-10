@@ -553,7 +553,7 @@ public final class SumOfProducts extends Tools {
                 for (int t=0; t < finalProductsList.size(); t++) {
                     numberOfLiterals_SORTING += numberOfLiterals2(finalProductsList.get(t));
                 }
-               break;
+                break;
             }
             i++;
         }
