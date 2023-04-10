@@ -405,14 +405,11 @@ public class Tools {
     }
     
     public static Object print(Object obj, PrintWriter w) {
-        //System.out.print(obj);
         w.print(obj);
         return obj;
     }
     
     public static Object print(Object obj) {
-        //System.out.print(obj);
-        //w.print(obj);
         return obj;
     }
     

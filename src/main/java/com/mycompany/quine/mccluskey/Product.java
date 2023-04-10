@@ -15,10 +15,10 @@ public final class Product extends Tools {
     private int                   onesCount;
     private int             implicantBitPos;
     private int                        size;
-    private int            numberOfLiterals;
+    //private int            numberOfLiterals;
     private boolean                hasPrime;
     private boolean             isEssential;
-    private boolean                 isFinal;
+    //private boolean                 isFinal;
     
     public Product() {
         minTermsList    = new ArrayList<>();
@@ -49,14 +49,14 @@ public final class Product extends Tools {
                 if (!minTermsList.contains(newDecimal)) {
                     minTermsList.add(newDecimal);
                 }
-                numberOfLiterals = numberOfLiterals2(inputExp);
+                //numberOfLiterals = numberOfLiterals2(inputExp);
             }
             case "Decimal" -> {
                 setProductFromDecimal(Integer.parseInt(inputExp));
                 decimalView = Integer.parseInt(inputExp);
                 binaryView  = decimal2binary(Integer.parseInt(inputExp), size);
                 literalView = binary2literal(binaryView, vars, size);
-                numberOfLiterals = size;
+                //numberOfLiterals = size;
                 //RESOLVER: SE VIER DE DECIMAL TEM QUE PREENCHER VARS COM ALPHABETCHAR
             }
             case "Binário" -> {
@@ -68,7 +68,7 @@ public final class Product extends Tools {
                 if (!minTermsList.contains(newDecimal)) {
                     minTermsList.add(newDecimal);
                 }
-                numberOfLiterals = size;
+                //numberOfLiterals = size;
             }
             default -> {
             }

@@ -5,7 +5,6 @@ import java.io.FileNotFoundException;
 import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
 import java.util.Arrays;
-//import java.util.Collections;
 import java.util.Formatter;
 
 /**
@@ -26,7 +25,6 @@ public final class SumOfProducts extends Tools {
     private ArrayList<String>    essentialProductsList;
     private ArrayList<String> notEssentialProductsList;
     private ArrayList<String>        finalProductsList;
-    //private ArrayList<ArrayList<Integer>> permutations;
     private int                           numberOfVars;
     private int                       numberOfProducts;
     //private int                       numberOfLiterals;
@@ -200,10 +198,6 @@ public final class SumOfProducts extends Tools {
         return str;
     }
     
-    /*public ArrayList<ArrayList<Integer>> getPermutations() {
-        return permutations;
-    }*/
-
     public boolean isError() {
         return isError;
     }
@@ -215,7 +209,6 @@ public final class SumOfProducts extends Tools {
     public void fillProductsList(int selectedNumberofVars) {
         productsList = new ArrayList<>();
         minTermsList = new ArrayList<>();
-        //permutations = new ArrayList<>();
         
         int begin    = 0;
         int end;
@@ -227,8 +220,6 @@ public final class SumOfProducts extends Tools {
             }
             
             String str = convertedExpression.substring(begin, end);
-            //ArrayList<String> originalProductsList = new ArrayList<>();
-            //originalProductsList.add(str);
             
             //Trabalha os Don't Care (gera todas as variações)
             ArrayList<String> allStr;
@@ -463,9 +454,7 @@ public final class SumOfProducts extends Tools {
             productString = productsList.get(p).getLiteralView();
             
             if (!essentialProductsList.contains(productString)) {
-                //if (!notEssentialProductsList.contains(productString)) {
-                    notEssentialProductsList.add(productString);
-                //}
+                notEssentialProductsList.add(productString);
             }
         }
         setIsCovered();
@@ -525,27 +514,26 @@ public final class SumOfProducts extends Tools {
         }
     }
     
-    // ENJAMNBRE TEMPORÁRIO
+    // ENJAMBRE TEMPORÁRIO
     // para resolver diferença entre o uso de combinações
     // COM ou SEM ordenação prévia:
     // Faz um e depois o outro e usa o que deu menos literais
-    public void completeFinalList_NEW() {
+    public void completeFinalList() {
         ArrayList<String> finalListOriginal = (ArrayList) finalProductsList.clone();
         
         //NO SORTING
-        ArrayList<String> finalList_NO_Sorting = (ArrayList) finalProductsList.clone();
-        int numberOfLiterals_NO_Sorting = 0;
+        ArrayList<String> finalList_NO_SORTING = (ArrayList) finalProductsList.clone();
+        int numberOfLiterals_NO_SORTING = 0;
         int i = 1;
         while (i <= notEssentialProductsList.size()) {
             String[] candidateCombination = new String[i];
             combinations(i, 0, candidateCombination);
             if (isAllCovered()) {
                 //return;
-                finalList_NO_Sorting = (ArrayList) finalProductsList.clone();
-                for (int t=0; t < finalList_NO_Sorting.size(); t++) {
-                    numberOfLiterals_NO_Sorting += numberOfLiterals2(finalList_NO_Sorting.get(t));
+                finalList_NO_SORTING = (ArrayList) finalProductsList.clone();
+                for (int t=0; t < finalList_NO_SORTING.size(); t++) {
+                    numberOfLiterals_NO_SORTING += numberOfLiterals2(finalList_NO_SORTING.get(t));
                 }
-                //printt("\nsem pré-ordenação: "+numberOfLiterals_NO_Sorting+"\n");
                 break;
             }
             i++;
@@ -555,7 +543,7 @@ public final class SumOfProducts extends Tools {
         finalProductsList = (ArrayList) finalListOriginal.clone();
         setIsCovered();
         sortProductsSet(notEssentialProductsList);
-        int numberOfLiterals_Sorting = 0;
+        int numberOfLiterals_SORTING = 0;
         i = 1;
         while (i <= notEssentialProductsList.size()) {
             String[] candidateCombination = new String[i];
@@ -563,16 +551,14 @@ public final class SumOfProducts extends Tools {
             if (isAllCovered()) {
                 //return;
                 for (int t=0; t < finalProductsList.size(); t++) {
-                    numberOfLiterals_Sorting += numberOfLiterals2(finalProductsList.get(t));
+                    numberOfLiterals_SORTING += numberOfLiterals2(finalProductsList.get(t));
                 }
-                //printt("\nCOM pré-ordenação: "+numberOfLiterals_Sorting+"\n");
-                break;
+               break;
             }
             i++;
         }
-        if (numberOfLiterals_NO_Sorting < numberOfLiterals_Sorting) {
-            //printt("\n in \n");
-            finalProductsList = (ArrayList) finalList_NO_Sorting.clone();
+        if (numberOfLiterals_NO_SORTING < numberOfLiterals_SORTING) {
+            finalProductsList = (ArrayList) finalList_NO_SORTING.clone();
         }
     }
     
@@ -645,13 +631,6 @@ public final class SumOfProducts extends Tools {
         return str;
     }
     
-    /*public String getCoveringTable() {
-        String str = "";
-        for (int i=0; i<1500; i++){
-            str += i + "\t" + (char) i + "\n";
-        }
-        return str;
-    }*/
     public String getCoveringTable() {
         if (isError) {
             return "-";
@@ -751,7 +730,6 @@ public final class SumOfProducts extends Tools {
             return report;
         }
         
-        //report += print("\nFormato de Entrada:\n> " + originalInputFormat + "\n"/*, writer*/);
         report += print("> " + originalInputFormat + "\n"/*, writer*/);
         
         if (!inputFormat.equals(originalInputFormat)) {
@@ -761,26 +739,10 @@ public final class SumOfProducts extends Tools {
         
         report += print("> " + numberOfVars + " variáveis\n"/*, writer*/);
         
-        //report += print("\nQuantidade de Literais na Entrada:\n"/*, writer*/);
         report += print("> " + numberOfLiterals(
                 convertedExpression,
                 numberOfVars,
                 numberOfProducts) + " literais\n"/*, writer*/);
-        
-        //report += print("\nRepresentação Hexadecimal:\n> " + expression2hexadecimal(originalInputExpression) + "\n"/*, writer*/);
-        //print(expression2hexadecimal(originalInputExpression)+"\n", writer);
-        
-        //report += print ("\nTabela Verdade:\n"/*, writer*/);
-        //report += print(getTruthTable()/*, writer*/);
-        
-        //report += print ("\nMintermos e seus Produtos:\n"/*, writer*/);
-        //report += print (getProductsFromMinTerms()/*, writer*/);
-        
-        //report += print("\nProdutos e seus Mintermos:\n"/*, writer*/);
-        //report += print(getMinTermsFromProducts()/*, writer*/);
-        
-        //report += print ("\nTabela de Cobertura:\n"/*, writer*/);
-        //report += print (getCoveringTable()/*, writer*/);
         
         report += print("\nProdutos Essenciais:\n> "/*, writer*/);
         for (int i=0; i < essentialProductsList.size(); i++) {
@@ -790,15 +752,12 @@ public final class SumOfProducts extends Tools {
         
         report += print("\nExpressão Otimizada:\n"/*, writer*/);
         report += print("> " + result + "\n"/*, writer*/);
-        //print(result + "\n", writer);
             
-        //report += print("\nQuantidade de Literais na Saída:\n"/*, writer*/);
         report += print("> " + numberOfLiterals(
                 result,
                 numberOfVars,
                 numberOfProducts) + " literais\n"/*, writer*/);
         
-        //report += print ("\nFim dos Resultados.\n"/*, writer*/);
         report += print("\n==================================================\n"/*, writer*/);
         
         //writer.close();

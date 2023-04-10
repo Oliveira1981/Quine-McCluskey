@@ -154,9 +154,9 @@ public final class GUI extends Tools implements KeyListener {
     public void showWindow() throws Exception {
         
         String[] wichInput = {
+            "Carregar expressões de um arquivo...",
             "Digitar expressão",
-            "Gerar expressão aleatória",
-            "Carregar expressões de um arquivo..."
+            "Gerar expressão aleatória"
         };
         
         String[] templates = {
@@ -238,6 +238,7 @@ public final class GUI extends Tools implements KeyListener {
         qmPanel.add(space3, c);
         
         JComboBox<String> comboWichInput = new JComboBox<>(wichInput);
+        comboWichInput.setSelectedIndex(1); // Digitar
         comboWichInput.setPreferredSize(new Dimension(220, 30));
         comboWichInput.setMinimumSize(new Dimension(220, 30));
         comboWichInput.addKeyListener(this);
@@ -616,7 +617,6 @@ public final class GUI extends Tools implements KeyListener {
 	space2.setBorder(BorderFactory.createLineBorder(borderColor));
         qmPanel.add(space2, c);
         
-        //myFrame.add(vPanel);
         mainFrame.add(tabbedPane);
         mainFrame.pack();
         mainFrame.setSize(750, 680);
@@ -631,7 +631,7 @@ public final class GUI extends Tools implements KeyListener {
             public void actionPerformed(ActionEvent e) {
                 errorMsg = "";
                 switch (comboWichInput.getSelectedIndex()) {
-                    case 0 -> { // input: digitar
+                    case 1 -> { // input: digitar
                         qmPanel.remove(checkReadEntireFile);
                         qmPanel.remove(labelStartLine);
                         qmPanel.remove(textStartLine);
@@ -651,7 +651,7 @@ public final class GUI extends Tools implements KeyListener {
                         
                         mainFrame.repaint();
                     }
-                    case 1 -> { // input: aleatória
+                    case 2 -> { // input: aleatória
                         qmPanel.remove(checkReadEntireFile);
                         qmPanel.remove(labelStartLine);
                         qmPanel.remove(textStartLine);
@@ -684,7 +684,7 @@ public final class GUI extends Tools implements KeyListener {
                         }
                         editor.setText(gen);
                     }
-                    case 2 -> { // input: arquivo
+                    case 0 -> { // input: arquivo
                         
                         c.fill = GridBagConstraints.HORIZONTAL;
                         c.gridx = 3;
@@ -782,10 +782,8 @@ public final class GUI extends Tools implements KeyListener {
                     labelEndLine.setForeground(new Color(30, 130, 230));
                     textStartLine.setEnabled(true);
                     textStartLine.setEditable(true);
-                    //textStartLine.setText("1");
                     textEndLine.setEnabled(true);
                     textEndLine.setEditable(true);
-                    //textEndLine.setText("1");
                     KeyboardFocusManager.getCurrentKeyboardFocusManager().focusNextComponent(checkReadEntireFile);
                 }
                 else {
@@ -907,21 +905,23 @@ public final class GUI extends Tools implements KeyListener {
                     setFileToWrite("Quine-McCluskey Results.txt");
                     hasResult = true;
                     switch (comboWichInput.getSelectedIndex()) {
-                        case 0 -> { // input: digitar
+                        case 1 -> { // input: digitar
                             optimizeExpressions(
                                 (String) comboExpressions.getSelectedItem(),
                                 (int) slider.getValue()/*,
                                 outputFile*/
                             );
+                            textAreaReport.setFont(fontReport);
                         }
-                        case 1 -> { // input: aleatória
+                        case 2 -> { // input: aleatória
                             optimizeExpressions(
                                 editor.getText(),
                                 (int) slider.getValue()/*,
                                 outputFile*/
                             );
+                            textAreaReport.setFont(fontReport);
                         }
-                        case 2 -> { // input: arquivo
+                        case 0 -> { // input: arquivo
                             int startLine = 1;
                             int endLine = -1;
                             if (!checkReadEntireFile.isSelected()) {
@@ -937,6 +937,11 @@ public final class GUI extends Tools implements KeyListener {
                                 else {
                                     endLine = Integer.parseInt(textEndLine.getText());
                                 }
+                            }
+                            if ((endLine != -1) && (endLine < startLine)) {
+                                errorMsg = "Linha final menor que linha inicial";
+                                textAreaReport.setText(errorMsg);
+                                return;
                             }
                             setFileToWrite("Quine-McCluskey Results.txt");
                             File selectedFile = new File(editor.getText());
@@ -958,10 +963,21 @@ public final class GUI extends Tools implements KeyListener {
                             }
                             printt("\nReading...");
                             
-                            mainFrame.setMinimumSize(new Dimension(1000,520));
+                            mainFrame.setMinimumSize(new Dimension(1020,520));
                             Font fileResultsFont = new Font("Consolas", Font.PLAIN, 14);
                             textAreaReport.setFont(fileResultsFont);
                             textAreaReport.setText("");
+                            textAreaReport.setText(
+                                "ÍNDICE\t" +
+                                "EXPRESSÃO MINIMIZADA" +
+                                    "                " +
+                                    "                " +
+                                    "                " +
+                                    "              " +
+                                "CÓDIGO HEXADECIMAL" +
+                                    "    " +
+                                "LIT.\n\n"
+                            );
                             int count = line;
                             if (endLine == -1) { // LER ATÉ O FINAL DO ARQUIVO
                                 while (sc.hasNext()) {
@@ -988,7 +1004,7 @@ public final class GUI extends Tools implements KeyListener {
                                         formattedNumLit = formattedNumLit + ' ';
                                     }
                                     formattedNumLit = formattedNumLit + numLit;
-                                    textAreaReport.append(formattedNumLit + "\n");
+                                    textAreaReport.append(formattedNumLit + "\n\n");
                                 }
                             }
                             else {
@@ -1017,7 +1033,7 @@ public final class GUI extends Tools implements KeyListener {
                                         formattedNumLit = formattedNumLit + ' ';
                                     }
                                     formattedNumLit = formattedNumLit + numLit;
-                                    textAreaReport.append(formattedNumLit + "\n");
+                                    textAreaReport.append(formattedNumLit + "\n\n");
                                     line++;
                                 }
                             }
@@ -1031,7 +1047,7 @@ public final class GUI extends Tools implements KeyListener {
                             }*/
                         }
                     }
-                    if (comboWichInput.getSelectedIndex() == 2) {
+                    if (comboWichInput.getSelectedIndex() == 0) {
                         
                     }
                     else {
@@ -1127,10 +1143,6 @@ public final class GUI extends Tools implements KeyListener {
                 try {
                     for (int r=0; r < sopsList.size(); r++) {
                         out += sopsList.get(r).getBasicReport();
-                        //print(sopsList.get(r).expression2hexadecimal(sopsList.get(r).getOriginalInputExpression())+"\n", writer);
-                        //print(sopsList.get(r).expression2hexadecimal(sopsList.get(r).getResult())+"\n", writer);
-                        //print(sopsList.get(r).getOriginalInputExpression()+"; ", writer);
-                        //print(sopsList.get(r).getResult()+"\n", /*writer*/outputFile);
                     }
                 } catch (UnsupportedEncodingException ex) {
                     Logger.getLogger(GUI.class.getName()).log(Level.SEVERE, null, ex);
@@ -1232,11 +1244,7 @@ public final class GUI extends Tools implements KeyListener {
             sopsList.get(lastSOPIndex).fillMinTermsList();
             sopsList.get(lastSOPIndex).fillTruthTable();
             sopsList.get(lastSOPIndex).fillFinalProductsLists();
-            sopsList.get(lastSOPIndex).completeFinalList_NEW();
-            
-            //ArrayList<Integer> indexes = sopsList.get(lastSOPIndex).getCandidateProductsIndexes();
-            //sopsList.get(lastSOPIndex).permute(indexes);
-            //sopsList.get(lastSOPIndex).completeFinalList_OLD();
+            sopsList.get(lastSOPIndex).completeFinalList();
             sopsList.get(lastSOPIndex).buildOptimizedExpression();
             
 ////////////// LER E ESCREVER EM ARQUIVO [BLOCK START] /////////////////////////
