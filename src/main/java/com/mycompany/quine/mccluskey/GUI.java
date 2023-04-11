@@ -986,8 +986,8 @@ public final class GUI extends Tools implements KeyListener {
                             if (endLine == -1) { // LER ATÉ O FINAL DO ARQUIVO
                                 while (sc.hasNext()) {
                                     optimizeExpressions(sc.nextLine(), numVars/*, outputFile*/);
-                                    //textAreaReport.append(count + "\t");
-                                    fullReport.add(count + "\t");
+                                    //textAreaReport.append("\n" + count + "\t");
+                                    fullReport.add("\n" + count + "\t");
                                     count++;
                                     
                                     String result = sopsList.get(0).getResult();
@@ -1012,16 +1012,16 @@ public final class GUI extends Tools implements KeyListener {
                                         formattedNumLit = formattedNumLit + ' ';
                                     }
                                     formattedNumLit = formattedNumLit + numLit;
-                                    //textAreaReport.append(formattedNumLit + "\n\n");
-                                    fullReport.add(formattedNumLit + "\n\n");
+                                    //textAreaReport.append(formattedNumLit + "\n");
+                                    fullReport.add(formattedNumLit + "\n");
                                     
                                     //Exibe atualização a cada X iterações
                                     if (Math.floorMod(count, 100) == 0) {
                                         textAreaReport.setText(
                                             "ÍNDICE\t" +
-                                            "EXPRESSÃO MINIMIZADA\n\n"
+                                            "EXPRESSÃO MINIMIZADA\n"
                                         );
-                                        textAreaReport.append(count + "\t" + result + " ...");
+                                        textAreaReport.append("\n" + count + "\t" + result + " ...");
                                         textAreaReport.update(textAreaReport.getGraphics());
                                     }
                                 }
@@ -1029,8 +1029,8 @@ public final class GUI extends Tools implements KeyListener {
                             else {
                                 while (line <= endLine) {
                                     optimizeExpressions(sc.nextLine(), numVars/*, outputFile*/);
-                                    //textAreaReport.append(count + "\t");
-                                    fullReport.add(count + "\t");
+                                    //textAreaReport.append("\n" + count + "\t");
+                                    fullReport.add("\n" + count + "\t");
                                     count++;
                                     
                                     String result = sopsList.get(0).getResult();
@@ -1055,16 +1055,16 @@ public final class GUI extends Tools implements KeyListener {
                                         formattedNumLit = formattedNumLit + ' ';
                                     }
                                     formattedNumLit = formattedNumLit + numLit;
-                                    //textAreaReport.append(formattedNumLit + "\n\n");
-                                    fullReport.add(formattedNumLit + "\n\n");
+                                    //textAreaReport.append(formattedNumLit + "\n");
+                                    fullReport.add(formattedNumLit + "\n");
                                     
                                     //Exibe atualização a cada X iterações
                                     if (Math.floorMod(count, 100) == 0) {
                                         textAreaReport.setText(
                                             "ÍNDICE\t" +
-                                            "EXPRESSÃO MINIMIZADA\n\n"
+                                            "EXPRESSÃO MINIMIZADA\n"
                                         );
-                                        textAreaReport.append(count + "\t" + result + " ...");
+                                        textAreaReport.append("\n" + count + "\t" + result + " ...");
                                         textAreaReport.update(textAreaReport.getGraphics());
                                     }
                                     line++;
@@ -1082,9 +1082,10 @@ public final class GUI extends Tools implements KeyListener {
                                 "              " +
                                 "CÓDIGO HEXADECIMAL" +
                                 "    " +
-                                "LIT.\n\n"
+                                "LIT.\n"
                             );
                             KeyboardFocusManager.getCurrentKeyboardFocusManager().focusNextComponent(labelResultsFromFile);
+                            textAreaReport.setCaretColor(new Color(30, 120, 255));
                             textAreaReport.getCaret().setVisible(true);
                             for (int a = 0; a < fullReport.size(); a++) {
                                 textAreaReport.append(fullReport.get(a));
