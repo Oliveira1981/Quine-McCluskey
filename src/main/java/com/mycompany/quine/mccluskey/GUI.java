@@ -581,6 +581,7 @@ public final class GUI extends Tools implements KeyListener {
         textAreaReport.setFont(fontReport);
         Insets mReport = new Insets(10, 10, 10, 10);
         textAreaReport.setMargin(mReport);
+        textAreaReport.setDoubleBuffered(true);
         
         JScrollPane jScrollReport = new JScrollPane(textAreaReport);
 	c.fill = GridBagConstraints.BOTH;
@@ -591,6 +592,8 @@ public final class GUI extends Tools implements KeyListener {
 	c.weightx = 100.0;
         c.weighty = 0.6;
 	jScrollReport.setBorder(BorderFactory.createLineBorder(borderColor));
+        jScrollReport.setDoubleBuffered(true);
+        //jScrollReport.set
         qmPanel.add(jScrollReport, c);
         
         JLabel space4 = new JLabel("   ");
@@ -619,7 +622,8 @@ public final class GUI extends Tools implements KeyListener {
         
         mainFrame.add(tabbedPane);
         mainFrame.pack();
-        mainFrame.setSize(750, 680);
+        //mainFrame.setSize(750, 680);
+        mainFrame.setSize(1020,700);
         Dimension dim = Toolkit.getDefaultToolkit().getScreenSize();
         mainFrame.setLocation(dim.width/2-mainFrame.getSize().width/2, dim.height/2-mainFrame.getSize().height/2);
         mainFrame.setVisible(true);
@@ -649,6 +653,8 @@ public final class GUI extends Tools implements KeyListener {
                         c.anchor = GridBagConstraints.WEST;
                         qmPanel.add(comboWichReport, c);
                         
+                        resultLabel.setVisible(true);
+                        textAreaResult.setVisible(true);
                         mainFrame.repaint();
                     }
                     case 2 -> { // input: aleatória
@@ -669,6 +675,8 @@ public final class GUI extends Tools implements KeyListener {
                         c.anchor = GridBagConstraints.WEST;
                         qmPanel.add(comboWichReport, c);
                         
+                        resultLabel.setVisible(true);
+                        textAreaResult.setVisible(true);
                         mainFrame.repaint();
                         hasResult = true;
                         String gen;
@@ -686,6 +694,9 @@ public final class GUI extends Tools implements KeyListener {
                     }
                     case 0 -> { // input: arquivo
                         
+                        checkReadEntireFile.setForeground(new Color(30, 130, 230));
+                        checkReadEntireFile.setFocusable(true);
+                        checkReadEntireFile.setSelected(true);
                         c.fill = GridBagConstraints.HORIZONTAL;
                         c.gridx = 3;
                 	c.gridy = 1;
@@ -694,9 +705,10 @@ public final class GUI extends Tools implements KeyListener {
                         c.weightx = 0.0;
                         c.weighty = 0.0;
                         c.anchor = GridBagConstraints.WEST;
-                        //checkReadEntireFile.setSelected(true);
+                        checkReadEntireFile.setSelected(true);
                         qmPanel.add(checkReadEntireFile, c);
                         
+                        labelStartLine.setForeground(new Color(110, 110, 110));
                         c.fill = GridBagConstraints.HORIZONTAL;
                         c.gridx = 4;
                         c.gridy = 1;
@@ -720,6 +732,7 @@ public final class GUI extends Tools implements KeyListener {
                         textStartLine.setEditable(false);
                         qmPanel.add(textStartLine, c);
                         
+                        labelEndLine.setForeground(new Color(110, 110, 110));
                         c.fill = GridBagConstraints.HORIZONTAL;
                         c.gridx = 6;
                         c.gridy = 1;
@@ -755,6 +768,8 @@ public final class GUI extends Tools implements KeyListener {
                         //labelResultsFromFile.setBorder(BorderFactory.createLineBorder(borderColor));
                         qmPanel.add(labelResultsFromFile, c);
                             
+                        resultLabel.setVisible(false);
+                        textAreaResult.setVisible(false);
                         mainFrame.repaint();
                         
                         try {
@@ -954,49 +969,42 @@ public final class GUI extends Tools implements KeyListener {
                             Scanner sc = new Scanner(selectedFile);
                             
                             int line = 1;
-                            if (line < startLine) {
-                                printt("\nSkipping line(s)...\n");
-                            }
+                            //if (line < startLine) {
+                            //    printt("\nSkipping line(s)...\n");
+                            //}
                             while (line < startLine) {
                                 sc.nextLine();
                                 line++;
                             }
-                            printt("\nReading...");
+                            //printt("\nReading...");
                             
-                            mainFrame.setMinimumSize(new Dimension(1020,520));
                             Font fileResultsFont = new Font("Consolas", Font.PLAIN, 14);
                             textAreaReport.setFont(fileResultsFont);
                             textAreaReport.setText("");
-                            textAreaReport.setText(
-                                "ÍNDICE\t" +
-                                "EXPRESSÃO MINIMIZADA" +
-                                    "                " +
-                                    "                " +
-                                    "                " +
-                                    "              " +
-                                "CÓDIGO HEXADECIMAL" +
-                                    "    " +
-                                "LIT.\n\n"
-                            );
                             int count = line;
+                            ArrayList<String> fullReport = new ArrayList<>();
                             if (endLine == -1) { // LER ATÉ O FINAL DO ARQUIVO
                                 while (sc.hasNext()) {
                                     optimizeExpressions(sc.nextLine(), numVars/*, outputFile*/);
-                                    textAreaReport.append(count++ + "\t");
+                                    //textAreaReport.append(count + "\t");
+                                    fullReport.add(count + "\t");
+                                    count++;
                                     
                                     String result = sopsList.get(0).getResult();
                                     String formattedResult = result + ' ';
                                     for (int c = result.length(); c < 80; c++) {
                                         formattedResult = formattedResult + '.';
                                     }
-                                    textAreaReport.append(formattedResult + " ");
+                                    //textAreaReport.append(formattedResult + " ");
+                                    fullReport.add(formattedResult + " ");
                                     
                                     String hexa = sopsList.get(0).expression2hexadecimal(sopsList.get(0).getResult());
                                     String formattedHexa = hexa + ' ';
                                     for (int c = hexa.length(); c < 20; c++) {
                                         formattedHexa = formattedHexa + '.';
                                     }
-                                    textAreaReport.append(formattedHexa + " ");
+                                    //textAreaReport.append(formattedHexa + " ");
+                                    fullReport.add(formattedHexa + " ");
                                     
                                     String numLit = String.valueOf(SumOfProducts.numberOfLiterals(sopsList.get(0).getResult(), sopsList.get(0).getNumberOfVars(), sopsList.get(0).getNumberOfProducts()));
                                     String formattedNumLit = "";
@@ -1004,28 +1012,42 @@ public final class GUI extends Tools implements KeyListener {
                                         formattedNumLit = formattedNumLit + ' ';
                                     }
                                     formattedNumLit = formattedNumLit + numLit;
-                                    textAreaReport.append(formattedNumLit + "\n\n");
+                                    //textAreaReport.append(formattedNumLit + "\n\n");
+                                    fullReport.add(formattedNumLit + "\n\n");
+                                    
+                                    //Exibe atualização a cada X iterações
+                                    if (Math.floorMod(count, 100) == 0) {
+                                        textAreaReport.setText(
+                                            "ÍNDICE\t" +
+                                            "EXPRESSÃO MINIMIZADA\n\n"
+                                        );
+                                        textAreaReport.append(count + "\t" + result + " ...");
+                                        textAreaReport.update(textAreaReport.getGraphics());
+                                    }
                                 }
                             }
                             else {
                                 while (line <= endLine) {
                                     optimizeExpressions(sc.nextLine(), numVars/*, outputFile*/);
-                                    
-                                    textAreaReport.append(count++ + "\t");
+                                    //textAreaReport.append(count + "\t");
+                                    fullReport.add(count + "\t");
+                                    count++;
                                     
                                     String result = sopsList.get(0).getResult();
                                     String formattedResult = result + ' ';
                                     for (int c = result.length(); c < 80; c++) {
                                         formattedResult = formattedResult + '.';
                                     }
-                                    textAreaReport.append(formattedResult + " ");
+                                    //textAreaReport.append(formattedResult + " ");
+                                    fullReport.add(formattedResult + " ");
                                     
                                     String hexa = sopsList.get(0).expression2hexadecimal(sopsList.get(0).getResult());
                                     String formattedHexa = hexa + ' ';
                                     for (int c = hexa.length(); c < 20; c++) {
                                         formattedHexa = formattedHexa + '.';
                                     }
-                                    textAreaReport.append(formattedHexa + " ");
+                                    //textAreaReport.append(formattedHexa + " ");
+                                    fullReport.add(formattedHexa + " ");
                                     
                                     String numLit = String.valueOf(SumOfProducts.numberOfLiterals(sopsList.get(0).getResult(), sopsList.get(0).getNumberOfVars(), sopsList.get(0).getNumberOfProducts()));
                                     String formattedNumLit = "";
@@ -1033,10 +1055,41 @@ public final class GUI extends Tools implements KeyListener {
                                         formattedNumLit = formattedNumLit + ' ';
                                     }
                                     formattedNumLit = formattedNumLit + numLit;
-                                    textAreaReport.append(formattedNumLit + "\n\n");
+                                    //textAreaReport.append(formattedNumLit + "\n\n");
+                                    fullReport.add(formattedNumLit + "\n\n");
+                                    
+                                    //Exibe atualização a cada X iterações
+                                    if (Math.floorMod(count, 100) == 0) {
+                                        textAreaReport.setText(
+                                            "ÍNDICE\t" +
+                                            "EXPRESSÃO MINIMIZADA\n\n"
+                                        );
+                                        textAreaReport.append(count + "\t" + result + " ...");
+                                        textAreaReport.update(textAreaReport.getGraphics());
+                                    }
                                     line++;
                                 }
                             }
+                            textAreaReport.append("\n\nFinalizando...");
+                            textAreaReport.update(textAreaReport.getGraphics());
+                            //mainFrame.setMinimumSize(new Dimension(1020,520));
+                            textAreaReport.setText(
+                                "ÍNDICE\t" +
+                                "EXPRESSÃO MINIMIZADA" +
+                                "                " +
+                                "                " +
+                                "                " +
+                                "              " +
+                                "CÓDIGO HEXADECIMAL" +
+                                "    " +
+                                "LIT.\n\n"
+                            );
+                            KeyboardFocusManager.getCurrentKeyboardFocusManager().focusNextComponent(labelResultsFromFile);
+                            textAreaReport.getCaret().setVisible(true);
+                            for (int a = 0; a < fullReport.size(); a++) {
+                                textAreaReport.append(fullReport.get(a));
+                            }
+                            textAreaReport.setCaretPosition(0);
                             qmPanel.repaint();
                             outputFile.close();
                             /*if (readFromFile(editor.getText(),
@@ -1048,7 +1101,7 @@ public final class GUI extends Tools implements KeyListener {
                         }
                     }
                     if (comboWichInput.getSelectedIndex() == 0) {
-                        
+                        textAreaResult.setText("");
                     }
                     else {
                         if (errorMsg.isEmpty()) {
