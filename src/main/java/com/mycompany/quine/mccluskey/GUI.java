@@ -19,10 +19,12 @@ import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
+//import java.awt.event.WindowAdapter;
+//import java.awt.event.WindowEvent;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
-import java.io.PrintWriter;
+//import java.io.PrintWriter;
 import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
 import java.util.Dictionary;
@@ -43,6 +45,7 @@ import javax.swing.JSlider;
 import javax.swing.JTabbedPane;
 import javax.swing.JTextArea;
 import javax.swing.JTextField;
+import javax.swing.SwingConstants;
 import javax.swing.WindowConstants;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
@@ -59,7 +62,7 @@ public final class GUI extends Tools implements KeyListener {
     private boolean hasResult;
     private String errorMsg;
     private ArrayList<SumOfProducts> sopsList;
-    private PrintWriter outputFile;
+    //private PrintWriter outputFile;
     
     public GUI(){
         inputFormat = "";
@@ -134,7 +137,7 @@ public final class GUI extends Tools implements KeyListener {
     public void setFileToWrite(String outputFileName) throws
         FileNotFoundException,
         UnsupportedEncodingException {
-        outputFile = new PrintWriter(outputFileName);
+        //outputFile = new PrintWriter(outputFileName);
     }
     
     public void openOutputFile(String outputFileName)  throws
@@ -364,7 +367,7 @@ public final class GUI extends Tools implements KeyListener {
         c.fill = GridBagConstraints.HORIZONTAL;
         c.gridx = 11;
 	c.gridy = 1;
-	c.gridwidth = 3;
+	c.gridwidth = 1;
 	c.gridheight = 1;
         c.weightx = 0.0;
         c.weighty = 0.0;
@@ -551,7 +554,7 @@ public final class GUI extends Tools implements KeyListener {
         c.fill = GridBagConstraints.NONE;
 	c.gridx = 1;
 	c.gridy = 8;
-	c.gridwidth = 5;
+	c.gridwidth = 1;
 	c.gridheight = 1;
         c.weightx = 0.0;
         c.weighty = 0.0;
@@ -581,7 +584,23 @@ public final class GUI extends Tools implements KeyListener {
         textAreaReport.setFont(fontReport);
         Insets mReport = new Insets(10, 10, 10, 10);
         textAreaReport.setMargin(mReport);
-        textAreaReport.setDoubleBuffered(true);
+        
+        JLabel labelTime = new JLabel(" ");
+        labelTime.setPreferredSize(new Dimension(250, 30));
+        labelTime.setMinimumSize(new Dimension(250, 30));
+        labelTime.setFont(fontRFF);
+        labelTime.setForeground(new Color(30, 130, 230));
+        labelTime.setHorizontalAlignment(SwingConstants.RIGHT);
+        c.fill = GridBagConstraints.HORIZONTAL;
+	c.gridx = 13;
+	c.gridy = 8;
+	c.gridwidth = 1;
+	c.gridheight = 1;
+        c.weightx = 0.0;
+        c.weighty = 0.0;
+        c.anchor = GridBagConstraints.WEST;
+	labelTime.setBorder(BorderFactory.createLineBorder(borderColor));
+        qmPanel.add(labelTime, c);
         
         JScrollPane jScrollReport = new JScrollPane(textAreaReport);
 	c.fill = GridBagConstraints.BOTH;
@@ -592,8 +611,6 @@ public final class GUI extends Tools implements KeyListener {
 	c.weightx = 100.0;
         c.weighty = 0.6;
 	jScrollReport.setBorder(BorderFactory.createLineBorder(borderColor));
-        jScrollReport.setDoubleBuffered(true);
-        //jScrollReport.set
         qmPanel.add(jScrollReport, c);
         
         JLabel space4 = new JLabel("   ");
@@ -601,7 +618,7 @@ public final class GUI extends Tools implements KeyListener {
 	c.gridx = 14;
 	c.gridy = 1;
 	c.gridwidth = 1;
-	c.gridheight = 8;
+	c.gridheight = 9;
         c.weightx = 0.0;
         c.weighty = 0.0;
 	space4.setBorder(BorderFactory.createLineBorder(borderColor));
@@ -899,7 +916,7 @@ public final class GUI extends Tools implements KeyListener {
                     labelVariables.setText("Número de variáveis: " + numVars);
                 }
                 c.fill = GridBagConstraints.HORIZONTAL;
-                c.gridx = 13;
+                c.gridx = 11;
                 c.gridy = 1;
                 c.gridwidth = 1;
                 c.gridheight = 1;
@@ -915,6 +932,9 @@ public final class GUI extends Tools implements KeyListener {
 
             @Override
             public void actionPerformed(ActionEvent e) {
+                labelTime.setText("Tempo: ...          ");
+                labelTime.update(labelTime.getGraphics());
+                long startTime = System.nanoTime();
                 try {
                     //openOutputFile("Quine-McCluskey Results.txt");
                     setFileToWrite("Quine-McCluskey Results.txt");
@@ -1092,7 +1112,7 @@ public final class GUI extends Tools implements KeyListener {
                             }
                             textAreaReport.setCaretPosition(0);
                             qmPanel.repaint();
-                            outputFile.close();
+                            //outputFile.close();
                             /*if (readFromFile(editor.getText(),
                                     startLine,
                                     endLine
@@ -1119,11 +1139,15 @@ public final class GUI extends Tools implements KeyListener {
                             textAreaReport.setText("-");
                         }
                     }
-                    outputFile.close();
+                    //outputFile.close();
                 }
                 catch (Exception ex) {
                     Logger.getLogger(GUI.class.getName()).log(Level.SEVERE, null, ex);
                 }
+                long elapsedTime = System.nanoTime() - startTime;
+                labelTime.setText(String.format("Tempo: %.3f s", (float) elapsedTime/1000000000));
+                //labelTime.update(labelTime.getGraphics());
+                //System.out.printf("\nTime elapsed: %.3f s", (float) elapsedTime/1000000000);
             }
         });
         
@@ -1154,8 +1178,9 @@ public final class GUI extends Tools implements KeyListener {
             
             @Override
             public void actionPerformed(ActionEvent e) {
+                long startTime = System.nanoTime();
                 try {
-                    setFileToWrite("Quine-McCluskey Results.txt");
+                    //setFileToWrite("Quine-McCluskey Results.txt");
                     //openOutputFile("Quine-McCluskey Results.txt");
                     hasResult = true;
                     errorMsg = "";
@@ -1179,13 +1204,22 @@ public final class GUI extends Tools implements KeyListener {
                         textAreaResult.setText(errorMsg);
                         textAreaReport.setText("-");
                     }
-                    outputFile.close();
+                    //outputFile.close();
                 } catch (Exception ex) {
                     Logger.getLogger(GUI.class.getName()).log(Level.SEVERE, null, ex);
                 }
+                long elapsedTime = System.nanoTime() - startTime;
+                System.out.printf("\nTime elapsed: %.3f s", (float) elapsedTime/1000000000);
             }
         });
-        
+        /*
+        mainFrame.addWindowListener(new WindowAdapter() {
+            @Override
+            public void windowClosing(WindowEvent we) { 
+                printt("\n");
+            }
+        });
+        */
         inputFormat = String.valueOf(comboExpressions.getSelectedItem());
     }
     
@@ -1302,9 +1336,9 @@ public final class GUI extends Tools implements KeyListener {
             sopsList.get(lastSOPIndex).buildOptimizedExpression();
             
 ////////////// LER E ESCREVER EM ARQUIVO [BLOCK START] /////////////////////////
-            print(sopsList.get(lastSOPIndex).getResult()+"\t", /*writer*/outputFile);
-            print(sopsList.get(lastSOPIndex).expression2hexadecimal(sopsList.get(lastSOPIndex).getResult())+"\t", /*writer*/outputFile);
-            print(SumOfProducts.numberOfLiterals(sopsList.get(lastSOPIndex).getResult(), sopsList.get(lastSOPIndex).getNumberOfVars(), sopsList.get(lastSOPIndex).getNumberOfProducts())+"\n", /*writer*/outputFile);
+            //print(sopsList.get(lastSOPIndex).getResult()+"\t", /*writer*/outputFile);
+            //print(sopsList.get(lastSOPIndex).expression2hexadecimal(sopsList.get(lastSOPIndex).getResult())+"\t", /*writer*/outputFile);
+            //print(SumOfProducts.numberOfLiterals(sopsList.get(lastSOPIndex).getResult(), sopsList.get(lastSOPIndex).getNumberOfVars(), sopsList.get(lastSOPIndex).getNumberOfProducts())+"\n", /*writer*/outputFile);
 ////////////// LER E ESCREVER EM ARQUIVO [BLOCK END] ///////////////////////////
             
             begin = end + 1;
@@ -1324,6 +1358,7 @@ public final class GUI extends Tools implements KeyListener {
     @Override
     public void keyPressed(KeyEvent e) {
         if (e.getKeyCode() == KeyEvent.VK_ESCAPE) {
+            printt("\n");
             System.exit(0);
         }
     }
