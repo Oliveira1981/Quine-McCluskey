@@ -174,7 +174,7 @@ public final class GUI extends Tools implements KeyListener {
         
         Font fontDefault = new Font("Segoe UI", Font.BOLD, 13);
         
-        Color borderColor = new Color(0, 0, 0, 222);
+        Color borderColor = new Color(0, 0, 0, 0);
         
         JLabel space1 = new JLabel("   ");
         c.fill = GridBagConstraints.HORIZONTAL;
