@@ -1,5 +1,6 @@
 package com.mycompany.quine.mccluskey;
 
+//import com.formdev.flatlaf.FlatLightLaf;
 import com.formdev.flatlaf.FlatDarkLaf;
 import java.awt.*;
 import java.awt.event.*;
@@ -146,10 +147,10 @@ public final class GUI extends Tools implements KeyListener {
         };
         
         //UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
-        UIManager.setLookAndFeel( new FlatDarkLaf());
+        //UIManager.setLookAndFeel(new FlatLightLaf());
+        UIManager.setLookAndFeel(new FlatDarkLaf());
         JFrame mainFrame = new JFrame("ROSA Binary");
         mainFrame.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
-        mainFrame.setMinimumSize(new Dimension(930,520));
         
         GridBagLayout grid = new GridBagLayout();
         JPanel qmPanel = new JPanel(grid);
@@ -157,8 +158,7 @@ public final class GUI extends Tools implements KeyListener {
         tabbedPane.setName("mainTabbedPane");
         //tabbedPane.setForeground(new Color(1, 90, 190));
         tabbedPane.setForeground(new Color(30, 130, 230));
-        Font fontTab = new Font("Segoe UI", Font.BOLD, 14);
-        tabbedPane.setFont(fontTab);
+        tabbedPane.setFont(new Font("Segoe UI", Font.BOLD, 14));
         tabbedPane.add("Quine-McCluskey", qmPanel);
         //tabbedPane.getComponent(0).setBackground(new Color(170, 170, 170));
         tabbedPane.add("Maze Router", new JPanel());
@@ -172,10 +172,9 @@ public final class GUI extends Tools implements KeyListener {
         GridBagConstraints c = new GridBagConstraints();
         qmPanel.setBorder(BorderFactory.createEmptyBorder(2,2,2,2));
         
-        Font font = new Font("Segoe UI", Font.BOLD, 13);
+        Font fontDefault = new Font("Segoe UI", Font.BOLD, 13);
         
-        Color borderColor = new Color(0, 0, 0, 0);
-        //Color borderColor = new Color(55, 111, 155, 155);
+        Color borderColor = new Color(0, 0, 0, 222);
         
         JLabel space1 = new JLabel("   ");
         c.fill = GridBagConstraints.HORIZONTAL;
@@ -205,8 +204,7 @@ public final class GUI extends Tools implements KeyListener {
         comboWichInput.setMinimumSize(new Dimension(220, 30));
         comboWichInput.addKeyListener(this);
         comboWichInput.setFocusable(true);
-        Font fontWichInput = new Font("Segoe UI", Font.BOLD, 12);
-	comboWichInput.setFont(fontWichInput);
+	comboWichInput.setFont(new Font("Segoe UI", Font.BOLD, 12));
         //comboWichInput.setForeground(new Color(1, 90, 190));
         comboWichInput.setForeground(new Color(30, 130, 230));
         c.fill = GridBagConstraints.NONE;
@@ -233,7 +231,7 @@ public final class GUI extends Tools implements KeyListener {
         qmPanel.add(space4a, c);
         
         JCheckBox checkReadEntireFile = new JCheckBox("Inteiro");
-        checkReadEntireFile.setFont(font);
+        checkReadEntireFile.setFont(fontDefault);
         //labelInteiro.setForeground(new Color(1, 90, 190));
         checkReadEntireFile.setForeground(new Color(30, 130, 230));
         checkReadEntireFile.addKeyListener(this);
@@ -251,7 +249,7 @@ public final class GUI extends Tools implements KeyListener {
         //vPanel.add(checkReadEntireFile, c);
         
         JLabel labelStartLine = new JLabel("     Linha inicial: ");
-        labelStartLine.setFont(font);
+        labelStartLine.setFont(fontDefault);
         //labelStartLine.setForeground(new Color(30, 130, 230));
         labelStartLine.setForeground(new Color(110, 110, 110));
         labelStartLine.addKeyListener(this);
@@ -270,8 +268,7 @@ public final class GUI extends Tools implements KeyListener {
         //textStartLine.setForeground(new Color(30, 130, 230));
         textStartLine.setPreferredSize(new Dimension(55, 20));
         textStartLine.setMinimumSize(new Dimension(55, 20));
-        Font fontStartLine = new Font("Segoe UI", Font.PLAIN, 12);
-        textStartLine.setFont(fontStartLine);
+        textStartLine.setFont(new Font("Segoe UI", Font.PLAIN, 12));
         textStartLine.addKeyListener(this);
         c.fill = GridBagConstraints.HORIZONTAL;
         c.gridx = 5;
@@ -285,7 +282,7 @@ public final class GUI extends Tools implements KeyListener {
         //vPanel.add(textStartLine, c);
         
         JLabel labelEndLine = new JLabel("     Linha final: ");
-        labelEndLine.setFont(font);
+        labelEndLine.setFont(fontDefault);
         //labelEndLine.setForeground(new Color(30, 130, 230));
         labelEndLine.setForeground(new Color(110, 110, 110));
         labelEndLine.addKeyListener(this);
@@ -305,8 +302,7 @@ public final class GUI extends Tools implements KeyListener {
         //textEndLine.setForeground(new Color(30, 130, 230));
         textEndLine.setPreferredSize(new Dimension(55, 20));
         textEndLine.setMinimumSize(new Dimension(55, 20));
-        Font fontEndLine = new Font("Segoe UI", Font.PLAIN, 12);
-        textEndLine.setFont(fontEndLine);
+        textEndLine.setFont(new Font("Segoe UI", Font.PLAIN, 12));
         textEndLine.addKeyListener(this);
         c.fill = GridBagConstraints.HORIZONTAL;
         c.gridx = 7;
@@ -319,8 +315,8 @@ public final class GUI extends Tools implements KeyListener {
         //textEndLine.setBorder(BorderFactory.createLineBorder(borderColor));
         //vPanel.add(textEndLine, c);
         
-        JLabel labelVariables = new JLabel("Número de variáveis: Auto");
-        labelVariables.setFont(font);
+        JLabel labelVariables = new JLabel("   Número de variáveis: Auto");
+        labelVariables.setFont(fontDefault);
         //labelExpressions.setForeground(new Color(1, 90, 190));
         labelVariables.setForeground(new Color(30, 130, 230));
         c.fill = GridBagConstraints.HORIZONTAL;
@@ -334,10 +330,9 @@ public final class GUI extends Tools implements KeyListener {
         labelVariables.setBorder(BorderFactory.createLineBorder(borderColor));
         qmPanel.add(labelVariables, c);
         
-        Font f = new Font("Consolas", Font.PLAIN, 1);
-        JLabel space3a = new JLabel();
-        space3a.setFont(f);
-        space3a.setText(" ");
+        JLabel space3a = new JLabel(" ");
+        //space3a.setVisible(false);
+        space3a.setFont(new Font("SEGOE UI", Font.PLAIN, 1));
 	c.fill = GridBagConstraints.HORIZONTAL;
 	c.gridx = 1;
 	c.gridy = 2;
@@ -354,8 +349,7 @@ public final class GUI extends Tools implements KeyListener {
         comboExpressions.setEditable(true);
         JTextField editor = (JTextField) comboExpressions.getEditor().getEditorComponent();
         editor.addKeyListener(this);
-        Font fontExp = new Font("Segoe UI", Font.PLAIN, 12);
-        comboExpressions.setFont(fontExp);
+        comboExpressions.setFont(new Font("Segoe UI", Font.PLAIN, 12));
         comboExpressions.setFocusable(true);
 	c.fill = GridBagConstraints.HORIZONTAL;
 	c.gridx = 1;
@@ -369,7 +363,7 @@ public final class GUI extends Tools implements KeyListener {
         qmPanel.add(comboExpressions, c);
         
         JLabel space5 = new JLabel(" ");
-	c.fill = GridBagConstraints.NONE;
+	c.fill = GridBagConstraints.HORIZONTAL;
 	c.gridx = 8;
 	c.gridy = 3;
 	c.gridwidth = 1;
@@ -388,8 +382,8 @@ public final class GUI extends Tools implements KeyListener {
         okButton.setBackground(new Color(30, 50, 100));
         okButton.setForeground(new Color(50, 150, 250));
         //okButton.setForeground(new Color(30, 130, 230));
-        okButton.setFont(font);
-	c.fill = GridBagConstraints.NONE;
+        okButton.setFont(fontDefault);
+	c.fill = GridBagConstraints.HORIZONTAL;
 	c.gridx = 9;
 	c.gridy = 3;
 	c.gridwidth = 1;
@@ -402,7 +396,7 @@ public final class GUI extends Tools implements KeyListener {
         mainFrame.getRootPane().setDefaultButton(okButton);
         
         JLabel space5B = new JLabel(" ");
-	c.fill = GridBagConstraints.NONE;
+	c.fill = GridBagConstraints.HORIZONTAL;
 	c.gridx = 10;
 	c.gridy = 3;
 	c.gridwidth = 1;
@@ -428,17 +422,17 @@ public final class GUI extends Tools implements KeyListener {
         //slider.setPaintTicks(true);
         slider.setSnapToTicks(true);
         //slider.setPaintLabels(true);  
-        slider.setMinimumSize(new Dimension(200, 40));
+        slider.setMinimumSize(new Dimension(200, 30));
         slider.setLabelTable(labelTable);
-	c.fill = GridBagConstraints.NONE;
+	c.fill = GridBagConstraints.VERTICAL;
 	c.gridx = 11;
 	c.gridy = 3;
-	c.gridwidth = 3;
+	c.gridwidth = 1;
 	c.gridheight = 1;
         c.weightx = 0.0;
         c.weighty = 0.0;
         c.anchor = GridBagConstraints.WEST;
-        //slider.setBorder(BorderFactory.createLineBorder(borderColor));
+        slider.setBorder(BorderFactory.createLineBorder(borderColor));
         qmPanel.add(slider, c);
         
         JLabel space6 = new JLabel(" ");
@@ -453,7 +447,7 @@ public final class GUI extends Tools implements KeyListener {
         qmPanel.add(space6, c);
         
         JLabel resultLabel = new JLabel("Expressão Minimizada:");
-        resultLabel.setFont(font);
+        resultLabel.setFont(fontDefault);
         //resultLabel.setForeground(new Color(1, 90, 190));
         resultLabel.setForeground(new Color(30, 130, 230));
 	c.fill = GridBagConstraints.NONE;
@@ -475,8 +469,7 @@ public final class GUI extends Tools implements KeyListener {
         textAreaResult.setBackground(new Color(44, 44, 44));
         //textAreaResult.setForeground(new Color(1, 188, 255));
         textAreaResult.setForeground(new Color(50, 150, 250));
-        Font fontResult = new Font("Consolas", Font.PLAIN, 16);
-        textAreaResult.setFont(fontResult);
+        textAreaResult.setFont(new Font("Consolas", Font.PLAIN, 16));
         Insets mResult = new Insets(12, 8, 4, 6);
         textAreaResult.setMargin(mResult);
 	c.fill = GridBagConstraints.HORIZONTAL;
@@ -506,8 +499,7 @@ public final class GUI extends Tools implements KeyListener {
         comboWichReport.setMinimumSize(new Dimension(250, 30));
         comboWichReport.addKeyListener(this);
         comboWichReport.setFocusable(true);
-        Font fontRep = new Font("Segoe UI", Font.BOLD, 12);
-	comboWichReport.setFont(fontRep);
+	comboWichReport.setFont(new Font("Segoe UI", Font.BOLD, 12));
         //comboWichReport.setForeground(new Color(1, 90, 190));
         comboWichReport.setForeground(new Color(30, 130, 230));
         c.fill = GridBagConstraints.NONE;
@@ -521,27 +513,22 @@ public final class GUI extends Tools implements KeyListener {
 	//comboWichReport.setBorder(BorderFactory.createLineBorder(borderColor));
         qmPanel.add(comboWichReport, c);
         
-        JLabel labelResultsFromFile = new JLabel("Resultados:");
+        JLabel labelResultsFromFile = new JLabel(" Resultados:");
         labelResultsFromFile.setPreferredSize(new Dimension(250, 30));
-        labelResultsFromFile.setMinimumSize(new Dimension(250, 30));
-        //labelResultsFromFile.addKeyListener(this);
-        labelResultsFromFile.setFocusable(true);
-        Font fontRFF = new Font("Segoe UI", Font.BOLD, 12);
-     	labelResultsFromFile.setFont(fontRFF);
+     	labelResultsFromFile.setFont(new Font("Segoe UI", Font.BOLD, 14));
         //labelResultsFromFile.setForeground(new Color(1, 90, 190));
         labelResultsFromFile.setForeground(new Color(30, 130, 230));
         
         JTextField labelTime = new JTextField(" ");
         labelTime.setEditable(false);
-        labelTime.setPreferredSize(new Dimension(250, 30));
         labelTime.setMinimumSize(new Dimension(250, 30));
-        labelTime.setFont(fontRFF);
+        labelTime.setFont(new Font("Consolas", Font.PLAIN, 14));
         labelTime.setForeground(new Color(30, 130, 230));
         labelTime.setHorizontalAlignment(SwingConstants.RIGHT);
-        c.fill = GridBagConstraints.HORIZONTAL;
-	c.gridx = 13;
+        c.fill = GridBagConstraints.BOTH;
+	c.gridx = 11;
 	c.gridy = 8;
-	c.gridwidth = 1;
+	c.gridwidth = 3;
 	c.gridheight = 1;
         c.weightx = 0.0;
         c.weighty = 0.0;
@@ -592,15 +579,14 @@ public final class GUI extends Tools implements KeyListener {
 	c.gridheight = 1;
         c.weightx = 0.0;
         c.weighty = 0.0;
-        Font fontBottom = new Font("Segoe UI", Font.PLAIN, 6);
-        space2.setFont(fontBottom);
+        space2.setFont(new Font("Segoe UI", Font.PLAIN, 6));
 	space2.setBorder(BorderFactory.createLineBorder(borderColor));
         qmPanel.add(space2, c);
         
         mainFrame.add(tabbedPane);
         mainFrame.pack();
-        //mainFrame.setSize(750, 680);
-        mainFrame.setSize(1020,700);
+        mainFrame.setMinimumSize(new Dimension(1050,600));
+        mainFrame.setSize(new Dimension(1050,700));
         Dimension dim = java.awt.Toolkit.getDefaultToolkit().getScreenSize();
         mainFrame.setLocation(dim.width/2-mainFrame.getSize().width/2, dim.height/2-mainFrame.getSize().height/2);
         mainFrame.setVisible(true);
@@ -870,10 +856,10 @@ public final class GUI extends Tools implements KeyListener {
                 numVars = (int)source.getValue();
                 qmPanel.remove(labelVariables);
                 if (numVars == 0) {
-                    labelVariables.setText("Número de variáveis: Auto");
+                    labelVariables.setText("   Número de variáveis: Auto");
                 }
                 else {
-                    labelVariables.setText("Número de variáveis: " + numVars);
+                    labelVariables.setText("   Número de variáveis: " + numVars);
                 }
                 c.fill = GridBagConstraints.HORIZONTAL;
                 c.gridx = 11;
@@ -892,7 +878,7 @@ public final class GUI extends Tools implements KeyListener {
 
             @Override
             public void actionPerformed(ActionEvent e) {
-                labelTime.setText("Tempo: ...         ");
+                labelTime.setText("Tempo:        ");
                 labelTime.update(labelTime.getGraphics());
                 long startTime = System.nanoTime();
                 try {
@@ -958,8 +944,7 @@ public final class GUI extends Tools implements KeyListener {
                             }
                             //printt("\nReading...");
                             
-                            Font fileResultsFont = new Font("Consolas", Font.PLAIN, 14);
-                            textAreaReport.setFont(fileResultsFont);
+                            textAreaReport.setFont(new Font("Consolas", Font.PLAIN, 14));
                             textAreaReport.setText("");
                             int count = line;
                             ArrayList<String> fullReport = new ArrayList<>();
@@ -1171,8 +1156,10 @@ public final class GUI extends Tools implements KeyListener {
                 } catch (Exception ex) {
                     Logger.getLogger(GUI.class.getName()).log(Level.SEVERE, null, ex);
                 }
-                long elapsedTime = System.nanoTime() - startTime;
-                System.out.printf("\nTime elapsed: %.3f s", (float) elapsedTime/1000000000);
+                //long elapsedTime = System.nanoTime() - startTime;
+                labelTime.setText(String.format("Tempo: %.3f s", (float) (System.nanoTime() - startTime)/1000000000));
+                labelTime.update(labelTime.getGraphics());
+                //System.out.printf("\nTime elapsed: %.3f s", (float) elapsedTime/1000000000);
             }
         });
         /*
