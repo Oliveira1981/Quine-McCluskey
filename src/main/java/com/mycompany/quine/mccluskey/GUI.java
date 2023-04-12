@@ -587,7 +587,7 @@ public final class GUI extends Tools implements KeyListener {
         mainFrame.pack();
         mainFrame.setMinimumSize(new Dimension(1050,600));
         mainFrame.setSize(new Dimension(1050,700));
-        Dimension dim = java.awt.Toolkit.getDefaultToolkit().getScreenSize();
+        Dimension dim = Toolkit.getDefaultToolkit().getScreenSize();
         mainFrame.setLocation(dim.width/2-mainFrame.getSize().width/2, dim.height/2-mainFrame.getSize().height/2);
         mainFrame.setVisible(true);
         KeyboardFocusManager.getCurrentKeyboardFocusManager().focusNextComponent(labelVariables);
@@ -883,7 +883,7 @@ public final class GUI extends Tools implements KeyListener {
                 long startTime = System.nanoTime();
                 try {
                     //openOutputFile("Quine-McCluskey Results.txt");
-                    setFileToWrite("Quine-McCluskey Results.txt");
+                    //setFileToWrite("Quine-McCluskey Results.txt");
                     hasResult = true;
                     switch (comboWichInput.getSelectedIndex()) {
                         case 1 -> { // input: digitar
@@ -920,11 +920,11 @@ public final class GUI extends Tools implements KeyListener {
                                 }
                             }
                             if ((endLine != -1) && (endLine < startLine)) {
-                                errorMsg = "Linha final menor que linha inicial";
+                                errorMsg = "Linha final menor que linha inicial.";
                                 textAreaReport.setText(errorMsg);
                                 return;
                             }
-                            setFileToWrite("Quine-McCluskey Results.txt");
+                            //setFileToWrite("Quine-McCluskey Results.txt");
                             File selectedFile = new File(editor.getText());
                             if(!selectedFile.exists()){
                                 printt("\nNo file selected.\n");
@@ -939,8 +939,18 @@ public final class GUI extends Tools implements KeyListener {
                             //    printt("\nSkipping line(s)...\n");
                             //}
                             while (line < startLine) {
-                                sc.nextLine();
-                                line++;
+                                if (sc.hasNext()) {
+                                    sc.nextLine();
+                                    line++;
+                                }
+                                else {
+                                    break;
+                                }
+                            }
+                            if (!sc.hasNext()) {
+                                errorMsg = "Linha inicial além do fim do arquivo.";
+                                textAreaReport.setText(errorMsg);
+                                return;
                             }
                             //printt("\nReading...");
                             
@@ -981,7 +991,7 @@ public final class GUI extends Tools implements KeyListener {
                                     fullReport.add(formattedNumLit + "\n");
                                     
                                     //Exibe atualização a cada X iterações
-                                    if (Math.floorMod(count, 100) == 0) {
+                                    if (Math.floorMod(count, 500) == 0) {
                                         textAreaReport.setText(
                                             "ÍNDICE\t" +
                                             "EXPRESSÃO MINIMIZADA\n"
@@ -1026,7 +1036,7 @@ public final class GUI extends Tools implements KeyListener {
                                     fullReport.add(formattedNumLit + "\n");
                                     
                                     //Exibe atualização a cada X iterações
-                                    if (Math.floorMod(count, 100) == 0) {
+                                    if (Math.floorMod(count, 500) == 0) {
                                         textAreaReport.setText(
                                             "ÍNDICE\t" +
                                             "EXPRESSÃO MINIMIZADA\n"
