@@ -1333,61 +1333,10 @@ public final class GUI extends Tools implements KeyListener {
     
     @Override
     public void keyPressed(KeyEvent e) {
-        if (tabbedPane.getSelectedIndex() == 0) {
+        if (tabbedPane.getSelectedIndex() != 1) {
             if (e.getKeyCode() == KeyEvent.VK_ESCAPE) {
                 printt("\n");
                 System.exit(0);
-            }
-        }
-        if (tabbedPane.getSelectedIndex() == 1) {
-            if (e.getKeyCode() == KeyEvent.VK_ESCAPE) {
-                mazeRouter.cleanUpMaze();
-                mazeRouter.firstStepDone = false;
-                mazeRouter.targetFound = false;
-                try {
-                    mazeRouter.sound.play("reset.wav");
-                } catch (LineUnavailableException |
-                    UnsupportedAudioFileException |
-                    IOException ex) {
-                }
-            }
-            if (e.getKeyCode() == KeyEvent.VK_ENTER) {
-                mazeRouter.maze.setSource();
-                mazeRouter.maze.setTarget();
-                mazeRouter.findPath(mazeRouter.maze);
-                mazeRouter.showFinalResult();
-            }
-            if (e.getKeyCode() == KeyEvent.VK_SPACE) {
-                try {
-                mazeRouter.sound.play("expanding.wav");
-                } catch (LineUnavailableException |
-                    UnsupportedAudioFileException |
-                    IOException ex) {
-                }
-                if (mazeRouter.targetFound) {
-                    return;
-                }
-                if (!mazeRouter.firstStepDone) {
-                    mazeRouter.firstStepDone = true;
-                    mazeRouter.maze.setSource();
-                    mazeRouter.maze.setTarget();
-                    //Position sourcePos = guiMaze.maze.getSourcePosition();
-                    //guiMaze.maze.expand(sourcePos);
-                    //guiMaze.currentPos = sourcePos;
-                    mazeRouter.showResult();
-                    return;
-                }
-                if(!mazeRouter.findPathStep()) {
-                    mazeRouter.showResult();
-                }
-                else {
-                    mazeRouter.targetFound = true;
-                    mazeRouter.showFinalResult();
-                }
-            }
-            if (e.getKeyCode() == KeyEvent.VK_B) {
-                mazeRouter.showBorder = !mazeRouter.showBorder;
-                mazeRouter.showResult();
             }
         }
     }
