@@ -1,8 +1,7 @@
 package com.mycompany.quine.mccluskey;
 
 import java.io.PrintWriter;
-import java.util.ArrayList;
-import java.util.Random;
+import java.util.*;
 
 /**
  *

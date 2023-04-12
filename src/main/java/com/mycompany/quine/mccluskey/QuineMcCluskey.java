@@ -13,9 +13,5 @@ public class QuineMcCluskey extends Tools {
         GUI gui = new GUI();
         gui.showMainWindow();
         
-        /*
-        GUIMaze guiMaze = new GUIMaze();
-        guiMaze.showMazeRouterWindow();
-        */
     }
 }

@@ -13,7 +13,7 @@ import javax.swing.*;
  */
 public class MazeRouter implements KeyListener{//, MouseListener {
     
-    public Maze maze = new Maze(40, 40);
+    public Maze maze = new Maze(50, 30);
     public JFrame frame = new JFrame("Maze Router");
     public ArrayList<JTextField> textFields = new ArrayList<>();
     public Font textFieldFont = new Font("Segoe UI", Font.BOLD, 10);
@@ -55,6 +55,7 @@ public class MazeRouter implements KeyListener{//, MouseListener {
                 int b = y;
                 //textFields.get(last).setBorder(BorderFactory.createStrokeBorder(new BasicStroke(0.1f)));
                 textFields.get(last).setBorder(BorderFactory.createLineBorder(colorBorder));
+                textFields.get(last).setForeground(new Color(50, 50, 50));
                 int cellHeight = (int) dim.height/maze.getSizeX()-3;
                 textFields.get(last).setPreferredSize(new Dimension(cellHeight, cellHeight));
                 textFields.get(last).setMinimumSize(new Dimension(10, 10));
