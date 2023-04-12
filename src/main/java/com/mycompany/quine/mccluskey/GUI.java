@@ -7,8 +7,10 @@ import java.awt.event.*;
 import java.io.*;
 import java.util.*;
 import java.util.logging.*;
+import javax.sound.sampled.*;
 import javax.swing.*;
 import javax.swing.event.*;
+import mazerouter.*;
 
 /**
 *
@@ -23,6 +25,8 @@ public final class GUI extends Tools implements KeyListener {
     private String errorMsg;
     private ArrayList<SumOfProducts> sopsList;
     //private PrintWriter outputFile;
+    private JTabbedPane tabbedPane;
+    private MazeRouter mazeRouter;
     
     public GUI(){
         inputFormat = "";
@@ -114,7 +118,7 @@ public final class GUI extends Tools implements KeyListener {
         }
     }
     
-    public void showWindow() throws Exception {
+    public void showMainWindow() throws Exception {
         
         String[] wichInput = {
             "Carregar expressões de um arquivo...",
@@ -153,27 +157,29 @@ public final class GUI extends Tools implements KeyListener {
         mainFrame.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
         
         GridBagLayout grid = new GridBagLayout();
-        JPanel qmPanel = new JPanel(grid);
-        JTabbedPane tabbedPane = new JTabbedPane(1);
+        
+        tabbedPane = new JTabbedPane(1);
         tabbedPane.setName("mainTabbedPane");
-        //tabbedPane.setForeground(new Color(1, 90, 190));
         tabbedPane.setForeground(new Color(30, 130, 230));
         tabbedPane.setFont(new Font("Segoe UI", Font.BOLD, 14));
-        tabbedPane.add("Quine-McCluskey", qmPanel);
-        //tabbedPane.getComponent(0).setBackground(new Color(170, 170, 170));
-        tabbedPane.add("Maze Router", new JPanel());
-        //tabbedPane.getComponent(1).setBackground(new Color(170, 170, 170));
+        
+        JPanel quineMcPanel = new JPanel(grid);
+        tabbedPane.add("Quine-McCluskey", quineMcPanel);
+        
+        mazeRouter = new MazeRouter();
+        tabbedPane.add("Maze Router", mazeRouter.mazeRouterPanel());
+        
         tabbedPane.add("Fatoração", new JPanel());
-        //tabbedPane.getComponent(2).setBackground(new Color(170, 170, 170));
+        
         tabbedPane.add("Composição Funcional", new JPanel());
-        //tabbedPane.getComponent(3).setBackground(new Color(170, 170, 170));
+        
         tabbedPane.addKeyListener(this);
         tabbedPane.setFocusable(true);
+        
         GridBagConstraints c = new GridBagConstraints();
-        qmPanel.setBorder(BorderFactory.createEmptyBorder(2,2,2,2));
         
+        quineMcPanel.setBorder(BorderFactory.createEmptyBorder(2,2,2,2));
         Font fontDefault = new Font("Segoe UI", Font.BOLD, 13);
-        
         Color borderColor = new Color(0, 0, 0, 0);
         
         JLabel space1 = new JLabel("   ");
@@ -185,7 +191,7 @@ public final class GUI extends Tools implements KeyListener {
         c.weightx = 0.0;
         c.weighty = 0.0;
 	space1.setBorder(BorderFactory.createLineBorder(borderColor));
-        qmPanel.add(space1, c);
+        quineMcPanel.add(space1, c);
         
         JLabel space3 = new JLabel("   ");
 	c.fill = GridBagConstraints.VERTICAL;
@@ -196,7 +202,7 @@ public final class GUI extends Tools implements KeyListener {
         c.weightx = 0.0;
         c.weighty = 0.0;
 	space3.setBorder(BorderFactory.createLineBorder(borderColor));
-        qmPanel.add(space3, c);
+        quineMcPanel.add(space3, c);
         
         JComboBox<String> comboWichInput = new JComboBox<>(wichInput);
         comboWichInput.setSelectedIndex(1); // Digitar
@@ -216,7 +222,7 @@ public final class GUI extends Tools implements KeyListener {
         c.weighty = 0.0;
         c.anchor = GridBagConstraints.WEST;
 	//comboWichInput.setBorder(BorderFactory.createLineBorder(borderColor));
-        qmPanel.add(comboWichInput, c);
+        quineMcPanel.add(comboWichInput, c);
         
         JLabel space4a = new JLabel(" ");
 	c.fill = GridBagConstraints.HORIZONTAL;
@@ -228,7 +234,7 @@ public final class GUI extends Tools implements KeyListener {
         c.weighty = 0.0;
         c.anchor = GridBagConstraints.WEST;
 	space4a.setBorder(BorderFactory.createLineBorder(borderColor));
-        qmPanel.add(space4a, c);
+        quineMcPanel.add(space4a, c);
         
         JCheckBox checkReadEntireFile = new JCheckBox("Inteiro");
         checkReadEntireFile.setFont(fontDefault);
@@ -328,7 +334,7 @@ public final class GUI extends Tools implements KeyListener {
         c.weighty = 0.0;
         c.anchor = GridBagConstraints.WEST;
         labelVariables.setBorder(BorderFactory.createLineBorder(borderColor));
-        qmPanel.add(labelVariables, c);
+        quineMcPanel.add(labelVariables, c);
         
         JLabel space3a = new JLabel(" ");
         //space3a.setVisible(false);
@@ -341,7 +347,7 @@ public final class GUI extends Tools implements KeyListener {
         c.weightx = 0.0;
         c.weighty = 0.0;
 	space3a.setBorder(BorderFactory.createLineBorder(borderColor));
-        qmPanel.add(space3a, c);
+        quineMcPanel.add(space3a, c);
         
         JComboBox<String> comboExpressions = new JComboBox<>(templates);
         comboExpressions.setPreferredSize(new Dimension(500, 30));
@@ -360,7 +366,7 @@ public final class GUI extends Tools implements KeyListener {
         c.weighty = 0.0;
         c.anchor = GridBagConstraints.WEST;
 	//comboExpressions.setBorder(BorderFactory.createLineBorder(borderColor));
-        qmPanel.add(comboExpressions, c);
+        quineMcPanel.add(comboExpressions, c);
         
         JLabel space5 = new JLabel(" ");
 	c.fill = GridBagConstraints.HORIZONTAL;
@@ -372,7 +378,7 @@ public final class GUI extends Tools implements KeyListener {
         c.weighty = 0.0;
         c.anchor = GridBagConstraints.WEST;
 	space5.setBorder(BorderFactory.createLineBorder(borderColor));
-        qmPanel.add(space5, c);
+        quineMcPanel.add(space5, c);
         
         JButton okButton = new JButton("Executar");
         okButton.setPreferredSize(new Dimension(90, 30));
@@ -392,7 +398,7 @@ public final class GUI extends Tools implements KeyListener {
         c.weighty = 0.0;
         c.anchor = GridBagConstraints.WEST;
 	//okButton.setBorder(BorderFactory.createLineBorder(borderColor));
-        qmPanel.add(okButton, c);
+        quineMcPanel.add(okButton, c);
         mainFrame.getRootPane().setDefaultButton(okButton);
         
         JLabel space5B = new JLabel(" ");
@@ -405,7 +411,7 @@ public final class GUI extends Tools implements KeyListener {
         c.weighty = 0.0;
         c.anchor = GridBagConstraints.WEST;
 	space5B.setBorder(BorderFactory.createLineBorder(borderColor));
-        qmPanel.add(space5B, c);
+        quineMcPanel.add(space5B, c);
         
         Dictionary<Integer, Component> labelTable = new Hashtable<>();
         labelTable.put(0, new JLabel("Auto"));
@@ -433,7 +439,7 @@ public final class GUI extends Tools implements KeyListener {
         c.weighty = 0.0;
         c.anchor = GridBagConstraints.WEST;
         slider.setBorder(BorderFactory.createLineBorder(borderColor));
-        qmPanel.add(slider, c);
+        quineMcPanel.add(slider, c);
         
         JLabel space6 = new JLabel(" ");
 	c.fill = GridBagConstraints.HORIZONTAL;
@@ -444,7 +450,7 @@ public final class GUI extends Tools implements KeyListener {
         c.weightx = 0.0;
         c.weighty = 0.0;
 	space6.setBorder(BorderFactory.createLineBorder(borderColor));
-        qmPanel.add(space6, c);
+        quineMcPanel.add(space6, c);
         
         JLabel resultLabel = new JLabel("Expressão Minimizada:");
         resultLabel.setFont(fontDefault);
@@ -459,7 +465,7 @@ public final class GUI extends Tools implements KeyListener {
         c.weighty = 0.0;
         c.anchor = GridBagConstraints.WEST;
 	resultLabel.setBorder(BorderFactory.createLineBorder(borderColor));
-        qmPanel.add(resultLabel, c);
+        quineMcPanel.add(resultLabel, c);
         
         JTextArea textAreaResult = new JTextArea();
         textAreaResult.addKeyListener(this);
@@ -481,7 +487,7 @@ public final class GUI extends Tools implements KeyListener {
         c.weighty = 0.0;
         c.anchor = GridBagConstraints.WEST;
 	//textAreaResult.setBorder(BorderFactory.createLineBorder(borderColor));
-        qmPanel.add(textAreaResult, c);
+        quineMcPanel.add(textAreaResult, c);
         
         JLabel space9 = new JLabel(" ");
 	c.fill = GridBagConstraints.HORIZONTAL;
@@ -492,7 +498,7 @@ public final class GUI extends Tools implements KeyListener {
         c.weightx = 0.0;
         c.weighty = 0.0;
 	space9.setBorder(BorderFactory.createLineBorder(borderColor));
-        qmPanel.add(space9, c);
+        quineMcPanel.add(space9, c);
         
         JComboBox<String> comboWichReport = new JComboBox<>(wichReport);
         comboWichReport.setPreferredSize(new Dimension(250, 30));
@@ -511,7 +517,7 @@ public final class GUI extends Tools implements KeyListener {
         c.weighty = 0.0;
         c.anchor = GridBagConstraints.WEST;
 	//comboWichReport.setBorder(BorderFactory.createLineBorder(borderColor));
-        qmPanel.add(comboWichReport, c);
+        quineMcPanel.add(comboWichReport, c);
         
         JLabel labelResultsFromFile = new JLabel(" Resultados:");
         labelResultsFromFile.setPreferredSize(new Dimension(250, 30));
@@ -534,7 +540,7 @@ public final class GUI extends Tools implements KeyListener {
         c.weighty = 0.0;
         c.anchor = GridBagConstraints.WEST;
 	labelTime.setBorder(BorderFactory.createLineBorder(borderColor));
-        qmPanel.add(labelTime, c);
+        quineMcPanel.add(labelTime, c);
         
         JTextArea textAreaReport = new JTextArea();
         textAreaReport.addKeyListener(this);
@@ -558,7 +564,7 @@ public final class GUI extends Tools implements KeyListener {
 	c.weightx = 100.0;
         c.weighty = 0.6;
 	jScrollReport.setBorder(BorderFactory.createLineBorder(borderColor));
-        qmPanel.add(jScrollReport, c);
+        quineMcPanel.add(jScrollReport, c);
         
         JLabel space4 = new JLabel("   ");
 	c.fill = GridBagConstraints.VERTICAL;
@@ -569,7 +575,7 @@ public final class GUI extends Tools implements KeyListener {
         c.weightx = 0.0;
         c.weighty = 0.0;
 	space4.setBorder(BorderFactory.createLineBorder(borderColor));
-        qmPanel.add(space4, c);
+        quineMcPanel.add(space4, c);
         
         JLabel space2 = new JLabel(" ");
 	c.fill = GridBagConstraints.HORIZONTAL;
@@ -581,7 +587,7 @@ public final class GUI extends Tools implements KeyListener {
         c.weighty = 0.0;
         space2.setFont(new Font("Segoe UI", Font.PLAIN, 6));
 	space2.setBorder(BorderFactory.createLineBorder(borderColor));
-        qmPanel.add(space2, c);
+        quineMcPanel.add(space2, c);
         
         mainFrame.add(tabbedPane);
         mainFrame.pack();
@@ -592,6 +598,16 @@ public final class GUI extends Tools implements KeyListener {
         mainFrame.setVisible(true);
         KeyboardFocusManager.getCurrentKeyboardFocusManager().focusNextComponent(labelVariables);
         
+        /*tabbedPane.addChangeListener(new ChangeListener() {
+            
+            @Override
+            public void stateChanged(ChangeEvent e) {
+                if (tabbedPane.getSelectedIndex()==1) {
+                    //tabbedPane.setComponentAt(1, mazeRouterPanel());
+                }
+            }
+        });
+        */
         comboWichInput.addActionListener(new ActionListener() {
             
             @Override
@@ -599,12 +615,12 @@ public final class GUI extends Tools implements KeyListener {
                 errorMsg = "";
                 switch (comboWichInput.getSelectedIndex()) {
                     case 1 -> { // input: digitar
-                        qmPanel.remove(checkReadEntireFile);
-                        qmPanel.remove(labelStartLine);
-                        qmPanel.remove(textStartLine);
-                        qmPanel.remove(labelEndLine);
-                        qmPanel.remove(textEndLine);
-                        qmPanel.remove(labelResultsFromFile);
+                        quineMcPanel.remove(checkReadEntireFile);
+                        quineMcPanel.remove(labelStartLine);
+                        quineMcPanel.remove(textStartLine);
+                        quineMcPanel.remove(labelEndLine);
+                        quineMcPanel.remove(textEndLine);
+                        quineMcPanel.remove(labelResultsFromFile);
                         
                         c.fill = GridBagConstraints.NONE;
                         c.gridx = 1;
@@ -614,19 +630,19 @@ public final class GUI extends Tools implements KeyListener {
                         c.weightx = 0.0;
                         c.weighty = 0.0;
                         c.anchor = GridBagConstraints.WEST;
-                        qmPanel.add(comboWichReport, c);
+                        quineMcPanel.add(comboWichReport, c);
                         
                         resultLabel.setVisible(true);
                         textAreaResult.setVisible(true);
                         mainFrame.repaint();
                     }
                     case 2 -> { // input: aleatória
-                        qmPanel.remove(checkReadEntireFile);
-                        qmPanel.remove(labelStartLine);
-                        qmPanel.remove(textStartLine);
-                        qmPanel.remove(labelEndLine);
-                        qmPanel.remove(textEndLine);
-                        qmPanel.remove(labelResultsFromFile);
+                        quineMcPanel.remove(checkReadEntireFile);
+                        quineMcPanel.remove(labelStartLine);
+                        quineMcPanel.remove(textStartLine);
+                        quineMcPanel.remove(labelEndLine);
+                        quineMcPanel.remove(textEndLine);
+                        quineMcPanel.remove(labelResultsFromFile);
                         
                         c.fill = GridBagConstraints.NONE;
                         c.gridx = 1;
@@ -636,7 +652,7 @@ public final class GUI extends Tools implements KeyListener {
                         c.weightx = 0.0;
                         c.weighty = 0.0;
                         c.anchor = GridBagConstraints.WEST;
-                        qmPanel.add(comboWichReport, c);
+                        quineMcPanel.add(comboWichReport, c);
                         
                         resultLabel.setVisible(true);
                         textAreaResult.setVisible(true);
@@ -669,7 +685,7 @@ public final class GUI extends Tools implements KeyListener {
                         c.weighty = 0.0;
                         c.anchor = GridBagConstraints.WEST;
                         checkReadEntireFile.setSelected(true);
-                        qmPanel.add(checkReadEntireFile, c);
+                        quineMcPanel.add(checkReadEntireFile, c);
                         
                         labelStartLine.setForeground(new Color(110, 110, 110));
                         c.fill = GridBagConstraints.HORIZONTAL;
@@ -680,7 +696,7 @@ public final class GUI extends Tools implements KeyListener {
                         c.weightx = 0.0;
                         c.weighty = 0.0;
                         c.anchor = GridBagConstraints.WEST;
-                        qmPanel.add(labelStartLine, c);
+                        quineMcPanel.add(labelStartLine, c);
                         
                         textStartLine.setText("");
                         c.fill = GridBagConstraints.HORIZONTAL;
@@ -693,7 +709,7 @@ public final class GUI extends Tools implements KeyListener {
                         c.anchor = GridBagConstraints.WEST;
                         textStartLine.setEnabled(false);
                         textStartLine.setEditable(false);
-                        qmPanel.add(textStartLine, c);
+                        quineMcPanel.add(textStartLine, c);
                         
                         labelEndLine.setForeground(new Color(110, 110, 110));
                         c.fill = GridBagConstraints.HORIZONTAL;
@@ -704,7 +720,7 @@ public final class GUI extends Tools implements KeyListener {
                         c.weightx = 0.0;
                         c.weighty = 0.0;
                         c.anchor = GridBagConstraints.WEST;
-                        qmPanel.add(labelEndLine, c);
+                        quineMcPanel.add(labelEndLine, c);
                         
                         textEndLine.setText("");
                         c.fill = GridBagConstraints.HORIZONTAL;
@@ -717,9 +733,9 @@ public final class GUI extends Tools implements KeyListener {
                         c.anchor = GridBagConstraints.WEST;
                         textEndLine.setEnabled(false);
                         textEndLine.setEditable(false);
-                        qmPanel.add(textEndLine, c);
+                        quineMcPanel.add(textEndLine, c);
                         
-                        qmPanel.remove(comboWichReport);
+                        quineMcPanel.remove(comboWichReport);
                         c.fill = GridBagConstraints.NONE;
                 	c.gridx = 1;
                 	c.gridy = 8;
@@ -729,7 +745,7 @@ public final class GUI extends Tools implements KeyListener {
                         c.weighty = 0.0;
                         c.anchor = GridBagConstraints.WEST;
                         //labelResultsFromFile.setBorder(BorderFactory.createLineBorder(borderColor));
-                        qmPanel.add(labelResultsFromFile, c);
+                        quineMcPanel.add(labelResultsFromFile, c);
                             
                         resultLabel.setVisible(false);
                         textAreaResult.setVisible(false);
@@ -854,7 +870,7 @@ public final class GUI extends Tools implements KeyListener {
             public void stateChanged(ChangeEvent e) {
                 JSlider source = (JSlider)e.getSource();
                 numVars = (int)source.getValue();
-                qmPanel.remove(labelVariables);
+                quineMcPanel.remove(labelVariables);
                 if (numVars == 0) {
                     labelVariables.setText("   Número de variáveis: Auto");
                 }
@@ -869,8 +885,8 @@ public final class GUI extends Tools implements KeyListener {
                 c.weightx = 0.0;
                 c.weighty = 0.0;
                 c.anchor = GridBagConstraints.WEST;
-                qmPanel.add(labelVariables, c);
-                qmPanel.repaint();
+                quineMcPanel.add(labelVariables, c);
+                quineMcPanel.repaint();
             }
         });
         
@@ -1070,7 +1086,7 @@ public final class GUI extends Tools implements KeyListener {
                                 textAreaReport.append(fullReport.get(a));
                             }
                             textAreaReport.setCaretPosition(0);
-                            qmPanel.repaint();
+                            quineMcPanel.repaint();
                             //outputFile.close();
                             /*if (readFromFile(editor.getText(),
                                     startLine,
@@ -1317,9 +1333,62 @@ public final class GUI extends Tools implements KeyListener {
     
     @Override
     public void keyPressed(KeyEvent e) {
-        if (e.getKeyCode() == KeyEvent.VK_ESCAPE) {
-            printt("\n");
-            System.exit(0);
+        if (tabbedPane.getSelectedIndex() == 0) {
+            if (e.getKeyCode() == KeyEvent.VK_ESCAPE) {
+                printt("\n");
+                System.exit(0);
+            }
+        }
+        if (tabbedPane.getSelectedIndex() == 1) {
+            if (e.getKeyCode() == KeyEvent.VK_ESCAPE) {
+                mazeRouter.cleanUpMaze();
+                mazeRouter.firstStepDone = false;
+                mazeRouter.targetFound = false;
+                try {
+                    mazeRouter.sound.play("reset.wav");
+                } catch (LineUnavailableException |
+                    UnsupportedAudioFileException |
+                    IOException ex) {
+                }
+            }
+            if (e.getKeyCode() == KeyEvent.VK_ENTER) {
+                mazeRouter.maze.setSource();
+                mazeRouter.maze.setTarget();
+                mazeRouter.findPath(mazeRouter.maze);
+                mazeRouter.showFinalResult();
+            }
+            if (e.getKeyCode() == KeyEvent.VK_SPACE) {
+                try {
+                mazeRouter.sound.play("expanding.wav");
+                } catch (LineUnavailableException |
+                    UnsupportedAudioFileException |
+                    IOException ex) {
+                }
+                if (mazeRouter.targetFound) {
+                    return;
+                }
+                if (!mazeRouter.firstStepDone) {
+                    mazeRouter.firstStepDone = true;
+                    mazeRouter.maze.setSource();
+                    mazeRouter.maze.setTarget();
+                    //Position sourcePos = guiMaze.maze.getSourcePosition();
+                    //guiMaze.maze.expand(sourcePos);
+                    //guiMaze.currentPos = sourcePos;
+                    mazeRouter.showResult();
+                    return;
+                }
+                if(!mazeRouter.findPathStep()) {
+                    mazeRouter.showResult();
+                }
+                else {
+                    mazeRouter.targetFound = true;
+                    mazeRouter.showFinalResult();
+                }
+            }
+            if (e.getKeyCode() == KeyEvent.VK_B) {
+                mazeRouter.showBorder = !mazeRouter.showBorder;
+                mazeRouter.showResult();
+            }
         }
     }
     
