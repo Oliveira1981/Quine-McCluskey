@@ -571,21 +571,9 @@ public final class GUI extends Tools implements KeyListener {
      	labelResultsFromFile.setFont(fontRFF);
         //labelResultsFromFile.setForeground(new Color(1, 90, 190));
         labelResultsFromFile.setForeground(new Color(30, 130, 230));
-                        
-        JTextArea textAreaReport = new JTextArea();
-        textAreaReport.addKeyListener(this);
-        textAreaReport.setFocusable(true);
-        textAreaReport.setLineWrap(true);
-        textAreaReport.setEditable(false);
-        textAreaReport.setBackground(new Color(44, 44, 44));
-        //textAreaReport.setForeground(new Color(1, 188, 255));
-        textAreaReport.setForeground(new Color(50, 150, 250));
-        Font fontReport = new Font("Consolas", Font.PLAIN, 16);
-        textAreaReport.setFont(fontReport);
-        Insets mReport = new Insets(10, 10, 10, 10);
-        textAreaReport.setMargin(mReport);
         
-        JLabel labelTime = new JLabel(" ");
+        JTextField labelTime = new JTextField(" ");
+        labelTime.setEditable(false);
         labelTime.setPreferredSize(new Dimension(250, 30));
         labelTime.setMinimumSize(new Dimension(250, 30));
         labelTime.setFont(fontRFF);
@@ -602,10 +590,23 @@ public final class GUI extends Tools implements KeyListener {
 	labelTime.setBorder(BorderFactory.createLineBorder(borderColor));
         qmPanel.add(labelTime, c);
         
+        JTextArea textAreaReport = new JTextArea();
+        textAreaReport.addKeyListener(this);
+        textAreaReport.setFocusable(true);
+        textAreaReport.setLineWrap(true);
+        textAreaReport.setEditable(false);
+        textAreaReport.setBackground(new Color(44, 44, 44));
+        //textAreaReport.setForeground(new Color(1, 188, 255));
+        textAreaReport.setForeground(new Color(50, 150, 250));
+        Font fontReport = new Font("Consolas", Font.PLAIN, 16);
+        textAreaReport.setFont(fontReport);
+        Insets mReport = new Insets(10, 10, 10, 10);
+        textAreaReport.setMargin(mReport);
+        
         JScrollPane jScrollReport = new JScrollPane(textAreaReport);
 	c.fill = GridBagConstraints.BOTH;
         c.gridx = 1;
-	c.gridy = 9;//14
+	c.gridy = 9;
 	c.gridwidth = 13;
 	c.gridheight = 1;
 	c.weightx = 100.0;
@@ -932,7 +933,7 @@ public final class GUI extends Tools implements KeyListener {
 
             @Override
             public void actionPerformed(ActionEvent e) {
-                labelTime.setText("Tempo: ...          ");
+                labelTime.setText("Tempo: ...         ");
                 labelTime.update(labelTime.getGraphics());
                 long startTime = System.nanoTime();
                 try {
@@ -1043,6 +1044,8 @@ public final class GUI extends Tools implements KeyListener {
                                         );
                                         textAreaReport.append("\n" + count + "\t" + result + " ...");
                                         textAreaReport.update(textAreaReport.getGraphics());
+                                        labelTime.setText(String.format("Tempo: %.3f s", (float) (System.nanoTime() - startTime)/1000000000));
+                                        labelTime.update(labelTime.getGraphics());
                                     }
                                 }
                             }
@@ -1086,6 +1089,8 @@ public final class GUI extends Tools implements KeyListener {
                                         );
                                         textAreaReport.append("\n" + count + "\t" + result + " ...");
                                         textAreaReport.update(textAreaReport.getGraphics());
+                                        labelTime.setText(String.format("Tempo: %.3f s", (float) (System.nanoTime() - startTime)/1000000000));
+                                        labelTime.update(labelTime.getGraphics());
                                     }
                                     line++;
                                 }
@@ -1104,7 +1109,7 @@ public final class GUI extends Tools implements KeyListener {
                                 "    " +
                                 "LIT.\n"
                             );
-                            KeyboardFocusManager.getCurrentKeyboardFocusManager().focusNextComponent(labelResultsFromFile);
+                            KeyboardFocusManager.getCurrentKeyboardFocusManager().focusNextComponent(labelTime);
                             textAreaReport.setCaretColor(new Color(30, 120, 255));
                             textAreaReport.getCaret().setVisible(true);
                             for (int a = 0; a < fullReport.size(); a++) {
@@ -1144,8 +1149,7 @@ public final class GUI extends Tools implements KeyListener {
                 catch (Exception ex) {
                     Logger.getLogger(GUI.class.getName()).log(Level.SEVERE, null, ex);
                 }
-                long elapsedTime = System.nanoTime() - startTime;
-                labelTime.setText(String.format("Tempo: %.3f s", (float) elapsedTime/1000000000));
+                labelTime.setText(String.format("Tempo: %.3f s", (float) (System.nanoTime() - startTime)/1000000000));
                 //labelTime.update(labelTime.getGraphics());
                 //System.out.printf("\nTime elapsed: %.3f s", (float) elapsedTime/1000000000);
             }
