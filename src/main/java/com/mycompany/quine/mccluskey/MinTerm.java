@@ -6,7 +6,7 @@ import java.util.ArrayList;
  *
  * @author Rodrigo da Rosa
  */
-public final class MinTerm extends Tools {
+public final class MinTerm {//extends Tools {
     
     private ArrayList<String> productsList;
     private String             literalView;
@@ -31,8 +31,8 @@ public final class MinTerm extends Tools {
     public void setMinTerm(int decimal, String vars, int size) {
         this.size        = size;
         this.decimalView = decimal;
-        this.binaryView  = decimal2binary(decimal, size);
-        this.literalView = binary2literal(this.binaryView, vars, size);
+        this.binaryView  = Tools.decimal2binary(decimal, size);
+        this.literalView = Tools.binary2literal(this.binaryView, vars, size);
         isCovered        = false;
         productsList     = new ArrayList<>();
     }
@@ -63,20 +63,20 @@ public final class MinTerm extends Tools {
     
     public void setMinTermFromDecimal(int decimalView, String vars) {
         this.decimalView = decimalView;
-        this.binaryView  = decimal2binary(decimalView, size);
-        this.literalView = binary2literal(binaryView, vars, size);
+        this.binaryView  = Tools.decimal2binary(decimalView, size);
+        this.literalView = Tools.binary2literal(binaryView, vars, size);
     }
     
     public void setMinTermFromLiteral(String literalView, String vars) {
         this.literalView = literalView;
-        this.binaryView  = literal2binary(literalView, vars, size);
-        this.decimalView = binary2decimal(binaryView, size);
+        this.binaryView  = Tools.literal2binary(literalView, vars, size);
+        this.decimalView = Tools.binary2decimal(binaryView, size);
     }
     
     public void setMinTermFromBinary(String binaryView, String vars) {
         this.binaryView  = binaryView;
-        this.literalView = binary2literal(binaryView, vars, size);
-        this.decimalView = binary2decimal(binaryView, size);
+        this.literalView = Tools.binary2literal(binaryView, vars, size);
+        this.decimalView = Tools.binary2decimal(binaryView, size);
     }
     
     public void setIsCovered(boolean isCovered) {

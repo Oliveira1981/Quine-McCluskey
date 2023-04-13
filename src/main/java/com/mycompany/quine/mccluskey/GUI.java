@@ -7,7 +7,6 @@ import java.awt.event.*;
 import java.io.*;
 import java.util.*;
 import java.util.logging.*;
-import javax.sound.sampled.*;
 import javax.swing.*;
 import javax.swing.event.*;
 import mazerouter.*;
@@ -16,7 +15,7 @@ import mazerouter.*;
 *
  * @author Rodrigo da Rosa
  */
-public final class GUI extends Tools implements KeyListener {
+public final class GUI /*extends Tools*/ implements KeyListener {
     
     private String inputFormat;
     private String expression;
@@ -661,10 +660,10 @@ public final class GUI extends Tools implements KeyListener {
                         String gen;
                         int vars = slider.getValue();
                         if (vars == 0) {
-                            gen = generateRandomExpression(8, 4);
+                            gen = Tools.generateRandomExpression(8, 4);
                         }
                         else {
-                            gen = generateRandomExpression(
+                            gen = Tools.generateRandomExpression(
                                 vars*2, //numberOfProducts 
                                 vars    //numberOfVars
                             );
@@ -943,7 +942,7 @@ public final class GUI extends Tools implements KeyListener {
                             //setFileToWrite("Quine-McCluskey Results.txt");
                             File selectedFile = new File(editor.getText());
                             if(!selectedFile.exists()){
-                                printt("\nNo file selected.\n");
+                                Tools.printt("\nNo file selected.\n");
                                 errorMsg = "Nenhum arquivo selecionado.";
                                 textAreaReport.setText(errorMsg);
                                 return;
@@ -997,8 +996,8 @@ public final class GUI extends Tools implements KeyListener {
                                     //textAreaReport.append(formattedHexa + " ");
                                     fullReport.add(formattedHexa + " ");
                                     
-                                    String numLit = String.valueOf(SumOfProducts.numberOfLiterals(sopsList.get(0).getResult(), sopsList.get(0).getNumberOfVars(), sopsList.get(0).getNumberOfProducts()));
-                                    String formattedNumLit = "";
+                                    //String numLit = String.valueOf(SumOfProducts.numberOfLiterals(sopsList.get(0).getResult(), sopsList.get(0).getNumberOfVars(), sopsList.get(0).getNumberOfProducts()));
+                                    String numLit = String.valueOf(Tools.numberOfLiterals(sopsList.get(0).getResult(), sopsList.get(0).getNumberOfVars(), sopsList.get(0).getNumberOfProducts()));String formattedNumLit = "";
                                     for (int c = 0; c < (3 - numLit.length()); c++) {
                                         formattedNumLit = formattedNumLit + ' ';
                                     }
@@ -1042,7 +1041,8 @@ public final class GUI extends Tools implements KeyListener {
                                     //textAreaReport.append(formattedHexa + " ");
                                     fullReport.add(formattedHexa + " ");
                                     
-                                    String numLit = String.valueOf(SumOfProducts.numberOfLiterals(sopsList.get(0).getResult(), sopsList.get(0).getNumberOfVars(), sopsList.get(0).getNumberOfProducts()));
+                                    //String numLit = String.valueOf(SumOfProducts.numberOfLiterals(sopsList.get(0).getResult(), sopsList.get(0).getNumberOfVars(), sopsList.get(0).getNumberOfProducts()));
+                                    String numLit = String.valueOf(Tools.numberOfLiterals(sopsList.get(0).getResult(), sopsList.get(0).getNumberOfVars(), sopsList.get(0).getNumberOfProducts()));
                                     String formattedNumLit = "";
                                     for (int c = 0; c < (3 - numLit.length()); c++) {
                                         formattedNumLit = formattedNumLit + ' ';
@@ -1285,7 +1285,7 @@ public final class GUI extends Tools implements KeyListener {
         sopsList = new ArrayList<>();
         //SumOfProducts sopsList = new SumOfProducts();
         
-        allExpressions = removeSpacesFromExpression(allExpressions);
+        allExpressions = Tools.removeSpacesFromExpression(allExpressions);
         int begin = 0;
         int end;
         do {
@@ -1335,7 +1335,7 @@ public final class GUI extends Tools implements KeyListener {
     public void keyPressed(KeyEvent e) {
         if (tabbedPane.getSelectedIndex() != 1) {
             if (e.getKeyCode() == KeyEvent.VK_ESCAPE) {
-                printt("\n");
+                Tools.printt("\n");
                 System.exit(0);
             }
         }

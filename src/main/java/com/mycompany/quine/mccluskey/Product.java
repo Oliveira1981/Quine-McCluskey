@@ -6,7 +6,7 @@ import java.util.ArrayList;
  *
  * @author Rodrigo da Rosa
  */
-public final class Product extends Tools {
+public final class Product {//extends Tools {
 
     private ArrayList<Integer> minTermsList;
     private String              literalView;
@@ -42,10 +42,10 @@ public final class Product extends Tools {
         switch(inputFormat) {
             case "Literal" -> {
                 setProductFromLiteral(inputExp);
-                binaryView     = literal2binary(literalView, vars, size);
-                decimalView    = binary2decimal(binaryView, size);
+                binaryView     = Tools.literal2binary(literalView, vars, size);
+                decimalView    = Tools.binary2decimal(binaryView, size);
                 minTermsList   = new ArrayList<>();
-                int newDecimal = binary2decimal(binaryView, size);
+                int newDecimal = Tools.binary2decimal(binaryView, size);
                 if (!minTermsList.contains(newDecimal)) {
                     minTermsList.add(newDecimal);
                 }
@@ -54,17 +54,17 @@ public final class Product extends Tools {
             case "Decimal" -> {
                 setProductFromDecimal(Integer.parseInt(inputExp));
                 decimalView = Integer.parseInt(inputExp);
-                binaryView  = decimal2binary(Integer.parseInt(inputExp), size);
-                literalView = binary2literal(binaryView, vars, size);
+                binaryView  = Tools.decimal2binary(Integer.parseInt(inputExp), size);
+                literalView = Tools.binary2literal(binaryView, vars, size);
                 //numberOfLiterals = size;
                 //RESOLVER: SE VIER DE DECIMAL TEM QUE PREENCHER VARS COM ALPHABETCHAR
             }
             case "Binário" -> {
                 setProductFromBinary(inputExp);
-                literalView    = binary2literal(binaryView, vars, size);
-                decimalView    = binary2decimal(binaryView, size);
+                literalView    = Tools.binary2literal(binaryView, vars, size);
+                decimalView    = Tools.binary2decimal(binaryView, size);
                 minTermsList   = new ArrayList<>();
-                int newDecimal = binary2decimal(binaryView, size);
+                int newDecimal = Tools.binary2decimal(binaryView, size);
                 if (!minTermsList.contains(newDecimal)) {
                     minTermsList.add(newDecimal);
                 }

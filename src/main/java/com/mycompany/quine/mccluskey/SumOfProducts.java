@@ -7,7 +7,7 @@ import java.util.*;
  *
  * @author Rodrigo da Rosa
  */
-public final class SumOfProducts extends Tools {
+public final class SumOfProducts {//extends Tools {
 
     private String                 originalInputFormat;
     private String                         inputFormat;
@@ -48,7 +48,7 @@ public final class SumOfProducts extends Tools {
     public boolean setExpression(String expression, int selectedNumberOfVars) {
         this.isError         = false;
         this.report          = "";
-        originalInputFormat = detectInputFormat(expression);
+        originalInputFormat = Tools.detectInputFormat(expression);
         inputFormat = originalInputFormat;
         
         if(!isValidInput(expression, selectedNumberOfVars)) {
@@ -57,7 +57,7 @@ public final class SumOfProducts extends Tools {
         
         originalInputExpression = expression;
         if (inputFormat.equals("Hexadecimal")) {
-            convertedExpression = hexadecimal2expression(expression);
+            convertedExpression = Tools.hexadecimal2expression(expression);
             originalInputFormat = "Hexadecimal";
             inputFormat = "Decimal";
             expression = convertedExpression;
@@ -66,7 +66,7 @@ public final class SumOfProducts extends Tools {
             convertedExpression = expression;
         }
         
-        numberOfVars = detectNumberOfVars(inputFormat, expression);
+        numberOfVars = Tools.detectNumberOfVars(inputFormat, expression);
         if(!isValidNumberOfVars(selectedNumberOfVars)) {
             return false;
         }
@@ -76,7 +76,7 @@ public final class SumOfProducts extends Tools {
         }
         
         if (inputFormat.equals("Literal")){
-            this.convertedExpression = cleanUpExpression(expression);
+            this.convertedExpression = Tools.cleanUpExpression(expression);
             fillVariablesList(convertedExpression);
         }
         else {
@@ -91,7 +91,7 @@ public final class SumOfProducts extends Tools {
     public boolean isValidInput(String expression, int selectedNumberOfVars) {//vai precisar testar o número de variáveis também
         if (inputFormat.length() == 0  ||
             inputFormat.equals("ERRO") ||
-           (inputFormat.equals("Literal") && hasDuplicate(expression))) {
+           (inputFormat.equals("Literal") && Tools.hasDuplicate(expression))) {
             
             isError = true;
             result = "Expressão inconsistente.";
@@ -220,8 +220,8 @@ public final class SumOfProducts extends Tools {
             //Trabalha os Don't Care (gera todas as variações)
             ArrayList<String> allStr;
             if (inputFormat.equals("Literal")) {
-                variablesList = completeVarsList(variablesList, numberOfVars);
-                allStr = (ArrayList<String>) getAllVariations(str, variablesList, numberOfVars).clone();
+                variablesList = Tools.completeVarsList(variablesList, numberOfVars);
+                allStr = (ArrayList<String>) Tools.getAllVariations(str, variablesList, numberOfVars).clone();
             }
             else {
                 allStr = new ArrayList<>();
@@ -232,7 +232,7 @@ public final class SumOfProducts extends Tools {
                 Product newProduct = new Product(
                     inputFormat, allStr.get(a), variablesList, numberOfVars
                 );
-                if (!productsListContains(newProduct.getLiteralView(), productsList)) {
+                if (!Tools.productsListContains(newProduct.getLiteralView(), productsList)) {
                     productsList.add(newProduct);
                 }
                 
@@ -242,7 +242,7 @@ public final class SumOfProducts extends Tools {
                     ).getMinTermsList().get(0), variablesList, numberOfVars
                 );
                 
-                if (!minTermsListContains(newMinTerm.getDecimalView(), minTermsList)) {
+                if (!Tools.minTermsListContains(newMinTerm.getDecimalView(), minTermsList)) {
                     minTermsList.add(newMinTerm);
                 }
             }
@@ -271,7 +271,7 @@ public final class SumOfProducts extends Tools {
         int size = (int) Math.pow(2, numberOfVars);
         int m = 0;
         for (int i=1; i <= size; i++) {
-            String binary = decimal2binary(i-1, numberOfVars);
+            String binary = Tools.decimal2binary(i-1, numberOfVars);
             String allBits = "";
             for (int j=0; j < binary.length(); j++) {
                 allBits += binary.charAt(j) + " ";
@@ -332,7 +332,7 @@ public final class SumOfProducts extends Tools {
                     Math.min(productsList.get(i).getSize(),
                              productsList.get(j).getSize());
                 int bitPosition =
-                    primeImplicantBitPosition(productsList.get(i).getBinaryView(),
+                    Tools.primeImplicantBitPosition(productsList.get(i).getBinaryView(),
                                               productsList.get(j).getBinaryView(),size);
                 if (bitPosition != -1) {
                     primesWereFound = true;
@@ -346,7 +346,7 @@ public final class SumOfProducts extends Tools {
                         else
                             bitString += productsList.get(i).getBinaryView().charAt(c);
                     }
-                    if (!contains(bitString, auxProductsList)) {
+                    if (!Tools.contains(bitString, auxProductsList)) {
                         auxProductsList.add(new Product("Binário", bitString, variablesList, numberOfVars));
                         auxProductsList.get(auxProductsList.size()-1).getMinTermsList().clear();
                         
@@ -383,7 +383,7 @@ public final class SumOfProducts extends Tools {
     }
     
     public void buildOptimizedExpression() {
-        if (isDumb(minTermsList, numberOfVars)) {
+        if (Tools.isDumb(minTermsList, numberOfVars)) {
             result = "1";
             return;
         }
@@ -528,7 +528,7 @@ public final class SumOfProducts extends Tools {
                 //return;
                 finalList_NO_SORTING = (ArrayList) finalProductsList.clone();
                 for (int t=0; t < finalList_NO_SORTING.size(); t++) {
-                    numberOfLiterals_NO_SORTING += numberOfLiterals2(finalList_NO_SORTING.get(t));
+                    numberOfLiterals_NO_SORTING += Tools.numberOfLiterals2(finalList_NO_SORTING.get(t));
                 }
                 break;
             }
@@ -538,7 +538,7 @@ public final class SumOfProducts extends Tools {
         //SORTING
         finalProductsList = (ArrayList) finalListOriginal.clone();
         setIsCovered();
-        sortProductsSet(notEssentialProductsList);
+        Tools.sortProductsSet(notEssentialProductsList);
         int numberOfLiterals_SORTING = 0;
         i = 1;
         while (i <= notEssentialProductsList.size()) {
@@ -547,7 +547,7 @@ public final class SumOfProducts extends Tools {
             if (isAllCovered()) {
                 //return;
                 for (int t=0; t < finalProductsList.size(); t++) {
-                    numberOfLiterals_SORTING += numberOfLiterals2(finalProductsList.get(t));
+                    numberOfLiterals_SORTING += Tools.numberOfLiterals2(finalProductsList.get(t));
                 }
                 break;
             }
@@ -694,8 +694,8 @@ public final class SumOfProducts extends Tools {
                 fourBits += truthTable.get(i).charAt(last);
                 i--;
             }
-            int decimalDigit = binary2decimal(fourBits, 4);
-            hexa += decimalDigit2hexaDigit(decimalDigit);
+            int decimalDigit = Tools.binary2decimal(fourBits, 4);
+            hexa += Tools.decimalDigit2hexaDigit(decimalDigit);
         }
         
         return hexa;
@@ -719,42 +719,42 @@ public final class SumOfProducts extends Tools {
     public String getBasicReport() throws FileNotFoundException, UnsupportedEncodingException {
         //PrintWriter writer = new PrintWriter("Quine-McCluskey Results.txt", "UTF-8");
         report = "";
-        report += print("\nExpressão de Entrada: \n> " + originalInputExpression + "\n"/*, writer*/);
+        report += Tools.print("\nExpressão de Entrada: \n> " + originalInputExpression + "\n"/*, writer*/);
         
         if (isError) {
-            report += print("\nExpressão Inconsistente.\n"/*, writer*/);
+            report += Tools.print("\nExpressão Inconsistente.\n"/*, writer*/);
             return report;
         }
         
-        report += print("> " + originalInputFormat + "\n"/*, writer*/);
+        report += Tools.print("> " + originalInputFormat + "\n"/*, writer*/);
         
         if (!inputFormat.equals(originalInputFormat)) {
-            report += print("\nExpressão Convertida: \n> " + convertedExpression + "\n"/*, writer*/);
-            report += print("> " + inputFormat + "\n"/*, writer*/);
+            report += Tools.print("\nExpressão Convertida: \n> " + convertedExpression + "\n"/*, writer*/);
+            report += Tools.print("> " + inputFormat + "\n"/*, writer*/);
         }
         
-        report += print("> " + numberOfVars + " variáveis\n"/*, writer*/);
+        report += Tools.print("> " + numberOfVars + " variáveis\n"/*, writer*/);
         
-        report += print("> " + numberOfLiterals(
+        report += Tools.print("> " + Tools.numberOfLiterals(
                 convertedExpression,
                 numberOfVars,
                 numberOfProducts) + " literais\n"/*, writer*/);
         
-        report += print("\nProdutos Essenciais:\n> "/*, writer*/);
+        report += Tools.print("\nProdutos Essenciais:\n> "/*, writer*/);
         for (int i=0; i < essentialProductsList.size(); i++) {
-            report += print(essentialProductsList.get(i)+"\t"/*, writer*/);
+            report += Tools.print(essentialProductsList.get(i)+"\t"/*, writer*/);
         }
-        report += print("\n"/*, writer*/);
+        report += Tools.print("\n"/*, writer*/);
         
-        report += print("\nExpressão Otimizada:\n"/*, writer*/);
-        report += print("> " + result + "\n"/*, writer*/);
+        report += Tools.print("\nExpressão Otimizada:\n"/*, writer*/);
+        report += Tools.print("> " + result + "\n"/*, writer*/);
             
-        report += print("> " + numberOfLiterals(
+        report += Tools.print("> " + Tools.numberOfLiterals(
                 result,
                 numberOfVars,
                 numberOfProducts) + " literais\n"/*, writer*/);
         
-        report += print("\n==================================================\n"/*, writer*/);
+        report += Tools.print("\n==================================================\n"/*, writer*/);
         
         //writer.close();
         return report;

@@ -14,7 +14,7 @@ import javax.swing.*;
 public class MazeRouter implements KeyListener {
     
     public Maze maze = new Maze(50, 30);
-    JPanel panel;
+    public JPanel panel;
     public ArrayList<JTextField> textFields = new ArrayList<>();
     public Font textFieldFont = new Font("Segoe UI", Font.BOLD, 10);
     public boolean pressed = false;

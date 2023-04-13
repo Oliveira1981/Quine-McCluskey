@@ -1,12 +1,10 @@
 package com.mycompany.quine.mccluskey;
 
-//import mazerouter.*;
-
 /**
  *
  * @author Rodrigo da Rosa
  */
-public class QuineMcCluskey extends Tools {
+public class QuineMcCluskey {
         
     public static void main(String[] args) throws Exception {
         
