@@ -319,6 +319,7 @@ public class MazeRouter implements KeyListener {
     
     public void showFinalResult() {
         //ArrayList<Position> path = getPath(maze);
+        getPath(maze);
         
         if (!targetFound) {
             maze.println("Caminho não encontrado.");
