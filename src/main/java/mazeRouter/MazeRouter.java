@@ -11,10 +11,10 @@ import javax.swing.*;
  *
  * @author Rodrigo da Rosa
  */
-public class MazeRouter implements KeyListener{//, MouseListener {
+public class MazeRouter implements KeyListener {
     
     public Maze maze = new Maze(50, 30);
-    public JFrame frame = new JFrame("Maze Router");
+    JPanel panel;
     public ArrayList<JTextField> textFields = new ArrayList<>();
     public Font textFieldFont = new Font("Segoe UI", Font.BOLD, 10);
     public boolean pressed = false;
@@ -42,7 +42,7 @@ public class MazeRouter implements KeyListener{//, MouseListener {
     public JPanel mazeRouterPanel () {
         GridBagLayout grid = new GridBagLayout();
         GridBagConstraints c = new GridBagConstraints();
-        JPanel panel = new JPanel(grid);
+        panel = new JPanel(grid);
         //JScrollPane scrollPane = new JScrollPane(panel);
         panel.setBackground(colorFree);
         Dimension dim = Toolkit.getDefaultToolkit().getScreenSize();
@@ -185,6 +185,7 @@ public class MazeRouter implements KeyListener{//, MouseListener {
     public void findPath(Maze maze){
         Position sourcePos = maze.getSourcePosition();
         maze.expand(sourcePos);
+        currentPos = sourcePos;
         
         while(!maze.getExpansionList().isEmpty() &&
             !targetFound) {
@@ -313,11 +314,11 @@ public class MazeRouter implements KeyListener{//, MouseListener {
                 bPos++;
             }
         }
-        frame.repaint();
+        //panel.repaint();
     }
     
     public void showFinalResult() {
-        ArrayList<Position> path = getPath(maze);
+        //ArrayList<Position> path = getPath(maze);
         
         if (!targetFound) {
             maze.println("Caminho não encontrado.");
@@ -401,7 +402,7 @@ public class MazeRouter implements KeyListener{//, MouseListener {
         if (e.getKeyCode() == KeyEvent.VK_B) {
             showBorder = !showBorder;
             showResult();
-            //frame.repaint();
+            //panel.repaint();
         }
     }
 
