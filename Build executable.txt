@@ -1,3 +1,5 @@
 D:\Users\Rodrigo\OneDrive - rzpy\Documents\Mestrado\Projeto\Quine-McCluskey\Quine-McCluskey\target>
 
 jpackage --input . --name ROSA-Binary --main-jar Quine-McCluskey-1.0-SNAPSHOT.jar --main-class com.mycompany.quine.mccluskey.QuineMcCluskey --type msi
+
+Para debug, incluir --win-console.
