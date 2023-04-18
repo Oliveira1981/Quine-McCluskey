@@ -19,4 +19,46 @@
         <maven.compiler.target>18</maven.compiler.target>
         <exec.mainClass>rodrigo.rosabinary.RosaBinary</exec.mainClass>
     </properties>
+    <build>
+        <plugins>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-assembly-plugin</artifactId>
+                <configuration>
+                    <archive>
+                        <manifest>
+                            <mainClass>rodrigo.rosabinary.RosaBinary</mainClass>
+                        </manifest>
+                    </archive>
+                    <outputDirectory>
+                        ${project.build.directory}/libs
+                    </outputDirectory>
+                    <descriptorRefs>
+                        <descriptorRef>jar-with-dependencies</descriptorRef>
+                    </descriptorRefs>
+                </configuration>
+            </plugin>
+            <plugin>
+                <artifactId>maven-resources-plugin</artifactId>
+                <version>2.6</version>
+                <executions>
+                    <execution>
+                        <id>copy-resources</id>
+                        <phase>validate</phase>
+                        <goals>
+                            <goal>copy-resources</goal>
+                        </goals>
+                        <configuration>
+                            <outputDirectory>${project.build.directory}/libs/sound</outputDirectory>
+                            <resources>
+                                <resource>
+                                    <directory>sound</directory>
+                                </resource>
+                            </resources>
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin>
+        </plugins>
+    </build>
 </project>

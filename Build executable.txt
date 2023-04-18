@@ -1,5 +1,0 @@
-cd "D:\Users\Rodrigo\OneDrive - rzpy\Documents\Mestrado\Projeto\Rosa Binary\Rosa Binary\target>"
-
-jpackage --input . --name ROSA-Binary --main-jar RosaBinary-1.0.jar --main-class rodrigo.rosabinary.RosaBinary --type msi
-
-Para debug, incluir --win-console.

@@ -4,7 +4,7 @@ import java.awt.*;
 import java.awt.event.*;
 import java.io.*;
 import java.util.*;
-import java.util.logging.*;
+//import java.util.logging.*;
 import javax.swing.*;
 import javax.swing.event.*;
 import rodrigo.rosabinary.mazerouter.*;
@@ -112,7 +112,7 @@ public final class GUI /*extends Tools*/ implements KeyListener {
         try {
             Desktop.getDesktop().open(fileOut);
         } catch (IOException ex) {
-            Logger.getLogger(GUI.class.getName()).log(Level.SEVERE, null, ex);
+            //Logger.getLogger(GUI.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
     
@@ -751,9 +751,9 @@ public final class GUI /*extends Tools*/ implements KeyListener {
                         try {
                             editor.setText(selectFile());
                         } catch (UnsupportedEncodingException ex) {
-                            Logger.getLogger(GUI.class.getName()).log(Level.SEVERE, null, ex);
+                            //Logger.getLogger(GUI.class.getName()).log(Level.SEVERE, null, ex);
                         } catch (Exception ex) {
-                            Logger.getLogger(GUI.class.getName()).log(Level.SEVERE, null, ex);
+                            //Logger.getLogger(GUI.class.getName()).log(Level.SEVERE, null, ex);
                         }
                     }
                     default -> {
@@ -1115,7 +1115,7 @@ public final class GUI /*extends Tools*/ implements KeyListener {
                     //outputFile.close();
                 }
                 catch (Exception ex) {
-                    Logger.getLogger(GUI.class.getName()).log(Level.SEVERE, null, ex);
+                   // Logger.getLogger(GUI.class.getName()).log(Level.SEVERE, null, ex);
                 }
                 labelTime.setText(String.format("Tempo: %.3f s", (float) (System.nanoTime() - startTime)/1000000000));
                 //labelTime.update(labelTime.getGraphics());
@@ -1133,7 +1133,7 @@ public final class GUI /*extends Tools*/ implements KeyListener {
                             try {
                                 textAreaReport.setText(reportText(comboWichReport/*, writer*/));
                             } catch (UnsupportedEncodingException ex) {
-                                Logger.getLogger(GUI.class.getName()).log(Level.SEVERE, null, ex);
+                                //Logger.getLogger(GUI.class.getName()).log(Level.SEVERE, null, ex);
                             }
                         }
                     }
@@ -1141,7 +1141,7 @@ public final class GUI /*extends Tools*/ implements KeyListener {
                         textAreaReport.setText("-");
                     }
                 } catch (FileNotFoundException ex) {
-                    Logger.getLogger(GUI.class.getName()).log(Level.SEVERE, null, ex);
+                    //Logger.getLogger(GUI.class.getName()).log(Level.SEVERE, null, ex);
                 }
             }
         });
@@ -1178,7 +1178,7 @@ public final class GUI /*extends Tools*/ implements KeyListener {
                     }
                     //outputFile.close();
                 } catch (Exception ex) {
-                    Logger.getLogger(GUI.class.getName()).log(Level.SEVERE, null, ex);
+                    //Logger.getLogger(GUI.class.getName()).log(Level.SEVERE, null, ex);
                 }
                 //long elapsedTime = System.nanoTime() - startTime;
                 labelTime.setText(String.format("Tempo: %.3f s", (float) (System.nanoTime() - startTime)/1000000000));
@@ -1207,7 +1207,7 @@ public final class GUI /*extends Tools*/ implements KeyListener {
                         out += sopsList.get(r).getBasicReport();
                     }
                 } catch (UnsupportedEncodingException ex) {
-                    Logger.getLogger(GUI.class.getName()).log(Level.SEVERE, null, ex);
+                    //Logger.getLogger(GUI.class.getName()).log(Level.SEVERE, null, ex);
                 }
             }
             case "Tabela Verdade" -> {
@@ -1268,7 +1268,7 @@ public final class GUI /*extends Tools*/ implements KeyListener {
                         out = sopsList.get(r).getBasicReport();
                     }
                 } catch (UnsupportedEncodingException ex) {
-                    Logger.getLogger(GUI.class.getName()).log(Level.SEVERE, null, ex);
+                    //Logger.getLogger(GUI.class.getName()).log(Level.SEVERE, null, ex);
                 }
             }
         }
