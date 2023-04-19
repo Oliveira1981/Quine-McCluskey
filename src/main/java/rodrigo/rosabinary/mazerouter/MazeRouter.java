@@ -56,7 +56,7 @@ public class MazeRouter implements KeyListener {
                 //textFields.get(last).setBorder(BorderFactory.createStrokeBorder(new BasicStroke(0.1f)));
                 textFields.get(last).setBorder(BorderFactory.createLineBorder(colorBorder));
                 textFields.get(last).setForeground(new Color(50, 50, 50));
-                int cellHeight = (int) dim.height/maze.getSizeX()-3;
+                int cellHeight = dim.height/maze.getSizeX()-3;
                 textFields.get(last).setPreferredSize(new Dimension(cellHeight, cellHeight));
                 textFields.get(last).setMinimumSize(new Dimension(10, 10));
                 textFields.get(last).setBackground(colorFree);

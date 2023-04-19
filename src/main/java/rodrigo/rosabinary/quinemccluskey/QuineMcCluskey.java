@@ -740,7 +740,7 @@ public class QuineMcCluskey implements KeyListener {
             @Override
             public void stateChanged(ChangeEvent e) {
                 JSlider source = (JSlider)e.getSource();
-                numVars = (int)source.getValue();
+                numVars = source.getValue();
                 quineMcPanel.remove(labelVariables);
                 if (numVars == 0) {
                     labelVariables.setText("   Número de variáveis: Auto");
@@ -776,16 +776,16 @@ public class QuineMcCluskey implements KeyListener {
                         case 1 -> { // input: digitar
                             optimizeExpressions(
                                 (String) comboExpressions.getSelectedItem(),
-                                (int) slider.getValue()/*,
-                                outputFile*/
+                                slider.getValue()
+                                //,outputFile
                             );
                             textAreaReport.setFont(fontReport);
                         }
                         case 2 -> { // input: aleatória
                             optimizeExpressions(
                                 editor.getText(),
-                                (int) slider.getValue()/*,
-                                outputFile*/
+                                slider.getValue()
+                                //,outputFile
                             );
                             textAreaReport.setFont(fontReport);
                         }
@@ -793,13 +793,13 @@ public class QuineMcCluskey implements KeyListener {
                             int startLine = 1;
                             int endLine = -1;
                             if (!checkReadEntireFile.isSelected()) {
-                                if (textStartLine.getText().equals("")) {
+                                if (textStartLine.getText().isEmpty()) {
                                     startLine = 1;
                                 }
                                 else {
                                     startLine = Integer.parseInt(textStartLine.getText());
                                 }
-                                if (textEndLine.getText().equals("")) {
+                                if (textEndLine.getText().isEmpty()) {
                                     endLine = -1;
                                 }
                                 else {
@@ -847,7 +847,9 @@ public class QuineMcCluskey implements KeyListener {
                             ArrayList<String> fullReport = new ArrayList<>();
                             if (endLine == -1) { // LER ATÉ O FINAL DO ARQUIVO
                                 while (sc.hasNext()) {
-                                    optimizeExpressions(sc.nextLine(), numVars/*, outputFile*/);
+                                    optimizeExpressions(sc.nextLine(), numVars
+                                        //, outputFile
+                                    );
                                     for (int x = 0; x < expressions.size(); x++) {
                                         //textAreaReport.append("\n" + count + "\t");
                                         fullReport.add("\n" + count + "\t");
@@ -856,7 +858,7 @@ public class QuineMcCluskey implements KeyListener {
                                         String result = sopsList.get(x).getResult();
                                         String formattedResult = result + ' ';
                                         for (int c = result.length(); c < 80; c++) {
-                                            formattedResult = formattedResult + '.';
+                                            formattedResult += '.';
                                         }
                                         //textAreaReport.append(formattedResult + " ");
                                         fullReport.add(formattedResult + " ");
@@ -864,7 +866,7 @@ public class QuineMcCluskey implements KeyListener {
                                         String hexa = sopsList.get(x).expression2hexadecimal(sopsList.get(0).getResult());
                                         String formattedHexa = hexa + ' ';
                                         for (int c = hexa.length(); c < 20; c++) {
-                                            formattedHexa = formattedHexa + '.';
+                                            formattedHexa += '.';
                                         }
                                         //textAreaReport.append(formattedHexa + " ");
                                         fullReport.add(formattedHexa + " ");
@@ -872,9 +874,9 @@ public class QuineMcCluskey implements KeyListener {
                                         //String numLit = String.valueOf(SumOfProducts.numberOfLiterals(sopsList.get(0).getResult(), sopsList.get(0).getNumberOfVars(), sopsList.get(0).getNumberOfProducts()));
                                         String numLit = String.valueOf(Tools.numberOfLiterals(sopsList.get(x).getResult(), sopsList.get(x).getNumberOfVars(), sopsList.get(x).getNumberOfProducts()));String formattedNumLit = "";
                                         for (int c = 0; c < (3 - numLit.length()); c++) {
-                                            formattedNumLit = formattedNumLit + ' ';
+                                            formattedNumLit += ' ';
                                         }
-                                        formattedNumLit = formattedNumLit + numLit;
+                                        formattedNumLit += numLit;
                                         //textAreaReport.append(formattedNumLit + "\n");
                                         fullReport.add(formattedNumLit + "\n");
                                         
@@ -894,7 +896,9 @@ public class QuineMcCluskey implements KeyListener {
                             }
                             else {
                                 while (line <= endLine) {
-                                    optimizeExpressions(sc.nextLine(), numVars/*, outputFile*/);
+                                    optimizeExpressions(sc.nextLine(), numVars
+                                        //, outputFile
+                                    );
                                     for (int x = 0; x < expressions.size(); x++) {
                                         //textAreaReport.append("\n" + count + "\t");
                                         fullReport.add("\n" + count + "\t");
@@ -903,7 +907,7 @@ public class QuineMcCluskey implements KeyListener {
                                         String result = sopsList.get(x).getResult();
                                         String formattedResult = result + ' ';
                                         for (int c = result.length(); c < 80; c++) {
-                                            formattedResult = formattedResult + '.';
+                                            formattedResult += '.';
                                         }
                                         //textAreaReport.append(formattedResult + " ");
                                         fullReport.add(formattedResult + " ");
@@ -911,7 +915,7 @@ public class QuineMcCluskey implements KeyListener {
                                         String hexa = sopsList.get(x).expression2hexadecimal(sopsList.get(x).getResult());
                                         String formattedHexa = hexa + ' ';
                                         for (int c = hexa.length(); c < 20; c++) {
-                                            formattedHexa = formattedHexa + '.';
+                                            formattedHexa += '.';
                                         }
                                         //textAreaReport.append(formattedHexa + " ");
                                         fullReport.add(formattedHexa + " ");
@@ -920,9 +924,9 @@ public class QuineMcCluskey implements KeyListener {
                                         String numLit = String.valueOf(Tools.numberOfLiterals(sopsList.get(x).getResult(), sopsList.get(x).getNumberOfVars(), sopsList.get(x).getNumberOfProducts()));
                                         String formattedNumLit = "";
                                         for (int c = 0; c < (3 - numLit.length()); c++) {
-                                            formattedNumLit = formattedNumLit + ' ';
+                                            formattedNumLit += ' ';
                                         }
-                                        formattedNumLit = formattedNumLit + numLit;
+                                        formattedNumLit += numLit;
                                         //textAreaReport.append(formattedNumLit + "\n");
                                         fullReport.add(formattedNumLit + "\n");
                                         
@@ -983,7 +987,9 @@ public class QuineMcCluskey implements KeyListener {
                                 results += ";\n" + sopsList.get(r).getResult();
                             }
                             textAreaResult.setText(results);
-                            textAreaReport.setText(reportText(comboWichReport/*, writer*/));
+                            textAreaReport.setText(reportText(comboWichReport
+                                //, writer
+                            ));
                         }
                         else {
                             textAreaResult.setText(errorMsg);
@@ -1009,7 +1015,9 @@ public class QuineMcCluskey implements KeyListener {
                     if (errorMsg.isEmpty()) {
                         if (hasResult) {
                             try {
-                                textAreaReport.setText(reportText(comboWichReport/*, writer*/));
+                                textAreaReport.setText(reportText(comboWichReport
+                                    //, writer
+                                ));
                             }
                             catch (UnsupportedEncodingException ex) {
                             }
@@ -1037,8 +1045,8 @@ public class QuineMcCluskey implements KeyListener {
                     errorMsg = "";
                     optimizeExpressions(
                         (String) comboExpressions.getSelectedItem(),
-                        (int) slider.getValue()/*,
-                        outputFile*/
+                        slider.getValue()
+                        //, outputFile
                     );
                     if (errorMsg.isEmpty()) {
                         String results;
@@ -1049,7 +1057,9 @@ public class QuineMcCluskey implements KeyListener {
                             results = sopsList.get(0).getResult();
                         }
                         textAreaResult.setText(results);
-                        textAreaReport.setText(reportText(comboWichReport/*, writer*/));
+                        textAreaReport.setText(reportText(comboWichReport
+                            //, writer
+                        ));
                     }
                     else {
                         textAreaResult.setText(errorMsg);
@@ -1221,8 +1231,9 @@ public class QuineMcCluskey implements KeyListener {
     
     public void optimizeExpressions(
         String allExpressions,
-        int numVars/*,
-        PrintWriter writer*/) throws Exception {
+        int numVars
+        //, PrintWriter writer
+        ) throws Exception {
         
         //SumOfProducts sopsList = new SumOfProducts();
         sopsList = new ArrayList<>();
@@ -1256,9 +1267,15 @@ public class QuineMcCluskey implements KeyListener {
             sopsList.get(lastSOPIndex).buildOptimizedExpression();
             
 ////////////// LER E ESCREVER EM ARQUIVO [BLOCK START] /////////////////////////
-            //print(sopsList.get(lastSOPIndex).getResult()+"\t", /*writer*/outputFile);
-            //print(sopsList.get(lastSOPIndex).expression2hexadecimal(sopsList.get(lastSOPIndex).getResult())+"\t", /*writer*/outputFile);
-            //print(SumOfProducts.numberOfLiterals(sopsList.get(lastSOPIndex).getResult(), sopsList.get(lastSOPIndex).getNumberOfVars(), sopsList.get(lastSOPIndex).getNumberOfProducts())+"\n", /*writer*/outputFile);
+            //print(sopsList.get(lastSOPIndex).getResult()+"\t", outputFile
+                //, writer
+            //);
+            //print(sopsList.get(lastSOPIndex).expression2hexadecimal(sopsList.get(lastSOPIndex).getResult())+"\t", outputFile
+                //, writer
+            //);
+            //print(Tools.numberOfLiterals(sopsList.get(lastSOPIndex).getResult(), sopsList.get(lastSOPIndex).getNumberOfVars(), sopsList.get(lastSOPIndex).getNumberOfProducts())+"\n", outputFile
+                //, writer
+            //);
 ////////////// LER E ESCREVER EM ARQUIVO [BLOCK END] ///////////////////////////
             
             begin = end + 1;

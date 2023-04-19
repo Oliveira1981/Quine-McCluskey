@@ -51,7 +51,7 @@ public class Tools {
             int exp = bits.length() - 1 - i;
             
             if(bits.charAt(i) == '1') {
-                decimalValue += (int) Math.pow(2, (double) exp);
+                decimalValue += (int) Math.pow(2, exp);
             }
         }
         
@@ -91,7 +91,7 @@ public class Tools {
                     hexaDigit = Integer.parseInt(Character.toString(hexaChar));
                 }
             }
-            decimalValue += hexaDigit * (int) Math.pow(16, (double) expo);
+            decimalValue += hexaDigit * (int) Math.pow(16, expo);
         }
         return decimalValue;
     }
@@ -141,7 +141,7 @@ public class Tools {
                 str += "1";
             }
             b++;
-            curr = (int) (curr / 2);
+            curr = (curr / 2);
         }
         while (curr > 0);
         
@@ -361,7 +361,7 @@ public class Tools {
                     int integerInput = Integer.parseInt(str);
                     
                     do {
-                        integerInput = (int) (integerInput / 2);
+                        integerInput = (integerInput / 2);
                         currSize++;
                     }
                     while (integerInput > 0);
@@ -748,6 +748,9 @@ public class Tools {
                 productsSet.add(j, productsSet.remove(i));
             }
         }
+    }
+
+    private Tools() {
     }
 
 }

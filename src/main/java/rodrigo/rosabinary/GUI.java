@@ -10,7 +10,7 @@ import rodrigo.rosabinary.quinemccluskey.*;
 *
  * @author Rodrigo Rosa
  */
-public final class GUI implements KeyListener {
+public class GUI implements KeyListener {
     
     private JTabbedPane        tabbedPane;
     private QuineMcCluskey quineMcCluskey;

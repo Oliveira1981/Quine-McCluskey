@@ -6,7 +6,7 @@ import java.util.ArrayList;
  *
  * @author Rodrigo Rosa
  */
-public final class Product {
+public class Product {
 
     private ArrayList<Integer> minTermsList;
     private String              literalView;

@@ -7,7 +7,7 @@ import java.util.*;
  *
  * @author Rodrigo Rosa
  */
-public final class SumOfProducts {
+public class SumOfProducts {
 
     private String                 originalInputFormat;
     private String                         inputFormat;
