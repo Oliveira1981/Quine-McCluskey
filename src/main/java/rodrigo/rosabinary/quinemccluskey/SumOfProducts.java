@@ -48,8 +48,8 @@ public final class SumOfProducts {
     public boolean setExpression(String expression, int selectedNumberOfVars) {
         this.isError         = false;
         this.report          = "";
-        originalInputFormat = Tools.detectInputFormat(expression);
-        inputFormat = originalInputFormat;
+        originalInputFormat  = Tools.detectInputFormat(expression);
+        inputFormat          = originalInputFormat;
         
         if(!isValidInput(expression, selectedNumberOfVars)) {
             return false;
@@ -719,17 +719,17 @@ public final class SumOfProducts {
     public String getBasicReport() throws FileNotFoundException, UnsupportedEncodingException {
         //PrintWriter writer = new PrintWriter("Quine-McCluskey Results.txt", "UTF-8");
         report = "";
-        report += Tools.print("\nExpressão de Entrada: \n> " + originalInputExpression + "\n"/*, writer*/);
+        report += Tools.print("\nEXPRESSÃO DE ENTRADA: \n> " + originalInputExpression + "\n"/*, writer*/);
         
         if (isError) {
-            report += Tools.print("\nExpressão Inconsistente.\n"/*, writer*/);
+            report += Tools.print("\nEXPRESSÃO INCONSISTENTE.\n"/*, writer*/);
             return report;
         }
         
         report += Tools.print("> " + originalInputFormat + "\n"/*, writer*/);
         
         if (!inputFormat.equals(originalInputFormat)) {
-            report += Tools.print("\nExpressão Convertida: \n> " + convertedExpression + "\n"/*, writer*/);
+            report += Tools.print("\nEXPRESSÃO CONVERTIDA: \n> " + convertedExpression + "\n"/*, writer*/);
             report += Tools.print("> " + inputFormat + "\n"/*, writer*/);
         }
         
@@ -740,13 +740,13 @@ public final class SumOfProducts {
                 numberOfVars,
                 numberOfProducts) + " literais\n"/*, writer*/);
         
-        report += Tools.print("\nProdutos Essenciais:\n> "/*, writer*/);
-        for (int i=0; i < essentialProductsList.size(); i++) {
-            report += Tools.print(essentialProductsList.get(i)+"\t"/*, writer*/);
-        }
-        report += Tools.print("\n"/*, writer*/);
+        //report += Tools.print("\nPRODUTOS ESSENCIAIS:\n> "/*, writer*/);
+        //for (int i=0; i < essentialProductsList.size(); i++) {
+        //    report += Tools.print(essentialProductsList.get(i)+"\t"/*, writer*/);
+        //}
+        //report += Tools.print("\n"/*, writer*/);
         
-        report += Tools.print("\nExpressão Otimizada:\n"/*, writer*/);
+        report += Tools.print("\nEXPRESSÃO OTIMIZADA:\n"/*, writer*/);
         report += Tools.print("> " + result + "\n"/*, writer*/);
             
         report += Tools.print("> " + Tools.numberOfLiterals(

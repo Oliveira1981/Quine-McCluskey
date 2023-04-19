@@ -13,13 +13,13 @@ import javax.swing.*;
  */
 public class MazeRouter implements KeyListener {
     
-    public Maze maze = new Maze(60, 30);
+    public Maze maze             = new Maze(60, 30);
     public JPanel panel;
     public ArrayList<JTextField> textFields = new ArrayList<>();
-    public Font textFieldFont = new Font("Segoe UI", Font.BOLD, 10);
-    public boolean pressed = false;
-    public boolean played = false;
-    //public boolean released = false;
+    public Font textFieldFont    = new Font("Segoe UI", Font.BOLD, 10);
+    public boolean pressed       = false;
+    public boolean played        = false;
+    //public boolean released      = false;
     public boolean firstStepDone = false;
     public boolean targetFound   = false;
     public boolean showBorder    = true;
@@ -32,7 +32,7 @@ public class MazeRouter implements KeyListener {
     public Color colorExpanded   = new Color(20, 50, 250);
     public Color colorPath       = new Color(255, 200, 0);
     public Color colorBorder     = new Color(100, 100, 100, 40);
-    public Sound sound = new Sound();
+    public Sound sound           = new Sound();
     public Clip clip;
 
     public MazeRouter(){

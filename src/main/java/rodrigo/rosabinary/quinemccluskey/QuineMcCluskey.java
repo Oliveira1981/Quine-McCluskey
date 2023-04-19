@@ -16,7 +16,7 @@ import javax.swing.event.*;
 public class QuineMcCluskey implements KeyListener {
     
     public String                inputFormat;
-    public String                 expression;
+    public ArrayList<String>     expressions;
     public int                       numVars;
     public boolean                 hasResult;
     public String                   errorMsg;
@@ -57,19 +57,19 @@ public class QuineMcCluskey implements KeyListener {
     
     public QuineMcCluskey() {
         inputFormat = "";
-        expression  = "";
         numVars     = 0;
         hasResult   = false;
         errorMsg    = "";
         sopsList    = null;
+        //expressions = new ArrayList<>();
     }
     
     public String getInputFormat(){
         return inputFormat;
     }
     
-    public String getExpression(){
-        return expression;
+    public ArrayList<String> getExpression(){
+        return expressions;
     }
     
     public JPanel quineMcPanel () {
@@ -848,93 +848,97 @@ public class QuineMcCluskey implements KeyListener {
                             if (endLine == -1) { // LER ATÉ O FINAL DO ARQUIVO
                                 while (sc.hasNext()) {
                                     optimizeExpressions(sc.nextLine(), numVars/*, outputFile*/);
-                                    //textAreaReport.append("\n" + count + "\t");
-                                    fullReport.add("\n" + count + "\t");
-                                    count++;
-                                    
-                                    String result = sopsList.get(0).getResult();
-                                    String formattedResult = result + ' ';
-                                    for (int c = result.length(); c < 80; c++) {
-                                        formattedResult = formattedResult + '.';
-                                    }
-                                    //textAreaReport.append(formattedResult + " ");
-                                    fullReport.add(formattedResult + " ");
-                                    
-                                    String hexa = sopsList.get(0).expression2hexadecimal(sopsList.get(0).getResult());
-                                    String formattedHexa = hexa + ' ';
-                                    for (int c = hexa.length(); c < 20; c++) {
-                                        formattedHexa = formattedHexa + '.';
-                                    }
-                                    //textAreaReport.append(formattedHexa + " ");
-                                    fullReport.add(formattedHexa + " ");
-                                    
-                                    //String numLit = String.valueOf(SumOfProducts.numberOfLiterals(sopsList.get(0).getResult(), sopsList.get(0).getNumberOfVars(), sopsList.get(0).getNumberOfProducts()));
-                                    String numLit = String.valueOf(Tools.numberOfLiterals(sopsList.get(0).getResult(), sopsList.get(0).getNumberOfVars(), sopsList.get(0).getNumberOfProducts()));String formattedNumLit = "";
-                                    for (int c = 0; c < (3 - numLit.length()); c++) {
-                                        formattedNumLit = formattedNumLit + ' ';
-                                    }
-                                    formattedNumLit = formattedNumLit + numLit;
-                                    //textAreaReport.append(formattedNumLit + "\n");
-                                    fullReport.add(formattedNumLit + "\n");
-                                    
-                                    //Exibe atualização a cada X iterações
-                                    if (Math.floorMod(count, 500) == 0) {
-                                        textAreaReport.setText(
-                                            "ÍNDICE\t" +
-                                            "EXPRESSÃO MINIMIZADA\n"
-                                        );
-                                        textAreaReport.append("\n" + count + "\t" + result + " ...");
-                                        textAreaReport.update(textAreaReport.getGraphics());
-                                        labelTime.setText(String.format("Tempo: %.3f s", (float) (System.nanoTime() - startTime)/1000000000));
-                                        labelTime.update(labelTime.getGraphics());
+                                    for (int x = 0; x < expressions.size(); x++) {
+                                        //textAreaReport.append("\n" + count + "\t");
+                                        fullReport.add("\n" + count + "\t");
+                                        count++;
+                                        
+                                        String result = sopsList.get(x).getResult();
+                                        String formattedResult = result + ' ';
+                                        for (int c = result.length(); c < 80; c++) {
+                                            formattedResult = formattedResult + '.';
+                                        }
+                                        //textAreaReport.append(formattedResult + " ");
+                                        fullReport.add(formattedResult + " ");
+                                        
+                                        String hexa = sopsList.get(x).expression2hexadecimal(sopsList.get(0).getResult());
+                                        String formattedHexa = hexa + ' ';
+                                        for (int c = hexa.length(); c < 20; c++) {
+                                            formattedHexa = formattedHexa + '.';
+                                        }
+                                        //textAreaReport.append(formattedHexa + " ");
+                                        fullReport.add(formattedHexa + " ");
+                                        
+                                        //String numLit = String.valueOf(SumOfProducts.numberOfLiterals(sopsList.get(0).getResult(), sopsList.get(0).getNumberOfVars(), sopsList.get(0).getNumberOfProducts()));
+                                        String numLit = String.valueOf(Tools.numberOfLiterals(sopsList.get(x).getResult(), sopsList.get(x).getNumberOfVars(), sopsList.get(x).getNumberOfProducts()));String formattedNumLit = "";
+                                        for (int c = 0; c < (3 - numLit.length()); c++) {
+                                            formattedNumLit = formattedNumLit + ' ';
+                                        }
+                                        formattedNumLit = formattedNumLit + numLit;
+                                        //textAreaReport.append(formattedNumLit + "\n");
+                                        fullReport.add(formattedNumLit + "\n");
+                                        
+                                        //Exibe atualização a cada X iterações
+                                        if (Math.floorMod(count, 500) == 0) {
+                                            textAreaReport.setText(
+                                                "ÍNDICE\t" +
+                                                "EXPRESSÃO MINIMIZADA\n"
+                                            );
+                                            textAreaReport.append("\n" + count + "\t" + result + " ...");
+                                            textAreaReport.update(textAreaReport.getGraphics());
+                                            labelTime.setText(String.format("Tempo: %.3f s", (float) (System.nanoTime() - startTime)/1000000000));
+                                            labelTime.update(labelTime.getGraphics());
+                                        }
                                     }
                                 }
                             }
                             else {
                                 while (line <= endLine) {
                                     optimizeExpressions(sc.nextLine(), numVars/*, outputFile*/);
-                                    //textAreaReport.append("\n" + count + "\t");
-                                    fullReport.add("\n" + count + "\t");
-                                    count++;
-                                    
-                                    String result = sopsList.get(0).getResult();
-                                    String formattedResult = result + ' ';
-                                    for (int c = result.length(); c < 80; c++) {
-                                        formattedResult = formattedResult + '.';
+                                    for (int x = 0; x < expressions.size(); x++) {
+                                        //textAreaReport.append("\n" + count + "\t");
+                                        fullReport.add("\n" + count + "\t");
+                                        count++;
+                                        
+                                        String result = sopsList.get(x).getResult();
+                                        String formattedResult = result + ' ';
+                                        for (int c = result.length(); c < 80; c++) {
+                                            formattedResult = formattedResult + '.';
+                                        }
+                                        //textAreaReport.append(formattedResult + " ");
+                                        fullReport.add(formattedResult + " ");
+                                        
+                                        String hexa = sopsList.get(x).expression2hexadecimal(sopsList.get(x).getResult());
+                                        String formattedHexa = hexa + ' ';
+                                        for (int c = hexa.length(); c < 20; c++) {
+                                            formattedHexa = formattedHexa + '.';
+                                        }
+                                        //textAreaReport.append(formattedHexa + " ");
+                                        fullReport.add(formattedHexa + " ");
+                                        
+                                        //String numLit = String.valueOf(SumOfProducts.numberOfLiterals(sopsList.get(0).getResult(), sopsList.get(0).getNumberOfVars(), sopsList.get(0).getNumberOfProducts()));
+                                        String numLit = String.valueOf(Tools.numberOfLiterals(sopsList.get(x).getResult(), sopsList.get(x).getNumberOfVars(), sopsList.get(x).getNumberOfProducts()));
+                                        String formattedNumLit = "";
+                                        for (int c = 0; c < (3 - numLit.length()); c++) {
+                                            formattedNumLit = formattedNumLit + ' ';
+                                        }
+                                        formattedNumLit = formattedNumLit + numLit;
+                                        //textAreaReport.append(formattedNumLit + "\n");
+                                        fullReport.add(formattedNumLit + "\n");
+                                        
+                                        //Exibe atualização a cada X iterações
+                                        if (Math.floorMod(count, 500) == 0) {
+                                            textAreaReport.setText(
+                                                "ÍNDICE\t" +
+                                                "EXPRESSÃO MINIMIZADA\n"
+                                            );
+                                            textAreaReport.append("\n" + count + "\t" + result + " ...");
+                                            textAreaReport.update(textAreaReport.getGraphics());
+                                            labelTime.setText(String.format("Tempo: %.3f s", (float) (System.nanoTime() - startTime)/1000000000));
+                                            labelTime.update(labelTime.getGraphics());
+                                        }
+                                        line++;
                                     }
-                                    //textAreaReport.append(formattedResult + " ");
-                                    fullReport.add(formattedResult + " ");
-                                    
-                                    String hexa = sopsList.get(0).expression2hexadecimal(sopsList.get(0).getResult());
-                                    String formattedHexa = hexa + ' ';
-                                    for (int c = hexa.length(); c < 20; c++) {
-                                        formattedHexa = formattedHexa + '.';
-                                    }
-                                    //textAreaReport.append(formattedHexa + " ");
-                                    fullReport.add(formattedHexa + " ");
-                                    
-                                    //String numLit = String.valueOf(SumOfProducts.numberOfLiterals(sopsList.get(0).getResult(), sopsList.get(0).getNumberOfVars(), sopsList.get(0).getNumberOfProducts()));
-                                    String numLit = String.valueOf(Tools.numberOfLiterals(sopsList.get(0).getResult(), sopsList.get(0).getNumberOfVars(), sopsList.get(0).getNumberOfProducts()));
-                                    String formattedNumLit = "";
-                                    for (int c = 0; c < (3 - numLit.length()); c++) {
-                                        formattedNumLit = formattedNumLit + ' ';
-                                    }
-                                    formattedNumLit = formattedNumLit + numLit;
-                                    //textAreaReport.append(formattedNumLit + "\n");
-                                    fullReport.add(formattedNumLit + "\n");
-                                    
-                                    //Exibe atualização a cada X iterações
-                                    if (Math.floorMod(count, 500) == 0) {
-                                        textAreaReport.setText(
-                                            "ÍNDICE\t" +
-                                            "EXPRESSÃO MINIMIZADA\n"
-                                        );
-                                        textAreaReport.append("\n" + count + "\t" + result + " ...");
-                                        textAreaReport.update(textAreaReport.getGraphics());
-                                        labelTime.setText(String.format("Tempo: %.3f s", (float) (System.nanoTime() - startTime)/1000000000));
-                                        labelTime.update(labelTime.getGraphics());
-                                    }
-                                    line++;
                                 }
                             }
                             textAreaReport.append("\n\nFinalizando...");
@@ -957,7 +961,7 @@ public class QuineMcCluskey implements KeyListener {
                             for (int a = 0; a < fullReport.size(); a++) {
                                 textAreaReport.append(fullReport.get(a));
                             }
-                            textAreaReport.setCaretPosition(0);
+                            //textAreaReport.setCaretPosition(0);
                             quineMcPanel.repaint();
                             //outputFile.close();
                             /*if (readFromFile(editor.getText(),
@@ -986,6 +990,7 @@ public class QuineMcCluskey implements KeyListener {
                             textAreaReport.setText("-");
                         }
                     }
+                    textAreaReport.setCaretPosition(0);
                     //outputFile.close();
                 }
                 catch (Exception ex) {
@@ -1013,6 +1018,7 @@ public class QuineMcCluskey implements KeyListener {
                     else {
                         textAreaReport.setText("-");
                     }
+                    textAreaReport.setCaretPosition(0);
                 }
                 catch (FileNotFoundException ex) {
                 }
@@ -1218,8 +1224,9 @@ public class QuineMcCluskey implements KeyListener {
         int numVars/*,
         PrintWriter writer*/) throws Exception {
         
-        sopsList = new ArrayList<>();
         //SumOfProducts sopsList = new SumOfProducts();
+        sopsList = new ArrayList<>();
+        expressions = new ArrayList<>();
         
         allExpressions = Tools.removeSpacesFromExpression(allExpressions);
         int begin = 0;
@@ -1230,12 +1237,13 @@ public class QuineMcCluskey implements KeyListener {
             if (end < 0) {
                 end = allExpressions.length();
             }
-            expression = allExpressions.substring(begin, end);
+            expressions.add(allExpressions.substring(begin, end));
             //expression = allExpressions;
             sopsList.add(new SumOfProducts());
+            int lastExpressionIndex = expressions.size()-1;
             int lastSOPIndex = sopsList.size()-1;
             //sopsList.get(lastSOPIndex).setExpression(expression, numVars);
-            if (!sopsList.get(lastSOPIndex).setExpression(expression, numVars)) {
+            if (!sopsList.get(lastSOPIndex).setExpression(expressions.get(lastExpressionIndex), numVars)) {
                 begin = end + 1;
                 continue;
             }

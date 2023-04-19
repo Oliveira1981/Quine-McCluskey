@@ -8,11 +8,11 @@ import java.util.ArrayList;
  */
 public class Maze {
     
-    private final int sizeX;
-    private final int sizeY;
-    private ArrayList<ArrayList<Cell>> maze;
-    private Position sourcePosition;
-    private Position targetPosition;
+    private final int                   sizeX;
+    private final int                   sizeY;
+    private ArrayList<ArrayList<Cell>>   maze;
+    private Position           sourcePosition;
+    private Position           targetPosition;
     private ArrayList<Position> expansionList;
     
     public Maze(int sizeX, int sizeY) {
@@ -27,7 +27,7 @@ public class Maze {
         }
         sourcePosition = new Position(0, 0);
         targetPosition = new Position(sizeX-1, sizeY-1);
-        expansionList = new ArrayList<>();
+        expansionList  = new ArrayList<>();
     }
     
     public void printMazeChars() {

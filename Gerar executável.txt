@@ -2,6 +2,7 @@ Para gerar jar executável:
 
 - Instalar Maven
 - Executar:
+cd "D:\Users\Rodrigo\OneDrive - rzpy\Documents\Mestrado\Projeto\Rosa Binary\Rosa Binary"
 mvn clean compile assembly:single
 
 =========================================================
@@ -10,7 +11,7 @@ Para gerar instalador para Windows, independente do Java:
 - Gerar jar executável
 - Instalar WiX
 - Executar:
-cd "D:\Users\Rodrigo\OneDrive - rzpy\Documents\Mestrado\Projeto\Rosa Binary\Rosa Binary\target\libs>"
+cd "D:\Users\Rodrigo\OneDrive - rzpy\Documents\Mestrado\Projeto\Rosa Binary\Rosa Binary\target\libs"
 jpackage --input . --name ROSA-Binary --main-jar RosaBinary-1.0-jar-with-dependencies.jar --main-class rodrigo.rosabinary.RosaBinary --type msi
 
 (Para debug, incluir --win-console.)
