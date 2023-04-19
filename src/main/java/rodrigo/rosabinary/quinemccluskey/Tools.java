@@ -5,7 +5,7 @@ import java.util.*;
 
 /**
  *
- * @author Rodrigo da Rosa
+ * @author Rodrigo Rosa
  */
 public class Tools {
     

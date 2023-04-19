@@ -2,7 +2,7 @@ package rodrigo.rosabinary.mazerouter;
 
 /**
  *
- * @author Rodrigo da Rosa
+ * @author Rodrigo Rosa
  */
 public class Cell {
     

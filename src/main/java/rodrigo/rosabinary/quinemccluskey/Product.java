@@ -4,9 +4,9 @@ import java.util.ArrayList;
 
 /**
  *
- * @author Rodrigo da Rosa
+ * @author Rodrigo Rosa
  */
-public final class Product {//extends Tools {
+public final class Product {
 
     private ArrayList<Integer> minTermsList;
     private String              literalView;

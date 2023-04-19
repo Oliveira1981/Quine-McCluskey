@@ -5,9 +5,9 @@ import java.util.*;
 
 /**
  *
- * @author Rodrigo da Rosa
+ * @author Rodrigo Rosa
  */
-public final class SumOfProducts {//extends Tools {
+public final class SumOfProducts {
 
     private String                 originalInputFormat;
     private String                         inputFormat;

@@ -4,7 +4,7 @@ import java.util.ArrayList;
 
 /**
  *
- * @author Rodrigo da Rosa
+ * @author Rodrigo Rosa
  */
 public class Position {
     private int x;

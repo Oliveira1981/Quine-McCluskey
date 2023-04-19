@@ -4,9 +4,9 @@ import java.util.ArrayList;
 
 /**
  *
- * @author Rodrigo da Rosa
+ * @author Rodrigo Rosa
  */
-public final class MinTerm {//extends Tools {
+public final class MinTerm {
     
     private ArrayList<String> productsList;
     private String             literalView;

@@ -5,7 +5,7 @@ import javax.sound.sampled.*;
 
 /**
  *
- * @author Rodrigo da Rosa
+ * @author Rodrigo Rosa
  */
 public class Sound {
     

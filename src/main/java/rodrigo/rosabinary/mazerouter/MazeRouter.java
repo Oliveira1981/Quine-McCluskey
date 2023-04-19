@@ -9,11 +9,11 @@ import javax.swing.*;
 
 /**
  *
- * @author Rodrigo da Rosa
+ * @author Rodrigo Rosa
  */
 public class MazeRouter implements KeyListener {
     
-    public Maze maze = new Maze(50, 30);
+    public Maze maze = new Maze(60, 30);
     public JPanel panel;
     public ArrayList<JTextField> textFields = new ArrayList<>();
     public Font textFieldFont = new Font("Segoe UI", Font.BOLD, 10);
