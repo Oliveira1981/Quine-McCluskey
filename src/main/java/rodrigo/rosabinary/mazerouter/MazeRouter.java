@@ -24,14 +24,14 @@ public class MazeRouter implements KeyListener {
     public boolean targetFound   = false;
     public boolean showBorder    = true;
     public Position currentPos   = new Position();
-    public Color colorFree       = new Color(10, 10, 10);
+    public Color colorFree;//       = new Color(10, 10, 10);
     public Color colorBlocked    = new Color(150, 30, 50);
     public Color colorSource     = new Color(80, 180, 255);
     public Color colorTarget     = new Color(0, 220, 50);
     public Color colorExpanding  = Color.MAGENTA;
     public Color colorExpanded   = new Color(20, 50, 250);
     public Color colorPath       = new Color(255, 200, 0);
-    public Color colorBorder     = new Color(100, 100, 100, 40);
+    public Color colorBorder;//     = new Color(100, 100, 100, 40);
     public Sound sound           = new Sound();
     public Clip clip;
 
@@ -39,12 +39,19 @@ public class MazeRouter implements KeyListener {
         
     }
     
-    public JPanel mazeRouterPanel () {
+    public JPanel mazeRouterPanel (boolean darkTheme) {
         GridBagLayout grid = new GridBagLayout();
         GridBagConstraints c = new GridBagConstraints();
         panel = new JPanel(grid);
         //JScrollPane scrollPane = new JScrollPane(panel);
-        panel.setBackground(colorFree);
+        if (darkTheme) {
+            colorFree = new Color(10, 10, 10);
+            colorBorder = new Color(100, 100, 100, 40);
+        }
+        else {
+            colorFree = new Color(199, 222, 244);
+            colorBorder = new Color(155, 177, 199, 40);
+        }
         Dimension dim = Toolkit.getDefaultToolkit().getScreenSize();
         
         for (int y=0; y < maze.getSizeY(); y++) {

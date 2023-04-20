@@ -728,42 +728,42 @@ public class SumOfProducts {
     
     public String getBasicReport() throws FileNotFoundException, UnsupportedEncodingException {
         report = "";
-        report += Tools.print("\nEXPRESSÃO DE ENTRADA: \n> " + originalInputExpression + "\n");
+        report += /*Tools.print*/("\nEXPRESSÃO DE ENTRADA: \n> " + originalInputExpression + "\n");
         
         if (isError) {
-            report += Tools.print("\nEXPRESSÃO INCONSISTENTE.\n");
+            report += /*Tools.print*/("\nEXPRESSÃO INCONSISTENTE.\n");
             return report;
         }
         
-        report += Tools.print("> " + originalInputFormat + "\n");
+        report += /*Tools.print*/("> " + originalInputFormat + "\n");
         
         if (!inputFormat.equals(originalInputFormat)) {
-            report += Tools.print("\nEXPRESSÃO CONVERTIDA: \n> " + convertedExpression + "\n");
-            report += Tools.print("> " + inputFormat + "\n");
+            report += /*Tools.print*/("\nEXPRESSÃO CONVERTIDA: \n> " + convertedExpression + "\n");
+            report += /*Tools.print*/("> " + inputFormat + "\n");
         }
         
-        report += Tools.print("> " + numberOfVars + " variáveis\n");
+        report += /*Tools.print*/("> " + numberOfVars + " variáveis\n");
         
-        report += Tools.print("> " + Tools.numberOfLiterals(
+        report += /*Tools.print*/("> " + Tools.numberOfLiterals(
                 convertedExpression,
                 numberOfVars,
                 numberOfProducts) + " literais\n");
         
-        //report += Tools.print("\nPRODUTOS ESSENCIAIS:\n> ");
+        //report += /*Tools.print*/("\nPRODUTOS ESSENCIAIS:\n> ");
         //for (int i=0; i < essentialProductsList.size(); i++) {
         //    report += Tools.print(essentialProductsList.get(i)+"\t");
         //}
-        //report += Tools.print("\n");
+        //report += /*Tools.print*/("\n");
         
-        report += Tools.print("\nEXPRESSÃO OTIMIZADA:\n");
-        report += Tools.print("> " + result + "\n");
+        report += /*Tools.print*/("\nEXPRESSÃO OTIMIZADA:\n");
+        report += /*Tools.print*/("> " + result + "\n");
             
-        report += Tools.print("> " + Tools.numberOfLiterals(
+        report += /*Tools.print*/("> " + Tools.numberOfLiterals(
                 result,
                 numberOfVars,
                 numberOfProducts) + " literais\n");
         
-        report += Tools.print("\n==================================================\n");
+        report += /*Tools.print*/("\n==================================================\n");
         
         return report;
     }

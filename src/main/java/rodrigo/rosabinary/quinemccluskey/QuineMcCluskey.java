@@ -49,7 +49,7 @@ public class QuineMcCluskey implements KeyListener {
     };
     
     public String[] wichReport = {
-        "Relatório Básico",
+        "Relatório",
         "Tabela Verdade",
         "Mintermos e seus Produtos",
         "Produtos e seus Mintermos",
@@ -62,7 +62,7 @@ public class QuineMcCluskey implements KeyListener {
         hasResult          = false;
         errorMsg           = "";
         sopsList           = null;
-        writeResultsTofile = true;
+        writeResultsTofile = !true;
         //expressions        = new ArrayList<>();
     }
     
@@ -74,7 +74,7 @@ public class QuineMcCluskey implements KeyListener {
         return expressions;
     }
     
-    public JPanel quineMcPanel () {
+    public JPanel quineMcPanel (boolean darkTheme) {
         
         GridBagLayout grid = new GridBagLayout();
         JPanel quineMcPanel = new JPanel(grid);
@@ -282,8 +282,14 @@ public class QuineMcCluskey implements KeyListener {
         okButton.setMinimumSize(new Dimension(90, 30));
         okButton.addKeyListener(this);
         okButton.setFocusable(true);
-        okButton.setBackground(new Color(30, 50, 100));
-        okButton.setForeground(new Color(50, 150, 250));
+        if (darkTheme) {
+            okButton.setBackground(new Color(30, 50, 100));
+            okButton.setForeground(new Color(50, 150, 250));
+        }
+        else {
+            okButton.setBackground(new Color(199, 222, 244));
+            okButton.setForeground(new Color(50, 150, 250));
+        }
         okButton.setFont(fontDefault);
 	c.fill = GridBagConstraints.HORIZONTAL;
 	c.gridx = 9;
@@ -366,8 +372,14 @@ public class QuineMcCluskey implements KeyListener {
         textAreaResult.setFocusable(true);
         textAreaResult.setLineWrap(true);
         textAreaResult.setEditable(false);
-        textAreaResult.setBackground(new Color(44, 44, 44));
-        textAreaResult.setForeground(new Color(50, 150, 250));
+        if (darkTheme) {
+            textAreaResult.setBackground(new Color(44, 44, 44));
+            textAreaResult.setForeground(new Color(50, 150, 250));
+        }
+        else {
+            textAreaResult.setBackground(new Color(199, 222, 244));
+            textAreaResult.setForeground(new Color(10, 110, 210));
+        }
         textAreaResult.setFont(new Font("Consolas", Font.PLAIN, 16));
         Insets mResult = new Insets(12, 8, 4, 6);
         textAreaResult.setMargin(mResult);
@@ -438,8 +450,14 @@ public class QuineMcCluskey implements KeyListener {
         textAreaReport.setFocusable(true);
         textAreaReport.setLineWrap(true);
         textAreaReport.setEditable(false);
-        textAreaReport.setBackground(new Color(44, 44, 44));
-        textAreaReport.setForeground(new Color(50, 150, 250));
+        if (darkTheme) {
+            textAreaReport.setBackground(new Color(44, 44, 44));
+            textAreaReport.setForeground(new Color(50, 150, 250));
+        }
+        else {
+            textAreaReport.setBackground(new Color(199, 222, 244));
+            textAreaReport.setForeground(new Color(10, 110, 210));
+        }
         Font fontReport = new Font("Consolas", Font.PLAIN, 16);
         textAreaReport.setFont(fontReport);
         Insets mReport = new Insets(10, 10, 10, 10);
@@ -1162,7 +1180,7 @@ public class QuineMcCluskey implements KeyListener {
     public String reportText(JComboBox comboWichReport) throws FileNotFoundException, UnsupportedEncodingException {
         String out = "";
         switch ((String)comboWichReport.getSelectedItem()) {
-            case "Relatório Básico" -> {
+            case "Relatório" -> {
                 try {
                     for (int r=0; r < sopsList.size(); r++) {
                         out += sopsList.get(r).getBasicReport();
