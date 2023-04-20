@@ -727,46 +727,44 @@ public class SumOfProducts {
     }
     
     public String getBasicReport() throws FileNotFoundException, UnsupportedEncodingException {
-        //PrintWriter writer = new PrintWriter("Quine-McCluskey Results.txt", "UTF-8");
         report = "";
-        report += Tools.print("\nEXPRESSÃO DE ENTRADA: \n> " + originalInputExpression + "\n"/*, writer*/);
+        report += Tools.print("\nEXPRESSÃO DE ENTRADA: \n> " + originalInputExpression + "\n");
         
         if (isError) {
-            report += Tools.print("\nEXPRESSÃO INCONSISTENTE.\n"/*, writer*/);
+            report += Tools.print("\nEXPRESSÃO INCONSISTENTE.\n");
             return report;
         }
         
-        report += Tools.print("> " + originalInputFormat + "\n"/*, writer*/);
+        report += Tools.print("> " + originalInputFormat + "\n");
         
         if (!inputFormat.equals(originalInputFormat)) {
-            report += Tools.print("\nEXPRESSÃO CONVERTIDA: \n> " + convertedExpression + "\n"/*, writer*/);
-            report += Tools.print("> " + inputFormat + "\n"/*, writer*/);
+            report += Tools.print("\nEXPRESSÃO CONVERTIDA: \n> " + convertedExpression + "\n");
+            report += Tools.print("> " + inputFormat + "\n");
         }
         
-        report += Tools.print("> " + numberOfVars + " variáveis\n"/*, writer*/);
+        report += Tools.print("> " + numberOfVars + " variáveis\n");
         
         report += Tools.print("> " + Tools.numberOfLiterals(
                 convertedExpression,
                 numberOfVars,
-                numberOfProducts) + " literais\n"/*, writer*/);
+                numberOfProducts) + " literais\n");
         
-        //report += Tools.print("\nPRODUTOS ESSENCIAIS:\n> "/*, writer*/);
+        //report += Tools.print("\nPRODUTOS ESSENCIAIS:\n> ");
         //for (int i=0; i < essentialProductsList.size(); i++) {
-        //    report += Tools.print(essentialProductsList.get(i)+"\t"/*, writer*/);
+        //    report += Tools.print(essentialProductsList.get(i)+"\t");
         //}
-        //report += Tools.print("\n"/*, writer*/);
+        //report += Tools.print("\n");
         
-        report += Tools.print("\nEXPRESSÃO OTIMIZADA:\n"/*, writer*/);
-        report += Tools.print("> " + result + "\n"/*, writer*/);
+        report += Tools.print("\nEXPRESSÃO OTIMIZADA:\n");
+        report += Tools.print("> " + result + "\n");
             
         report += Tools.print("> " + Tools.numberOfLiterals(
                 result,
                 numberOfVars,
-                numberOfProducts) + " literais\n"/*, writer*/);
+                numberOfProducts) + " literais\n");
         
-        report += Tools.print("\n==================================================\n"/*, writer*/);
+        report += Tools.print("\n==================================================\n");
         
-        //writer.close();
         return report;
     }
 

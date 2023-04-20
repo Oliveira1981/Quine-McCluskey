@@ -22,6 +22,7 @@ public class QuineMcCluskey implements KeyListener {
     public String                   errorMsg;
     public ArrayList<SumOfProducts> sopsList;
     public PrintWriter            outputFile;
+    public boolean        writeResultsTofile;
     public JButton                  okButton;
     public JLabel             labelVariables;
     
@@ -56,12 +57,13 @@ public class QuineMcCluskey implements KeyListener {
     };
     
     public QuineMcCluskey() {
-        inputFormat = "";
-        numVars     = 0;
-        hasResult   = false;
-        errorMsg    = "";
-        sopsList    = null;
-        //expressions = new ArrayList<>();
+        inputFormat        = "";
+        numVars            = 0;
+        hasResult          = false;
+        errorMsg           = "";
+        sopsList           = null;
+        writeResultsTofile = true;
+        //expressions        = new ArrayList<>();
     }
     
     public String getInputFormat(){
@@ -769,15 +771,16 @@ public class QuineMcCluskey implements KeyListener {
                 labelTime.update(labelTime.getGraphics());
                 long startTime = System.nanoTime();
                 try {
-                    //("Quine-McCluskey Results.txt");
-                    setFileToWrite("Quine-McCluskey Results.txt");
+                    if (writeResultsTofile) {
+                        setFileToWrite("Quine-McCluskey Results.txt");
+                    }
                     hasResult = true;
                     switch (comboWichInput.getSelectedIndex()) {
                         case 1 -> { // input: digitar
                             optimizeExpressions(
                                 (String) comboExpressions.getSelectedItem(),
                                 slider.getValue()
-                                ,outputFile
+                                //,outputFile
                             );
                             textAreaReport.setFont(fontReport);
                         }
@@ -785,7 +788,7 @@ public class QuineMcCluskey implements KeyListener {
                             optimizeExpressions(
                                 editor.getText(),
                                 slider.getValue()
-                                ,outputFile
+                                //,outputFile
                             );
                             textAreaReport.setFont(fontReport);
                         }
@@ -811,7 +814,6 @@ public class QuineMcCluskey implements KeyListener {
                                 textAreaReport.setText(errorMsg);
                                 return;
                             }
-                            //setFileToWrite("Quine-McCluskey Results.txt");
                             File selectedFile = new File(editor.getText());
                             if(!selectedFile.exists()){
                                 Tools.printt("\nNo file selected.\n");
@@ -846,11 +848,18 @@ public class QuineMcCluskey implements KeyListener {
                             int count = line;
                             ArrayList<String> fullReport = new ArrayList<>();
                             if (endLine == -1) { // LER ATÉ O FINAL DO ARQUIVO
+                                
                                 while (sc.hasNext()) {
                                     optimizeExpressions(sc.nextLine(), numVars
-                                        , outputFile
+                                        //, outputFile
                                     );
-                                    for (int x = 0; x < expressions.size(); x++) {
+                                    
+                                    //Apenas uma expressão por linha
+                                    int x = 0;
+                                    
+                                    //Aceita mais de uma expressão por linha
+                                    //for (int x = 0; x < expressions.size(); x++) {
+                                    
                                         //textAreaReport.append("\n" + count + "\t");
                                         fullReport.add("\n" + count + "\t");
                                         count++;
@@ -891,15 +900,21 @@ public class QuineMcCluskey implements KeyListener {
                                             labelTime.setText(String.format("Tempo: %.3f s", (float) (System.nanoTime() - startTime)/1000000000));
                                             labelTime.update(labelTime.getGraphics());
                                         }
-                                    }
+                                    //}
                                 }
                             }
                             else {
                                 while (line <= endLine) {
                                     optimizeExpressions(sc.nextLine(), numVars
-                                        , outputFile
+                                        //, outputFile
                                     );
-                                    for (int x = 0; x < expressions.size(); x++) {
+                                    
+                                    //Apenas uma expressão por linha
+                                    int x = 0;
+                                    
+                                    //Aceita mais de uma expressão por linha
+                                    //for (int x = 0; x < expressions.size(); x++) {
+                                    
                                         //textAreaReport.append("\n" + count + "\t");
                                         fullReport.add("\n" + count + "\t");
                                         count++;
@@ -942,7 +957,7 @@ public class QuineMcCluskey implements KeyListener {
                                             labelTime.update(labelTime.getGraphics());
                                         }
                                         line++;
-                                    }
+                                    //}
                                 }
                             }
                             textAreaReport.append("\n\nFinalizando...");
@@ -967,7 +982,6 @@ public class QuineMcCluskey implements KeyListener {
                             }
                             //textAreaReport.setCaretPosition(0);
                             quineMcPanel.repaint();
-                            //outputFile.close();
                             /*if (readFromFile(editor.getText(),
                                     startLine,
                                     endLine
@@ -987,9 +1001,7 @@ public class QuineMcCluskey implements KeyListener {
                                 results += ";\n" + sopsList.get(r).getResult();
                             }
                             textAreaResult.setText(results);
-                            textAreaReport.setText(reportText(comboWichReport
-                                //, writer
-                            ));
+                            textAreaReport.setText(reportText(comboWichReport));
                         }
                         else {
                             textAreaResult.setText(errorMsg);
@@ -1015,9 +1027,7 @@ public class QuineMcCluskey implements KeyListener {
                     if (errorMsg.isEmpty()) {
                         if (hasResult) {
                             try {
-                                textAreaReport.setText(reportText(comboWichReport
-                                    //, writer
-                                ));
+                                textAreaReport.setText(reportText(comboWichReport));
                             }
                             catch (UnsupportedEncodingException ex) {
                             }
@@ -1039,14 +1049,15 @@ public class QuineMcCluskey implements KeyListener {
             public void actionPerformed(ActionEvent e) {
                 long startTime = System.nanoTime();
                 try {
-                    setFileToWrite("Quine-McCluskey Results.txt");
-                    //openOutputFile("Quine-McCluskey Results.txt");
+                    if (writeResultsTofile) {
+                        setFileToWrite("Quine-McCluskey Results.txt");
+                    }
                     hasResult = true;
                     errorMsg = "";
                     optimizeExpressions(
                         (String) comboExpressions.getSelectedItem(),
                         slider.getValue()
-                        , outputFile
+                        //, outputFile
                     );
                     if (errorMsg.isEmpty()) {
                         String results;
@@ -1057,9 +1068,7 @@ public class QuineMcCluskey implements KeyListener {
                             results = sopsList.get(0).getResult();
                         }
                         textAreaResult.setText(results);
-                        textAreaReport.setText(reportText(comboWichReport
-                            //, writer
-                        ));
+                        textAreaReport.setText(reportText(comboWichReport));
                     }
                     else {
                         textAreaResult.setText(errorMsg);
@@ -1097,7 +1106,6 @@ public class QuineMcCluskey implements KeyListener {
     /*
     public int readFromFile(String filePath, int startLine, int endLine) throws Exception {
         
-        setFileToWrite("Quine-McCluskey Results.txt");
         File selectedFile = new File(filePath);
         if(!selectedFile.exists()){
             printt("\nNo file selected.\n");
@@ -1152,7 +1160,6 @@ public class QuineMcCluskey implements KeyListener {
     }
     
     public String reportText(JComboBox comboWichReport) throws FileNotFoundException, UnsupportedEncodingException {
-        //PrintWriter writer = new PrintWriter("Quine-McCluskey Results 1.txt", "UTF-8");
         String out = "";
         switch ((String)comboWichReport.getSelectedItem()) {
             case "Relatório Básico" -> {
@@ -1232,7 +1239,7 @@ public class QuineMcCluskey implements KeyListener {
     public void optimizeExpressions(
         String allExpressions,
         int numVars
-        , PrintWriter writer
+        //, PrintWriter writer
         ) throws Exception {
         
         //SumOfProducts sopsList = new SumOfProducts();
@@ -1266,23 +1273,11 @@ public class QuineMcCluskey implements KeyListener {
             sopsList.get(lastSOPIndex).completeFinalList();
             sopsList.get(lastSOPIndex).buildOptimizedExpression();
             
-////////////// LER E ESCREVER EM ARQUIVO [BLOCK START] /////////////////////////
-            //Tools.print(sopsList.get(lastSOPIndex).getResult()
-            //   +"\n"
-            //    , outputFile
-            //    , writer
-            //);
-            //Tools.print(sopsList.get(lastSOPIndex).expression2hexadecimal(sopsList.get(lastSOPIndex).getResult())
-            //    +"\n"
-            //    , outputFile
-            //    , writer
-            //);
-            //Tools.print(Tools.numberOfLiterals(sopsList.get(lastSOPIndex).getResult(), sopsList.get(lastSOPIndex).getNumberOfVars(), sopsList.get(lastSOPIndex).getNumberOfProducts())
-            //    +"\n"
-            //    , outputFile
-            //    , writer
-            //);
-////////////// LER E ESCREVER EM ARQUIVO [BLOCK END] ///////////////////////////
+            if (writeResultsTofile) {
+                Tools.print(sopsList.get(lastSOPIndex).getResult()+"\t", outputFile);
+                Tools.print(sopsList.get(lastSOPIndex).expression2hexadecimal(sopsList.get(lastSOPIndex).getResult())+"\t", outputFile);
+                Tools.print(Tools.numberOfLiterals(sopsList.get(lastSOPIndex).getResult(), sopsList.get(lastSOPIndex).getNumberOfVars(), sopsList.get(lastSOPIndex).getNumberOfProducts())+"\n", outputFile);
+            }
             
             begin = end + 1;
             if (begin >= allExpressions.length()) {
@@ -1290,8 +1285,6 @@ public class QuineMcCluskey implements KeyListener {
             }
         }
         while (begin < allExpressions.length());
-        //outputFile.close();
-        //openOutputFile("Quine-McCluskey Results.txt");
     }
 
     @Override
