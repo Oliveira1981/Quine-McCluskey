@@ -45,7 +45,7 @@ public class SumOfProducts {
         this.numberOfVars            = 0; //Auto
     }
     
-    public boolean setExpression(String expression, int selectedNumberOfVars) {
+    public final boolean setExpression(String expression, int selectedNumberOfVars) {
         this.isError         = false;
         this.report          = "";
         originalInputFormat  = Tools.detectInputFormat(expression);
@@ -298,14 +298,15 @@ public class SumOfProducts {
     
     public void sortByOnesCount() {
         for(int i=1; i < productsList.size(); i++) {
-            int count_k = productsList.get(i).getOnesCount();
+            int count = productsList.get(i).getOnesCount();
             
-            if(count_k < productsList.get(i-1).getOnesCount()) {
+            if(count < productsList.get(i-1).getOnesCount()) {
                 int j = i;
                 do {
                     j--;
                     if (j < 1) break;
-                } while(count_k < productsList.get(j-1).getOnesCount());
+                }
+                while(count < productsList.get(j-1).getOnesCount());
                 productsList.add(j, productsList.remove(i));
             }
         }
@@ -328,38 +329,46 @@ public class SumOfProducts {
             int j = i + 1;
             
             while (j < productsList.size()) {
-                int size =
-                    Math.min(productsList.get(i).getSize(),
-                             productsList.get(j).getSize());
-                int bitPosition =
-                    Tools.primeImplicantBitPosition(productsList.get(i).getBinaryView(),
-                                              productsList.get(j).getBinaryView(),size);
-                if (bitPosition != -1) {
-                    primesWereFound = true;
-                    productsList.get(i).setHasPrime(true);
-                    productsList.get(j).setHasPrime(true);
-                    String bitString = "";
-                    
-                    for (int c=0; c < productsList.get(i).getBinaryView().length(); c++) {
-                        if (c == bitPosition)
-                            bitString += "_";
-                        else
-                            bitString += productsList.get(i).getBinaryView().charAt(c);
-                    }
-                    if (!Tools.contains(bitString, auxProductsList)) {
-                        auxProductsList.add(new Product("Binário", bitString, variablesList, numberOfVars));
-                        auxProductsList.get(auxProductsList.size()-1).getMinTermsList().clear();
+                
+                //Se a diferença da contagem de 1's for diferente de 1,
+                //não precisa testar, pois é impossível serem implicantes primos
+                //FALTA TESTAR SE OS RESULTADOS SE MANTÊM CORRETOS!
+                if ((productsList.get(j).getOnesCount()
+                   - productsList.get(i).getOnesCount()) == 1) {
+                    int size =
+                        Math.min(productsList.get(i).getSize(),
+                                 productsList.get(j).getSize());
+                    int bitPosition =
+                        Tools.primeImplicantBitPosition(productsList.get(i).getBinaryView(),
+                                                        productsList.get(j).getBinaryView(),size);
+                    if (bitPosition != -1) {
+                        primesWereFound = true;
+                        productsList.get(i).setHasPrime(true);
+                        productsList.get(j).setHasPrime(true);
+                        String bitString = "";
                         
-                        for(int d=0; d < productsList.get(i).getMinTermsList().size(); d++) {
-                            auxProductsList.get(auxProductsList.size()-1)
-                                .addMinTerm(productsList.get(i).getMinTermsList().get(d));
+                        for (int c=0; c < productsList.get(i).getBinaryView().length(); c++) {
+                            if (c == bitPosition)
+                                bitString += "_";
+                            else
+                                bitString += productsList.get(i).getBinaryView().charAt(c);
                         }
-                        
-                        for(int d=0; d < productsList.get(j).getMinTermsList().size(); d++) {
-                            auxProductsList.get(auxProductsList.size()-1)
-                                .addMinTerm(productsList.get(j).getMinTermsList().get(d));
+                        if (!Tools.contains(bitString, auxProductsList)) {
+                            auxProductsList.add(new Product("Binário", bitString, variablesList, numberOfVars));
+                            auxProductsList.get(auxProductsList.size()-1).getMinTermsList().clear();
+                            
+                            for(int d=0; d < productsList.get(i).getMinTermsList().size(); d++) {
+                                auxProductsList.get(auxProductsList.size()-1)
+                                    .addMinTerm(productsList.get(i).getMinTermsList().get(d));
+                            }
+                            
+                            for(int d=0; d < productsList.get(j).getMinTermsList().size(); d++) {
+                                auxProductsList.get(auxProductsList.size()-1)
+                                    .addMinTerm(productsList.get(j).getMinTermsList().get(d));
+                            }
                         }
                     }
+                    //j++;
                 }
                 j++;
             }
@@ -553,6 +562,7 @@ public class SumOfProducts {
             }
             i++;
         }
+        
         if (numberOfLiterals_NO_SORTING < numberOfLiterals_SORTING) {
             finalProductsList = (ArrayList) finalList_NO_SORTING.clone();
         }

@@ -28,7 +28,7 @@ public class MinTerm {
         setMinTerm(decimal, vars, size);
     }
     
-    public void setMinTerm(int decimal, String vars, int size) {
+    public final void setMinTerm(int decimal, String vars, int size) {
         this.size        = size;
         this.decimalView = decimal;
         this.binaryView  = Tools.decimal2binary(decimal, size);

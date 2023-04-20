@@ -36,7 +36,7 @@ public class Product {
         setProduct(inputFormat, inputExp, vars, size);
     }
     
-    public void setProduct(String inputFormat, String inputExp, String vars, int size) {
+    public final void setProduct(String inputFormat, String inputExp, String vars, int size) {
         this.size = size;
         
         switch(inputFormat) {

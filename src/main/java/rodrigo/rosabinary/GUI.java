@@ -22,6 +22,7 @@ public class GUI implements KeyListener {
     public void showMainWindow() throws Exception {
         
         //UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
+        //UIManager.setLookAndFeel(new com.formdev.flatlaf.FlatLightLaf());
         UIManager.setLookAndFeel(new com.formdev.flatlaf.FlatDarkLaf());
         JFrame mainFrame = new JFrame("ROSA Binary");
         mainFrame.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);

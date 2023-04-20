@@ -260,7 +260,7 @@ public class Tools {
     }
     
     //Retorna a posição do bit variante ou:
-    //-1 se os produtos não são primos implicantes
+    //-1 se os produtos não são implicantes primos
     //-2 se os produtos são iguais
     public static int primeImplicantBitPosition(String product1, String product2, int size) {
         int count = 0;
@@ -404,6 +404,7 @@ public class Tools {
     }
     
     public static Object print(Object obj, PrintWriter w) {
+        System.out.print("\nqwert\n");
         w.print(obj);
         return obj;
     }

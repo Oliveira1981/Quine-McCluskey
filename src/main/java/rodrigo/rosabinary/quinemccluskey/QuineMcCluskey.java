@@ -21,7 +21,7 @@ public class QuineMcCluskey implements KeyListener {
     public boolean                 hasResult;
     public String                   errorMsg;
     public ArrayList<SumOfProducts> sopsList;
-    //public PrintWriter            outputFile;
+    public PrintWriter            outputFile;
     public JButton                  okButton;
     public JLabel             labelVariables;
     
@@ -769,15 +769,15 @@ public class QuineMcCluskey implements KeyListener {
                 labelTime.update(labelTime.getGraphics());
                 long startTime = System.nanoTime();
                 try {
-                    //openOutputFile("Quine-McCluskey Results.txt");
-                    //setFileToWrite("Quine-McCluskey Results.txt");
+                    //("Quine-McCluskey Results.txt");
+                    setFileToWrite("Quine-McCluskey Results.txt");
                     hasResult = true;
                     switch (comboWichInput.getSelectedIndex()) {
                         case 1 -> { // input: digitar
                             optimizeExpressions(
                                 (String) comboExpressions.getSelectedItem(),
                                 slider.getValue()
-                                //,outputFile
+                                ,outputFile
                             );
                             textAreaReport.setFont(fontReport);
                         }
@@ -785,7 +785,7 @@ public class QuineMcCluskey implements KeyListener {
                             optimizeExpressions(
                                 editor.getText(),
                                 slider.getValue()
-                                //,outputFile
+                                ,outputFile
                             );
                             textAreaReport.setFont(fontReport);
                         }
@@ -848,7 +848,7 @@ public class QuineMcCluskey implements KeyListener {
                             if (endLine == -1) { // LER ATÉ O FINAL DO ARQUIVO
                                 while (sc.hasNext()) {
                                     optimizeExpressions(sc.nextLine(), numVars
-                                        //, outputFile
+                                        , outputFile
                                     );
                                     for (int x = 0; x < expressions.size(); x++) {
                                         //textAreaReport.append("\n" + count + "\t");
@@ -897,7 +897,7 @@ public class QuineMcCluskey implements KeyListener {
                             else {
                                 while (line <= endLine) {
                                     optimizeExpressions(sc.nextLine(), numVars
-                                        //, outputFile
+                                        , outputFile
                                     );
                                     for (int x = 0; x < expressions.size(); x++) {
                                         //textAreaReport.append("\n" + count + "\t");
@@ -997,7 +997,7 @@ public class QuineMcCluskey implements KeyListener {
                         }
                     }
                     textAreaReport.setCaretPosition(0);
-                    //outputFile.close();
+                    outputFile.close();
                 }
                 catch (Exception ex) {
                 }
@@ -1039,14 +1039,14 @@ public class QuineMcCluskey implements KeyListener {
             public void actionPerformed(ActionEvent e) {
                 long startTime = System.nanoTime();
                 try {
-                    //setFileToWrite("Quine-McCluskey Results.txt");
+                    setFileToWrite("Quine-McCluskey Results.txt");
                     //openOutputFile("Quine-McCluskey Results.txt");
                     hasResult = true;
                     errorMsg = "";
                     optimizeExpressions(
                         (String) comboExpressions.getSelectedItem(),
                         slider.getValue()
-                        //, outputFile
+                        , outputFile
                     );
                     if (errorMsg.isEmpty()) {
                         String results;
@@ -1065,7 +1065,7 @@ public class QuineMcCluskey implements KeyListener {
                         textAreaResult.setText(errorMsg);
                         textAreaReport.setText("-");
                     }
-                    //outputFile.close();
+                    outputFile.close();
                 }
                 catch (Exception ex) {
                 }
@@ -1134,7 +1134,7 @@ public class QuineMcCluskey implements KeyListener {
     public void setFileToWrite(String outputFileName) throws
         FileNotFoundException,
         UnsupportedEncodingException {
-        //outputFile = new PrintWriter(outputFileName);
+        outputFile = new PrintWriter(outputFileName);
     }
     
     public void openOutputFile(String outputFileName)  throws
@@ -1232,7 +1232,7 @@ public class QuineMcCluskey implements KeyListener {
     public void optimizeExpressions(
         String allExpressions,
         int numVars
-        //, PrintWriter writer
+        , PrintWriter writer
         ) throws Exception {
         
         //SumOfProducts sopsList = new SumOfProducts();
@@ -1267,14 +1267,20 @@ public class QuineMcCluskey implements KeyListener {
             sopsList.get(lastSOPIndex).buildOptimizedExpression();
             
 ////////////// LER E ESCREVER EM ARQUIVO [BLOCK START] /////////////////////////
-            //print(sopsList.get(lastSOPIndex).getResult()+"\t", outputFile
-                //, writer
+            //Tools.print(sopsList.get(lastSOPIndex).getResult()
+            //   +"\n"
+            //    , outputFile
+            //    , writer
             //);
-            //print(sopsList.get(lastSOPIndex).expression2hexadecimal(sopsList.get(lastSOPIndex).getResult())+"\t", outputFile
-                //, writer
+            //Tools.print(sopsList.get(lastSOPIndex).expression2hexadecimal(sopsList.get(lastSOPIndex).getResult())
+            //    +"\n"
+            //    , outputFile
+            //    , writer
             //);
-            //print(Tools.numberOfLiterals(sopsList.get(lastSOPIndex).getResult(), sopsList.get(lastSOPIndex).getNumberOfVars(), sopsList.get(lastSOPIndex).getNumberOfProducts())+"\n", outputFile
-                //, writer
+            //Tools.print(Tools.numberOfLiterals(sopsList.get(lastSOPIndex).getResult(), sopsList.get(lastSOPIndex).getNumberOfVars(), sopsList.get(lastSOPIndex).getNumberOfProducts())
+            //    +"\n"
+            //    , outputFile
+            //    , writer
             //);
 ////////////// LER E ESCREVER EM ARQUIVO [BLOCK END] ///////////////////////////
             
