@@ -85,8 +85,6 @@ public class QuineMcCluskey implements KeyListener {
         Color darkTextBGColor         = new Color( 44,  44,  44);
         Color darkButtonBGColor       = new Color( 30,  50, 100);
         Color darkComboBGColor        = new Color( 70,  73,  75);//70, 73, 75 (flatlaf defaut)
-        UIDefaults defaults = javax.swing.UIManager.getDefaults();
-        Tools.printt(defaults.getColor("List.background"));
     // Dark Theme Text
         Color darkComboTextColor      = new Color( 30, 130, 230);
         Color darkLabelColor          = new Color( 30, 130, 230);
@@ -105,9 +103,7 @@ public class QuineMcCluskey implements KeyListener {
         Color lightButtonTextColor    = new Color( 50, 150, 250);
         Color lightTextColor          = new Color( 10, 110, 210);
         
-        GridBagLayout grid = new GridBagLayout();
-        JPanel quineMcPanel = new JPanel(grid);
-        
+        JPanel quineMcPanel = new JPanel(new GridBagLayout());
         
         Font fontDefault = new Font("Segoe UI", Font.BOLD, 13);
         GridBagConstraints gbcSpaces = new GridBagConstraints();
@@ -312,6 +308,13 @@ public class QuineMcCluskey implements KeyListener {
         gbcSliderTheme.anchor = GridBagConstraints.EAST;
         sliderTheme.setBorder(BorderFactory.createLineBorder(borderColor));
         quineMcPanel.add(sliderTheme, gbcSliderTheme);
+        
+        //SteelCheckBox tg = new SteelCheckBox();
+        //tg.setSelectedColor(ColorDef.YELLOW);
+        //tg.setRised(false);
+        //tg.setSelected(true);
+        //tg.setSize(22, 22);
+        //quineMcPanel.add(tg, gbcSliderTheme);
         
         labelThemeDark = new JLabel("   Escuro");
         labelThemeDark.setFont(fontDefault);
