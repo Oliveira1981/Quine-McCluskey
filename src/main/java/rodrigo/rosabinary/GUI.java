@@ -18,7 +18,7 @@ public class GUI implements KeyListener {
     private boolean             darkTheme;
     
     public GUI(){
-        darkTheme = !true;
+        darkTheme = true;
     }
     
     public void showMainWindow() throws Exception {
