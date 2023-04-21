@@ -170,7 +170,7 @@ public class QuineMcCluskey implements KeyListener {
         checkReadEntireFile.setFont(fontDefault);
         checkReadEntireFile.setForeground(darkLabelColor);//30, 130, 230
         checkReadEntireFile.addKeyListener(this);
-        checkReadEntireFile.setFocusable(true);
+        checkReadEntireFile.setFocusable(false);
         checkReadEntireFile.setSelected(true);
         c.fill = GridBagConstraints.HORIZONTAL;
         c.gridx = 3;
@@ -181,7 +181,8 @@ public class QuineMcCluskey implements KeyListener {
         c.weighty = 0.0;
         c.anchor = GridBagConstraints.WEST;
         checkReadEntireFile.setBorder(BorderFactory.createLineBorder(borderColor));
-        //vPanel.add(checkReadEntireFile, c);
+        checkReadEntireFile.setVisible(false);
+        quineMcPanel.add(checkReadEntireFile, c);
         
         JLabel labelStartLine = new JLabel("     Linha inicial: ");
         labelStartLine.setFont(fontDefault);
@@ -201,13 +202,15 @@ public class QuineMcCluskey implements KeyListener {
         c.weighty = 0.0;
         c.anchor = GridBagConstraints.WEST;
         labelStartLine.setBorder(BorderFactory.createLineBorder(borderColor));
-        //vPanel.add(labelStartLine, c);
+        labelStartLine.setVisible(false);
+        quineMcPanel.add(labelStartLine, c);
         
         JTextField textStartLine = new JTextField();
         textStartLine.setPreferredSize(new Dimension(55, 20));
         textStartLine.setMinimumSize(new Dimension(55, 20));
         textStartLine.setFont(new Font("Segoe UI", Font.PLAIN, 12));
         textStartLine.addKeyListener(this);
+        textStartLine.setFocusable(false);
         c.fill = GridBagConstraints.HORIZONTAL;
         c.gridx = 5;
 	c.gridy = 1;
@@ -217,7 +220,8 @@ public class QuineMcCluskey implements KeyListener {
         c.weighty = 0.0;
         c.anchor = GridBagConstraints.WEST;
         //textStartLine.setBorder(BorderFactory.createLineBorder(borderColor));
-        //vPanel.add(textStartLine, c);
+        textStartLine.setVisible(false);
+        quineMcPanel.add(textStartLine, c);
         
         JLabel labelEndLine = new JLabel("     Linha final: ");
         labelEndLine.setFont(fontDefault);
@@ -237,7 +241,8 @@ public class QuineMcCluskey implements KeyListener {
         c.weighty = 0.0;
         c.anchor = GridBagConstraints.WEST;
         labelEndLine.setBorder(BorderFactory.createLineBorder(borderColor));
-        //vPanel.add(labelEndLine, c);
+        labelEndLine.setVisible(false);
+        quineMcPanel.add(labelEndLine, c);
         
         JTextField textEndLine = new JTextField();
         //textEndLine.setForeground(darkLabelColor);
@@ -245,6 +250,7 @@ public class QuineMcCluskey implements KeyListener {
         textEndLine.setMinimumSize(new Dimension(55, 20));
         textEndLine.setFont(new Font("Segoe UI", Font.PLAIN, 12));
         textEndLine.addKeyListener(this);
+        textEndLine.setFocusable(false);
         c.fill = GridBagConstraints.HORIZONTAL;
         c.gridx = 7;
 	c.gridy = 1;
@@ -254,7 +260,8 @@ public class QuineMcCluskey implements KeyListener {
         c.weighty = 0.0;
         c.anchor = GridBagConstraints.WEST;
         //textEndLine.setBorder(BorderFactory.createLineBorder(borderColor));
-        //vPanel.add(textEndLine, c);
+        textEndLine.setVisible(false);
+        quineMcPanel.add(textEndLine, c);
         
         labelVariables = new JLabel("   Número de variáveis: Auto");
         labelVariables.setFont(fontDefault);
@@ -602,8 +609,6 @@ public class QuineMcCluskey implements KeyListener {
             @Override
             public void stateChanged(ChangeEvent e) {
                 JSlider source = (JSlider)e.getSource();
-                //quineMcPanel.remove(labelThemeLight);
-                //quineMcPanel.remove(labelThemeDark);
                 
                 if (source.getValue() == 1) {
                     darkTheme = true;
@@ -626,11 +631,18 @@ public class QuineMcCluskey implements KeyListener {
                 errorMsg = "";
                 switch (comboWichInput.getSelectedIndex()) {
                     case 1 -> { // input: digitar
-                        quineMcPanel.remove(checkReadEntireFile);
-                        quineMcPanel.remove(labelStartLine);
-                        quineMcPanel.remove(textStartLine);
-                        quineMcPanel.remove(labelEndLine);
-                        quineMcPanel.remove(textEndLine);
+                        checkReadEntireFile.setVisible(false);
+                        labelStartLine.setVisible(false);
+                        textStartLine.setVisible(false);
+                        labelEndLine.setVisible(false);
+                        textEndLine.setVisible(false);
+                        
+                        checkReadEntireFile.setFocusable(false);
+                        labelStartLine.setFocusable(false);
+                        textStartLine.setFocusable(false);
+                        labelEndLine.setFocusable(false);
+                        textEndLine.setFocusable(false);
+                        
                         quineMcPanel.remove(labelResultsFromFile);
                         
                         c.fill = GridBagConstraints.NONE;
@@ -648,11 +660,18 @@ public class QuineMcCluskey implements KeyListener {
                         quineMcPanel.repaint();
                     }
                     case 2 -> { // input: aleatória
-                        quineMcPanel.remove(checkReadEntireFile);
-                        quineMcPanel.remove(labelStartLine);
-                        quineMcPanel.remove(textStartLine);
-                        quineMcPanel.remove(labelEndLine);
-                        quineMcPanel.remove(textEndLine);
+                        checkReadEntireFile.setVisible(false);
+                        labelStartLine.setVisible(false);
+                        textStartLine.setVisible(false);
+                        labelEndLine.setVisible(false);
+                        textEndLine.setVisible(false);
+                        
+                        checkReadEntireFile.setFocusable(false);
+                        labelStartLine.setFocusable(false);
+                        textStartLine.setFocusable(false);
+                        labelEndLine.setFocusable(false);
+                        textEndLine.setFocusable(false);
+                        
                         quineMcPanel.remove(labelResultsFromFile);
                         
                         c.fill = GridBagConstraints.NONE;
@@ -684,77 +703,18 @@ public class QuineMcCluskey implements KeyListener {
                     }
                     case 0 -> { // input: arquivo
                         
-                        checkReadEntireFile.setForeground(new Color(30, 130, 230));
+                        checkReadEntireFile.setVisible(true);
+                        labelStartLine.setVisible(true);
+                        textStartLine.setVisible(true);
+                        labelEndLine.setVisible(true);
+                        textEndLine.setVisible(true);
+                        
                         checkReadEntireFile.setFocusable(true);
+                        textStartLine.setFocusable(true);
+                        textEndLine.setFocusable(true);
+                        
+                        checkReadEntireFile.setForeground(new Color(30, 130, 230));
                         checkReadEntireFile.setSelected(true);
-                        c.fill = GridBagConstraints.HORIZONTAL;
-                        c.gridx = 3;
-                	c.gridy = 1;
-                        c.gridwidth = 1;
-                        c.gridheight = 1;
-                        c.weightx = 0.0;
-                        c.weighty = 0.0;
-                        c.anchor = GridBagConstraints.WEST;
-                        checkReadEntireFile.setSelected(true);
-                        quineMcPanel.add(checkReadEntireFile, c);
-                        
-                        if (darkTheme) {
-                            labelStartLine.setForeground(darkDisabledLabelColor);
-                        }
-                        else {
-                            labelStartLine.setForeground(lightDisabledLabelColor);
-                        }
-                        c.fill = GridBagConstraints.HORIZONTAL;
-                        c.gridx = 4;
-                        c.gridy = 1;
-                        c.gridwidth = 1;
-                        c.gridheight = 1;
-                        c.weightx = 0.0;
-                        c.weighty = 0.0;
-                        c.anchor = GridBagConstraints.WEST;
-                        quineMcPanel.add(labelStartLine, c);
-                        
-                        textStartLine.setText("");
-                        c.fill = GridBagConstraints.HORIZONTAL;
-                        c.gridx = 5;
-                        c.gridy = 1;
-                        c.gridwidth = 1;
-                        c.gridheight = 1;
-                        c.weightx = 0.0;
-                        c.weighty = 0.0;
-                        c.anchor = GridBagConstraints.WEST;
-                        textStartLine.setEnabled(false);
-                        textStartLine.setEditable(false);
-                        quineMcPanel.add(textStartLine, c);
-                        
-                        if (darkTheme) {
-                            labelEndLine.setForeground(darkDisabledLabelColor);
-                        }
-                        else {
-                            labelEndLine.setForeground(lightDisabledLabelColor);
-                        }
-                        c.fill = GridBagConstraints.HORIZONTAL;
-                        c.gridx = 6;
-                        c.gridy = 1;
-                        c.gridwidth = 1;
-                        c.gridheight = 1;
-                        c.weightx = 0.0;
-                        c.weighty = 0.0;
-                        c.anchor = GridBagConstraints.WEST;
-                        quineMcPanel.add(labelEndLine, c);
-                        
-                        textEndLine.setText("");
-                        c.fill = GridBagConstraints.HORIZONTAL;
-                        c.gridx = 7;
-                        c.gridy = 1;
-                        c.gridwidth = 1;
-                        c.gridheight = 1;
-                        c.weightx = 0.0;
-                        c.weighty = 0.0;
-                        c.anchor = GridBagConstraints.WEST;
-                        textEndLine.setEnabled(false);
-                        textEndLine.setEditable(false);
-                        quineMcPanel.add(textEndLine, c);
                         
                         quineMcPanel.remove(comboWichReport);
                         c.fill = GridBagConstraints.NONE;
