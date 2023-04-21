@@ -25,6 +25,7 @@ public class QuineMcCluskey implements KeyListener {
     public boolean        writeResultsTofile;
     public JButton                  okButton;
     public JLabel             labelVariables;
+    public JLabel             labelThemeDark;
     public boolean                 darkTheme;
     
     public String[] wichInput = {
@@ -75,7 +76,7 @@ public class QuineMcCluskey implements KeyListener {
         return expressions;
     }
     
-    public JPanel quineMcPanel (boolean theme) throws UnsupportedLookAndFeelException {
+    public JPanel quineMcPanel (boolean theme) {
         
         this.darkTheme = theme;
         
@@ -292,23 +293,15 @@ public class QuineMcCluskey implements KeyListener {
         labelThemeLight.setBorder(BorderFactory.createLineBorder(borderColor));
         quineMcPanel.add(labelThemeLight, c);
         
-        Dictionary<Integer, Component> labelTableTheme = new Hashtable<>();
-        labelTableTheme.put(0, new JLabel("Claro"));
-        labelTableTheme.put(1, new JLabel("Escuro"));
-        
         JSlider sliderTheme = new JSlider(JSlider.HORIZONTAL, 0, 1, 1); // min, max, inicial
         sliderTheme.addKeyListener(this);
-        //sliderTheme.addChangeListener(this);
-        //sliderTheme.setMajorTickSpacing(1);
-        //sliderTheme.setMinorTickSpacing(1);
+        sliderTheme.setFocusable(false);
+        sliderTheme.setMinorTickSpacing(1);
         sliderTheme.setSnapToTicks(true);
-        //sliderTheme.setPaintLabels(true);  
         sliderTheme.setMinimumSize(new Dimension(40, 20));
         sliderTheme.setMaximumSize(new Dimension(40, 20));
         sliderTheme.setPreferredSize(new Dimension(40, 20));
         sliderTheme.setSize(new Dimension(40, 20));
-        //sliderTheme.setLabelTable(labelTableTheme);
-        //sliderTheme.setHorizontalAlignment(SwingConstants.RIGHT);
         c.fill = GridBagConstraints.NONE;
 	c.gridx = 13;
 	c.gridy = 1;
@@ -320,7 +313,7 @@ public class QuineMcCluskey implements KeyListener {
         sliderTheme.setBorder(BorderFactory.createLineBorder(borderColor));
         quineMcPanel.add(sliderTheme, c);
         
-        JLabel labelThemeDark = new JLabel("   Escuro");
+        labelThemeDark = new JLabel("   Escuro");
         labelThemeDark.setFont(fontDefault);
         labelThemeDark.setForeground(darkLabelColor);
         labelThemeDark.setHorizontalAlignment(SwingConstants.RIGHT);
@@ -425,12 +418,8 @@ public class QuineMcCluskey implements KeyListener {
         
         JSlider slider = new JSlider(JSlider.HORIZONTAL, 0, 16, 0); // min, max, inicial
         slider.addKeyListener(this);
-        //slider.addChangeListener(this);
-        slider.setMajorTickSpacing(4);
         slider.setMinorTickSpacing(1);
-        //slider.setPaintTicks(true);
         slider.setSnapToTicks(true);
-        //slider.setPaintLabels(true);  
         slider.setMinimumSize(new Dimension(200, 30));
         slider.setLabelTable(labelTable);
 	c.fill = GridBagConstraints.VERTICAL;
@@ -829,6 +818,61 @@ public class QuineMcCluskey implements KeyListener {
         labelStartLine.addMouseListener(mouseListenerStartLine);
         textStartLine.addMouseListener(mouseListenerStartLine);
         
+        MouseListener mouseListenerLabelLight = new MouseListener() {
+            @Override
+            public void mouseClicked(MouseEvent e) {
+                darkTheme = false;
+                sliderTheme.setValue(0);
+                labelThemeDark.setForeground(lightDisabledLabelColor);
+                labelThemeLight.setForeground(lightLabelColor);
+            }
+            
+            @Override
+            public void mousePressed(MouseEvent e) {
+            }
+            
+            @Override
+            public void mouseReleased(MouseEvent e) {
+            }
+            
+            @Override
+            public void mouseEntered(MouseEvent e) {
+            }
+            
+            @Override
+            public void mouseExited(MouseEvent e) {
+            }
+        };
+        labelThemeLight.addMouseListener(mouseListenerLabelLight);
+        
+        MouseListener mouseListenerLabelDark = new MouseListener() {
+            @Override
+            public void mouseClicked(MouseEvent e) {
+                darkTheme = true;
+                sliderTheme.setValue(1);
+                darkTheme = true;
+                labelThemeDark.setForeground(darkLabelColor);
+                labelThemeLight.setForeground(darkDisabledLabelColor);
+            }
+            
+            @Override
+            public void mousePressed(MouseEvent e) {
+            }
+            
+            @Override
+            public void mouseReleased(MouseEvent e) {
+            }
+            
+            @Override
+            public void mouseEntered(MouseEvent e) {
+            }
+            
+            @Override
+            public void mouseExited(MouseEvent e) {
+            }
+        };
+        labelThemeDark.addMouseListener(mouseListenerLabelDark);
+        
         MouseListener mouseListenerEndLine = new MouseListener() {
             @Override
             public void mouseClicked(MouseEvent e) {
@@ -878,22 +922,12 @@ public class QuineMcCluskey implements KeyListener {
             public void stateChanged(ChangeEvent e) {
                 JSlider source = (JSlider)e.getSource();
                 numVars = source.getValue();
-                quineMcPanel.remove(labelVariables);
                 if (numVars == 0) {
                     labelVariables.setText("   Número de variáveis: Auto");
                 }
                 else {
                     labelVariables.setText("   Número de variáveis: " + numVars);
                 }
-                c.fill = GridBagConstraints.HORIZONTAL;
-                c.gridx = 11;
-                c.gridy = 1;
-                c.gridwidth = 1;
-                c.gridheight = 1;
-                c.weightx = 0.0;
-                c.weighty = 0.0;
-                c.anchor = GridBagConstraints.WEST;
-                quineMcPanel.add(labelVariables, c);
                 quineMcPanel.repaint();
             }
         });
