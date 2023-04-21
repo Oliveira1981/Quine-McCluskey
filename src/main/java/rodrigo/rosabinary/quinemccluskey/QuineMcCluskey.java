@@ -26,7 +26,6 @@ public class QuineMcCluskey implements KeyListener {
     public JButton                  okButton;
     public JLabel             labelVariables;
     public JLabel             labelThemeDark;
-    public JLabel                     space1;
     public boolean                 darkTheme;
     
     public String[] wichInput = {
@@ -115,7 +114,7 @@ public class QuineMcCluskey implements KeyListener {
         Font fontDefault = new Font("Segoe UI", Font.BOLD, 13);
         Color borderColor = new Color(0, 0, 0, 0);
         
-        space1 = new JLabel("   ");
+        JLabel space1 = new JLabel("   ");
         c.fill = GridBagConstraints.HORIZONTAL;
 	c.gridx = 0;
 	c.gridy = 0;
@@ -703,6 +702,7 @@ public class QuineMcCluskey implements KeyListener {
                             );
                         }
                         editor.setText(gen);
+                        comboExpressions.setSelectedItem(gen);
                     }
                     case 0 -> { // input: arquivo
                         
@@ -737,6 +737,7 @@ public class QuineMcCluskey implements KeyListener {
                         
                         try {
                             editor.setText(selectFile());
+                            comboExpressions.setSelectedItem(editor.getText());
                         }
                         catch (UnsupportedEncodingException ex) {
                         }
