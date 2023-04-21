@@ -2,6 +2,8 @@ package rodrigo.rosabinary;
 
 import java.awt.*;
 import java.awt.event.*;
+import java.beans.PropertyChangeEvent;
+import java.beans.PropertyChangeListener;
 import javax.swing.*;
 import rodrigo.rosabinary.mazerouter.*;
 import rodrigo.rosabinary.quinemccluskey.*;
@@ -50,6 +52,30 @@ public class GUI implements KeyListener {
         
         tabbedPane.addKeyListener(this);
         tabbedPane.setFocusable(true);
+        
+        tabbedPane.getComponent(0).addPropertyChangeListener(new PropertyChangeListener() {
+            @Override
+            public void propertyChange(PropertyChangeEvent evt) {
+                if ("foreground".equals(evt.getPropertyName())){
+                    try {
+                        if (quineMcCluskey.darkTheme) {
+                            UIManager.setLookAndFeel(new com.formdev.flatlaf.FlatDarkLaf());
+                        }
+                        else {
+                            UIManager.setLookAndFeel(new com.formdev.flatlaf.FlatLightLaf());
+                        }
+                    }
+                    catch (UnsupportedLookAndFeelException ex) {
+                    }
+                    SwingUtilities.invokeLater(new Runnable() {
+                        @Override
+                        public void run() {
+                            SwingUtilities.updateComponentTreeUI(mainFrame);
+                        }
+                    });
+                }
+            }
+        });
         
         mainFrame.add(tabbedPane);
         mainFrame.pack();

@@ -26,6 +26,7 @@ public class QuineMcCluskey implements KeyListener {
     public JButton                  okButton;
     public JLabel             labelVariables;
     public JLabel             labelThemeDark;
+    public JLabel                     space1;
     public boolean                 darkTheme;
     
     public String[] wichInput = {
@@ -84,6 +85,9 @@ public class QuineMcCluskey implements KeyListener {
     // Dark Theme Background
         Color darkTextBGColor         = new Color( 44,  44,  44);
         Color darkButtonBGColor       = new Color( 30,  50, 100);
+        Color darkComboBGColor        = new Color( 70,  73,  75);//70, 73, 75 (flatlaf defaut)
+        UIDefaults defaults = javax.swing.UIManager.getDefaults();
+        Tools.printt(defaults.getColor("List.background"));
     // Dark Theme Text
         Color darkComboTextColor      = new Color( 30, 130, 230);
         Color darkLabelColor          = new Color( 30, 130, 230);
@@ -111,7 +115,7 @@ public class QuineMcCluskey implements KeyListener {
         Font fontDefault = new Font("Segoe UI", Font.BOLD, 13);
         Color borderColor = new Color(0, 0, 0, 0);
         
-        JLabel space1 = new JLabel("   ");
+        space1 = new JLabel("   ");
         c.fill = GridBagConstraints.HORIZONTAL;
 	c.gridx = 0;
 	c.gridy = 0;
@@ -140,10 +144,8 @@ public class QuineMcCluskey implements KeyListener {
         comboWichInput.addKeyListener(this);
         comboWichInput.setFocusable(true);
 	comboWichInput.setFont(new Font("Segoe UI", Font.BOLD, 12));
+        //comboWichInput.setBackground(darkComboBGColor);
         comboWichInput.setForeground(darkComboTextColor);//30, 130, 230
-        if (!darkTheme) {
-            comboWichInput.setBackground(lightComboBGColor);
-        }
         c.fill = GridBagConstraints.NONE;
 	c.gridx = 1;
 	c.gridy = 1;
@@ -187,12 +189,7 @@ public class QuineMcCluskey implements KeyListener {
         
         JLabel labelStartLine = new JLabel("     Linha inicial: ");
         labelStartLine.setFont(fontDefault);
-        if (darkTheme) {
-            labelStartLine.setForeground(darkDisabledLabelColor);//110, 110, 110
-        }
-        else {
-            labelStartLine.setForeground(lightDisabledLabelColor);
-        }
+        labelStartLine.setForeground(darkDisabledLabelColor);//110, 110, 110
         labelStartLine.addKeyListener(this);
         c.fill = GridBagConstraints.HORIZONTAL;
         c.gridx = 4;
@@ -226,12 +223,7 @@ public class QuineMcCluskey implements KeyListener {
         
         JLabel labelEndLine = new JLabel("     Linha final: ");
         labelEndLine.setFont(fontDefault);
-        if (darkTheme) {
-            labelEndLine.setForeground(darkDisabledLabelColor);//110, 110, 110
-        }
-        else {
-            labelEndLine.setForeground(lightDisabledLabelColor);
-        }
+        labelEndLine.setForeground(darkDisabledLabelColor);//110, 110, 110
         labelEndLine.addKeyListener(this);
         c.fill = GridBagConstraints.HORIZONTAL;
         c.gridx = 6;
@@ -298,10 +290,10 @@ public class QuineMcCluskey implements KeyListener {
         sliderTheme.setFocusable(false);
         sliderTheme.setMinorTickSpacing(1);
         sliderTheme.setSnapToTicks(true);
-        sliderTheme.setMinimumSize(new Dimension(40, 20));
-        sliderTheme.setMaximumSize(new Dimension(40, 20));
-        sliderTheme.setPreferredSize(new Dimension(40, 20));
-        sliderTheme.setSize(new Dimension(40, 20));
+        sliderTheme.setMinimumSize(new Dimension(60, 20));
+        sliderTheme.setMaximumSize(new Dimension(60, 20));
+        sliderTheme.setPreferredSize(new Dimension(60, 20));
+        sliderTheme.setSize(new Dimension(60, 20));
         c.fill = GridBagConstraints.NONE;
 	c.gridx = 13;
 	c.gridy = 1;
@@ -377,14 +369,8 @@ public class QuineMcCluskey implements KeyListener {
         okButton.setMinimumSize(new Dimension(90, 30));
         okButton.addKeyListener(this);
         okButton.setFocusable(true);
-        if (darkTheme) {
-            okButton.setBackground(darkButtonBGColor);//30, 50, 100
-            okButton.setForeground(darkButtonTextColor);//50, 150, 250
-        }
-        else {
-            okButton.setBackground(lightButtonBGColor);
-            okButton.setForeground(lightButtonTextColor);//50, 150, 250
-        }
+        okButton.setBackground(darkButtonBGColor);//30, 50, 100
+        okButton.setForeground(darkButtonTextColor);//50, 150, 250
         okButton.setFont(fontDefault);
 	c.fill = GridBagConstraints.HORIZONTAL;
 	c.gridx = 9;
@@ -463,14 +449,8 @@ public class QuineMcCluskey implements KeyListener {
         textAreaResult.setFocusable(true);
         textAreaResult.setLineWrap(true);
         textAreaResult.setEditable(false);
-        if (darkTheme) {
-            textAreaResult.setBackground(darkTextBGColor);
-            textAreaResult.setForeground(darkTextColor);//50, 150, 250
-        }
-        else {
-            textAreaResult.setBackground(lightTextBGColor);
-            textAreaResult.setForeground(lightTextColor);//10, 110, 210
-        }
+        textAreaResult.setBackground(darkTextBGColor);
+        textAreaResult.setForeground(darkTextColor);//50, 150, 250
         textAreaResult.setFont(new Font("Consolas", Font.PLAIN, 16));
         Insets mResult = new Insets(12, 8, 4, 6);
         textAreaResult.setMargin(mResult);
@@ -502,10 +482,8 @@ public class QuineMcCluskey implements KeyListener {
         comboWichReport.addKeyListener(this);
         comboWichReport.setFocusable(true);
 	comboWichReport.setFont(new Font("Segoe UI", Font.BOLD, 12));
+        //comboWichReport.setBackground(darkComboBGColor);
         comboWichReport.setForeground(darkComboTextColor);//30, 130, 230
-        if (!darkTheme) {
-            comboWichReport.setBackground(lightComboBGColor);
-        }
         c.fill = GridBagConstraints.NONE;
 	c.gridx = 1;
 	c.gridy = 8;
@@ -544,14 +522,8 @@ public class QuineMcCluskey implements KeyListener {
         textAreaReport.setFocusable(true);
         textAreaReport.setLineWrap(true);
         textAreaReport.setEditable(false);
-        if (darkTheme) {
-            textAreaReport.setBackground(darkTextBGColor);
-            textAreaReport.setForeground(darkTextColor);
-        }
-        else {
-            textAreaReport.setBackground(lightTextBGColor);
-            textAreaReport.setForeground(lightTextColor);
-        }
+        textAreaReport.setBackground(darkTextBGColor);
+        textAreaReport.setForeground(darkTextColor);
         Font fontReport = new Font("Consolas", Font.PLAIN, 16);
         textAreaReport.setFont(fontReport);
         Insets mReport = new Insets(10, 10, 10, 10);
@@ -599,17 +571,59 @@ public class QuineMcCluskey implements KeyListener {
             public void stateChanged(ChangeEvent e) {
                 JSlider source = (JSlider)e.getSource();
                 
+                // DARK THEME ///////////////
                 if (source.getValue() == 1) {
                     darkTheme = true;
                     labelThemeDark.setForeground(darkLabelColor);
                     labelThemeLight.setForeground(darkDisabledLabelColor);
+                    
+                    textAreaReport.setBackground(darkTextBGColor);
+                    textAreaReport.setForeground(darkTextColor);
+                    
+                    //comboWichReport.setBackground(darkComboBGColor);
+                    
+                    textAreaResult.setBackground(darkTextBGColor);
+                    textAreaResult.setForeground(darkTextColor);//50, 150, 250
+                    
+                    //comboWichInput.setBackground(darkComboBGColor);
+                    
+                    okButton.setBackground(darkButtonBGColor);//30, 50, 100
+                    okButton.setForeground(darkButtonTextColor);//50, 150, 250
+                    
+                    labelEndLine.setForeground(darkDisabledLabelColor);//110, 110, 110
+                    labelStartLine.setForeground(darkDisabledLabelColor);//110, 110, 110
+                    
+                    //ENJAMBRE pra GUI ouvir a mudança
+                    quineMcPanel.setForeground(Color.green);
                 }
+                // LIGHT THEME //////////////
                 else {
                     darkTheme = false;
                     labelThemeDark.setForeground(lightDisabledLabelColor);
                     labelThemeLight.setForeground(lightLabelColor);
+                    
+                    textAreaReport.setBackground(lightTextBGColor);
+                    textAreaReport.setForeground(lightTextColor);
+                    
+                    //comboWichReport.setBackground(lightComboBGColor);
+                    
+                    textAreaResult.setBackground(lightTextBGColor);
+                    textAreaResult.setForeground(lightTextColor);//10, 110, 210
+                    
+                    //comboWichInput.setBackground(lightComboBGColor);
+                    
+                    okButton.setBackground(lightButtonBGColor);
+                    okButton.setForeground(lightButtonTextColor);//50, 150, 250
+                    
+                    labelEndLine.setForeground(lightDisabledLabelColor);
+                    labelStartLine.setForeground(lightDisabledLabelColor);
+                    
+                    //comboWichInput.setBackground(lightComboBGColor);
+                    
+                    //ENJAMBRE pra GUI ouvir a mudança
+                    quineMcPanel.setForeground(Color.red);
                 }
-                quineMcPanel.repaint();
+                sliderTheme.update(sliderTheme.getGraphics());
             }
         });
         
@@ -778,6 +792,54 @@ public class QuineMcCluskey implements KeyListener {
             }
         });
         
+        MouseListener mouseListenerLabelLight = new MouseListener() {
+            @Override
+            public void mouseClicked(MouseEvent e) {
+                sliderTheme.setValue(0);
+            }
+            
+            @Override
+            public void mousePressed(MouseEvent e) {
+            }
+            
+            @Override
+            public void mouseReleased(MouseEvent e) {
+            }
+            
+            @Override
+            public void mouseEntered(MouseEvent e) {
+            }
+            
+            @Override
+            public void mouseExited(MouseEvent e) {
+            }
+        };
+        labelThemeLight.addMouseListener(mouseListenerLabelLight);
+        
+        MouseListener mouseListenerLabelDark = new MouseListener() {
+            @Override
+            public void mouseClicked(MouseEvent e) {
+                sliderTheme.setValue(1);
+            }
+            
+            @Override
+            public void mousePressed(MouseEvent e) {
+            }
+            
+            @Override
+            public void mouseReleased(MouseEvent e) {
+            }
+            
+            @Override
+            public void mouseEntered(MouseEvent e) {
+            }
+            
+            @Override
+            public void mouseExited(MouseEvent e) {
+            }
+        };
+        labelThemeDark.addMouseListener(mouseListenerLabelDark);
+        
         MouseListener mouseListenerStartLine = new MouseListener() {
             @Override
             public void mouseClicked(MouseEvent e) {
@@ -817,61 +879,6 @@ public class QuineMcCluskey implements KeyListener {
         };
         labelStartLine.addMouseListener(mouseListenerStartLine);
         textStartLine.addMouseListener(mouseListenerStartLine);
-        
-        MouseListener mouseListenerLabelLight = new MouseListener() {
-            @Override
-            public void mouseClicked(MouseEvent e) {
-                darkTheme = false;
-                sliderTheme.setValue(0);
-                labelThemeDark.setForeground(lightDisabledLabelColor);
-                labelThemeLight.setForeground(lightLabelColor);
-            }
-            
-            @Override
-            public void mousePressed(MouseEvent e) {
-            }
-            
-            @Override
-            public void mouseReleased(MouseEvent e) {
-            }
-            
-            @Override
-            public void mouseEntered(MouseEvent e) {
-            }
-            
-            @Override
-            public void mouseExited(MouseEvent e) {
-            }
-        };
-        labelThemeLight.addMouseListener(mouseListenerLabelLight);
-        
-        MouseListener mouseListenerLabelDark = new MouseListener() {
-            @Override
-            public void mouseClicked(MouseEvent e) {
-                darkTheme = true;
-                sliderTheme.setValue(1);
-                darkTheme = true;
-                labelThemeDark.setForeground(darkLabelColor);
-                labelThemeLight.setForeground(darkDisabledLabelColor);
-            }
-            
-            @Override
-            public void mousePressed(MouseEvent e) {
-            }
-            
-            @Override
-            public void mouseReleased(MouseEvent e) {
-            }
-            
-            @Override
-            public void mouseEntered(MouseEvent e) {
-            }
-            
-            @Override
-            public void mouseExited(MouseEvent e) {
-            }
-        };
-        labelThemeDark.addMouseListener(mouseListenerLabelDark);
         
         MouseListener mouseListenerEndLine = new MouseListener() {
             @Override
