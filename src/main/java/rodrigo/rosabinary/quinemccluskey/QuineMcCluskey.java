@@ -108,33 +108,33 @@ public class QuineMcCluskey implements KeyListener {
         GridBagLayout grid = new GridBagLayout();
         JPanel quineMcPanel = new JPanel(grid);
         
-        GridBagConstraints c = new GridBagConstraints();
         
-        quineMcPanel.setBorder(BorderFactory.createEmptyBorder(2,2,2,2));
         Font fontDefault = new Font("Segoe UI", Font.BOLD, 13);
+        GridBagConstraints gbcSpaces = new GridBagConstraints();
+        quineMcPanel.setBorder(BorderFactory.createEmptyBorder(2,2,2,2));
         Color borderColor = new Color(0, 0, 0, 0);
         
         JLabel space1 = new JLabel("   ");
-        c.fill = GridBagConstraints.HORIZONTAL;
-	c.gridx = 0;
-	c.gridy = 0;
-	c.gridwidth = 16;
-	c.gridheight = 1;
-        c.weightx = 0.0;
-        c.weighty = 0.0;
+        gbcSpaces.fill = GridBagConstraints.HORIZONTAL;
+	gbcSpaces.gridx = 0;
+	gbcSpaces.gridy = 0;
+	gbcSpaces.gridwidth = 16;
+	gbcSpaces.gridheight = 1;
+        gbcSpaces.weightx = 0.0;
+        gbcSpaces.weighty = 0.0;
 	space1.setBorder(BorderFactory.createLineBorder(borderColor));
-        quineMcPanel.add(space1, c);
+        quineMcPanel.add(space1, gbcSpaces);
         
         JLabel space3 = new JLabel("   ");
-	c.fill = GridBagConstraints.VERTICAL;
-	c.gridx = 0;
-	c.gridy = 1;
-	c.gridwidth = 1;
-	c.gridheight = 9;
-        c.weightx = 0.0;
-        c.weighty = 0.0;
+	gbcSpaces.fill = GridBagConstraints.VERTICAL;
+	gbcSpaces.gridx = 0;
+	gbcSpaces.gridy = 1;
+	gbcSpaces.gridwidth = 1;
+	gbcSpaces.gridheight = 9;
+        gbcSpaces.weightx = 0.0;
+        gbcSpaces.weighty = 0.0;
 	space3.setBorder(BorderFactory.createLineBorder(borderColor));
-        quineMcPanel.add(space3, c);
+        quineMcPanel.add(space3, gbcSpaces);
         
         JComboBox<String> comboWichInput = new JComboBox<>(wichInput);
         comboWichInput.setSelectedIndex(1); // Digitar
@@ -143,30 +143,31 @@ public class QuineMcCluskey implements KeyListener {
         comboWichInput.addKeyListener(this);
         comboWichInput.setFocusable(true);
 	comboWichInput.setFont(new Font("Segoe UI", Font.BOLD, 12));
-        //comboWichInput.setBackground(darkComboBGColor);
+        comboWichInput.setBackground(darkComboBGColor);
         comboWichInput.setForeground(darkComboTextColor);//30, 130, 230
-        c.fill = GridBagConstraints.NONE;
-	c.gridx = 1;
-	c.gridy = 1;
-	c.gridwidth = 1;
-	c.gridheight = 1;
-        c.weightx = 0.0;
-        c.weighty = 0.0;
-        c.anchor = GridBagConstraints.WEST;
+        GridBagConstraints gbcWichInput = new GridBagConstraints();
+        gbcWichInput.fill = GridBagConstraints.NONE;
+	gbcWichInput.gridx = 1;
+	gbcWichInput.gridy = 1;
+	gbcWichInput.gridwidth = 1;
+	gbcWichInput.gridheight = 1;
+        gbcWichInput.weightx = 0.0;
+        gbcWichInput.weighty = 0.0;
+        gbcWichInput.anchor = GridBagConstraints.WEST;
 	//comboWichInput.setBorder(BorderFactory.createLineBorder(borderColor));
-        quineMcPanel.add(comboWichInput, c);
+        quineMcPanel.add(comboWichInput, gbcWichInput);
         
         JLabel space4a = new JLabel(" ");
-	c.fill = GridBagConstraints.HORIZONTAL;
-	c.gridx = 2;
-	c.gridy = 1;
-	c.gridwidth = 1;
-	c.gridheight = 1;
-        c.weightx = 0.0;
-        c.weighty = 0.0;
-        c.anchor = GridBagConstraints.WEST;
+	gbcSpaces.fill = GridBagConstraints.HORIZONTAL;
+	gbcSpaces.gridx = 2;
+	gbcSpaces.gridy = 1;
+	gbcSpaces.gridwidth = 1;
+	gbcSpaces.gridheight = 1;
+        gbcSpaces.weightx = 0.0;
+        gbcSpaces.weighty = 0.0;
+        gbcSpaces.anchor = GridBagConstraints.WEST;
 	space4a.setBorder(BorderFactory.createLineBorder(borderColor));
-        quineMcPanel.add(space4a, c);
+        quineMcPanel.add(space4a, gbcSpaces);
         
         JCheckBox checkReadEntireFile = new JCheckBox("Inteiro");
         checkReadEntireFile.setFont(fontDefault);
@@ -174,33 +175,35 @@ public class QuineMcCluskey implements KeyListener {
         checkReadEntireFile.addKeyListener(this);
         checkReadEntireFile.setFocusable(false);
         checkReadEntireFile.setSelected(true);
-        c.fill = GridBagConstraints.HORIZONTAL;
-        c.gridx = 3;
-	c.gridy = 1;
-	c.gridwidth = 1;
-	c.gridheight = 1;
-        c.weightx = 0.0;
-        c.weighty = 0.0;
-        c.anchor = GridBagConstraints.WEST;
+        GridBagConstraints gbcCheckReadEntireFile = new GridBagConstraints();
+        gbcCheckReadEntireFile.fill = GridBagConstraints.HORIZONTAL;
+        gbcCheckReadEntireFile.gridx = 3;
+	gbcCheckReadEntireFile.gridy = 1;
+	gbcCheckReadEntireFile.gridwidth = 1;
+	gbcCheckReadEntireFile.gridheight = 1;
+        gbcCheckReadEntireFile.weightx = 0.0;
+        gbcCheckReadEntireFile.weighty = 0.0;
+        gbcCheckReadEntireFile.anchor = GridBagConstraints.WEST;
         checkReadEntireFile.setBorder(BorderFactory.createLineBorder(borderColor));
         checkReadEntireFile.setVisible(false);
-        quineMcPanel.add(checkReadEntireFile, c);
+        quineMcPanel.add(checkReadEntireFile, gbcCheckReadEntireFile);
         
         JLabel labelStartLine = new JLabel("     Linha inicial: ");
         labelStartLine.setFont(fontDefault);
         labelStartLine.setForeground(darkDisabledLabelColor);//110, 110, 110
         labelStartLine.addKeyListener(this);
-        c.fill = GridBagConstraints.HORIZONTAL;
-        c.gridx = 4;
-	c.gridy = 1;
-	c.gridwidth = 1;
-	c.gridheight = 1;
-        c.weightx = 0.0;
-        c.weighty = 0.0;
-        c.anchor = GridBagConstraints.WEST;
+        GridBagConstraints gbcLabelStartLine = new GridBagConstraints();
+        gbcLabelStartLine.fill = GridBagConstraints.HORIZONTAL;
+        gbcLabelStartLine.gridx = 4;
+	gbcLabelStartLine.gridy = 1;
+	gbcLabelStartLine.gridwidth = 1;
+	gbcLabelStartLine.gridheight = 1;
+        gbcLabelStartLine.weightx = 0.0;
+        gbcLabelStartLine.weighty = 0.0;
+        gbcLabelStartLine.anchor = GridBagConstraints.WEST;
         labelStartLine.setBorder(BorderFactory.createLineBorder(borderColor));
         labelStartLine.setVisible(false);
-        quineMcPanel.add(labelStartLine, c);
+        quineMcPanel.add(labelStartLine, gbcLabelStartLine);
         
         JTextField textStartLine = new JTextField();
         textStartLine.setPreferredSize(new Dimension(55, 20));
@@ -208,33 +211,35 @@ public class QuineMcCluskey implements KeyListener {
         textStartLine.setFont(new Font("Segoe UI", Font.PLAIN, 12));
         textStartLine.addKeyListener(this);
         textStartLine.setFocusable(false);
-        c.fill = GridBagConstraints.HORIZONTAL;
-        c.gridx = 5;
-	c.gridy = 1;
-	c.gridwidth = 1;
-	c.gridheight = 1;
-        c.weightx = 0.0;
-        c.weighty = 0.0;
-        c.anchor = GridBagConstraints.WEST;
+        GridBagConstraints gbcTextStartLine = new GridBagConstraints();
+        gbcTextStartLine.fill = GridBagConstraints.HORIZONTAL;
+        gbcTextStartLine.gridx = 5;
+	gbcTextStartLine.gridy = 1;
+	gbcTextStartLine.gridwidth = 1;
+	gbcTextStartLine.gridheight = 1;
+        gbcTextStartLine.weightx = 0.0;
+        gbcTextStartLine.weighty = 0.0;
+        gbcTextStartLine.anchor = GridBagConstraints.WEST;
         //textStartLine.setBorder(BorderFactory.createLineBorder(borderColor));
         textStartLine.setVisible(false);
-        quineMcPanel.add(textStartLine, c);
+        quineMcPanel.add(textStartLine, gbcTextStartLine);
         
         JLabel labelEndLine = new JLabel("     Linha final: ");
         labelEndLine.setFont(fontDefault);
         labelEndLine.setForeground(darkDisabledLabelColor);//110, 110, 110
         labelEndLine.addKeyListener(this);
-        c.fill = GridBagConstraints.HORIZONTAL;
-        c.gridx = 6;
-	c.gridy = 1;
-	c.gridwidth = 1;
-	c.gridheight = 1;
-        c.weightx = 0.0;
-        c.weighty = 0.0;
-        c.anchor = GridBagConstraints.WEST;
+        GridBagConstraints gbcLabelEndLine = new GridBagConstraints();
+        gbcLabelEndLine.fill = GridBagConstraints.HORIZONTAL;
+        gbcLabelEndLine.gridx = 6;
+	gbcLabelEndLine.gridy = 1;
+	gbcLabelEndLine.gridwidth = 1;
+	gbcLabelEndLine.gridheight = 1;
+        gbcLabelEndLine.weightx = 0.0;
+        gbcLabelEndLine.weighty = 0.0;
+        gbcLabelEndLine.anchor = GridBagConstraints.WEST;
         labelEndLine.setBorder(BorderFactory.createLineBorder(borderColor));
         labelEndLine.setVisible(false);
-        quineMcPanel.add(labelEndLine, c);
+        quineMcPanel.add(labelEndLine, gbcLabelEndLine);
         
         JTextField textEndLine = new JTextField();
         //textEndLine.setForeground(darkLabelColor);
@@ -243,46 +248,49 @@ public class QuineMcCluskey implements KeyListener {
         textEndLine.setFont(new Font("Segoe UI", Font.PLAIN, 12));
         textEndLine.addKeyListener(this);
         textEndLine.setFocusable(false);
-        c.fill = GridBagConstraints.HORIZONTAL;
-        c.gridx = 7;
-	c.gridy = 1;
-	c.gridwidth = 1;
-	c.gridheight = 1;
-        c.weightx = 0.0;
-        c.weighty = 0.0;
-        c.anchor = GridBagConstraints.WEST;
+        GridBagConstraints gbcTextEndLine = new GridBagConstraints();
+        gbcTextEndLine.fill = GridBagConstraints.HORIZONTAL;
+        gbcTextEndLine.gridx = 7;
+	gbcTextEndLine.gridy = 1;
+	gbcTextEndLine.gridwidth = 1;
+	gbcTextEndLine.gridheight = 1;
+        gbcTextEndLine.weightx = 0.0;
+        gbcTextEndLine.weighty = 0.0;
+        gbcTextEndLine.anchor = GridBagConstraints.WEST;
         //textEndLine.setBorder(BorderFactory.createLineBorder(borderColor));
         textEndLine.setVisible(false);
-        quineMcPanel.add(textEndLine, c);
+        quineMcPanel.add(textEndLine, gbcTextEndLine);
         
         labelVariables = new JLabel("   Número de variáveis: Auto");
         labelVariables.setFont(fontDefault);
         labelVariables.setForeground(darkLabelColor);
-        c.fill = GridBagConstraints.HORIZONTAL;
-        c.gridx = 11;
-	c.gridy = 1;
-	c.gridwidth = 1;
-	c.gridheight = 1;
-        c.weightx = 0.0;
-        c.weighty = 0.0;
-        c.anchor = GridBagConstraints.WEST;
+        GridBagConstraints gbcLabelVariables = new GridBagConstraints();
+        gbcLabelVariables.fill = GridBagConstraints.HORIZONTAL;
+        gbcLabelVariables.gridx = 11;
+	gbcLabelVariables.gridy = 1;
+	gbcLabelVariables.gridwidth = 1;
+	gbcLabelVariables.gridheight = 1;
+        gbcLabelVariables.weightx = 0.0;
+        gbcLabelVariables.weighty = 0.0;
+        gbcLabelVariables.anchor = GridBagConstraints.WEST;
         labelVariables.setBorder(BorderFactory.createLineBorder(borderColor));
-        quineMcPanel.add(labelVariables, c);
+        quineMcPanel.add(labelVariables, gbcLabelVariables);
         
         JLabel labelThemeLight = new JLabel("Claro");
         labelThemeLight.setFont(fontDefault);
         labelThemeLight.setForeground(darkDisabledLabelColor);
         labelThemeLight.setHorizontalAlignment(SwingConstants.RIGHT);
-        c.fill = GridBagConstraints.HORIZONTAL;
-        c.gridx = 12;
-	c.gridy = 1;
-	c.gridwidth = 1;
-	c.gridheight = 1;
-        c.weightx = 100.0;
-        c.weighty = 0.0;
-        c.anchor = GridBagConstraints.EAST;
+        GridBagConstraints gbcLabelThemeLight = new GridBagConstraints();
+        gbcLabelThemeLight.fill = GridBagConstraints.HORIZONTAL;
+        gbcLabelThemeLight.gridx = 12;
+	gbcLabelThemeLight.gridy = 1;
+	gbcLabelThemeLight.gridwidth = 1;
+	gbcLabelThemeLight.gridheight = 1;
+        gbcLabelThemeLight.weightx = 100.0;
+        gbcLabelThemeLight.weighty = 0.0;
+        gbcLabelThemeLight.anchor = GridBagConstraints.EAST;
         labelThemeLight.setBorder(BorderFactory.createLineBorder(borderColor));
-        quineMcPanel.add(labelThemeLight, c);
+        quineMcPanel.add(labelThemeLight, gbcLabelThemeLight);
         
         JSlider sliderTheme = new JSlider(JSlider.HORIZONTAL, 0, 1, 1); // min, max, inicial
         sliderTheme.addKeyListener(this);
@@ -293,44 +301,46 @@ public class QuineMcCluskey implements KeyListener {
         sliderTheme.setMaximumSize(new Dimension(60, 20));
         sliderTheme.setPreferredSize(new Dimension(60, 20));
         sliderTheme.setSize(new Dimension(60, 20));
-        c.fill = GridBagConstraints.NONE;
-	c.gridx = 13;
-	c.gridy = 1;
-	c.gridwidth = 1;
-	c.gridheight = 1;
-        c.weightx = 1.0;
-        c.weighty = 0.0;
-        c.anchor = GridBagConstraints.EAST;
+        GridBagConstraints gbcSliderTheme = new GridBagConstraints();
+        gbcSliderTheme.fill = GridBagConstraints.NONE;
+	gbcSliderTheme.gridx = 13;
+	gbcSliderTheme.gridy = 1;
+	gbcSliderTheme.gridwidth = 1;
+	gbcSliderTheme.gridheight = 1;
+        gbcSliderTheme.weightx = 1.0;
+        gbcSliderTheme.weighty = 0.0;
+        gbcSliderTheme.anchor = GridBagConstraints.EAST;
         sliderTheme.setBorder(BorderFactory.createLineBorder(borderColor));
-        quineMcPanel.add(sliderTheme, c);
+        quineMcPanel.add(sliderTheme, gbcSliderTheme);
         
         labelThemeDark = new JLabel("   Escuro");
         labelThemeDark.setFont(fontDefault);
         labelThemeDark.setForeground(darkLabelColor);
         labelThemeDark.setHorizontalAlignment(SwingConstants.RIGHT);
-        c.fill = GridBagConstraints.NONE;
-        c.gridx = 14;
-	c.gridy = 1;
-	c.gridwidth = 1;
-	c.gridheight = 1;
-        c.weightx = 0.0;
-        c.weighty = 0.0;
-        c.anchor = GridBagConstraints.EAST;
+        GridBagConstraints gbcLabelThemeDark = new GridBagConstraints();
+        gbcLabelThemeDark.fill = GridBagConstraints.NONE;
+        gbcLabelThemeDark.gridx = 14;
+	gbcLabelThemeDark.gridy = 1;
+	gbcLabelThemeDark.gridwidth = 1;
+	gbcLabelThemeDark.gridheight = 1;
+        gbcLabelThemeDark.weightx = 0.0;
+        gbcLabelThemeDark.weighty = 0.0;
+        gbcLabelThemeDark.anchor = GridBagConstraints.EAST;
         labelThemeDark.setBorder(BorderFactory.createLineBorder(borderColor));
-        quineMcPanel.add(labelThemeDark, c);
+        quineMcPanel.add(labelThemeDark, gbcLabelThemeDark);
         
         JLabel space3a = new JLabel(" ");
         //space3a.setVisible(false);
         space3a.setFont(new Font("SEGOE UI", Font.PLAIN, 1));
-	c.fill = GridBagConstraints.HORIZONTAL;
-	c.gridx = 1;
-	c.gridy = 2;
-	c.gridwidth = 14;
-	c.gridheight = 1;
-        c.weightx = 0.0;
-        c.weighty = 0.0;
+	gbcSpaces.fill = GridBagConstraints.HORIZONTAL;
+	gbcSpaces.gridx = 1;
+	gbcSpaces.gridy = 2;
+	gbcSpaces.gridwidth = 14;
+	gbcSpaces.gridheight = 1;
+        gbcSpaces.weightx = 0.0;
+        gbcSpaces.weighty = 0.0;
 	space3a.setBorder(BorderFactory.createLineBorder(borderColor));
-        quineMcPanel.add(space3a, c);
+        quineMcPanel.add(space3a, gbcSpaces);
         
         JComboBox<String> comboExpressions = new JComboBox<>(templates);
         comboExpressions.setPreferredSize(new Dimension(500, 30));
@@ -340,28 +350,29 @@ public class QuineMcCluskey implements KeyListener {
         editor.addKeyListener(this);
         comboExpressions.setFont(new Font("Segoe UI", Font.PLAIN, 12));
         comboExpressions.setFocusable(true);
-	c.fill = GridBagConstraints.HORIZONTAL;
-	c.gridx = 1;
-	c.gridy = 3;
-	c.gridwidth = 7;
-	c.gridheight = 1;
-        c.weightx = 0.0;
-        c.weighty = 0.0;
-        c.anchor = GridBagConstraints.WEST;
+        GridBagConstraints gbcComboExpressions = new GridBagConstraints();
+	gbcComboExpressions.fill = GridBagConstraints.HORIZONTAL;
+	gbcComboExpressions.gridx = 1;
+	gbcComboExpressions.gridy = 3;
+	gbcComboExpressions.gridwidth = 7;
+	gbcComboExpressions.gridheight = 1;
+        gbcComboExpressions.weightx = 0.0;
+        gbcComboExpressions.weighty = 0.0;
+        gbcComboExpressions.anchor = GridBagConstraints.WEST;
 	//comboExpressions.setBorder(BorderFactory.createLineBorder(borderColor));
-        quineMcPanel.add(comboExpressions, c);
+        quineMcPanel.add(comboExpressions, gbcComboExpressions);
         
         JLabel space5 = new JLabel(" ");
-	c.fill = GridBagConstraints.HORIZONTAL;
-	c.gridx = 8;
-	c.gridy = 3;
-	c.gridwidth = 1;
-	c.gridheight = 1;
-        c.weightx = 0.0;
-        c.weighty = 0.0;
-        c.anchor = GridBagConstraints.WEST;
+	gbcSpaces.fill = GridBagConstraints.HORIZONTAL;
+	gbcSpaces.gridx = 8;
+	gbcSpaces.gridy = 3;
+	gbcSpaces.gridwidth = 1;
+	gbcSpaces.gridheight = 1;
+        gbcSpaces.weightx = 0.0;
+        gbcSpaces.weighty = 0.0;
+        gbcSpaces.anchor = GridBagConstraints.WEST;
 	space5.setBorder(BorderFactory.createLineBorder(borderColor));
-        quineMcPanel.add(space5, c);
+        quineMcPanel.add(space5, gbcSpaces);
         
         okButton = new JButton("Executar");
         okButton.setPreferredSize(new Dimension(90, 30));
@@ -371,28 +382,29 @@ public class QuineMcCluskey implements KeyListener {
         okButton.setBackground(darkButtonBGColor);//30, 50, 100
         okButton.setForeground(darkButtonTextColor);//50, 150, 250
         okButton.setFont(fontDefault);
-	c.fill = GridBagConstraints.HORIZONTAL;
-	c.gridx = 9;
-	c.gridy = 3;
-	c.gridwidth = 1;
-	c.gridheight = 1;
-        c.weightx = 0.0;
-        c.weighty = 0.0;
-        c.anchor = GridBagConstraints.WEST;
+        GridBagConstraints gbcOkButton = new GridBagConstraints();
+	gbcOkButton.fill = GridBagConstraints.HORIZONTAL;
+	gbcOkButton.gridx = 9;
+	gbcOkButton.gridy = 3;
+	gbcOkButton.gridwidth = 1;
+	gbcOkButton.gridheight = 1;
+        gbcOkButton.weightx = 0.0;
+        gbcOkButton.weighty = 0.0;
+        gbcOkButton.anchor = GridBagConstraints.WEST;
 	//okButton.setBorder(BorderFactory.createLineBorder(borderColor));
-        quineMcPanel.add(okButton, c);
+        quineMcPanel.add(okButton, gbcOkButton);
         
         JLabel space5B = new JLabel(" ");
-	c.fill = GridBagConstraints.HORIZONTAL;
-	c.gridx = 10;
-	c.gridy = 3;
-	c.gridwidth = 1;
-	c.gridheight = 1;
-        c.weightx = 0.0;
-        c.weighty = 0.0;
-        c.anchor = GridBagConstraints.WEST;
+	gbcSpaces.fill = GridBagConstraints.HORIZONTAL;
+	gbcSpaces.gridx = 10;
+	gbcSpaces.gridy = 3;
+	gbcSpaces.gridwidth = 1;
+	gbcSpaces.gridheight = 1;
+        gbcSpaces.weightx = 0.0;
+        gbcSpaces.weighty = 0.0;
+        gbcSpaces.anchor = GridBagConstraints.WEST;
 	space5B.setBorder(BorderFactory.createLineBorder(borderColor));
-        quineMcPanel.add(space5B, c);
+        quineMcPanel.add(space5B, gbcSpaces);
         
         Dictionary<Integer, Component> labelTable = new Hashtable<>();
         labelTable.put(0, new JLabel("Auto"));
@@ -401,47 +413,49 @@ public class QuineMcCluskey implements KeyListener {
         labelTable.put(12, new JLabel("12"));
         labelTable.put(16, new JLabel("16"));
         
-        JSlider slider = new JSlider(JSlider.HORIZONTAL, 0, 16, 0); // min, max, inicial
-        slider.addKeyListener(this);
-        slider.setMinorTickSpacing(1);
-        slider.setSnapToTicks(true);
-        slider.setMinimumSize(new Dimension(200, 30));
-        slider.setLabelTable(labelTable);
-	c.fill = GridBagConstraints.VERTICAL;
-	c.gridx = 11;
-	c.gridy = 3;
-	c.gridwidth = 1;
-	c.gridheight = 1;
-        c.weightx = 0.0;
-        c.weighty = 0.0;
-        c.anchor = GridBagConstraints.WEST;
-        slider.setBorder(BorderFactory.createLineBorder(borderColor));
-        quineMcPanel.add(slider, c);
+        JSlider sliderVars = new JSlider(JSlider.HORIZONTAL, 0, 16, 0); // min, max, inicial
+        sliderVars.addKeyListener(this);
+        sliderVars.setMinorTickSpacing(1);
+        sliderVars.setSnapToTicks(true);
+        sliderVars.setMinimumSize(new Dimension(200, 30));
+        sliderVars.setLabelTable(labelTable);
+        GridBagConstraints gbcSliderVars = new GridBagConstraints();
+	gbcSliderVars.fill = GridBagConstraints.VERTICAL;
+	gbcSliderVars.gridx = 11;
+	gbcSliderVars.gridy = 3;
+	gbcSliderVars.gridwidth = 1;
+	gbcSliderVars.gridheight = 1;
+        gbcSliderVars.weightx = 0.0;
+        gbcSliderVars.weighty = 0.0;
+        gbcSliderVars.anchor = GridBagConstraints.WEST;
+        sliderVars.setBorder(BorderFactory.createLineBorder(borderColor));
+        quineMcPanel.add(sliderVars, gbcSliderVars);
         
         JLabel space6 = new JLabel(" ");
-	c.fill = GridBagConstraints.HORIZONTAL;
-	c.gridx = 1;
-	c.gridy = 4;
-	c.gridwidth = 14;
-	c.gridheight = 1;
-        c.weightx = 0.0;
-        c.weighty = 0.0;
+	gbcSpaces.fill = GridBagConstraints.HORIZONTAL;
+	gbcSpaces.gridx = 1;
+	gbcSpaces.gridy = 4;
+	gbcSpaces.gridwidth = 14;
+	gbcSpaces.gridheight = 1;
+        gbcSpaces.weightx = 0.0;
+        gbcSpaces.weighty = 0.0;
 	space6.setBorder(BorderFactory.createLineBorder(borderColor));
-        quineMcPanel.add(space6, c);
+        quineMcPanel.add(space6, gbcSpaces);
         
-        JLabel resultLabel = new JLabel("Expressão Minimizada:");
-        resultLabel.setFont(fontDefault);
-        resultLabel.setForeground(darkLabelColor);
-	c.fill = GridBagConstraints.NONE;
-	c.gridx = 1;
-	c.gridy = 5;
-	c.gridwidth = 14;
-	c.gridheight = 1;
-        c.weightx = 0.0;
-        c.weighty = 0.0;
-        c.anchor = GridBagConstraints.WEST;
-	resultLabel.setBorder(BorderFactory.createLineBorder(borderColor));
-        quineMcPanel.add(resultLabel, c);
+        JLabel labelResult = new JLabel("Expressão Minimizada:");
+        labelResult.setFont(fontDefault);
+        labelResult.setForeground(darkLabelColor);
+        GridBagConstraints gbcLabelResult = new GridBagConstraints();
+	gbcLabelResult.fill = GridBagConstraints.NONE;
+	gbcLabelResult.gridx = 1;
+	gbcLabelResult.gridy = 5;
+	gbcLabelResult.gridwidth = 14;
+	gbcLabelResult.gridheight = 1;
+        gbcLabelResult.weightx = 0.0;
+        gbcLabelResult.weighty = 0.0;
+        gbcLabelResult.anchor = GridBagConstraints.WEST;
+	labelResult.setBorder(BorderFactory.createLineBorder(borderColor));
+        quineMcPanel.add(labelResult, gbcLabelResult);
         
         JTextArea textAreaResult = new JTextArea();
         textAreaResult.addKeyListener(this);
@@ -453,27 +467,28 @@ public class QuineMcCluskey implements KeyListener {
         textAreaResult.setFont(new Font("Consolas", Font.PLAIN, 16));
         Insets mResult = new Insets(12, 8, 4, 6);
         textAreaResult.setMargin(mResult);
-	c.fill = GridBagConstraints.HORIZONTAL;
-        c.gridx = 1;
-	c.gridy = 6;
-	c.gridwidth = 14;
-	c.gridheight = 1;
-	c.weightx = 0.0;
-        c.weighty = 0.0;
-        c.anchor = GridBagConstraints.WEST;
+        GridBagConstraints gbcTextAreaResult = new GridBagConstraints();
+	gbcTextAreaResult.fill = GridBagConstraints.HORIZONTAL;
+        gbcTextAreaResult.gridx = 1;
+	gbcTextAreaResult.gridy = 6;
+	gbcTextAreaResult.gridwidth = 14;
+	gbcTextAreaResult.gridheight = 1;
+	gbcTextAreaResult.weightx = 0.0;
+        gbcTextAreaResult.weighty = 0.0;
+        gbcTextAreaResult.anchor = GridBagConstraints.WEST;
 	//textAreaResult.setBorder(BorderFactory.createLineBorder(borderColor));
-        quineMcPanel.add(textAreaResult, c);
+        quineMcPanel.add(textAreaResult, gbcTextAreaResult);
         
         JLabel space9 = new JLabel(" ");
-	c.fill = GridBagConstraints.HORIZONTAL;
-	c.gridx = 1;
-	c.gridy = 7;
-	c.gridwidth = 14;
-	c.gridheight = 1;
-        c.weightx = 0.0;
-        c.weighty = 0.0;
+	gbcSpaces.fill = GridBagConstraints.HORIZONTAL;
+	gbcSpaces.gridx = 1;
+	gbcSpaces.gridy = 7;
+	gbcSpaces.gridwidth = 14;
+	gbcSpaces.gridheight = 1;
+        gbcSpaces.weightx = 0.0;
+        gbcSpaces.weighty = 0.0;
 	space9.setBorder(BorderFactory.createLineBorder(borderColor));
-        quineMcPanel.add(space9, c);
+        quineMcPanel.add(space9, gbcSpaces);
         
         JComboBox<String> comboWichReport = new JComboBox<>(wichReport);
         comboWichReport.setPreferredSize(new Dimension(250, 30));
@@ -483,21 +498,32 @@ public class QuineMcCluskey implements KeyListener {
 	comboWichReport.setFont(new Font("Segoe UI", Font.BOLD, 12));
         //comboWichReport.setBackground(darkComboBGColor);
         comboWichReport.setForeground(darkComboTextColor);//30, 130, 230
-        c.fill = GridBagConstraints.NONE;
-	c.gridx = 1;
-	c.gridy = 8;
-	c.gridwidth = 1;
-	c.gridheight = 1;
-        c.weightx = 0.0;
-        c.weighty = 0.0;
-        c.anchor = GridBagConstraints.WEST;
+        GridBagConstraints gbcComboWichReport = new GridBagConstraints();
+        gbcComboWichReport.fill = GridBagConstraints.NONE;
+	gbcComboWichReport.gridx = 1;
+	gbcComboWichReport.gridy = 8;
+	gbcComboWichReport.gridwidth = 1;
+	gbcComboWichReport.gridheight = 1;
+        gbcComboWichReport.weightx = 0.0;
+        gbcComboWichReport.weighty = 0.0;
+        gbcComboWichReport.anchor = GridBagConstraints.WEST;
 	//comboWichReport.setBorder(BorderFactory.createLineBorder(borderColor));
-        quineMcPanel.add(comboWichReport, c);
+        quineMcPanel.add(comboWichReport, gbcComboWichReport);
         
         JLabel labelResultsFromFile = new JLabel(" Resultados:");
         labelResultsFromFile.setPreferredSize(new Dimension(250, 30));
      	labelResultsFromFile.setFont(new Font("Segoe UI", Font.BOLD, 14));
         labelResultsFromFile.setForeground(darkLabelColor);
+        GridBagConstraints gbcLabelResultsFromFile = new GridBagConstraints();
+        gbcLabelResultsFromFile.fill = GridBagConstraints.NONE;
+      	gbcLabelResultsFromFile.gridx = 1;
+       	gbcLabelResultsFromFile.gridy = 8;
+       	gbcLabelResultsFromFile.gridwidth = 5;
+        gbcLabelResultsFromFile.gridheight = 1;
+        gbcLabelResultsFromFile.weightx = 0.0;
+        gbcLabelResultsFromFile.weighty = 0.0;
+        gbcLabelResultsFromFile.anchor = GridBagConstraints.WEST;
+        //labelResultsFromFile.setBorder(BorderFactory.createLineBorder(borderColor));
         
         JTextField labelTime = new JTextField(" ");
         labelTime.setEditable(false);
@@ -505,16 +531,17 @@ public class QuineMcCluskey implements KeyListener {
         labelTime.setFont(new Font("Consolas", Font.PLAIN, 14));
         labelTime.setForeground(darkLabelColor);
         labelTime.setHorizontalAlignment(SwingConstants.RIGHT);
-        c.fill = GridBagConstraints.BOTH;
-	c.gridx = 12;
-	c.gridy = 8;
-	c.gridwidth = 3;
-	c.gridheight = 1;
-        c.weightx = 0.0;
-        c.weighty = 0.0;
-        c.anchor = GridBagConstraints.WEST;
+        GridBagConstraints gbcLabelTime = new GridBagConstraints();
+        gbcLabelTime.fill = GridBagConstraints.BOTH;
+	gbcLabelTime.gridx = 12;
+	gbcLabelTime.gridy = 8;
+	gbcLabelTime.gridwidth = 3;
+	gbcLabelTime.gridheight = 1;
+        gbcLabelTime.weightx = 0.0;
+        gbcLabelTime.weighty = 0.0;
+        gbcLabelTime.anchor = GridBagConstraints.WEST;
 	labelTime.setBorder(BorderFactory.createLineBorder(borderColor));
-        quineMcPanel.add(labelTime, c);
+        quineMcPanel.add(labelTime, gbcLabelTime);
         
         JTextArea textAreaReport = new JTextArea();
         textAreaReport.addKeyListener(this);
@@ -528,39 +555,40 @@ public class QuineMcCluskey implements KeyListener {
         Insets mReport = new Insets(10, 10, 10, 10);
         textAreaReport.setMargin(mReport);
         
-        JScrollPane jScrollReport = new JScrollPane(textAreaReport);
-	c.fill = GridBagConstraints.BOTH;
-        c.gridx = 1;
-	c.gridy = 9;
-	c.gridwidth = 14;
-	c.gridheight = 1;
-	c.weightx = 100.0;
-        c.weighty = 0.6;
-	jScrollReport.setBorder(BorderFactory.createLineBorder(borderColor));
-        quineMcPanel.add(jScrollReport, c);
+        JScrollPane scrollReport = new JScrollPane(textAreaReport);
+        GridBagConstraints gbcScrollReport = new GridBagConstraints();
+	gbcScrollReport.fill = GridBagConstraints.BOTH;
+        gbcScrollReport.gridx = 1;
+	gbcScrollReport.gridy = 9;
+	gbcScrollReport.gridwidth = 14;
+	gbcScrollReport.gridheight = 1;
+	gbcScrollReport.weightx = 100.0;
+        gbcScrollReport.weighty = 0.6;
+	scrollReport.setBorder(BorderFactory.createLineBorder(borderColor));
+        quineMcPanel.add(scrollReport, gbcScrollReport);
         
         JLabel space4 = new JLabel("   ");
-	c.fill = GridBagConstraints.VERTICAL;
-	c.gridx = 15;
-	c.gridy = 1;
-	c.gridwidth = 1;
-	c.gridheight = 9;
-        c.weightx = 0.0;
-        c.weighty = 0.0;
+	gbcSpaces.fill = GridBagConstraints.VERTICAL;
+	gbcSpaces.gridx = 15;
+	gbcSpaces.gridy = 1;
+	gbcSpaces.gridwidth = 1;
+	gbcSpaces.gridheight = 9;
+        gbcSpaces.weightx = 0.0;
+        gbcSpaces.weighty = 0.0;
 	space4.setBorder(BorderFactory.createLineBorder(borderColor));
-        quineMcPanel.add(space4, c);
+        quineMcPanel.add(space4, gbcSpaces);
         
         JLabel space2 = new JLabel(" ");
-	c.fill = GridBagConstraints.HORIZONTAL;
-	c.gridx = 0;
-	c.gridy = 10;
-	c.gridwidth = 16;
-	c.gridheight = 1;
-        c.weightx = 0.0;
-        c.weighty = 0.0;
+	gbcSpaces.fill = GridBagConstraints.HORIZONTAL;
+	gbcSpaces.gridx = 0;
+	gbcSpaces.gridy = 10;
+	gbcSpaces.gridwidth = 16;
+	gbcSpaces.gridheight = 1;
+        gbcSpaces.weightx = 0.0;
+        gbcSpaces.weighty = 0.0;
         space2.setFont(new Font("Segoe UI", Font.PLAIN, 6));
 	space2.setBorder(BorderFactory.createLineBorder(borderColor));
-        quineMcPanel.add(space2, c);
+        quineMcPanel.add(space2, gbcSpaces);
         
         inputFormat = String.valueOf(comboExpressions.getSelectedItem());
         
@@ -579,12 +607,12 @@ public class QuineMcCluskey implements KeyListener {
                     textAreaReport.setBackground(darkTextBGColor);
                     textAreaReport.setForeground(darkTextColor);
                     
-                    //comboWichReport.setBackground(darkComboBGColor);
+                    comboWichReport.setBackground(darkComboBGColor);
                     
                     textAreaResult.setBackground(darkTextBGColor);
                     textAreaResult.setForeground(darkTextColor);//50, 150, 250
                     
-                    //comboWichInput.setBackground(darkComboBGColor);
+                    comboWichInput.setBackground(darkComboBGColor);
                     
                     okButton.setBackground(darkButtonBGColor);//30, 50, 100
                     okButton.setForeground(darkButtonTextColor);//50, 150, 250
@@ -594,6 +622,20 @@ public class QuineMcCluskey implements KeyListener {
                     
                     //ENJAMBRE pra GUI ouvir a mudança
                     quineMcPanel.setForeground(Color.green);
+                    
+                    // e isto é só pra atualizar o comboWichReport, 
+                    // que não foi atualizado pois estava off
+                    try {
+                        UIManager.setLookAndFeel(new com.formdev.flatlaf.FlatDarkLaf());
+                    }
+                    catch (UnsupportedLookAndFeelException ex) {
+                    }
+                    SwingUtilities.invokeLater(new Runnable() {
+                        @Override
+                        public void run() {
+                            SwingUtilities.updateComponentTreeUI(comboWichReport);
+                        }
+                    });
                 }
                 // LIGHT THEME //////////////
                 else {
@@ -604,12 +646,12 @@ public class QuineMcCluskey implements KeyListener {
                     textAreaReport.setBackground(lightTextBGColor);
                     textAreaReport.setForeground(lightTextColor);
                     
-                    //comboWichReport.setBackground(lightComboBGColor);
+                    comboWichReport.setBackground(lightComboBGColor);
                     
                     textAreaResult.setBackground(lightTextBGColor);
                     textAreaResult.setForeground(lightTextColor);//10, 110, 210
                     
-                    //comboWichInput.setBackground(lightComboBGColor);
+                    comboWichInput.setBackground(lightComboBGColor);
                     
                     okButton.setBackground(lightButtonBGColor);
                     okButton.setForeground(lightButtonTextColor);//50, 150, 250
@@ -617,10 +659,22 @@ public class QuineMcCluskey implements KeyListener {
                     labelEndLine.setForeground(lightDisabledLabelColor);
                     labelStartLine.setForeground(lightDisabledLabelColor);
                     
-                    //comboWichInput.setBackground(lightComboBGColor);
-                    
                     //ENJAMBRE pra GUI ouvir a mudança
                     quineMcPanel.setForeground(Color.red);
+                    
+                    // e isto é só pra atualizar o comboWichReport, 
+                    // que não foi atualizado pois estava off
+                    try {
+                        UIManager.setLookAndFeel(new com.formdev.flatlaf.FlatLightLaf());
+                    }
+                    catch (UnsupportedLookAndFeelException ex) {
+                    }
+                    SwingUtilities.invokeLater(new Runnable() {
+                        @Override
+                        public void run() {
+                            SwingUtilities.updateComponentTreeUI(comboWichReport);
+                        }
+                    });
                 }
                 sliderTheme.update(sliderTheme.getGraphics());
             }
@@ -646,18 +700,15 @@ public class QuineMcCluskey implements KeyListener {
                         textEndLine.setFocusable(false);
                         
                         quineMcPanel.remove(labelResultsFromFile);
+                        if (darkTheme) {
+                            comboWichReport.setBackground(darkComboBGColor);
+                        }
+                        else {
+                            comboWichReport.setBackground(lightComboBGColor);
+                        }
+                        quineMcPanel.add(comboWichReport, gbcComboWichReport);
                         
-                        c.fill = GridBagConstraints.NONE;
-                        c.gridx = 1;
-                        c.gridy = 8;
-                        c.gridwidth = 5;
-                        c.gridheight = 1;
-                        c.weightx = 0.0;
-                        c.weighty = 0.0;
-                        c.anchor = GridBagConstraints.WEST;
-                        quineMcPanel.add(comboWichReport, c);
-                        
-                        resultLabel.setVisible(true);
+                        labelResult.setVisible(true);
                         textAreaResult.setVisible(true);
                         quineMcPanel.repaint();
                     }
@@ -675,23 +726,14 @@ public class QuineMcCluskey implements KeyListener {
                         textEndLine.setFocusable(false);
                         
                         quineMcPanel.remove(labelResultsFromFile);
+                        quineMcPanel.add(comboWichReport, gbcComboWichReport);
                         
-                        c.fill = GridBagConstraints.NONE;
-                        c.gridx = 1;
-                        c.gridy = 8;
-                        c.gridwidth = 5;
-                        c.gridheight = 1;
-                        c.weightx = 0.0;
-                        c.weighty = 0.0;
-                        c.anchor = GridBagConstraints.WEST;
-                        quineMcPanel.add(comboWichReport, c);
-                        
-                        resultLabel.setVisible(true);
+                        labelResult.setVisible(true);
                         textAreaResult.setVisible(true);
                         quineMcPanel.repaint();
                         hasResult = true;
                         String gen;
-                        int vars = slider.getValue();
+                        int vars = sliderVars.getValue();
                         if (vars == 0) {
                             gen = Tools.generateRandomExpression(8, 4);
                         }
@@ -720,18 +762,9 @@ public class QuineMcCluskey implements KeyListener {
                         checkReadEntireFile.setSelected(true);
                         
                         quineMcPanel.remove(comboWichReport);
-                        c.fill = GridBagConstraints.NONE;
-                	c.gridx = 1;
-                	c.gridy = 8;
-                	c.gridwidth = 5;
-                        c.gridheight = 1;
-                        c.weightx = 0.0;
-                        c.weighty = 0.0;
-                        c.anchor = GridBagConstraints.WEST;
-                        //labelResultsFromFile.setBorder(BorderFactory.createLineBorder(borderColor));
-                        quineMcPanel.add(labelResultsFromFile, c);
+                        quineMcPanel.add(labelResultsFromFile, gbcLabelResultsFromFile);
                             
-                        resultLabel.setVisible(false);
+                        labelResult.setVisible(false);
                         textAreaResult.setVisible(false);
                         quineMcPanel.repaint();
                         
@@ -924,7 +957,7 @@ public class QuineMcCluskey implements KeyListener {
         labelEndLine.addMouseListener(mouseListenerEndLine);
         textEndLine.addMouseListener(mouseListenerEndLine);
         
-        slider.addChangeListener(new ChangeListener() {
+        sliderVars.addChangeListener(new ChangeListener() {
             
             @Override
             public void stateChanged(ChangeEvent e) {
@@ -956,7 +989,7 @@ public class QuineMcCluskey implements KeyListener {
                         case 1 -> { // input: digitar
                             optimizeExpressions(
                                 (String) comboExpressions.getSelectedItem(),
-                                slider.getValue()
+                                sliderVars.getValue()
                                 //,outputFile
                             );
                             textAreaReport.setFont(fontReport);
@@ -964,7 +997,7 @@ public class QuineMcCluskey implements KeyListener {
                         case 2 -> { // input: aleatória
                             optimizeExpressions(
                                 editor.getText(),
-                                slider.getValue()
+                                sliderVars.getValue()
                                 //,outputFile
                             );
                             textAreaReport.setFont(fontReport);
@@ -1233,7 +1266,7 @@ public class QuineMcCluskey implements KeyListener {
                     errorMsg = "";
                     optimizeExpressions(
                         (String) comboExpressions.getSelectedItem(),
-                        slider.getValue()
+                        sliderVars.getValue()
                         //, outputFile
                     );
                     if (errorMsg.isEmpty()) {
