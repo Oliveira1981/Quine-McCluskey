@@ -1054,7 +1054,6 @@ public class QuineMcCluskey implements KeyListener {
                             int count = line;
                             ArrayList<String> fullReport = new ArrayList<>();
                             if (endLine == -1) { // LER ATÉ O FINAL DO ARQUIVO
-                                Tools.printt("\nstartLine1:"+startLine+"\tEndLine1:"+endLine+"\n");
                                 while (sc.hasNext()) {
                                     optimizeExpressions(sc.nextLine(), numVars
                                         //, outputFile
@@ -1110,9 +1109,7 @@ public class QuineMcCluskey implements KeyListener {
 */                                }
                             }
                             else {
-                                Tools.printt("\nstartLine2:"+startLine+"\tEndLine2:"+endLine+"\n");
                                 while (line <= endLine) {
-                                    Tools.printt("\nline: "+line);
                                     optimizeExpressions(sc.nextLine(), numVars
                                         //, outputFile
                                     );

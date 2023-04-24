@@ -580,8 +580,8 @@ public class SumOfProducts {
             );
         }
     }
-    // completeFinalList STEP 2 /////
-    public void generateAllCombinations(int n) {
+    // completeFinalList STEP 2 OLD /////
+    /*public void generateAllCombinations(int n) {
         
         combinationsList = new ArrayList<>();
         for (int r = 1; r <= n; r++) {
@@ -594,7 +594,46 @@ public class SumOfProducts {
                 }
             }
         }
+    }*/
+    // completeFinalList STEP 2 /////
+    public static void generateAllCombinations(int n) {
+        
+        combinationsList = new ArrayList<>();
+        for (int r = 1; r <= n; r++) {
+            int[] combination = new int[r];
+            
+            // initialize with lowest lexicographic combination
+            for (int i = 0; i < r; i++) {
+                combination[i] = i;
+            }
+            
+            while (combination[r - 1] < n) {
+                int last;
+                combinationsList.add(new ArrayList<>());
+                for (int i = 0; i < combination.length; i++) {
+                    last = combinationsList.size()-1;
+                    combinationsList.get(last).add(combination[i]);
+                }
+                
+                // generate next combination in lexicographic order
+                int t = r - 1;
+                while (t != 0 && combination[t] == n - r + t) {
+                    t--;
+                }
+                combination[t]++;
+                for (int i = t + 1; i < r; i++) {
+                    combination[i] = combination[i - 1] + 1;
+                }
+            }
+        }
+        /*for(int c=0; c<combinationsList.size(); c++) {
+            Tools.printt("\n");
+            for (int i=0; i<combinationsList.get(c).size(); i++) {
+                Tools.printt(combinationsList.get(c).get(i)+"\t");
+            }
+        }*/
     }
+    
     // completeFinalList STEP 3 /////
     public void addIndexToCombinationsList() {
         for(int c = 0; c < combinationsList.size(); c++) {
