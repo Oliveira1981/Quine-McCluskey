@@ -571,7 +571,7 @@ public class SumOfProducts {
             finalProductsList = (ArrayList) finalList_NO_SORTING.clone();
         }
     }
-    // completeFinalList_OLD STEP 1 /////
+    // completeFinalList STEP 1 /////
     public void setNumberOfLiteralsList() {
         numberOfLiteralsList = new ArrayList<>();
         for(int p = 0; p < notEssentialProductsList.size(); p++) {
@@ -580,7 +580,7 @@ public class SumOfProducts {
             );
         }
     }
-    // completeFinalList_OLD STEP 2 /////
+    // completeFinalList STEP 2 /////
     public void generateAllCombinations(int n) {
         
         combinationsList = new ArrayList<>();
@@ -595,7 +595,7 @@ public class SumOfProducts {
             }
         }
     }
-    // completeFinalList_OLD STEP 3 /////
+    // completeFinalList STEP 3 /////
     public void addIndexToCombinationsList() {
         for(int c = 0; c < combinationsList.size(); c++) {
             int combinationNumberOfLiterals = 0;
@@ -606,7 +606,7 @@ public class SumOfProducts {
             combinationsList.get(c).add(0, combinationNumberOfLiterals);
         }
     }
-    // completeFinalList_OLD STEP 4 /////
+    // completeFinalList STEP 4 /////
     public void sortCombinationsList() {
         for(int i=1; i < combinationsList.size(); i++) {
             int count = combinationsList.get(i).get(0);
@@ -623,7 +623,7 @@ public class SumOfProducts {
         }
     }
     
-    // completeFinalList_OLD STEP 5 /////
+    // completeFinalList STEP 5 /////
     public void testCombinations() {
         setIsCovered();
         if (isAllCovered()) {
