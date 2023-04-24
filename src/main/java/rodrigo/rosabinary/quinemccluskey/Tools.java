@@ -404,7 +404,6 @@ public class Tools {
     }
     
     public static Object print(Object obj, PrintWriter w) {
-        System.out.print("\nqwert\n");
         w.print(obj);
         return obj;
     }
@@ -753,5 +752,5 @@ public class Tools {
 
     private Tools() {
     }
-
+    
 }

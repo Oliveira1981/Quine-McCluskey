@@ -23,6 +23,8 @@ public class SumOfProducts {
     private ArrayList<String>        finalProductsList;
     private int                           numberOfVars;
     private int                       numberOfProducts;
+    private ArrayList<Integer>    numberOfLiteralsList;
+    private static ArrayList<ArrayList<Integer>> combinationsList;
     //private int                       numberOfLiterals;
     //private int               smallestNumberOfLiterals;
     private ArrayList<String>               truthTable;
@@ -519,11 +521,13 @@ public class SumOfProducts {
         }
     }
     
-    // ENJAMBRE TEMPORÁRIO
+    // ENJAMBRE ANTIGO
     // para resolver diferença entre o uso de combinações
     // COM ou SEM ordenação prévia:
-    // Faz um e depois o outro e usa o que deu menos literais
-    public void completeFinalList() {
+    // Faz um e depois o outro e usa o que deu menos literais.
+    // Mais rápido, mas, por não abordar todas as combinações,
+    // nem sempre retorna o resultado ótimo.
+    public void completeFinalList_OLD() {
         ArrayList<String> finalListOriginal = (ArrayList) finalProductsList.clone();
         
         //NO SORTING
@@ -567,17 +571,103 @@ public class SumOfProducts {
             finalProductsList = (ArrayList) finalList_NO_SORTING.clone();
         }
     }
-    
-    public void sortMinTermsList() {
-        for(int i=1; i < minTermsList.size(); i++) {
-            int count_k = minTermsList.get(i).getDecimalView();
+    // completeFinalList_OLD STEP 1 /////
+    public void setNumberOfLiteralsList() {
+        numberOfLiteralsList = new ArrayList<>();
+        for(int p = 0; p < notEssentialProductsList.size(); p++) {
+            numberOfLiteralsList.add(
+                Tools.numberOfLiterals2(notEssentialProductsList.get(p))
+            );
+        }
+    }
+    // completeFinalList_OLD STEP 2 /////
+    public void generateAllCombinations(int n) {
+        
+        combinationsList = new ArrayList<>();
+        for (int r = 1; r <= n; r++) {
+            Iterator<int[]> iterator = org.apache.commons.math3.util.CombinatoricsUtils.combinationsIterator(n, r);
+            while (iterator.hasNext()) {
+                combinationsList.add(new ArrayList<>());
+                final int[] combination = iterator.next();
+                for(int i=0; i<combination.length; i++) {
+                    combinationsList.get(combinationsList.size()-1).add(combination[i]);
+                }
+            }
+        }
+    }
+    // completeFinalList_OLD STEP 3 /////
+    public void addIndexToCombinationsList() {
+        for(int c = 0; c < combinationsList.size(); c++) {
+            int combinationNumberOfLiterals = 0;
+            for (int i = 0; i < combinationsList.get(c).size(); i++) {
+                combinationNumberOfLiterals +=
+                    numberOfLiteralsList.get(combinationsList.get(c).get(i));
+            }
+            combinationsList.get(c).add(0, combinationNumberOfLiterals);
+        }
+    }
+    // completeFinalList_OLD STEP 4 /////
+    public void sortCombinationsList() {
+        for(int i=1; i < combinationsList.size(); i++) {
+            int count = combinationsList.get(i).get(0);
             
-            if(count_k < minTermsList.get(i-1).getDecimalView()) {
+            if(count < combinationsList.get(i-1).get(0)) {
                 int j = i;
                 do {
                     j--;
                     if (j < 1) break;
-                } while(count_k < minTermsList.get(j-1).getDecimalView());
+                }
+                while(count < combinationsList.get(j-1).get(0));
+                combinationsList.add(j, combinationsList.remove(i));
+            }
+        }
+    }
+    
+    // completeFinalList_OLD STEP 5 /////
+    public void testCombinations() {
+        setIsCovered();
+        if (isAllCovered()) {
+            return;
+        }
+        ArrayList<String> finalListInitial = (ArrayList) finalProductsList.clone();
+        for (int c = 0; c < combinationsList.size(); c++) {
+            for (int i = 1; i < combinationsList.get(c).size(); i++) {
+                finalProductsList.add(
+                    notEssentialProductsList.get(combinationsList.get(c).get(i))
+                );
+            }
+            setIsCovered();
+            if (isAllCovered()) {
+                return;
+            }
+            finalProductsList = (ArrayList) finalListInitial.clone();
+            setIsCovered();
+        }
+    }
+    
+    public void completeFinalList() {
+        // 1 /////
+        setNumberOfLiteralsList();
+        // 2 /////
+        generateAllCombinations(notEssentialProductsList.size());
+        // 3 /////
+        addIndexToCombinationsList();
+        // 4 /////
+        sortCombinationsList();
+        // 5 /////
+        testCombinations();
+    }
+    
+    public void sortMinTermsList() {
+        for(int i=1; i < minTermsList.size(); i++) {
+            int count = minTermsList.get(i).getDecimalView();
+            
+            if(count < minTermsList.get(i-1).getDecimalView()) {
+                int j = i;
+                do {
+                    j--;
+                    if (j < 1) break;
+                } while(count < minTermsList.get(j-1).getDecimalView());
                 minTermsList.add(j, minTermsList.remove(i));
             }
         }

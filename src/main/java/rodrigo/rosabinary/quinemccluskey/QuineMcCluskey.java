@@ -64,7 +64,7 @@ public class QuineMcCluskey implements KeyListener {
         hasResult          = false;
         errorMsg           = "";
         sopsList           = null;
-        writeResultsTofile = !true;
+        writeResultsTofile = true;
         //expressions        = new ArrayList<>();
     }
     
@@ -308,13 +308,6 @@ public class QuineMcCluskey implements KeyListener {
         gbcSliderTheme.anchor = GridBagConstraints.EAST;
         sliderTheme.setBorder(BorderFactory.createLineBorder(borderColor));
         quineMcPanel.add(sliderTheme, gbcSliderTheme);
-        
-        //SteelCheckBox tg = new SteelCheckBox();
-        //tg.setSelectedColor(ColorDef.YELLOW);
-        //tg.setRised(false);
-        //tg.setSelected(true);
-        //tg.setSize(22, 22);
-        //quineMcPanel.add(tg, gbcSliderTheme);
         
         labelThemeDark = new JLabel("   Escuro");
         labelThemeDark.setFont(fontDefault);
@@ -1061,12 +1054,12 @@ public class QuineMcCluskey implements KeyListener {
                             int count = line;
                             ArrayList<String> fullReport = new ArrayList<>();
                             if (endLine == -1) { // LER ATÉ O FINAL DO ARQUIVO
-                                
+                                Tools.printt("\nstartLine1:"+startLine+"\tEndLine1:"+endLine+"\n");
                                 while (sc.hasNext()) {
                                     optimizeExpressions(sc.nextLine(), numVars
                                         //, outputFile
                                     );
-                                    
+/*
                                     //Apenas uma expressão por linha
                                     int x = 0;
                                     
@@ -1114,14 +1107,16 @@ public class QuineMcCluskey implements KeyListener {
                                             labelTime.update(labelTime.getGraphics());
                                         }
                                     //}
-                                }
+*/                                }
                             }
                             else {
+                                Tools.printt("\nstartLine2:"+startLine+"\tEndLine2:"+endLine+"\n");
                                 while (line <= endLine) {
+                                    Tools.printt("\nline: "+line);
                                     optimizeExpressions(sc.nextLine(), numVars
                                         //, outputFile
                                     );
-                                    
+/*                                    
                                     //Apenas uma expressão por linha
                                     int x = 0;
                                     
@@ -1169,7 +1164,7 @@ public class QuineMcCluskey implements KeyListener {
                                             labelTime.setText(String.format("Tempo: %.3f s", (float) (System.nanoTime() - startTime)/1000000000));
                                             labelTime.update(labelTime.getGraphics());
                                         }
-                                        line++;
+*/                                        line++;
                                     //}
                                 }
                             }
@@ -1487,8 +1482,8 @@ public class QuineMcCluskey implements KeyListener {
             sopsList.get(lastSOPIndex).buildOptimizedExpression();
             
             if (writeResultsTofile) {
-                Tools.print(sopsList.get(lastSOPIndex).getResult()+"\t", outputFile);
-                Tools.print(sopsList.get(lastSOPIndex).expression2hexadecimal(sopsList.get(lastSOPIndex).getResult())+"\t", outputFile);
+                //Tools.print(sopsList.get(lastSOPIndex).getResult()+"\t", outputFile);
+                //Tools.print(sopsList.get(lastSOPIndex).expression2hexadecimal(sopsList.get(lastSOPIndex).getResult())+"\t", outputFile);
                 Tools.print(Tools.numberOfLiterals(sopsList.get(lastSOPIndex).getResult(), sopsList.get(lastSOPIndex).getNumberOfVars(), sopsList.get(lastSOPIndex).getNumberOfProducts())+"\n", outputFile);
             }
             
