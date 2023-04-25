@@ -64,7 +64,7 @@ public class QuineMcCluskey implements KeyListener {
         hasResult          = false;
         errorMsg           = "";
         sopsList           = null;
-        writeResultsTofile = true;
+        writeResultsTofile = !true;
         //expressions        = new ArrayList<>();
     }
     
@@ -986,7 +986,6 @@ public class QuineMcCluskey implements KeyListener {
                             optimizeExpressions(
                                 (String) comboExpressions.getSelectedItem(),
                                 sliderVars.getValue()
-                                //,outputFile
                             );
                             textAreaReport.setFont(fontReport);
                         }
@@ -994,7 +993,6 @@ public class QuineMcCluskey implements KeyListener {
                             optimizeExpressions(
                                 editor.getText(),
                                 sliderVars.getValue()
-                                //,outputFile
                             );
                             textAreaReport.setFont(fontReport);
                         }
@@ -1055,10 +1053,9 @@ public class QuineMcCluskey implements KeyListener {
                             ArrayList<String> fullReport = new ArrayList<>();
                             if (endLine == -1) { // LER ATÉ O FINAL DO ARQUIVO
                                 while (sc.hasNext()) {
-                                    optimizeExpressions(sc.nextLine(), numVars
-                                        //, outputFile
-                                    );
-/*
+                                    //Tools.printt("\nline:"+line++);
+                                    optimizeExpressions(sc.nextLine(), numVars);
+
                                     //Apenas uma expressão por linha
                                     int x = 0;
                                     
@@ -1106,14 +1103,13 @@ public class QuineMcCluskey implements KeyListener {
                                             labelTime.update(labelTime.getGraphics());
                                         }
                                     //}
-*/                                }
+                                }
                             }
                             else {
                                 while (line <= endLine) {
-                                    optimizeExpressions(sc.nextLine(), numVars
-                                        //, outputFile
-                                    );
-/*                                    
+                                    //Tools.printt("\nline:"+line);
+                                    optimizeExpressions(sc.nextLine(), numVars);
+                                    
                                     //Apenas uma expressão por linha
                                     int x = 0;
                                     
@@ -1161,7 +1157,7 @@ public class QuineMcCluskey implements KeyListener {
                                             labelTime.setText(String.format("Tempo: %.3f s", (float) (System.nanoTime() - startTime)/1000000000));
                                             labelTime.update(labelTime.getGraphics());
                                         }
-*/                                        line++;
+                                        line++;
                                     //}
                                 }
                             }
@@ -1185,14 +1181,7 @@ public class QuineMcCluskey implements KeyListener {
                             for (int a = 0; a < fullReport.size(); a++) {
                                 textAreaReport.append(fullReport.get(a));
                             }
-                            //textAreaReport.setCaretPosition(0);
                             quineMcPanel.repaint();
-                            /*if (readFromFile(editor.getText(),
-                                    startLine,
-                                    endLine
-                                ) != 0) {
-                                errorMsg = "Nenhum arquivo selecionado";
-                            }*/
                         }
                     }
                     if (comboWichInput.getSelectedIndex() == 0) {
@@ -1219,8 +1208,6 @@ public class QuineMcCluskey implements KeyListener {
                 catch (Exception ex) {
                 }
                 labelTime.setText(String.format("Tempo: %.3f s", (float) (System.nanoTime() - startTime)/1000000000));
-                //labelTime.update(labelTime.getGraphics());
-                //System.out.printf("\nTime elapsed: %.3f s", (float) elapsedTime/1000000000);
             }
         });
         
@@ -1262,7 +1249,6 @@ public class QuineMcCluskey implements KeyListener {
                     optimizeExpressions(
                         (String) comboExpressions.getSelectedItem(),
                         sliderVars.getValue()
-                        //, outputFile
                     );
                     if (errorMsg.isEmpty()) {
                         String results;
@@ -1444,7 +1430,6 @@ public class QuineMcCluskey implements KeyListener {
     public void optimizeExpressions(
         String allExpressions,
         int numVars
-        //, PrintWriter writer
         ) throws Exception {
         
         //SumOfProducts sopsList = new SumOfProducts();
@@ -1479,9 +1464,13 @@ public class QuineMcCluskey implements KeyListener {
             sopsList.get(lastSOPIndex).buildOptimizedExpression();
             
             if (writeResultsTofile) {
-                //Tools.print(sopsList.get(lastSOPIndex).getResult()+"\t", outputFile);
-                //Tools.print(sopsList.get(lastSOPIndex).expression2hexadecimal(sopsList.get(lastSOPIndex).getResult())+"\t", outputFile);
-                Tools.print(Tools.numberOfLiterals(sopsList.get(lastSOPIndex).getResult(), sopsList.get(lastSOPIndex).getNumberOfVars(), sopsList.get(lastSOPIndex).getNumberOfProducts())+"\n", outputFile);
+                Tools.print(sopsList.get(lastSOPIndex).getResult()+"\t", outputFile);
+                Tools.print(sopsList.get(lastSOPIndex).expression2hexadecimal(sopsList.get(lastSOPIndex).getResult())+"\t", outputFile);
+                Tools.print(Tools.numberOfLiterals(sopsList.get(lastSOPIndex).getResult(), sopsList.get(lastSOPIndex).getNumberOfVars(), sopsList.get(lastSOPIndex).getNumberOfProducts()), outputFile);
+                //Tools.print("\t"+sopsList.get(lastSOPIndex).getNEPLSize(), outputFile);
+                //if (sopsList.get(lastSOPIndex).isInspect())
+                //    Tools.print(" < INSPECT! >", outputFile);
+                Tools.print("\n", outputFile);
             }
             
             begin = end + 1;

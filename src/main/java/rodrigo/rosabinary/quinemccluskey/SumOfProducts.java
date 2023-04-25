@@ -9,28 +9,26 @@ import java.util.*;
  */
 public class SumOfProducts {
 
-    private String                 originalInputFormat;
-    private String                         inputFormat;
-    private String             originalInputExpression;
-    private String                 convertedExpression;
-    private String                       variablesList;
-    //private ArrayList<String>     originalProductsList;
-    private ArrayList<Product>            productsList; // Linhas da coveringTable
-    private ArrayList<Product>         auxProductsList;
-    private ArrayList<MinTerm>            minTermsList; // Colunas da coveringTable
-    private ArrayList<String>    essentialProductsList;
-    private ArrayList<String> notEssentialProductsList;
-    private ArrayList<String>        finalProductsList;
-    private int                           numberOfVars;
-    private int                       numberOfProducts;
-    private ArrayList<Integer>    numberOfLiteralsList;
-    private static ArrayList<ArrayList<Integer>> combinationsList;
-    //private int                       numberOfLiterals;
-    //private int               smallestNumberOfLiterals;
-    private ArrayList<String>               truthTable;
-    private boolean                            isError;
-    private String                              result;
-    private String                              report;
+    private boolean                                isError;
+    private boolean                                inspect;
+    private int                               numberOfVars;
+    private int                           numberOfProducts;
+    private String                                  result;
+    private String                                  report;
+    private String                     originalInputFormat;
+    private String                             inputFormat;
+    private String                 originalInputExpression;
+    private String                     convertedExpression;
+    private String                           variablesList;
+    private ArrayList<Integer>        numberOfLiteralsList;
+    private ArrayList<String>        essentialProductsList;
+    private ArrayList<String>     notEssentialProductsList;
+    private ArrayList<String>            finalProductsList;
+    private ArrayList<String>                   truthTable;
+    private ArrayList<Product>                productsList; // Linhas da coveringTable
+    private ArrayList<Product>             auxProductsList;
+    private ArrayList<MinTerm>                minTermsList; // Colunas da coveringTable
+    private ArrayList<ArrayList<Integer>> combinationsList;
     
     public SumOfProducts(String expression, int numVars) {
         setExpression(expression, numVars);
@@ -43,6 +41,7 @@ public class SumOfProducts {
         this.convertedExpression     = "";
         this.variablesList           = "";
         this.isError                 = false;
+        this.inspect                 = false;
         this.report                  = "";
         this.numberOfVars            = 0; //Auto
     }
@@ -181,6 +180,10 @@ public class SumOfProducts {
         return numberOfProducts;
     }
     
+    public String getNEPLSize() {
+        return Integer.toString(notEssentialProductsList.size());
+    }
+    
     public String getTruthTable() {
         if (isError) {
             return "-";
@@ -198,6 +201,10 @@ public class SumOfProducts {
     
     public boolean isError() {
         return isError;
+    }
+    
+    public boolean isInspect() {
+        return inspect;
     }
     
     public String getReport() {
@@ -521,13 +528,10 @@ public class SumOfProducts {
         }
     }
     
-    // ENJAMBRE ANTIGO
-    // para resolver diferença entre o uso de combinações
-    // COM ou SEM ordenação prévia:
-    // Faz um e depois o outro e usa o que deu menos literais.
+    // Usar quando número de produtos não essenciais > 23:
     // Mais rápido, mas, por não abordar todas as combinações,
-    // nem sempre retorna o resultado ótimo.
-    public void completeFinalList_OLD() {
+    // pode não retornar o resultado ótimo.
+    public void completeFinalList_ALT() {
         ArrayList<String> finalListOriginal = (ArrayList) finalProductsList.clone();
         
         //NO SORTING
@@ -571,6 +575,7 @@ public class SumOfProducts {
             finalProductsList = (ArrayList) finalList_NO_SORTING.clone();
         }
     }
+    
     // completeFinalList STEP 1 /////
     public void setNumberOfLiteralsList() {
         numberOfLiteralsList = new ArrayList<>();
@@ -580,24 +585,9 @@ public class SumOfProducts {
             );
         }
     }
-    // completeFinalList STEP 2 OLD /////
-    /*public void generateAllCombinations(int n) {
-        
-        combinationsList = new ArrayList<>();
-        for (int r = 1; r <= n; r++) {
-            Iterator<int[]> iterator = org.apache.commons.math3.util.CombinatoricsUtils.combinationsIterator(n, r);
-            while (iterator.hasNext()) {
-                combinationsList.add(new ArrayList<>());
-                final int[] combination = iterator.next();
-                for(int i=0; i<combination.length; i++) {
-                    combinationsList.get(combinationsList.size()-1).add(combination[i]);
-                }
-            }
-        }
-    }*/
+    
     // completeFinalList STEP 2 /////
-    public static void generateAllCombinations(int n) {
-        
+    public void generateAllCombinations(int n) {
         combinationsList = new ArrayList<>();
         for (int r = 1; r <= n; r++) {
             int[] combination = new int[r];
@@ -608,11 +598,9 @@ public class SumOfProducts {
             }
             
             while (combination[r - 1] < n) {
-                int last;
                 combinationsList.add(new ArrayList<>());
                 for (int i = 0; i < combination.length; i++) {
-                    last = combinationsList.size()-1;
-                    combinationsList.get(last).add(combination[i]);
+                    combinationsList.get(combinationsList.size()-1).add(combination[i]);
                 }
                 
                 // generate next combination in lexicographic order
@@ -624,14 +612,15 @@ public class SumOfProducts {
                 for (int i = t + 1; i < r; i++) {
                     combination[i] = combination[i - 1] + 1;
                 }
+                /*
+                int last=combinationsList.size()-1;
+                for(int x=0; x < combinationsList.get(last).size(); x++) {
+                    Tools.printt(combinationsList.get(last).get(x)+"\t");
+                }
+                Tools.printt("\n");
+                */
             }
         }
-        /*for(int c=0; c<combinationsList.size(); c++) {
-            Tools.printt("\n");
-            for (int i=0; i<combinationsList.get(c).size(); i++) {
-                Tools.printt(combinationsList.get(c).get(i)+"\t");
-            }
-        }*/
     }
     
     // completeFinalList STEP 3 /////
@@ -645,29 +634,61 @@ public class SumOfProducts {
             combinationsList.get(c).add(0, combinationNumberOfLiterals);
         }
     }
+    
     // completeFinalList STEP 4 /////
+    // Counting Sort, by Rajat Mishra, geeksforgeeks.org
     public void sortCombinationsList() {
-        for(int i=1; i < combinationsList.size(); i++) {
-            int count = combinationsList.get(i).get(0);
-            
-            if(count < combinationsList.get(i-1).get(0)) {
-                int j = i;
-                do {
-                    j--;
-                    if (j < 1) break;
-                }
-                while(count < combinationsList.get(j-1).get(0));
-                combinationsList.add(j, combinationsList.remove(i));
-            }
+        
+        //long startTime = System.nanoTime();
+        
+        int n = combinationsList.size();
+        // The output objects array that will have sorted
+        ArrayList<ArrayList<Integer>> output = new ArrayList<>();
+ 
+        // Create a count array to store count of individual
+        // objects and initialize count array as 0
+        int count[] = new int[256]; //Por que 256? REVISAR.
+        for (int i = 0; i < 256; ++i)
+            count[i] = 0;
+ 
+        // store count of each object
+        for (int i = 0; i < n; ++i) {
+            ++count[combinationsList.get(i).get(0)];
         }
+ 
+        // Change count[i] so that count[i] now contains
+        // actual position of this object in output array
+        for (int i = 1; i <= 255; ++i) {
+            count[i] += count[i - 1];
+        }
+        
+        int outputSize = (int) Math.pow(2, notEssentialProductsList.size())-1;
+        for (int i = 0; i < outputSize; ++i) {
+            output.add(new ArrayList<>());
+        }
+        
+        // Build the output object array
+        // To make it stable we are operating in
+        // reverse order.
+        for (int i = n - 1; i >= 0; i--) {
+            int countIndex = combinationsList.get(i).get(0);
+            int outputIndex = count[countIndex] - 1;
+            output.set(outputIndex, combinationsList.get(i));
+            --count[combinationsList.get(i).get(0)];
+        }
+ 
+        // Copy the output array to arr, so that arr now
+        // contains sorted objects
+        combinationsList = (ArrayList) output.clone();
+        
+        //long endTime = (System.nanoTime() - startTime)/1000000000;
+        //if (endTime >= 1.0) {
+        //    Tools.printt(String.format("\nsortCombinationsList: %.5f s", (float) endTime));
+        //}
     }
     
     // completeFinalList STEP 5 /////
     public void testCombinations() {
-        setIsCovered();
-        if (isAllCovered()) {
-            return;
-        }
         ArrayList<String> finalListInitial = (ArrayList) finalProductsList.clone();
         for (int c = 0; c < combinationsList.size(); c++) {
             for (int i = 1; i < combinationsList.get(c).size(); i++) {
@@ -685,15 +706,25 @@ public class SumOfProducts {
     }
     
     public void completeFinalList() {
-        // 1 /////
+        if(isAllCovered()) {
+            return;
+        }
+        if(notEssentialProductsList.size() > 23) {
+            // Geraria um número muito grande de combinações
+            Tools.printt("\nINSPECT!\n");
+            inspect = true;
+            completeFinalList_ALT();
+            return;
+        }
+        // STEP 1 /////
         setNumberOfLiteralsList();
-        // 2 /////
+        // STEP 2 /////
         generateAllCombinations(notEssentialProductsList.size());
-        // 3 /////
+        // STEP 3 /////
         addIndexToCombinationsList();
-        // 4 /////
+        // STEP 4 /////
         sortCombinationsList();
-        // 5 /////
+        // STEP 5 /////
         testCombinations();
     }
     
