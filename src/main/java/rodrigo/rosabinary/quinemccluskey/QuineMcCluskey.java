@@ -2,10 +2,8 @@ package rodrigo.rosabinary.quinemccluskey;
 
 import java.awt.*;
 import java.awt.event.*;
-import java.io.File;
 import java.io.*;
 import java.util.*;
-import java.util.Dictionary;
 import javax.swing.*;
 import javax.swing.event.*;
 
@@ -1020,7 +1018,7 @@ public class QuineMcCluskey implements KeyListener {
                             }
                             File selectedFile = new File(editor.getText());
                             if(!selectedFile.exists()){
-                                Tools.printt("\nNo file selected.\n");
+                                print("\nNo file selected.\n");
                                 errorMsg = "Nenhum arquivo selecionado.";
                                 textAreaReport.setText(errorMsg);
                                 return;
@@ -1029,7 +1027,7 @@ public class QuineMcCluskey implements KeyListener {
                             
                             int line = 1;
                             //if (line < startLine) {
-                            //    printt("\nSkipping line(s)...\n");
+                            //    print("\nSkipping line(s)...\n");
                             //}
                             while (line < startLine) {
                                 if (sc.hasNext()) {
@@ -1045,7 +1043,7 @@ public class QuineMcCluskey implements KeyListener {
                                 textAreaReport.setText(errorMsg);
                                 return;
                             }
-                            //printt("\nReading...");
+                            //print("\nReading...");
                             
                             textAreaReport.setFont(new Font("Consolas", Font.PLAIN, 14));
                             textAreaReport.setText("");
@@ -1053,7 +1051,7 @@ public class QuineMcCluskey implements KeyListener {
                             ArrayList<String> fullReport = new ArrayList<>();
                             if (endLine == -1) { // LER ATÉ O FINAL DO ARQUIVO
                                 while (sc.hasNext()) {
-                                    //Tools.printt("\nline:"+line++);
+                                    //print("\nline:"+line++);
                                     optimizeExpressions(sc.nextLine(), numVars);
 
                                     //Apenas uma expressão por linha
@@ -1107,7 +1105,7 @@ public class QuineMcCluskey implements KeyListener {
                             }
                             else {
                                 while (line <= endLine) {
-                                    //Tools.printt("\nline:"+line);
+                                    //print("\nline:"+line);
                                     optimizeExpressions(sc.nextLine(), numVars);
                                     
                                     //Apenas uma expressão por linha
@@ -1299,20 +1297,20 @@ public class QuineMcCluskey implements KeyListener {
         
         File selectedFile = new File(filePath);
         if(!selectedFile.exists()){
-            printt("\nNo file selected.\n");
+            print("\nNo file selected.\n");
             return 1;
         }
         Scanner sc = new Scanner(selectedFile);
         
         int line = 1;
         if (line < startLine) {
-            printt("\nSkipping line(s)...\n");
+            print("\nSkipping line(s)...\n");
         }
         while (line < startLine) {
             sc.nextLine();
             line++;
         }
-        printt("\nReading...");
+        print("\nReading...");
         
         if (endLine == -1) { // LER ATÉ O FINAL DO ARQUIVO
             while (sc.hasNext()) {
@@ -1321,7 +1319,7 @@ public class QuineMcCluskey implements KeyListener {
         }
         else {
             while (line <= endLine) {
-                //printt("\nLine " + line + "\t"); //LEVA MUITO MAIS TEMPO SE FICAR MOSTRANDO A LINHA
+                //print("\nLine " + line + "\t"); //LEVA MUITO MAIS TEMPO SE FICAR MOSTRANDO A LINHA
                 optimizeExpressions(sc.nextLine(), numVars);
                 line++;
             }
@@ -1464,13 +1462,13 @@ public class QuineMcCluskey implements KeyListener {
             sopsList.get(lastSOPIndex).buildOptimizedExpression();
             
             if (writeResultsTofile) {
-                Tools.print(sopsList.get(lastSOPIndex).getResult()+"\t", outputFile);
-                Tools.print(sopsList.get(lastSOPIndex).expression2hexadecimal(sopsList.get(lastSOPIndex).getResult())+"\t", outputFile);
-                Tools.print(Tools.numberOfLiterals(sopsList.get(lastSOPIndex).getResult(), sopsList.get(lastSOPIndex).getNumberOfVars(), sopsList.get(lastSOPIndex).getNumberOfProducts()), outputFile);
-                //Tools.print("\t"+sopsList.get(lastSOPIndex).getNEPLSize(), outputFile);
+                print(sopsList.get(lastSOPIndex).getResult()+"\t", outputFile);
+                print(sopsList.get(lastSOPIndex).expression2hexadecimal(sopsList.get(lastSOPIndex).getResult())+"\t", outputFile);
+                print(Tools.numberOfLiterals(sopsList.get(lastSOPIndex).getResult(), sopsList.get(lastSOPIndex).getNumberOfVars(), sopsList.get(lastSOPIndex).getNumberOfProducts()), outputFile);
+                //print("\t"+sopsList.get(lastSOPIndex).getNEPLSize(), outputFile);
                 //if (sopsList.get(lastSOPIndex).isInspect())
-                //    Tools.print(" < INSPECT! >", outputFile);
-                Tools.print("\n", outputFile);
+                //    print(" < INSPECT! >", outputFile);
+                print("\n", outputFile);
             }
             
             begin = end + 1;
@@ -1481,6 +1479,38 @@ public class QuineMcCluskey implements KeyListener {
         while (begin < allExpressions.length());
     }
 
+    public void print(Object obj) {
+        System.out.print(obj);
+    }
+    
+    public Object printr(Object obj) {
+        System.out.print(obj);
+        return obj;
+    }
+    
+    public Object print(Object obj, PrintWriter w) {
+        w.print(obj);
+        return obj;
+    }
+
+    public static void printArray(ArrayList array) {
+        System.out.println();
+        for (int i=0; i < array.size(); i++) {
+            System.out.println(array.get(i));
+        }
+    }
+    
+    public static void printDoubleArray(ArrayList<ArrayList<Object>> array) {
+        for(int i = 0; i < array.size(); i++) {
+            System.out.print("\n");
+            for(int j = 0; j < array.get(i).size(); j++) {
+                if (!array.get(i).isEmpty()) {
+                    System.out.print(array.get(i).get(j) + "\t");
+                }
+            }
+        }
+    }
+    
     @Override
     public void keyTyped(KeyEvent e) {
     }
@@ -1488,7 +1518,7 @@ public class QuineMcCluskey implements KeyListener {
     @Override
     public void keyPressed(KeyEvent e) {
         if (e.getKeyCode() == KeyEvent.VK_ESCAPE) {
-            Tools.printt("\n");
+            print("\n");
             System.exit(0);
         }
     }

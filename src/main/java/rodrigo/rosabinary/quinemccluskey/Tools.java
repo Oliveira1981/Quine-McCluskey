@@ -1,6 +1,5 @@
 package rodrigo.rosabinary.quinemccluskey;
 
-import java.io.PrintWriter;
 import java.util.*;
 
 /**
@@ -399,27 +398,6 @@ public class Tools {
         return true;
     }
     
-    public static void printt(Object obj) {
-        System.out.print(obj);
-    }
-    
-    public static Object print(Object obj, PrintWriter w) {
-        w.print(obj);
-        return obj;
-    }
-    
-    public static Object print(Object obj) {
-        return obj;
-    }
-    
-    public static void printarr(ArrayList array) {
-        System.out.println();
-        
-        for (int i=0; i < array.size(); i++) {
-            System.out.println (array.get(i));
-        }
-    }
-    
     public static String detectInputFormat(String inputExp) {
         String in = inputExp.toUpperCase();
         String detectedFormat = "";
@@ -750,17 +728,7 @@ public class Tools {
         }
     }
     
-    public static void printDoubleArray(ArrayList<ArrayList<Integer>> arr) {
-        for(int i = 0; i < arr.size(); i++) {
-            printt("\n");
-            for(int j = 0; j < arr.get(i).size(); j++) {
-                if (!arr.get(i).isEmpty())
-                    printt(arr.get(i).get(j) + "\t");
-            }
-        }
-    }
-    
     private Tools() {
     }
-    
+
 }

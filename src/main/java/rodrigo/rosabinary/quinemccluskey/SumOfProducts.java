@@ -615,9 +615,9 @@ public class SumOfProducts {
                 /*
                 int last=combinationsList.size()-1;
                 for(int x=0; x < combinationsList.get(last).size(); x++) {
-                    Tools.printt(combinationsList.get(last).get(x)+"\t");
+                    print(combinationsList.get(last).get(x)+"\t");
                 }
-                Tools.printt("\n");
+                print("\n");
                 */
             }
         }
@@ -683,7 +683,7 @@ public class SumOfProducts {
         
         //long endTime = (System.nanoTime() - startTime)/1000000000;
         //if (endTime >= 1.0) {
-        //    Tools.printt(String.format("\nsortCombinationsList: %.5f s", (float) endTime));
+        //    print(String.format("\nsortCombinationsList: %.5f s", (float) endTime));
         //}
     }
     
@@ -711,7 +711,7 @@ public class SumOfProducts {
         }
         if(notEssentialProductsList.size() > 23) {
             // Geraria um número muito grande de combinações
-            Tools.printt("\nINSPECT!\n");
+            print("\nINSPECT!\n");
             inspect = true;
             completeFinalList_ALT();
             return;
@@ -888,44 +888,76 @@ public class SumOfProducts {
     
     public String getBasicReport() throws FileNotFoundException, UnsupportedEncodingException {
         report = "";
-        report += /*Tools.print*/("\nEXPRESSÃO DE ENTRADA: \n> " + originalInputExpression + "\n");
+        report += ("\nEXPRESSÃO DE ENTRADA: \n> " + originalInputExpression + "\n");
         
         if (isError) {
-            report += /*Tools.print*/("\nEXPRESSÃO INCONSISTENTE.\n");
+            report += ("\nEXPRESSÃO INCONSISTENTE.\n");
             return report;
         }
         
-        report += /*Tools.print*/("> " + originalInputFormat + "\n");
+        report += ("> " + originalInputFormat + "\n");
         
         if (!inputFormat.equals(originalInputFormat)) {
-            report += /*Tools.print*/("\nEXPRESSÃO CONVERTIDA: \n> " + convertedExpression + "\n");
-            report += /*Tools.print*/("> " + inputFormat + "\n");
+            report += ("\nEXPRESSÃO CONVERTIDA: \n> " + convertedExpression + "\n");
+            report += ("> " + inputFormat + "\n");
         }
         
-        report += /*Tools.print*/("> " + numberOfVars + " variáveis\n");
+        report += ("> " + numberOfVars + " variáveis\n");
         
-        report += /*Tools.print*/("> " + Tools.numberOfLiterals(
+        report += ("> " + Tools.numberOfLiterals(
                 convertedExpression,
                 numberOfVars,
                 numberOfProducts) + " literais\n");
         
-        //report += /*Tools.print*/("\nPRODUTOS ESSENCIAIS:\n> ");
+        //report += ("\nPRODUTOS ESSENCIAIS:\n> ");
         //for (int i=0; i < essentialProductsList.size(); i++) {
-        //    report += Tools.print(essentialProductsList.get(i)+"\t");
+        //    report += (essentialProductsList.get(i)+"\t");
         //}
-        //report += /*Tools.print*/("\n");
+        //report += ("\n");
         
-        report += /*Tools.print*/("\nEXPRESSÃO OTIMIZADA:\n");
-        report += /*Tools.print*/("> " + result + "\n");
+        report += ("\nEXPRESSÃO OTIMIZADA:\n");
+        report += ("> " + result + "\n");
             
-        report += /*Tools.print*/("> " + Tools.numberOfLiterals(
+        report += ("> " + Tools.numberOfLiterals(
                 result,
                 numberOfVars,
                 numberOfProducts) + " literais\n");
         
-        report += /*Tools.print*/("\n==================================================\n");
+        report += ("\n==================================================\n");
         
         return report;
     }
+    
+    public void print(Object obj) {
+        System.out.print(obj);
+    }
+    
+    public Object printr(Object obj) {
+        System.out.print(obj);
+        return obj;
+    }
+    
+    public Object print(Object obj, PrintWriter w) {
+        w.print(obj);
+        return obj;
+    }
 
+    public static void printArray(ArrayList array) {
+        System.out.println();
+        for (int i=0; i < array.size(); i++) {
+            System.out.println(array.get(i));
+        }
+    }
+    
+    public static void printDoubleArray(ArrayList<ArrayList<Integer>> array) {
+        for(int i = 0; i < array.size(); i++) {
+            System.out.print("\n");
+            for(int j = 0; j < array.get(i).size(); j++) {
+                if (!array.get(i).isEmpty()) {
+                    System.out.print(array.get(i).get(j) + "\t");
+                }
+            }
+        }
+    }
+    
 }
