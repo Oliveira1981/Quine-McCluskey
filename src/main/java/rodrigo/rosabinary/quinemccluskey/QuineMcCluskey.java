@@ -24,6 +24,7 @@ public class QuineMcCluskey implements KeyListener {
     public JButton                  okButton;
     public JLabel             labelVariables;
     public JLabel             labelThemeDark;
+    public int             progressBarStatus;
     public boolean                 darkTheme;
     
     public String[] wichInput = {
@@ -62,6 +63,7 @@ public class QuineMcCluskey implements KeyListener {
         hasResult          = false;
         errorMsg           = "";
         sopsList           = null;
+        progressBarStatus  = 0;
         writeResultsTofile = !true;
         //expressions        = new ArrayList<>();
     }
@@ -583,6 +585,20 @@ public class QuineMcCluskey implements KeyListener {
         space2.setFont(new Font("Segoe UI", Font.PLAIN, 6));
 	space2.setBorder(BorderFactory.createLineBorder(borderColor));
         quineMcPanel.add(space2, gbcSpaces);
+        
+        JProgressBar pb = new JProgressBar();
+	gbcSpaces.fill = GridBagConstraints.BOTH;
+	gbcSpaces.gridx = 12;
+	gbcSpaces.gridy = 10;
+	gbcSpaces.gridwidth = 3;
+	gbcSpaces.gridheight = 1;
+        gbcSpaces.weightx = 0.0;
+        gbcSpaces.weighty = 0.0;
+        pb.setFont(new Font("Segoe UI", Font.PLAIN, 6));
+        pb.setIndeterminate(!true);
+        pb.setValue(progressBarStatus);
+	pb.setBorder(BorderFactory.createLineBorder(borderColor));
+        quineMcPanel.add(pb, gbcSpaces);
         
         inputFormat = String.valueOf(comboExpressions.getSelectedItem());
         

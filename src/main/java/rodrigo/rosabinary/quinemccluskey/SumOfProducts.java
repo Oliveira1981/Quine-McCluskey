@@ -21,6 +21,7 @@ public class SumOfProducts {
     private String                     convertedExpression;
     private String                           variablesList;
     private ArrayList<Integer>        numberOfLiteralsList;
+    private int                      totalNumberOfLiterals;
     private ArrayList<String>        essentialProductsList;
     private ArrayList<String>     notEssentialProductsList;
     private ArrayList<String>            finalProductsList;
@@ -29,6 +30,7 @@ public class SumOfProducts {
     private ArrayList<Product>             auxProductsList;
     private ArrayList<MinTerm>                minTermsList; // Colunas da coveringTable
     private ArrayList<ArrayList<Integer>> combinationsList;
+    public int progress;
     
     public SumOfProducts(String expression, int numVars) {
         setExpression(expression, numVars);
@@ -39,6 +41,7 @@ public class SumOfProducts {
         this.inputFormat             = "Literal";
         this.originalInputExpression = "";
         this.convertedExpression     = "";
+        this.totalNumberOfLiterals   = 0;
         this.variablesList           = "";
         this.isError                 = false;
         this.inspect                 = false;
@@ -180,8 +183,8 @@ public class SumOfProducts {
         return numberOfProducts;
     }
     
-    public String getNEPLSize() {
-        return Integer.toString(notEssentialProductsList.size());
+    public int getNEPLSize() {
+        return notEssentialProductsList.size();
     }
     
     public String getTruthTable() {
@@ -578,16 +581,21 @@ public class SumOfProducts {
     
     // completeFinalList STEP 1 /////
     public void setNumberOfLiteralsList() {
+        //long startTime = System.nanoTime();
         numberOfLiteralsList = new ArrayList<>();
+        int thisNumberOfLiterals;
         for(int p = 0; p < notEssentialProductsList.size(); p++) {
-            numberOfLiteralsList.add(
-                Tools.numberOfLiterals2(notEssentialProductsList.get(p))
-            );
+            thisNumberOfLiterals = Tools.numberOfLiterals2(notEssentialProductsList.get(p));
+            numberOfLiteralsList.add(thisNumberOfLiterals);
+            // Valor necessário para o Counting Sort
+            totalNumberOfLiterals += thisNumberOfLiterals;
         }
+        //print(String.format("\nsetNumberOfLiteralsList: %.5f s", (float) (System.nanoTime() - startTime)/1000000000));
     }
     
     // completeFinalList STEP 2 /////
     public void generateAllCombinations(int n) {
+        //long startTime = System.nanoTime();
         combinationsList = new ArrayList<>();
         for (int r = 1; r <= n; r++) {
             int[] combination = new int[r];
@@ -620,11 +628,15 @@ public class SumOfProducts {
                 print("\n");
                 */
             }
+            progress = 33*r/n;
+            //print("\n"+progress);
         }
+        //print(String.format("\ngenerateAllCombinations: %.5f s", (float) (System.nanoTime() - startTime)/1000000000));
     }
     
     // completeFinalList STEP 3 /////
     public void addIndexToCombinationsList() {
+        //long startTime = System.nanoTime();
         for(int c = 0; c < combinationsList.size(); c++) {
             int combinationNumberOfLiterals = 0;
             for (int i = 0; i < combinationsList.get(c).size(); i++) {
@@ -632,7 +644,10 @@ public class SumOfProducts {
                     numberOfLiteralsList.get(combinationsList.get(c).get(i));
             }
             combinationsList.get(c).add(0, combinationNumberOfLiterals);
+            progress += 18*c/combinationsList.size();
+            //print("\n"+progress);
         }
+        //print(String.format("\naddIndexToCombinationsList: %.5f s", (float) (System.nanoTime() - startTime)/1000000000));
     }
     
     // completeFinalList STEP 4 /////
@@ -644,51 +659,62 @@ public class SumOfProducts {
         int n = combinationsList.size();
         // The output objects array that will have sorted
         ArrayList<ArrayList<Integer>> output = new ArrayList<>();
- 
+        
         // Create a count array to store count of individual
         // objects and initialize count array as 0
-        int count[] = new int[256]; //Por que 256? REVISAR.
-        for (int i = 0; i < 256; ++i)
+        int count[] = new int[totalNumberOfLiterals+1];
+        for (int i = 0; i < totalNumberOfLiterals+1; ++i)
             count[i] = 0;
- 
+        
         // store count of each object
         for (int i = 0; i < n; ++i) {
             ++count[combinationsList.get(i).get(0)];
         }
- 
+        
+        progress += 4;
+        //print("\n"+progress);
+        
         // Change count[i] so that count[i] now contains
         // actual position of this object in output array
-        for (int i = 1; i <= 255; ++i) {
+        for (int i = 1; i <= totalNumberOfLiterals; ++i) {
             count[i] += count[i - 1];
         }
+        
+        progress += 2;
+        //print("\n"+progress);
         
         int outputSize = (int) Math.pow(2, notEssentialProductsList.size())-1;
         for (int i = 0; i < outputSize; ++i) {
             output.add(new ArrayList<>());
         }
         
+        progress += 2;
+        //print("\n"+progress);
+        
         // Build the output object array
         // To make it stable we are operating in
         // reverse order.
+        // FALAR COM MARILTON SOBRE
+        // COMO PULAR A ETAPA DA ESTABILIDADE
         for (int i = n - 1; i >= 0; i--) {
             int countIndex = combinationsList.get(i).get(0);
             int outputIndex = count[countIndex] - 1;
             output.set(outputIndex, combinationsList.get(i));
             --count[combinationsList.get(i).get(0)];
+            progress += 4*(n-i)/n;
+            //print("\n"+progress);
         }
- 
+        
         // Copy the output array to arr, so that arr now
         // contains sorted objects
         combinationsList = (ArrayList) output.clone();
         
-        //long endTime = (System.nanoTime() - startTime)/1000000000;
-        //if (endTime >= 1.0) {
-        //    print(String.format("\nsortCombinationsList: %.5f s", (float) endTime));
-        //}
+        //print(String.format("\nsortCombinationsList: %.5f s", (float) (System.nanoTime() - startTime)/1000000000));
     }
     
     // completeFinalList STEP 5 /////
     public void testCombinations() {
+        //long startTime = System.nanoTime();
         ArrayList<String> finalListInitial = (ArrayList) finalProductsList.clone();
         for (int c = 0; c < combinationsList.size(); c++) {
             for (int i = 1; i < combinationsList.get(c).size(); i++) {
@@ -698,10 +724,13 @@ public class SumOfProducts {
             }
             setIsCovered();
             if (isAllCovered()) {
+                //print(String.format("\ntestCombinationsList: %.5f s", (float) (System.nanoTime() - startTime)/1000000000));
                 return;
             }
             finalProductsList = (ArrayList) finalListInitial.clone();
             setIsCovered();
+            progress += 37*c/combinationsList.size();
+            //print("\n"+progress);
         }
     }
     
@@ -711,7 +740,6 @@ public class SumOfProducts {
         }
         if(notEssentialProductsList.size() > 23) {
             // Geraria um número muito grande de combinações
-            print("\nINSPECT!\n");
             inspect = true;
             completeFinalList_ALT();
             return;
