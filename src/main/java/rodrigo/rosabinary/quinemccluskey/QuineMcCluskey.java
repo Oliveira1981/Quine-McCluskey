@@ -33,22 +33,6 @@ public class QuineMcCluskey implements KeyListener {
         "Gerar expressão aleatória"
     };
     
-    public String[] templates = {
-        "",
-        "2+4+6+8+9+10+12+13+15",
-        "4+5+6+7+9+11+12+13+14+15",
-        "!A*!B*!C*!D + !A*!B*!C*D + !A*B*!C*D + !A*B*C*!D + !A*B*C*D",
-        "ABCD+!A!BCD+A!B!C!D+!ABCD",
-        "A!BCD+!ABC!D+!ABCD+A!B!CD",
-        "ab!c+a!bc!d+!ab",
-        "abc+bcd",
-        "1111+0011+1000+0111",
-        "1111+0011+1010+0111",
-        "111+11+101+01",
-        "15+3+10+7",
-        "0xB754"
-    };
-    
     public String[] wichReport = {
         "Relatório",
         "Tabela Verdade",
@@ -56,6 +40,23 @@ public class QuineMcCluskey implements KeyListener {
         "Produtos e seus Mintermos",
         "Tabela de Cobertura"
     };
+    
+    public String[] getHistory() throws FileNotFoundException {
+        File selectedFile = new File("history");
+        if(!selectedFile.exists()){
+            return new String[0];
+        }
+        Scanner sc = new Scanner(selectedFile);
+        ArrayList<String> arr = new ArrayList<>();
+        int i = 0;
+        while(sc.hasNext()) {
+            arr.add(sc.nextLine());
+            i++;
+        }
+        String[] history = new String[arr.size()];
+        history = arr.toArray(history);
+        return history;
+    }
     
     public QuineMcCluskey() {
         inputFormat        = "";
@@ -76,7 +77,7 @@ public class QuineMcCluskey implements KeyListener {
         return expressions;
     }
     
-    public JPanel quineMcPanel (boolean theme) {
+    public JPanel quineMcPanel (boolean theme) throws FileNotFoundException {
         
         this.darkTheme = theme;
         
@@ -101,7 +102,7 @@ public class QuineMcCluskey implements KeyListener {
         Color lightLabelColor         = new Color( 30, 130, 230);
         Color lightDisabledLabelColor = new Color(188, 188, 188);
         Color lightButtonTextColor    = new Color( 50, 150, 250);
-        Color lightTextColor          = new Color( 10, 110, 210);
+        Color lightTextColor          = new Color( 10, 80, 170);
         
         JPanel quineMcPanel = new JPanel(new GridBagLayout());
         
@@ -338,11 +339,12 @@ public class QuineMcCluskey implements KeyListener {
 	space3a.setBorder(BorderFactory.createLineBorder(borderColor));
         quineMcPanel.add(space3a, gbcSpaces);
         
-        JComboBox<String> comboExpressions = new JComboBox<>(templates);
+        JComboBox<String> comboExpressions = new JComboBox<>(getHistory());
         comboExpressions.setPreferredSize(new Dimension(500, 30));
         comboExpressions.setMinimumSize(new Dimension(500, 30));
         comboExpressions.setEditable(true);
         JTextField editor = (JTextField) comboExpressions.getEditor().getEditorComponent();
+        editor.setText("");
         editor.addKeyListener(this);
         comboExpressions.setFont(new Font("Segoe UI", Font.PLAIN, 12));
         comboExpressions.setFocusable(true);
