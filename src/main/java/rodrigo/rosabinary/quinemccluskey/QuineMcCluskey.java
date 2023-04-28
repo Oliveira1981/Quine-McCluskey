@@ -77,7 +77,7 @@ public class QuineMcCluskey implements KeyListener {
         errorMsg           = "";
         sopsList           = null;
         progressBarStatus  = 0;
-        writeResultsTofile = true;
+        writeResultsTofile = !true;
         //expressions        = new ArrayList<>();
     }
     
@@ -1005,10 +1005,6 @@ public class QuineMcCluskey implements KeyListener {
                 labelTime.setText("Tempo:        ");
                 labelTime.update(labelTime.getGraphics());
                 long startTime = System.nanoTime();
-                textAreaResult.setText("Processando...");
-                textAreaReport.setText("...");
-                textAreaResult.update(textAreaResult.getGraphics());
-                textAreaReport.update(textAreaReport.getGraphics());
                 try {
                     if (writeResultsTofile) {
                         setFileToWrite("Quine-McCluskey Results.txt");
@@ -1016,6 +1012,10 @@ public class QuineMcCluskey implements KeyListener {
                     hasResult = true;
                     switch (comboWichInput.getSelectedIndex()) {
                         case 1 -> { // input: digitar
+                            textAreaResult.setText("Processando...");
+                            textAreaReport.setText("...");
+                            textAreaResult.update(textAreaResult.getGraphics());
+                            textAreaReport.update(textAreaReport.getGraphics());
                             optimizeExpressions(
                                 editor.getText(),
                                 sliderVars.getValue()
@@ -1028,6 +1028,10 @@ public class QuineMcCluskey implements KeyListener {
                             }
                         }
                         case 2 -> { // input: aleatória
+                            textAreaResult.setText("Processando...");
+                            textAreaReport.setText("...");
+                            textAreaResult.update(textAreaResult.getGraphics());
+                            textAreaReport.update(textAreaReport.getGraphics());
                             optimizeExpressions(
                                 editor.getText(),
                                 sliderVars.getValue()
