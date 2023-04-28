@@ -4,6 +4,8 @@ import java.awt.*;
 import java.awt.event.*;
 import java.io.*;
 import java.util.*;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.swing.*;
 import javax.swing.event.*;
 
@@ -20,7 +22,7 @@ public class QuineMcCluskey implements KeyListener {
     public String                   errorMsg;
     public ArrayList<SumOfProducts> sopsList;
     public PrintWriter            outputFile;
-    public boolean        writeResultsTofile;
+    public boolean        writeResultsToFile;
     public JButton                  okButton;
     public JLabel             labelVariables;
     public JLabel             labelThemeDark;
@@ -77,7 +79,7 @@ public class QuineMcCluskey implements KeyListener {
         errorMsg           = "";
         sopsList           = null;
         progressBarStatus  = 0;
-        writeResultsTofile = !true;
+        writeResultsToFile = !true;
         //expressions        = new ArrayList<>();
     }
     
@@ -1004,9 +1006,9 @@ public class QuineMcCluskey implements KeyListener {
             public void actionPerformed(ActionEvent e) {
                 labelTime.setText("Tempo:        ");
                 labelTime.update(labelTime.getGraphics());
-                long startTime = System.nanoTime();
+                //long startTime = System.nanoTime();
                 try {
-                    if (writeResultsTofile) {
+                    if (writeResultsToFile) {
                         setFileToWrite("Quine-McCluskey Results.txt");
                     }
                     hasResult = true;
@@ -1016,219 +1018,289 @@ public class QuineMcCluskey implements KeyListener {
                             textAreaReport.setText("...");
                             textAreaResult.update(textAreaResult.getGraphics());
                             textAreaReport.update(textAreaReport.getGraphics());
-                            optimizeExpressions(
-                                editor.getText(),
-                                sliderVars.getValue()
-                            );
-                            textAreaReport.setFont(fontReport);
-                            addToHistory(editor.getText());
-                            if(!editor.getText().equals(comboExpressions.getSelectedItem())) { // digitou, não selecionou
-                                comboExpressions.insertItemAt(editor.getText(), 0);
-                                comboExpressions.setSelectedIndex(0);
-                            }
+                            
+                            SwingUtilities.invokeLater(new Runnable() {
+                                
+                                @Override
+                                public void run() {
+                                    long startTime = System.nanoTime();
+                                    labelTime.setText("Tempo:        ");
+                                    labelTime.update(labelTime.getGraphics());
+                                    SwingUtilities.updateComponentTreeUI(textAreaReport);
+                                    try {
+                                        optimizeExpressions(
+                                            editor.getText(),
+                                            sliderVars.getValue()
+                                        );
+                                        textAreaReport.setFont(fontReport);
+                                        addToHistory(editor.getText());
+                                        if(!editor.getText().equals(comboExpressions.getSelectedItem())) { // digitou, não selecionou
+                                            comboExpressions.insertItemAt(editor.getText(), 0);
+                                            comboExpressions.setSelectedIndex(0);
+                                        }
+                                    } catch (Exception ex) {
+                                        Logger.getLogger(QuineMcCluskey.class.getName()).log(Level.SEVERE, null, ex);
+                                    }
+                                    textAreaReport.update(textAreaReport.getGraphics());
+                                    labelTime.setText(String.format("Tempo: %.3f s", (float) (System.nanoTime() - startTime)/1000000000));
+                                    quineMcPanel.repaint();
+                                }
+                            });
                         }
                         case 2 -> { // input: aleatória
                             textAreaResult.setText("Processando...");
                             textAreaReport.setText("...");
                             textAreaResult.update(textAreaResult.getGraphics());
                             textAreaReport.update(textAreaReport.getGraphics());
-                            optimizeExpressions(
-                                editor.getText(),
-                                sliderVars.getValue()
-                            );
-                            textAreaReport.setFont(fontReport);
-                            addToHistory(editor.getText());
-                            if(!editor.getText().equals(comboExpressions.getSelectedItem())) { // gerou, não selecionou
-                                comboExpressions.insertItemAt(editor.getText(), 0);
-                                comboExpressions.setSelectedIndex(0);
-                            }
+                            
+                            // Runnable não funciona pra primeira entrada de
+                            // expressão aleatória
+                            //SwingUtilities.invokeLater(new Runnable() {
+                                
+                            //    @Override
+                            //    public void run() {
+                                    long startTime = System.nanoTime();
+                                    labelTime.setText("Tempo:        ");
+                                    labelTime.update(labelTime.getGraphics());
+                                    SwingUtilities.updateComponentTreeUI(textAreaReport);
+                                    try {
+                                        optimizeExpressions(
+                                            editor.getText(),
+                                            sliderVars.getValue()
+                                        );
+                                    } catch (Exception ex) {
+                                        Logger.getLogger(QuineMcCluskey.class.getName()).log(Level.SEVERE, null, ex);
+                                    }
+                                    textAreaReport.setFont(fontReport);
+                                    try {
+                                        addToHistory(editor.getText());
+                                    } catch (FileNotFoundException ex) {
+                                        Logger.getLogger(QuineMcCluskey.class.getName()).log(Level.SEVERE, null, ex);
+                                    }
+                                    if(!editor.getText().equals(comboExpressions.getSelectedItem())) { // gerou, não selecionou
+                                        comboExpressions.insertItemAt(editor.getText(), 0);
+                                        comboExpressions.setSelectedIndex(0);
+                                    }
+                                    textAreaReport.update(textAreaReport.getGraphics());
+                                    labelTime.setText(String.format("Tempo: %.3f s", (float) (System.nanoTime() - startTime)/1000000000));
+                                    quineMcPanel.repaint();
+                                //}
+                            //});
                         }
                         case 0 -> { // input: arquivo
-                            int startLine = 1;
-                            int endLine = -1;
-                            if (!checkReadEntireFile.isSelected()) {
-                                if (textStartLine.getText().isEmpty()) {
-                                    startLine = 1;
-                                }
-                                else {
-                                    startLine = Integer.parseInt(textStartLine.getText());
-                                }
-                                if (textEndLine.getText().isEmpty()) {
-                                    endLine = -1;
-                                }
-                                else {
-                                    endLine = Integer.parseInt(textEndLine.getText());
-                                }
-                            }
-                            if ((endLine != -1) && (endLine < startLine)) {
-                                errorMsg = "Linha final menor que linha inicial.";
-                                textAreaReport.setText(errorMsg);
-                                return;
-                            }
-                            File selectedFile = new File(editor.getText());
-                            if(!selectedFile.exists()){
-                                print("\nNo file selected.\n");
-                                errorMsg = "Nenhum arquivo selecionado.";
-                                textAreaReport.setText(errorMsg);
-                                return;
-                            }
-                            Scanner sc = new Scanner(selectedFile);
-                            
-                            int line = 1;
-                            //if (line < startLine) {
-                            //    print("\nSkipping line(s)...\n");
-                            //}
-                            while (line < startLine) {
-                                if (sc.hasNext()) {
-                                    sc.nextLine();
-                                    line++;
-                                }
-                                else {
-                                    break;
-                                }
-                            }
-                            if (!sc.hasNext()) {
-                                errorMsg = "Linha inicial além do fim do arquivo.";
-                                textAreaReport.setText(errorMsg);
-                                return;
-                            }
-                            //print("\nReading...");
-                            
-                            textAreaReport.setFont(new Font("Consolas", Font.PLAIN, 14));
-                            textAreaReport.setText("");
-                            int count = line;
-                            ArrayList<String> fullReport = new ArrayList<>();
-                            if (endLine == -1) { // LER ATÉ O FINAL DO ARQUIVO
-                                while (sc.hasNext()) {
-                                    //print("\nline:"+line++);
-                                    optimizeExpressions(sc.nextLine(), numVars);
-
-                                    //Apenas uma expressão por linha
-                                    int x = 0;
-                                    
-                                    //Aceita mais de uma expressão por linha
-                                    //for (int x = 0; x < expressions.size(); x++) {
-                                    
-                                        //textAreaReport.append("\n" + count + "\t");
-                                        fullReport.add("\n" + count + "\t");
-                                        count++;
-                                        
-                                        String result = sopsList.get(x).getResult();
-                                        String formattedResult = result + ' ';
-                                        for (int c = result.length(); c < 80; c++) {
-                                            formattedResult += '.';
-                                        }
-                                        //textAreaReport.append(formattedResult + " ");
-                                        fullReport.add(formattedResult + " ");
-                                        
-                                        String hexa = sopsList.get(x).expression2hexadecimal(sopsList.get(0).getResult());
-                                        String formattedHexa = hexa + ' ';
-                                        for (int c = hexa.length(); c < 20; c++) {
-                                            formattedHexa += '.';
-                                        }
-                                        //textAreaReport.append(formattedHexa + " ");
-                                        fullReport.add(formattedHexa + " ");
-                                        
-                                        //String numLit = String.valueOf(SumOfProducts.numberOfLiterals(sopsList.get(0).getResult(), sopsList.get(0).getNumberOfVars(), sopsList.get(0).getNumberOfProducts()));
-                                        String numLit = String.valueOf(Tools.numberOfLiterals(sopsList.get(x).getResult(), sopsList.get(x).getNumberOfVars(), sopsList.get(x).getNumberOfProducts()));String formattedNumLit = "";
-                                        for (int c = 0; c < (3 - numLit.length()); c++) {
-                                            formattedNumLit += ' ';
-                                        }
-                                        formattedNumLit += numLit;
-                                        //textAreaReport.append(formattedNumLit + "\n");
-                                        fullReport.add(formattedNumLit + "\n");
-                                        
-                                        //Exibe atualização a cada X iterações
-                                        if (Math.floorMod(count, 500) == 0) {
-                                            textAreaReport.setText(
-                                                "ÍNDICE\t" +
-                                                "EXPRESSÃO MINIMIZADA\n"
-                                            );
-                                            textAreaReport.append("\n" + count + "\t" + result + " ...");
-                                            textAreaReport.update(textAreaReport.getGraphics());
-                                            labelTime.setText(String.format("Tempo: %.3f s", (float) (System.nanoTime() - startTime)/1000000000));
-                                            labelTime.update(labelTime.getGraphics());
-                                        }
-                                    //}
-                                }
-                            }
-                            else {
-                                while (line <= endLine) {
-                                    //print("\nline:"+line);
-                                    optimizeExpressions(sc.nextLine(), numVars);
-                                    
-                                    //Apenas uma expressão por linha
-                                    int x = 0;
-                                    
-                                    //Aceita mais de uma expressão por linha
-                                    //for (int x = 0; x < expressions.size(); x++) {
-                                    
-                                        //textAreaReport.append("\n" + count + "\t");
-                                        fullReport.add("\n" + count + "\t");
-                                        count++;
-                                        
-                                        String result = sopsList.get(x).getResult();
-                                        String formattedResult = result + ' ';
-                                        for (int c = result.length(); c < 80; c++) {
-                                            formattedResult += '.';
-                                        }
-                                        //textAreaReport.append(formattedResult + " ");
-                                        fullReport.add(formattedResult + " ");
-                                        
-                                        String hexa = sopsList.get(x).expression2hexadecimal(sopsList.get(x).getResult());
-                                        String formattedHexa = hexa + ' ';
-                                        for (int c = hexa.length(); c < 20; c++) {
-                                            formattedHexa += '.';
-                                        }
-                                        //textAreaReport.append(formattedHexa + " ");
-                                        fullReport.add(formattedHexa + " ");
-                                        
-                                        //String numLit = String.valueOf(SumOfProducts.numberOfLiterals(sopsList.get(0).getResult(), sopsList.get(0).getNumberOfVars(), sopsList.get(0).getNumberOfProducts()));
-                                        String numLit = String.valueOf(Tools.numberOfLiterals(sopsList.get(x).getResult(), sopsList.get(x).getNumberOfVars(), sopsList.get(x).getNumberOfProducts()));
-                                        String formattedNumLit = "";
-                                        for (int c = 0; c < (3 - numLit.length()); c++) {
-                                            formattedNumLit += ' ';
-                                        }
-                                        formattedNumLit += numLit;
-                                        //textAreaReport.append(formattedNumLit + "\n");
-                                        fullReport.add(formattedNumLit + "\n");
-                                        
-                                        //Exibe atualização a cada X iterações
-                                        if (Math.floorMod(count, 500) == 0) {
-                                            textAreaReport.setText(
-                                                "ÍNDICE\t" +
-                                                "EXPRESSÃO MINIMIZADA\n"
-                                            );
-                                            textAreaReport.append("\n" + count + "\t" + result + " ...");
-                                            textAreaReport.update(textAreaReport.getGraphics());
-                                            labelTime.setText(String.format("Tempo: %.3f s", (float) (System.nanoTime() - startTime)/1000000000));
-                                            labelTime.update(labelTime.getGraphics());
-                                        }
-                                        line++;
-                                    //}
-                                }
-                            }
-                            textAreaReport.append("\n\nFinalizando...");
+                            textAreaReport.setText("Processando...");
                             textAreaReport.update(textAreaReport.getGraphics());
-                            //mainFrame.setMinimumSize(new Dimension(1020,520));
-                            textAreaReport.setText(
-                                "ÍNDICE\t" +
-                                "EXPRESSÃO MINIMIZADA" +
-                                "                " +
-                                "                " +
-                                "                " +
-                                "              " +
-                                "CÓDIGO HEXADECIMAL" +
-                                "    " +
-                                "LIT.\n"
-                            );
-                            KeyboardFocusManager.getCurrentKeyboardFocusManager().focusNextComponent(labelTime);
-                            textAreaReport.setCaretColor(new Color(30, 120, 255));
-                            textAreaReport.getCaret().setVisible(true);
-                            for (int a = 0; a < fullReport.size(); a++) {
-                                textAreaReport.append(fullReport.get(a));
-                            }
-                            quineMcPanel.repaint();
+                            
+                            SwingUtilities.invokeLater(new Runnable() {
+                                
+                                @Override
+                                public void run() {
+                                    long startTime = System.nanoTime();
+                                    labelTime.setText("Tempo:        ");
+                                    labelTime.update(labelTime.getGraphics());
+                                    SwingUtilities.updateComponentTreeUI(textAreaReport);
+                                    
+                                    int startLine = 1;
+                                    int endLine = -1;
+                                    if (!checkReadEntireFile.isSelected()) {
+                                        if (textStartLine.getText().isEmpty()) {
+                                            startLine = 1;
+                                        }
+                                        else {
+                                            startLine = Integer.parseInt(textStartLine.getText());
+                                        }
+                                        if (textEndLine.getText().isEmpty()) {
+                                            endLine = -1;
+                                        }
+                                        else {
+                                            endLine = Integer.parseInt(textEndLine.getText());
+                                        }
+                                    }
+                                    if ((endLine != -1) && (endLine < startLine)) {
+                                        errorMsg = "Linha final menor que linha inicial.";
+                                        textAreaReport.setText(errorMsg);
+                                        return;
+                                    }
+                                    File selectedFile = new File(editor.getText());
+                                    if(!selectedFile.exists()){
+                                        print("\nNo file selected.\n");
+                                        errorMsg = "Nenhum arquivo selecionado.";
+                                        textAreaReport.setText(errorMsg);
+                                        return;
+                                    }
+                                    Scanner sc = null;
+                                    try {
+                                        sc = new Scanner(selectedFile);
+                                    } catch (FileNotFoundException ex) {
+                                        Logger.getLogger(QuineMcCluskey.class.getName()).log(Level.SEVERE, null, ex);
+                                    }
+                                        
+                                    int line = 1;
+                                    //if (line < startLine) {
+                                    //    print("\nSkipping line(s)...\n");
+                                    //}
+                                    while (line < startLine) {
+                                        if (sc.hasNext()) {
+                                            sc.nextLine();
+                                            line++;
+                                        }
+                                        else {
+                                            break;
+                                        }
+                                    }
+                                    if (!sc.hasNext()) {
+                                        errorMsg = "Linha inicial além do fim do arquivo.";
+                                        textAreaReport.setText(errorMsg);
+                                        return;
+                                    }
+                                    //print("\nReading...");
+                                        
+                                    textAreaReport.setFont(new Font("Consolas", Font.PLAIN, 14));
+                                    //textAreaReport.setText("");
+                                    int count = line;
+                                    ArrayList<String> fullReport = new ArrayList<>();
+                                    if (endLine == -1) { // LER ATÉ O FINAL DO ARQUIVO
+                                        while (sc.hasNext()) {
+                                            try {
+                                                //print("\nline:"+line++);
+                                                optimizeExpressions(sc.nextLine(), numVars);
+                                            } catch (Exception ex) {
+                                                Logger.getLogger(QuineMcCluskey.class.getName()).log(Level.SEVERE, null, ex);
+                                            }
+                                                
+                                            //Apenas uma expressão por linha
+                                            int x = 0;
+                                                
+                                            //Aceita mais de uma expressão por linha
+                                            //for (int x = 0; x < expressions.size(); x++) {
+                                                
+                                                //textAreaReport.append("\n" + count + "\t");
+                                                fullReport.add("\n" + count + "\t");
+                                                count++;
+                                                    
+                                                String result = sopsList.get(x).getResult();
+                                                String formattedResult = result + ' ';
+                                                for (int c = result.length(); c < 80; c++) {
+                                                    formattedResult += '.';
+                                                }
+                                                //textAreaReport.append(formattedResult + " ");
+                                                fullReport.add(formattedResult + " ");
+                                                    
+                                                String hexa = sopsList.get(x).expression2hexadecimal(sopsList.get(0).getResult());
+                                                String formattedHexa = hexa + ' ';
+                                                for (int c = hexa.length(); c < 20; c++) {
+                                                    formattedHexa += '.';
+                                                }
+                                                //textAreaReport.append(formattedHexa + " ");
+                                                fullReport.add(formattedHexa + " ");
+                                                    
+                                                //String numLit = String.valueOf(SumOfProducts.numberOfLiterals(sopsList.get(0).getResult(), sopsList.get(0).getNumberOfVars(), sopsList.get(0).getNumberOfProducts()));
+                                                String numLit = String.valueOf(Tools.numberOfLiterals(sopsList.get(x).getResult(), sopsList.get(x).getNumberOfVars(), sopsList.get(x).getNumberOfProducts()));String formattedNumLit = "";
+                                                for (int c = 0; c < (3 - numLit.length()); c++) {
+                                                    formattedNumLit += ' ';
+                                                }
+                                                formattedNumLit += numLit;
+                                                //textAreaReport.append(formattedNumLit + "\n");
+                                                fullReport.add(formattedNumLit + "\n");
+                                                    
+                                                //Exibe atualização a cada X iterações
+                                                if (Math.floorMod(count, 500) == 0) {
+                                                    textAreaReport.setText(
+                                                        "ÍNDICE\t" +
+                                                        "EXPRESSÃO MINIMIZADA\n"
+                                                    );
+                                                    textAreaReport.append("\n" + count + "\t" + result + " ...");
+                                                    textAreaReport.update(textAreaReport.getGraphics());
+                                                    labelTime.setText(String.format("Tempo: %.3f s", (float) (System.nanoTime() - startTime)/1000000000));
+                                                    labelTime.update(labelTime.getGraphics());
+                                                }
+                                            //}
+                                        }
+                                    }
+                                    else {
+                                        while (line <= endLine) {
+                                            try {
+                                                //print("\nline:"+line);
+                                                optimizeExpressions(sc.nextLine(), numVars);
+                                            } catch (Exception ex) {
+                                                Logger.getLogger(QuineMcCluskey.class.getName()).log(Level.SEVERE, null, ex);
+                                            }
+                                                
+                                            //Apenas uma expressão por linha
+                                            int x = 0;
+                                                
+                                            //Aceita mais de uma expressão por linha
+                                            //for (int x = 0; x < expressions.size(); x++) {
+                                                
+                                                //textAreaReport.append("\n" + count + "\t");
+                                                fullReport.add("\n" + count + "\t");
+                                                count++;
+                                                
+                                                String result = sopsList.get(x).getResult();
+                                                String formattedResult = result + ' ';
+                                                for (int c = result.length(); c < 80; c++) {
+                                                    formattedResult += '.';
+                                                }
+                                                //textAreaReport.append(formattedResult + " ");
+                                                fullReport.add(formattedResult + " ");
+                                                    
+                                                String hexa = sopsList.get(x).expression2hexadecimal(sopsList.get(x).getResult());
+                                                String formattedHexa = hexa + ' ';
+                                                for (int c = hexa.length(); c < 20; c++) {
+                                                    formattedHexa += '.';
+                                                }
+                                                //textAreaReport.append(formattedHexa + " ");
+                                                fullReport.add(formattedHexa + " ");
+                                                    
+                                                //String numLit = String.valueOf(SumOfProducts.numberOfLiterals(sopsList.get(0).getResult(), sopsList.get(0).getNumberOfVars(), sopsList.get(0).getNumberOfProducts()));
+                                                String numLit = String.valueOf(Tools.numberOfLiterals(sopsList.get(x).getResult(), sopsList.get(x).getNumberOfVars(), sopsList.get(x).getNumberOfProducts()));
+                                                String formattedNumLit = "";
+                                                for (int c = 0; c < (3 - numLit.length()); c++) {
+                                                    formattedNumLit += ' ';
+                                                }
+                                                formattedNumLit += numLit;
+                                                //textAreaReport.append(formattedNumLit + "\n");
+                                                fullReport.add(formattedNumLit + "\n");
+                                                    
+                                                //Exibe atualização a cada X iterações
+                                                if (Math.floorMod(count, 500) == 0) {
+                                                    textAreaReport.setText(
+                                                        "ÍNDICE\t" +
+                                                        "EXPRESSÃO MINIMIZADA\n"
+                                                    );
+                                                    textAreaReport.append("\n" + count + "\t" + result + " ...");
+                                                    textAreaReport.update(textAreaReport.getGraphics());
+                                                    labelTime.setText(String.format("Tempo: %.3f s", (float) (System.nanoTime() - startTime)/1000000000));
+                                                    labelTime.update(labelTime.getGraphics());
+                                                }
+                                                line++;
+                                            //}
+                                        }
+                                    }
+                                    textAreaReport.append("\n\nFinalizando...");
+                                    textAreaReport.update(textAreaReport.getGraphics());
+                                    //mainFrame.setMinimumSize(new Dimension(1020,520));
+                                    textAreaReport.setText(
+                                        "ÍNDICE\t" +
+                                        "EXPRESSÃO MINIMIZADA" +
+                                        "                " +
+                                        "                " +
+                                        "                " +
+                                        "              " +
+                                        "CÓDIGO HEXADECIMAL" +
+                                        "    " +
+                                        "LIT.\n"
+                                    );
+                                    KeyboardFocusManager.getCurrentKeyboardFocusManager().focusNextComponent(labelTime);
+                                    textAreaReport.setCaretColor(new Color(30, 120, 255));
+                                    textAreaReport.getCaret().setVisible(true);
+                                    for (int a = 0; a < fullReport.size(); a++) {
+                                        textAreaReport.append(fullReport.get(a));
+                                    }
+                                    labelTime.setText(String.format("Tempo: %.3f s", (float) (System.nanoTime() - startTime)/1000000000));
+                                    quineMcPanel.repaint();
+                                }
+                            });
                         }
                     }
                     if (comboWichInput.getSelectedIndex() == 0) {
@@ -1250,11 +1322,13 @@ public class QuineMcCluskey implements KeyListener {
                         }
                     }
                     textAreaReport.setCaretPosition(0);
-                    outputFile.close();
+                    if(writeResultsToFile) {
+                        outputFile.close();
+                    }
                 }
                 catch (Exception ex) {
                 }
-                labelTime.setText(String.format("Tempo: %.3f s", (float) (System.nanoTime() - startTime)/1000000000));
+                //labelTime.setText(String.format("Tempo: %.3f s", (float) (System.nanoTime() - startTime)/1000000000));
             }
         });
         
@@ -1286,7 +1360,7 @@ public class QuineMcCluskey implements KeyListener {
             
             @Override
             public void actionPerformed(ActionEvent e) {
-                long startTime = System.nanoTime();
+                //long startTime = System.nanoTime();
                 textAreaResult.setText("Processando...");
                 textAreaReport.setText("...");
                 textAreaResult.update(textAreaResult.getGraphics());
@@ -1294,44 +1368,72 @@ public class QuineMcCluskey implements KeyListener {
                 if(editor.getText().isBlank()) {
                     editor.setText((String) comboExpressions.getSelectedItem());
                 }
-                try {
-                    if (writeResultsTofile) {
+                if (writeResultsToFile) {
+                    try {
                         setFileToWrite("Quine-McCluskey Results.txt");
+                    } catch (FileNotFoundException | UnsupportedEncodingException ex) {
+                        Logger.getLogger(QuineMcCluskey.class.getName()).log(Level.SEVERE, null, ex);
                     }
-                    hasResult = true;
-                    errorMsg = "";
-                    optimizeExpressions(
-                        editor.getText(),
-                        sliderVars.getValue()
-                    );
-                    if (errorMsg.isEmpty()) {
-                        String results;
-                        if (sopsList.size() > 1) {
-                            results = "";
+                }
+                hasResult = true;
+                errorMsg = "";
+                //SwingUtilities.invokeLater(new Runnable() {
+                    
+                //    @Override
+                //    public void run() {
+                        long startTime = System.nanoTime();
+                        labelTime.setText("Tempo:        ");
+                        labelTime.update(labelTime.getGraphics());
+                        SwingUtilities.updateComponentTreeUI(textAreaReport);
+                        try {
+                            optimizeExpressions(
+                                editor.getText(),
+                                sliderVars.getValue()
+                            );
+                        } catch (Exception ex) {
+                            Logger.getLogger(QuineMcCluskey.class.getName()).log(Level.SEVERE, null, ex);
+                        }
+                        if (errorMsg.isEmpty()) {
+                            String results;
+                            if (sopsList.size() > 1) {
+                                results = "";
+                            }
+                            else {
+                                results = sopsList.get(0).getResult();
+                            }
+                            textAreaResult.setText(results);
+                            try {
+                                textAreaReport.setText(reportText(comboWichReport));
+                            } catch (FileNotFoundException | UnsupportedEncodingException ex) {
+                                Logger.getLogger(QuineMcCluskey.class.getName()).log(Level.SEVERE, null, ex);
+                            }
                         }
                         else {
-                            results = sopsList.get(0).getResult();
+                            textAreaResult.setText(errorMsg);
+                            textAreaReport.setText("-");
                         }
-                        textAreaResult.setText(results);
-                        textAreaReport.setText(reportText(comboWichReport));
-                    }
-                    else {
-                        textAreaResult.setText(errorMsg);
-                        textAreaReport.setText("-");
-                    }
-                    addToHistory(editor.getText());
-                    if(!editor.getText().equals(comboExpressions.getSelectedItem()) // digitou, não selecionou
+                        try {
+                            addToHistory(editor.getText());
+                        } catch (FileNotFoundException ex) {
+                            Logger.getLogger(QuineMcCluskey.class.getName()).log(Level.SEVERE, null, ex);
+                        }
+                        if(!editor.getText().equals(comboExpressions.getSelectedItem()) // digitou, não selecionou
                             ){//|| comboWichInput.getSelectedIndex() == 2) { // input: aleatória
-                        
-                        comboExpressions.insertItemAt(editor.getText(), 0);
-                        comboExpressions.setSelectedIndex(0);
-                    }
+                           
+                            comboExpressions.insertItemAt(editor.getText(), 0);
+                            comboExpressions.setSelectedIndex(0);
+                        }
+                        textAreaReport.update(textAreaReport.getGraphics());
+                        labelTime.setText(String.format("Tempo: %.3f s", (float) (System.nanoTime() - startTime)/1000000000));
+                        labelTime.update(labelTime.getGraphics());
+                        quineMcPanel.repaint();
+                    //}
+                //});
+                if(writeResultsToFile) {
                     outputFile.close();
                 }
-                catch (Exception ex) {
-                }
-                labelTime.setText(String.format("Tempo: %.3f s", (float) (System.nanoTime() - startTime)/1000000000));
-                labelTime.update(labelTime.getGraphics());
+                //labelTime.setText(String.format("Tempo: %.3f s", (float) (System.nanoTime() - startTime)/1000000000));
+                //labelTime.update(labelTime.getGraphics());
                 //System.out.printf("\nTime elapsed: %.3f s", (float) elapsedTime/1000000000);
             }
         });
@@ -1524,7 +1626,7 @@ public class QuineMcCluskey implements KeyListener {
             sopsList.get(lastSOPIndex).completeFinalList();
             sopsList.get(lastSOPIndex).buildOptimizedExpression();
             
-            if (writeResultsTofile) {
+            if (writeResultsToFile) {
                 print(sopsList.get(lastSOPIndex).getResult()+"\t", outputFile);
                 print(sopsList.get(lastSOPIndex).expression2hexadecimal(sopsList.get(lastSOPIndex).getResult())+"\t", outputFile);
                 print(Tools.numberOfLiterals(sopsList.get(lastSOPIndex).getResult(), sopsList.get(lastSOPIndex).getNumberOfVars(), sopsList.get(lastSOPIndex).getNumberOfProducts()), outputFile);
