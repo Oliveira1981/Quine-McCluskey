@@ -58,6 +58,18 @@ public class QuineMcCluskey implements KeyListener {
         return history;
     }
     
+    public void addToHistory(String newLine) throws FileNotFoundException {
+        String[] oldHistory = getHistory();
+        PrintWriter newHistoryFile = new PrintWriter("history");
+        newHistoryFile.print(newLine + "\n");
+        for (String oldHistoryLine : oldHistory) {
+            if (!newLine.equals(oldHistoryLine)) {
+                newHistoryFile.print(oldHistoryLine + "\n");
+            }
+        }
+        newHistoryFile.close();
+    }
+    
     public QuineMcCluskey() {
         inputFormat        = "";
         numVars            = 0;
@@ -65,7 +77,7 @@ public class QuineMcCluskey implements KeyListener {
         errorMsg           = "";
         sopsList           = null;
         progressBarStatus  = 0;
-        writeResultsTofile = !true;
+        writeResultsTofile = true;
         //expressions        = new ArrayList<>();
     }
     
@@ -688,6 +700,7 @@ public class QuineMcCluskey implements KeyListener {
                         }
                     });
                 }
+                comboExpressions.setSelectedIndex(-1);
                 sliderTheme.update(sliderTheme.getGraphics());
             }
         });
@@ -756,7 +769,7 @@ public class QuineMcCluskey implements KeyListener {
                             );
                         }
                         editor.setText(gen);
-                        comboExpressions.setSelectedItem(gen);
+                        //comboExpressions.setSelectedItem(gen);
                     }
                     case 0 -> { // input: arquivo
                         
@@ -986,12 +999,16 @@ public class QuineMcCluskey implements KeyListener {
         });
         
         okButton.addActionListener(new ActionListener() {
-
+            
             @Override
             public void actionPerformed(ActionEvent e) {
                 labelTime.setText("Tempo:        ");
                 labelTime.update(labelTime.getGraphics());
                 long startTime = System.nanoTime();
+                textAreaResult.setText("Processando...");
+                textAreaReport.setText("...");
+                textAreaResult.update(textAreaResult.getGraphics());
+                textAreaReport.update(textAreaReport.getGraphics());
                 try {
                     if (writeResultsTofile) {
                         setFileToWrite("Quine-McCluskey Results.txt");
@@ -1000,10 +1017,15 @@ public class QuineMcCluskey implements KeyListener {
                     switch (comboWichInput.getSelectedIndex()) {
                         case 1 -> { // input: digitar
                             optimizeExpressions(
-                                (String) comboExpressions.getSelectedItem(),
+                                editor.getText(),
                                 sliderVars.getValue()
                             );
                             textAreaReport.setFont(fontReport);
+                            addToHistory(editor.getText());
+                            if(!editor.getText().equals(comboExpressions.getSelectedItem())) { // digitou, não selecionou
+                                comboExpressions.insertItemAt(editor.getText(), 0);
+                                comboExpressions.setSelectedIndex(0);
+                            }
                         }
                         case 2 -> { // input: aleatória
                             optimizeExpressions(
@@ -1011,6 +1033,11 @@ public class QuineMcCluskey implements KeyListener {
                                 sliderVars.getValue()
                             );
                             textAreaReport.setFont(fontReport);
+                            addToHistory(editor.getText());
+                            if(!editor.getText().equals(comboExpressions.getSelectedItem())) { // gerou, não selecionou
+                                comboExpressions.insertItemAt(editor.getText(), 0);
+                                comboExpressions.setSelectedIndex(0);
+                            }
                         }
                         case 0 -> { // input: arquivo
                             int startLine = 1;
@@ -1256,6 +1283,13 @@ public class QuineMcCluskey implements KeyListener {
             @Override
             public void actionPerformed(ActionEvent e) {
                 long startTime = System.nanoTime();
+                textAreaResult.setText("Processando...");
+                textAreaReport.setText("...");
+                textAreaResult.update(textAreaResult.getGraphics());
+                textAreaReport.update(textAreaReport.getGraphics());
+                if(editor.getText().isBlank()) {
+                    editor.setText((String) comboExpressions.getSelectedItem());
+                }
                 try {
                     if (writeResultsTofile) {
                         setFileToWrite("Quine-McCluskey Results.txt");
@@ -1263,7 +1297,7 @@ public class QuineMcCluskey implements KeyListener {
                     hasResult = true;
                     errorMsg = "";
                     optimizeExpressions(
-                        (String) comboExpressions.getSelectedItem(),
+                        editor.getText(),
                         sliderVars.getValue()
                     );
                     if (errorMsg.isEmpty()) {
@@ -1280,6 +1314,13 @@ public class QuineMcCluskey implements KeyListener {
                     else {
                         textAreaResult.setText(errorMsg);
                         textAreaReport.setText("-");
+                    }
+                    addToHistory(editor.getText());
+                    if(!editor.getText().equals(comboExpressions.getSelectedItem()) // digitou, não selecionou
+                            ){//|| comboWichInput.getSelectedIndex() == 2) { // input: aleatória
+                        
+                        comboExpressions.insertItemAt(editor.getText(), 0);
+                        comboExpressions.setSelectedIndex(0);
                     }
                     outputFile.close();
                 }
