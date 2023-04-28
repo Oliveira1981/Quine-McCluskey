@@ -584,8 +584,13 @@ public class SumOfProducts {
         //long startTime = System.nanoTime();
         numberOfLiteralsList = new ArrayList<>();
         int thisNumberOfLiterals;
+        //int lastNOL = 0;
         for(int p = 0; p < notEssentialProductsList.size(); p++) {
             thisNumberOfLiterals = Tools.numberOfLiterals2(notEssentialProductsList.get(p));
+            //if((lastNOL > 0) && (thisNumberOfLiterals != lastNOL)) {
+            //    print("\nLAST:"+lastNOL+"  THIS:"+thisNumberOfLiterals);
+            //}
+            //lastNOL = thisNumberOfLiterals;
             numberOfLiteralsList.add(thisNumberOfLiterals);
             // Valor necessário para o Counting Sort
             totalNumberOfLiterals += thisNumberOfLiterals;
@@ -694,8 +699,6 @@ public class SumOfProducts {
         // Build the output object array
         // To make it stable we are operating in
         // reverse order.
-        // FALAR COM MARILTON SOBRE
-        // COMO PULAR A ETAPA DA ESTABILIDADE
         for (int i = n - 1; i >= 0; i--) {
             int countIndex = combinationsList.get(i).get(0);
             int outputIndex = count[countIndex] - 1;
