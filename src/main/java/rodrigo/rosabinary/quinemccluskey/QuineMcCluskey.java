@@ -702,6 +702,7 @@ public class QuineMcCluskey implements KeyListener {
                         }
                     });
                 }
+                //editor.setText("");
                 comboExpressions.setSelectedIndex(-1);
                 sliderTheme.update(sliderTheme.getGraphics());
             }
@@ -804,9 +805,6 @@ public class QuineMcCluskey implements KeyListener {
                         }
                         catch (Exception ex) {
                         }
-                    }
-                    default -> {
-                        return;
                     }
                 }
                 KeyboardFocusManager.getCurrentKeyboardFocusManager().focusNextComponent(comboWichInput);
@@ -1007,7 +1005,7 @@ public class QuineMcCluskey implements KeyListener {
             @Override
             public void actionPerformed(ActionEvent e) {
                 labelTime.setText("Tempo:        ");
-                //labelTime.update(labelTime.getGraphics());
+                labelTime.update(labelTime.getGraphics());
                 //long startTime = System.nanoTime();
                 try {
                     if (writeResultsToFile) {
@@ -1084,10 +1082,10 @@ public class QuineMcCluskey implements KeyListener {
                             
                             // Runnable não funciona pra primeira entrada de
                             // expressão aleatória
-                            //SwingUtilities.invokeLater(new Runnable() {
+                            SwingUtilities.invokeLater(new Runnable() {
                                 
-                            //    @Override
-                            //    public void run() {
+                                @Override
+                                public void run() {
                                     long startTime = System.nanoTime();
                                     labelTime.setText("Tempo:        ");
                                     //labelTime.update(labelTime.getGraphics());
@@ -1122,7 +1120,11 @@ public class QuineMcCluskey implements KeyListener {
                                             results += ";\n" + sopsList.get(r).getResult();
                                         }
                                         textAreaResult.setText(results);
-                                        textAreaReport.setText(reportText(comboWichReport));
+                                        try {
+                                            textAreaReport.setText(reportText(comboWichReport));
+                                        } catch (FileNotFoundException | UnsupportedEncodingException ex) {
+                                            Logger.getLogger(QuineMcCluskey.class.getName()).log(Level.SEVERE, null, ex);
+                                        }
                                     }
                                     else {
                                         textAreaResult.setText(errorMsg);
@@ -1132,8 +1134,8 @@ public class QuineMcCluskey implements KeyListener {
                                     labelTime.setText(String.format("Tempo: %.3f s", (float) (System.nanoTime() - startTime)/1000000000));
                                     //labelTime.update(labelTime.getGraphics());
                                     //quineMcPanel.repaint();
-                                //}
-                            //});
+                                }
+                            });
                         }
                         case 0 -> { // input: arquivo
                             textAreaReport.setText("Processando...");
@@ -1397,6 +1399,8 @@ public class QuineMcCluskey implements KeyListener {
                 //long startTime = System.nanoTime();
                 textAreaResult.setText("Processando...");
                 textAreaReport.setText("...");
+                labelTime.setText("Tempo:        ");
+                labelTime.update(labelTime.getGraphics());
                 //textAreaResult.update(textAreaResult.getGraphics());
                 //textAreaReport.update(textAreaReport.getGraphics());
                 if(editor.getText().isBlank()) {
@@ -1416,8 +1420,6 @@ public class QuineMcCluskey implements KeyListener {
                     @Override
                     public void run() {
                         long startTime = System.nanoTime();
-                        labelTime.setText("Tempo:        ");
-                        //labelTime.update(labelTime.getGraphics());
                         //SwingUtilities.updateComponentTreeUI(textAreaReport);
                         try {
                             optimizeExpressions(
