@@ -766,8 +766,8 @@ public class QuineMcCluskey implements KeyListener {
                                 vars    //numberOfVars
                             );
                         }
-                        editor.setText(gen);
-                        //comboExpressions.setSelectedItem(gen);
+                        //editor.setText(gen);
+                        comboExpressions.setSelectedItem(gen);
                     }
                     case 0 -> { // input: arquivo
                         
