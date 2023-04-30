@@ -58,7 +58,7 @@ public class GUI implements KeyListener {
             public void propertyChange(PropertyChangeEvent evt) {
                 if ("foreground".equals(evt.getPropertyName())){
                     try {
-                        if (quineMcCluskey.darkTheme) {
+                        if (darkTheme) {
                             UIManager.setLookAndFeel(new com.formdev.flatlaf.FlatDarkLaf());
                         }
                         else {
