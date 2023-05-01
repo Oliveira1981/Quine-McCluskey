@@ -8,7 +8,8 @@ public class RosaBinary {
     
     public static void main(String[] args) throws Exception {
         
-        GUI gui = new GUI();
+        boolean darkTheme = true;
+        GUI gui = new GUI(darkTheme);
         gui.showMainWindow();
         
     } 

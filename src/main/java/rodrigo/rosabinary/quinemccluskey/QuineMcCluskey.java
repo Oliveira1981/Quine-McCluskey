@@ -28,8 +28,6 @@ public class QuineMcCluskey implements KeyListener {
     public JLabel             labelThemeDark;
     public int             progressBarStatus;
     public boolean                 darkTheme;
-    public ActionListener newAL;
-    public JTextField newEditor;
     
     public String[] wichInput = {
         "Carregar expressões de um arquivo...",
@@ -97,28 +95,37 @@ public class QuineMcCluskey implements KeyListener {
         
         this.darkTheme = theme;
         
-    // DARK THEME COLORS /////////////////////////////////////
-    // Dark Theme Background
-        Color darkTextBGColor         = new Color( 44,  44,  44);
-        Color darkButtonBGColor       = new Color( 30,  50, 100);
-        Color darkComboBGColor        = new Color( 70,  73,  75);//70, 73, 75 (flatlaf defaut)
-    // Dark Theme Text
-        Color darkComboTextColor      = new Color( 30, 130, 230);
-        Color darkLabelColor          = new Color( 30, 130, 230);
-        Color darkDisabledLabelColor  = new Color(110, 110, 110);
-        Color darkButtonTextColor     = new Color( 50, 150, 250);
-        Color darkTextColor           = new Color( 50, 150, 250);
+        Color textBGColor         , textColor,
+              buttonBGColor       , buttonTextColor,
+              comboBGColor        , comboTextColor,
+              labelColor          , disabledLabelColor,
+              readEntireFileColor , caretColor
+        ;
         
-    // LIGHT THEME COLORS ////////////////////////////////////
-    // Light Theme Background
-        Color lightTextBGColor        = new Color(222, 222, 222);
-        Color lightButtonBGColor      = new Color(199, 222, 244);
-        Color lightComboBGColor       = new Color(248, 248, 248);
-    // Light Theme Text
-        Color lightLabelColor         = new Color( 30, 130, 230);
-        Color lightDisabledLabelColor = new Color(188, 188, 188);
-        Color lightButtonTextColor    = new Color( 50, 150, 250);
-        Color lightTextColor          = new Color( 10, 80, 170);
+        if(darkTheme) {
+            textBGColor         = new Color( 44,  44,  44);
+            textColor           = new Color( 50, 150, 250);
+            buttonBGColor       = new Color( 30,  50, 100);
+            buttonTextColor     = new Color( 50, 150, 250);
+            comboBGColor        = new Color( 70,  73,  75);//70, 73, 75 (flatlaf defaut)
+            comboTextColor      = new Color( 30, 130, 230);
+            labelColor          = new Color( 30, 130, 230);
+            disabledLabelColor  = new Color(110, 110, 110);
+            readEntireFileColor = new Color( 30, 130, 230);
+            caretColor          = new Color( 30, 120, 255);
+        }
+        else {
+            textBGColor         = new Color(222, 222, 222);
+            textColor           = new Color( 10, 80, 170);
+            buttonBGColor       = new Color(199, 222, 244);
+            buttonTextColor     = new Color( 50, 150, 250);
+            comboBGColor        = new Color(248, 248, 248);
+            comboTextColor      = new Color( 30, 130, 230);
+            labelColor          = new Color( 30, 130, 230);
+            disabledLabelColor  = new Color(188, 188, 188);
+            readEntireFileColor = new Color( 30, 130, 230);
+            caretColor          = new Color( 30, 120, 255);
+        }
         
         JPanel quineMcPanel = new JPanel(new GridBagLayout());
         
@@ -156,8 +163,8 @@ public class QuineMcCluskey implements KeyListener {
         comboWichInput.addKeyListener(this);
         comboWichInput.setFocusable(true);
 	comboWichInput.setFont(new Font("Segoe UI", Font.BOLD, 12));
-        comboWichInput.setBackground(darkComboBGColor);
-        comboWichInput.setForeground(darkComboTextColor);//30, 130, 230
+        comboWichInput.setBackground(comboBGColor);
+        comboWichInput.setForeground(comboTextColor);//30, 130, 230
         GridBagConstraints gbcWichInput = new GridBagConstraints();
         gbcWichInput.fill = GridBagConstraints.NONE;
 	gbcWichInput.gridx = 1;
@@ -184,7 +191,7 @@ public class QuineMcCluskey implements KeyListener {
         
         JCheckBox checkReadEntireFile = new JCheckBox("Inteiro");
         checkReadEntireFile.setFont(fontDefault);
-        checkReadEntireFile.setForeground(darkLabelColor);//30, 130, 230
+        checkReadEntireFile.setForeground(labelColor);//30, 130, 230
         checkReadEntireFile.addKeyListener(this);
         checkReadEntireFile.setFocusable(false);
         checkReadEntireFile.setSelected(true);
@@ -203,7 +210,7 @@ public class QuineMcCluskey implements KeyListener {
         
         JLabel labelStartLine = new JLabel("     Linha inicial: ");
         labelStartLine.setFont(fontDefault);
-        labelStartLine.setForeground(darkDisabledLabelColor);//110, 110, 110
+        labelStartLine.setForeground(disabledLabelColor);//110, 110, 110
         labelStartLine.addKeyListener(this);
         GridBagConstraints gbcLabelStartLine = new GridBagConstraints();
         gbcLabelStartLine.fill = GridBagConstraints.HORIZONTAL;
@@ -239,7 +246,7 @@ public class QuineMcCluskey implements KeyListener {
         
         JLabel labelEndLine = new JLabel("     Linha final: ");
         labelEndLine.setFont(fontDefault);
-        labelEndLine.setForeground(darkDisabledLabelColor);//110, 110, 110
+        labelEndLine.setForeground(disabledLabelColor);//110, 110, 110
         labelEndLine.addKeyListener(this);
         GridBagConstraints gbcLabelEndLine = new GridBagConstraints();
         gbcLabelEndLine.fill = GridBagConstraints.HORIZONTAL;
@@ -255,7 +262,7 @@ public class QuineMcCluskey implements KeyListener {
         quineMcPanel.add(labelEndLine, gbcLabelEndLine);
         
         JTextField textEndLine = new JTextField();
-        //textEndLine.setForeground(darkLabelColor);
+        textEndLine.setForeground(labelColor);
         textEndLine.setPreferredSize(new Dimension(55, 20));
         textEndLine.setMinimumSize(new Dimension(55, 20));
         textEndLine.setFont(new Font("Segoe UI", Font.PLAIN, 12));
@@ -276,7 +283,7 @@ public class QuineMcCluskey implements KeyListener {
         
         labelVariables = new JLabel("   Número de variáveis: Auto");
         labelVariables.setFont(fontDefault);
-        labelVariables.setForeground(darkLabelColor);
+        labelVariables.setForeground(labelColor);
         GridBagConstraints gbcLabelVariables = new GridBagConstraints();
         gbcLabelVariables.fill = GridBagConstraints.HORIZONTAL;
         gbcLabelVariables.gridx = 11;
@@ -291,7 +298,7 @@ public class QuineMcCluskey implements KeyListener {
         
         JLabel labelThemeLight = new JLabel("Claro");
         labelThemeLight.setFont(fontDefault);
-        labelThemeLight.setForeground(darkDisabledLabelColor);
+        labelThemeLight.setForeground(disabledLabelColor);
         labelThemeLight.setHorizontalAlignment(SwingConstants.RIGHT);
         GridBagConstraints gbcLabelThemeLight = new GridBagConstraints();
         gbcLabelThemeLight.fill = GridBagConstraints.HORIZONTAL;
@@ -303,6 +310,7 @@ public class QuineMcCluskey implements KeyListener {
         gbcLabelThemeLight.weighty = 0.0;
         gbcLabelThemeLight.anchor = GridBagConstraints.EAST;
         labelThemeLight.setBorder(BorderFactory.createLineBorder(borderColor));
+        labelThemeLight.setVisible(false);
         quineMcPanel.add(labelThemeLight, gbcLabelThemeLight);
         
         JSlider sliderTheme = new JSlider(JSlider.HORIZONTAL, 0, 1, 1); // min, max, inicial
@@ -324,11 +332,12 @@ public class QuineMcCluskey implements KeyListener {
         gbcSliderTheme.weighty = 0.0;
         gbcSliderTheme.anchor = GridBagConstraints.EAST;
         sliderTheme.setBorder(BorderFactory.createLineBorder(borderColor));
+        sliderTheme.setVisible(false);
         quineMcPanel.add(sliderTheme, gbcSliderTheme);
         
         labelThemeDark = new JLabel("   Escuro");
         labelThemeDark.setFont(fontDefault);
-        labelThemeDark.setForeground(darkLabelColor);
+        labelThemeDark.setForeground(labelColor);
         labelThemeDark.setHorizontalAlignment(SwingConstants.RIGHT);
         GridBagConstraints gbcLabelThemeDark = new GridBagConstraints();
         gbcLabelThemeDark.fill = GridBagConstraints.NONE;
@@ -340,10 +349,10 @@ public class QuineMcCluskey implements KeyListener {
         gbcLabelThemeDark.weighty = 0.0;
         gbcLabelThemeDark.anchor = GridBagConstraints.EAST;
         labelThemeDark.setBorder(BorderFactory.createLineBorder(borderColor));
+        labelThemeDark.setVisible(false);
         quineMcPanel.add(labelThemeDark, gbcLabelThemeDark);
         
         JLabel space3a = new JLabel(" ");
-        //space3a.setVisible(false);
         space3a.setFont(new Font("SEGOE UI", Font.PLAIN, 1));
 	gbcSpaces.fill = GridBagConstraints.HORIZONTAL;
 	gbcSpaces.gridx = 1;
@@ -393,8 +402,8 @@ public class QuineMcCluskey implements KeyListener {
         okButton.setMinimumSize(new Dimension(90, 30));
         okButton.addKeyListener(this);
         okButton.setFocusable(true);
-        okButton.setBackground(darkButtonBGColor);//30, 50, 100
-        okButton.setForeground(darkButtonTextColor);//50, 150, 250
+        okButton.setBackground(buttonBGColor);//30, 50, 100
+        okButton.setForeground(buttonTextColor);//50, 150, 250
         okButton.setFont(fontDefault);
         GridBagConstraints gbcOkButton = new GridBagConstraints();
 	gbcOkButton.fill = GridBagConstraints.HORIZONTAL;
@@ -458,7 +467,7 @@ public class QuineMcCluskey implements KeyListener {
         
         JLabel labelResult = new JLabel("Expressão Minimizada:");
         labelResult.setFont(fontDefault);
-        labelResult.setForeground(darkLabelColor);
+        labelResult.setForeground(labelColor);
         GridBagConstraints gbcLabelResult = new GridBagConstraints();
 	gbcLabelResult.fill = GridBagConstraints.NONE;
 	gbcLabelResult.gridx = 1;
@@ -476,8 +485,8 @@ public class QuineMcCluskey implements KeyListener {
         textAreaResult.setFocusable(true);
         textAreaResult.setLineWrap(true);
         textAreaResult.setEditable(false);
-        textAreaResult.setBackground(darkTextBGColor);
-        textAreaResult.setForeground(darkTextColor);//50, 150, 250
+        textAreaResult.setBackground(textBGColor);
+        textAreaResult.setForeground(textColor);//50, 150, 250
         textAreaResult.setFont(new Font("Consolas", Font.PLAIN, 16));
         Insets mResult = new Insets(12, 8, 4, 6);
         textAreaResult.setMargin(mResult);
@@ -510,8 +519,8 @@ public class QuineMcCluskey implements KeyListener {
         comboWichReport.addKeyListener(this);
         comboWichReport.setFocusable(true);
 	comboWichReport.setFont(new Font("Segoe UI", Font.BOLD, 12));
-        //comboWichReport.setBackground(darkComboBGColor);
-        comboWichReport.setForeground(darkComboTextColor);//30, 130, 230
+        comboWichReport.setBackground(comboBGColor);
+        comboWichReport.setForeground(comboTextColor);//30, 130, 230
         GridBagConstraints gbcComboWichReport = new GridBagConstraints();
         gbcComboWichReport.fill = GridBagConstraints.NONE;
 	gbcComboWichReport.gridx = 1;
@@ -527,7 +536,7 @@ public class QuineMcCluskey implements KeyListener {
         JLabel labelResultsFromFile = new JLabel(" Resultados:");
         labelResultsFromFile.setPreferredSize(new Dimension(250, 30));
      	labelResultsFromFile.setFont(new Font("Segoe UI", Font.BOLD, 14));
-        labelResultsFromFile.setForeground(darkLabelColor);
+        labelResultsFromFile.setForeground(labelColor);
         GridBagConstraints gbcLabelResultsFromFile = new GridBagConstraints();
         gbcLabelResultsFromFile.fill = GridBagConstraints.NONE;
       	gbcLabelResultsFromFile.gridx = 1;
@@ -543,7 +552,7 @@ public class QuineMcCluskey implements KeyListener {
         labelTime.setEditable(false);
         labelTime.setMinimumSize(new Dimension(250, 30));
         labelTime.setFont(new Font("Consolas", Font.PLAIN, 14));
-        labelTime.setForeground(darkLabelColor);
+        labelTime.setForeground(labelColor);
         labelTime.setHorizontalAlignment(SwingConstants.RIGHT);
         GridBagConstraints gbcLabelTime = new GridBagConstraints();
         gbcLabelTime.fill = GridBagConstraints.BOTH;
@@ -562,8 +571,8 @@ public class QuineMcCluskey implements KeyListener {
         textAreaReport.setFocusable(true);
         textAreaReport.setLineWrap(true);
         textAreaReport.setEditable(false);
-        textAreaReport.setBackground(darkTextBGColor);
-        textAreaReport.setForeground(darkTextColor);
+        textAreaReport.setBackground(textBGColor);
+        textAreaReport.setForeground(textColor);
         Font fontReport = new Font("Consolas", Font.PLAIN, 16);
         textAreaReport.setFont(fontReport);
         Insets mReport = new Insets(10, 10, 10, 10);
@@ -618,11 +627,7 @@ public class QuineMcCluskey implements KeyListener {
 	pb.setBorder(BorderFactory.createLineBorder(borderColor));
         quineMcPanel.add(pb, gbcSpaces);
         
-        sliderTheme.addChangeListener(new ChangeListener() {
-            // BUG
-            // DEPOIS DE MUDAR DE TEMA,
-            // editor.addActionListener
-            // NÃO FUNCIONA MAIS.
+        /*sliderTheme.addChangeListener(new ChangeListener() {
             
             @Override
             public void stateChanged(ChangeEvent e) {
@@ -700,7 +705,7 @@ public class QuineMcCluskey implements KeyListener {
                 comboExpressions.setSelectedIndex(selectedExp);
                 sliderTheme.update(sliderTheme.getGraphics());
             }
-        });
+        });*/
         
         comboWichInput.addActionListener(new ActionListener() {
             
@@ -723,12 +728,6 @@ public class QuineMcCluskey implements KeyListener {
                         textEndLine.setFocusable(false);
                         
                         quineMcPanel.remove(labelResultsFromFile);
-                        if (darkTheme) {
-                            comboWichReport.setBackground(darkComboBGColor);
-                        }
-                        else {
-                            comboWichReport.setBackground(lightComboBGColor);
-                        }
                         quineMcPanel.add(comboWichReport, gbcComboWichReport);
                         
                         labelResult.setVisible(true);
@@ -781,7 +780,7 @@ public class QuineMcCluskey implements KeyListener {
                         textStartLine.setFocusable(true);
                         textEndLine.setFocusable(true);
                         
-                        checkReadEntireFile.setForeground(new Color(30, 130, 230));
+                        checkReadEntireFile.setForeground(readEntireFileColor);
                         checkReadEntireFile.setSelected(true);
                         
                         quineMcPanel.remove(comboWichReport);
@@ -810,16 +809,9 @@ public class QuineMcCluskey implements KeyListener {
             @Override
             public void actionPerformed(ActionEvent e) {
                 if (!checkReadEntireFile.isSelected()) {
-                    if (darkTheme) {
-                        checkReadEntireFile.setForeground(darkDisabledLabelColor);
-                        labelStartLine.setForeground(darkLabelColor);
-                        labelEndLine.setForeground(darkLabelColor);
-                    }
-                    else {
-                        checkReadEntireFile.setForeground(lightDisabledLabelColor);
-                        labelStartLine.setForeground(lightLabelColor);
-                        labelEndLine.setForeground(lightLabelColor);
-                    }
+                    checkReadEntireFile.setForeground(disabledLabelColor);
+                    labelStartLine.setForeground(labelColor);
+                    labelEndLine.setForeground(labelColor);
                     textStartLine.setEnabled(true);
                     textStartLine.setEditable(true);
                     textEndLine.setEnabled(true);
@@ -827,46 +819,24 @@ public class QuineMcCluskey implements KeyListener {
                     KeyboardFocusManager.getCurrentKeyboardFocusManager().focusNextComponent(checkReadEntireFile);
                 }
                 else {
-                    checkReadEntireFile.setForeground(darkLabelColor);
-                    if (darkTheme) {
-                        labelStartLine.setForeground(darkDisabledLabelColor);
-                        labelEndLine.setForeground(darkDisabledLabelColor);
-                    }
-                    else {
-                        labelStartLine.setForeground(lightDisabledLabelColor);
-                        labelEndLine.setForeground(lightDisabledLabelColor);
-                    }
-                    textStartLine.setEnabled(!true);
-                    textStartLine.setEditable(!true);
+                    checkReadEntireFile.setForeground(labelColor);
+                    labelStartLine.setForeground(disabledLabelColor);
+                    labelEndLine.setForeground(disabledLabelColor);
+                    textStartLine.setEnabled(false);
+                    textStartLine.setEditable(false);
                     textStartLine.setText("");
-                    textEndLine.setEnabled(!true);
-                    textEndLine.setEditable(!true);
+                    textEndLine.setEnabled(false);
+                    textEndLine.setEditable(false);
                     textEndLine.setText("");
                 }
                 
             }
         });
         
-        MouseListener mouseListenerLabelLight = new MouseListener() {
+        /*MouseListener mouseListenerLabelLight = new MouseListener() {
             @Override
             public void mouseClicked(MouseEvent e) {
                 sliderTheme.setValue(0);
-            }
-            
-            @Override
-            public void mousePressed(MouseEvent e) {
-            }
-            
-            @Override
-            public void mouseReleased(MouseEvent e) {
-            }
-            
-            @Override
-            public void mouseEntered(MouseEvent e) {
-            }
-            
-            @Override
-            public void mouseExited(MouseEvent e) {
             }
         };
         labelThemeLight.addMouseListener(mouseListenerLabelLight);
@@ -876,39 +846,16 @@ public class QuineMcCluskey implements KeyListener {
             public void mouseClicked(MouseEvent e) {
                 sliderTheme.setValue(1);
             }
-            
-            @Override
-            public void mousePressed(MouseEvent e) {
-            }
-            
-            @Override
-            public void mouseReleased(MouseEvent e) {
-            }
-            
-            @Override
-            public void mouseEntered(MouseEvent e) {
-            }
-            
-            @Override
-            public void mouseExited(MouseEvent e) {
-            }
         };
-        labelThemeDark.addMouseListener(mouseListenerLabelDark);
+        labelThemeDark.addMouseListener(mouseListenerLabelDark);*/
         
         MouseListener mouseListenerStartLine = new MouseListener() {
             @Override
             public void mouseClicked(MouseEvent e) {
                 checkReadEntireFile.setSelected(false);
-                if (darkTheme) {
-                    checkReadEntireFile.setForeground(darkDisabledLabelColor);
-                    labelStartLine.setForeground(darkLabelColor);
-                    labelEndLine.setForeground(darkLabelColor);
-                }
-                else {
-                    checkReadEntireFile.setForeground(lightDisabledLabelColor);
-                    labelStartLine.setForeground(lightLabelColor);
-                    labelEndLine.setForeground(lightLabelColor);
-                }
+                checkReadEntireFile.setForeground(disabledLabelColor);
+                labelStartLine.setForeground(labelColor);
+                labelEndLine.setForeground(labelColor);
                 textStartLine.setEnabled(true);
                 textStartLine.setEditable(true);
                 textEndLine.setEnabled(true);
@@ -942,16 +889,9 @@ public class QuineMcCluskey implements KeyListener {
                     textStartLine.setText("1");
                 }
                 checkReadEntireFile.setSelected(false);
-                if (darkTheme) {
-                    checkReadEntireFile.setForeground(darkDisabledLabelColor);
-                    labelStartLine.setForeground(darkLabelColor);
-                    labelEndLine.setForeground(darkLabelColor);
-                }
-                else {
-                    checkReadEntireFile.setForeground(lightDisabledLabelColor);
-                    labelStartLine.setForeground(lightLabelColor);
-                    labelEndLine.setForeground(lightLabelColor);
-                }
+                checkReadEntireFile.setForeground(disabledLabelColor);
+                labelStartLine.setForeground(labelColor);
+                labelEndLine.setForeground(labelColor);
                 textStartLine.setEnabled(true);
                 textStartLine.setEditable(true);
                 textEndLine.setEnabled(true);
@@ -1068,8 +1008,6 @@ public class QuineMcCluskey implements KeyListener {
                         //textAreaResult.update(textAreaResult.getGraphics());
                         //textAreaReport.update(textAreaReport.getGraphics());
                         
-                        // Runnable não funciona pra primeira entrada de
-                        // expressão aleatória
                         SwingUtilities.invokeLater(new Runnable() {
                             
                             @Override
@@ -1321,7 +1259,7 @@ public class QuineMcCluskey implements KeyListener {
                                     "LIT.\n"
                                 );
                                 KeyboardFocusManager.getCurrentKeyboardFocusManager().focusNextComponent(labelTime);
-                                textAreaReport.setCaretColor(new Color(30, 120, 255));
+                                textAreaReport.setCaretColor(caretColor);
                                 textAreaReport.getCaret().setVisible(true);
                                 for (int a = 0; a < fullReport.size(); a++) {
                                     textAreaReport.append(fullReport.get(a));
@@ -1369,14 +1307,9 @@ public class QuineMcCluskey implements KeyListener {
         });
         
         editor.addActionListener(new ActionListener() {
-            // BUG
-            // DEPOIS DE MUDAR DE TEMA,
-            // editor.addActionListener
-            // NÃO FUNCIONA MAIS.
             
             @Override
             public void actionPerformed(ActionEvent e) {
-                print("\neditor action\n");
                 //long startTime = System.nanoTime();
                 textAreaResult.setText("Processando...");
                 textAreaReport.setText("...");

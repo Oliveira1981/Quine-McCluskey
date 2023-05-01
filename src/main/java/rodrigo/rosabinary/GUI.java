@@ -2,8 +2,7 @@ package rodrigo.rosabinary;
 
 import java.awt.*;
 import java.awt.event.*;
-import java.beans.PropertyChangeEvent;
-import java.beans.PropertyChangeListener;
+//import java.beans.*;
 import javax.swing.*;
 import rodrigo.rosabinary.mazerouter.*;
 import rodrigo.rosabinary.quinemccluskey.*;
@@ -17,10 +16,10 @@ public class GUI implements KeyListener {
     private JTabbedPane        tabbedPane;
     private QuineMcCluskey quineMcCluskey;
     private MazeRouter         mazeRouter;
-    private boolean             darkTheme;
+    private final boolean       darkTheme;
     
-    public GUI(){
-        darkTheme = true;
+    public GUI(boolean darkTheme){
+        this.darkTheme = darkTheme;
     }
     
     public void showMainWindow() throws Exception {
@@ -53,7 +52,7 @@ public class GUI implements KeyListener {
         tabbedPane.addKeyListener(this);
         tabbedPane.setFocusable(true);
         
-        tabbedPane.getComponent(0).addPropertyChangeListener(new PropertyChangeListener() {
+        /*tabbedPane.getComponent(0).addPropertyChangeListener(new PropertyChangeListener() {
             @Override
             public void propertyChange(PropertyChangeEvent evt) {
                 if ("foreground".equals(evt.getPropertyName())){
@@ -75,7 +74,7 @@ public class GUI implements KeyListener {
                     });
                 }
             }
-        });
+        });*/
         
         mainFrame.add(tabbedPane);
         mainFrame.pack();
@@ -86,7 +85,7 @@ public class GUI implements KeyListener {
         mainFrame.setVisible(true);
         mainFrame.setExtendedState(mainFrame.getExtendedState() | JFrame.MAXIMIZED_BOTH);
         mainFrame.getRootPane().setDefaultButton(quineMcCluskey.okButton);
-        KeyboardFocusManager.getCurrentKeyboardFocusManager().focusNextComponent(quineMcCluskey.labelThemeDark);
+        KeyboardFocusManager.getCurrentKeyboardFocusManager().focusNextComponent(quineMcCluskey.labelVariables);
         
         /*tabbedPane.addChangeListener(new ChangeListener() {
             
