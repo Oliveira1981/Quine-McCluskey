@@ -2,6 +2,7 @@ package rodrigo.rosabinary.quinemccluskey;
 
 import java.io.*;
 import java.util.*;
+import javax.swing.*;
 
 /**
  *
@@ -30,13 +31,14 @@ public class SumOfProducts {
     private ArrayList<Product>             auxProductsList;
     private ArrayList<MinTerm>                minTermsList; // Colunas da coveringTable
     private ArrayList<ArrayList<Integer>> combinationsList;
-    public int progress;
+    public int progress, oldProgress;
+    public JProgressBar progressBar;
     
-    public SumOfProducts(String expression, int numVars) {
+    public SumOfProducts(String expression, int numVars, JProgressBar progressBar) {
         setExpression(expression, numVars);
     }
     
-    public SumOfProducts() {
+    public SumOfProducts(JProgressBar progressBar) {
         this.originalInputFormat     = "Literal";
         this.inputFormat             = "Literal";
         this.originalInputExpression = "";
@@ -47,6 +49,9 @@ public class SumOfProducts {
         this.inspect                 = false;
         this.report                  = "";
         this.numberOfVars            = 0; //Auto
+        this.progressBar = progressBar;
+        this.progress = 0;
+        this.oldProgress = 0;
     }
     
     public final boolean setExpression(String expression, int selectedNumberOfVars) {
@@ -600,7 +605,7 @@ public class SumOfProducts {
     
     // completeFinalList STEP 2 /////
     public void generateAllCombinations(int n) {
-        long startTime = System.nanoTime();
+        //long startTime = System.nanoTime();
         combinationsList = new ArrayList<>();
         for (int r = 1; r <= n; r++) {
             int[] combination = new int[r];
@@ -634,15 +639,20 @@ public class SumOfProducts {
                 */
             }
             progress = 33*r/n;
-            print("\r"+progress+"\tSTEP 2");
+            if(progress != oldProgress) {
+                oldProgress = progress;
+                //print("\r"+progress+"\tSTEP 2");
+                progressBar.setValue(progress);
+                //progressBar.update(progressBar.getGraphics());
+            }
         }
-        print(String.format("\ngenerateAllCombinations: %.5f s", (float) (System.nanoTime() - startTime)/1000000000));
-        print("\n----------------------");
+        //print(String.format("\ngenerateAllCombinations: %.5f s", (float) (System.nanoTime() - startTime)/1000000000));
+        //print("\n----------------------");
     }
     
     // completeFinalList STEP 3 /////
     public void addIndexToCombinationsList() {
-        long startTime = System.nanoTime();
+        //long startTime = System.nanoTime();
         int pbUpdateFactor = Math.max(1, combinationsList.size());
         for(int c = 0; c < combinationsList.size(); c++) {
             int combinationNumberOfLiterals = 0;
@@ -653,18 +663,23 @@ public class SumOfProducts {
             combinationsList.get(c).add(0, combinationNumberOfLiterals);
             if(Math.floorMod(c, pbUpdateFactor)==0) {
                 progress = 33 + 12*c/combinationsList.size();
-                print("\r"+progress+"\tSTEP 3");
+                if(progress != oldProgress) {
+                    oldProgress = progress;
+                    //print("\r"+progress+"\tSTEP 3");
+                    progressBar.setValue(progress);
+                    //progressBar.update(progressBar.getGraphics());
+                }
             }
         }
-        print(String.format("\naddIndexToCombinationsList: %.5f s", (float) (System.nanoTime() - startTime)/1000000000));
-        print("\n----------------------");
+        //print(String.format("\naddIndexToCombinationsList: %.5f s", (float) (System.nanoTime() - startTime)/1000000000));
+        //print("\n----------------------");
     }
     
     // completeFinalList STEP 4 /////
     // Counting Sort, by Rajat Mishra, geeksforgeeks.org
     public void sortCombinationsList() {
         
-        long startTime;// = System.nanoTime();
+        //long startTime;// = System.nanoTime();
         
         int n = combinationsList.size();
         int pbUpdateFactor = Math.max(1, n/80);
@@ -675,53 +690,73 @@ public class SumOfProducts {
         // Create a count array to store count of individual
         // objects and initialize count array as 0
         int count[] = new int[totalNumberOfLiterals+1];
-        startTime = System.nanoTime();
+        //startTime = System.nanoTime();
         for (int i = 0; i < totalNumberOfLiterals+1; ++i) {
             count[i] = 0;
             progress = 45 + 5*i/(totalNumberOfLiterals+1);
-            print("\r"+progress+"\tSTEP 4a");
+            if(progress != oldProgress) {
+                oldProgress = progress;
+                //print("\r"+progress+"\tSTEP 4a");
+                progressBar.setValue(progress);
+                //progressBar.update(progressBar.getGraphics());
+            }
         }
-        print(String.format("\nSTEP 4a: %.5f s", (float) (System.nanoTime() - startTime)/1000000000));
-        print("\n----------------------");
+        //print(String.format("\nSTEP 4a: %.5f s", (float) (System.nanoTime() - startTime)/1000000000));
+        //print("\n----------------------");
         // store count of each object
-        startTime = System.nanoTime();
+        //startTime = System.nanoTime();
         for (int i = 0; i < n; ++i) {
             ++count[combinationsList.get(i).get(0)];
             if(Math.floorMod(i, pbUpdateFactor)==0) {
                 progress = 50 + 8*i/n;
-                print("\r"+progress+"\tSTEP 4b");
+                if(progress != oldProgress) {
+                    oldProgress = progress;
+                    //print("\r"+progress+"\tSTEP 4b");
+                    progressBar.setValue(progress);
+                    //progressBar.update(progressBar.getGraphics());
+                }
             }
         }
-        print(String.format("\nSTEP 4b: %.5f s", (float) (System.nanoTime() - startTime)/1000000000));
-        print("\n----------------------");
+        //print(String.format("\nSTEP 4b: %.5f s", (float) (System.nanoTime() - startTime)/1000000000));
+        //print("\n----------------------");
         
         // Change count[i] so that count[i] now contains
         // actual position of this object in output array
-        startTime = System.nanoTime();
+        //startTime = System.nanoTime();
         for (int i = 1; i <= totalNumberOfLiterals; ++i) {
             count[i] += count[i - 1];
             progress = 58 + 6*i/totalNumberOfLiterals;
-            print("\r"+progress+"\tSTEP 4c");
+            if(progress != oldProgress) {
+                oldProgress = progress;
+                //print("\r"+progress+"\tSTEP 4c");
+                progressBar.setValue(progress);
+                //progressBar.update(progressBar.getGraphics());
+            }
         }
-        print(String.format("\nSTEP 4c: %.5f s", (float) (System.nanoTime() - startTime)/1000000000));
-        print("\n----------------------");
+        //print(String.format("\nSTEP 4c: %.5f s", (float) (System.nanoTime() - startTime)/1000000000));
+        //print("\n----------------------");
         
-        startTime = System.nanoTime();
+        //startTime = System.nanoTime();
         int outputSize = (int) Math.pow(2, notEssentialProductsList.size())-1;
         for (int i = 0; i < outputSize; ++i) {
             output.add(new ArrayList<>());
             if(Math.floorMod(i, pbUpdateFactor)==0) {
                 progress = 64 + 6*i/outputSize;
-                print("\r"+progress+"\tSTEP 4d");
+                if(progress != oldProgress) {
+                    oldProgress = progress;
+                    //print("\r"+progress+"\tSTEP 4d");
+                    progressBar.setValue(progress);
+                    //progressBar.update(progressBar.getGraphics());
+                }
             }
         }
-        print(String.format("\nSTEP 4d: %.5f s", (float) (System.nanoTime() - startTime)/1000000000));
-        print("\n----------------------");
+        //print(String.format("\nSTEP 4d: %.5f s", (float) (System.nanoTime() - startTime)/1000000000));
+        //print("\n----------------------");
         
         // Build the output object array
         // To make it stable we are operating in
         // reverse order.
-        startTime = System.nanoTime();
+        //startTime = System.nanoTime();
         for (int i = n - 1; i >= 0; i--) {
             int countIndex = combinationsList.get(i).get(0);
             int outputIndex = count[countIndex] - 1;
@@ -729,11 +764,16 @@ public class SumOfProducts {
             --count[combinationsList.get(i).get(0)];
             if(Math.floorMod(i, pbUpdateFactor)==0) {
                 progress = 70 + 8*(n-i)/n;
-                print("\r"+progress+"\tSTEP 4e");
+                if(progress != oldProgress) {
+                    oldProgress = progress;
+                    //print("\r"+progress+"\tSTEP 4e");
+                    progressBar.setValue(progress);
+                    //progressBar.update(progressBar.getGraphics());
+                }
             }
         }
-        print(String.format("\nSTEP 4e: %.5f s", (float) (System.nanoTime() - startTime)/1000000000));
-        print("\n----------------------");
+        //print(String.format("\nSTEP 4e: %.5f s", (float) (System.nanoTime() - startTime)/1000000000));
+        //print("\n----------------------");
         
         // Copy the output array to arr, so that arr now
         // contains sorted objects
@@ -743,7 +783,7 @@ public class SumOfProducts {
     
     // completeFinalList STEP 5 /////
     public void testCombinations() {
-        long startTime = System.nanoTime();
+        //long startTime = System.nanoTime();
         int pbUpdateFactor = Math.max(1, combinationsList.size()/80);
         ArrayList<String> finalListInitial = (ArrayList) finalProductsList.clone();
         for (int c = 0; c < combinationsList.size(); c++) {
@@ -754,18 +794,27 @@ public class SumOfProducts {
             }
             setIsCovered();
             if (isAllCovered()) {
-                print(String.format("\ntestCombinationsList: %.5f s", (float) (System.nanoTime() - startTime)/1000000000));
+                progress = 100;
+                //print("\r"+progress+"\tSTEP 5");
+                progressBar.setValue(progress);
+                //progressBar.update(progressBar.getGraphics());
+                //print(String.format("\ntestCombinationsList: %.5f s", (float) (System.nanoTime() - startTime)/1000000000));
                 return;
             }
             finalProductsList = (ArrayList) finalListInitial.clone();
             setIsCovered();
             if(Math.floorMod(c, pbUpdateFactor)==0) {
                 progress = 78 + 22*c/combinationsList.size();
-                print("\r"+progress+"\tSTEP 5");
+                if(progress != oldProgress) {
+                    oldProgress = progress;
+                    //print("\r"+progress+"\tSTEP 5");
+                    progressBar.setValue(progress);
+                    //progressBar.update(progressBar.getGraphics());
+                }
             }
         }
-        print(String.format("\nSTEP 5: %.5f s", (float) (System.nanoTime() - startTime)/1000000000));
-        print("\n----------------------");
+        //print(String.format("\nSTEP 5: %.5f s", (float) (System.nanoTime() - startTime)/1000000000));
+        //print("\n----------------------");
     }
     
     public void completeFinalList() {

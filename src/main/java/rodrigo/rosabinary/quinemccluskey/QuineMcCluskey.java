@@ -26,7 +26,7 @@ public class QuineMcCluskey implements KeyListener {
     public JButton                  okButton;
     public JLabel             labelVariables;
     public JLabel             labelThemeDark;
-    public int             progressBarStatus;
+    public JProgressBar          progressBar;
     public boolean                 darkTheme;
     
     public String[] wichInput = {
@@ -78,7 +78,6 @@ public class QuineMcCluskey implements KeyListener {
         hasResult          = false;
         errorMsg           = "";
         sopsList           = null;
-        progressBarStatus  = 0;
         writeResultsToFile = !true;
         //expressions        = new ArrayList<>();
     }
@@ -613,7 +612,7 @@ public class QuineMcCluskey implements KeyListener {
 	space2.setBorder(BorderFactory.createLineBorder(borderColor));
         quineMcPanel.add(space2, gbcSpaces);
         
-        JProgressBar pb = new JProgressBar();
+        progressBar = new JProgressBar();
 	gbcSpaces.fill = GridBagConstraints.BOTH;
 	gbcSpaces.gridx = 12;
 	gbcSpaces.gridy = 10;
@@ -621,11 +620,11 @@ public class QuineMcCluskey implements KeyListener {
 	gbcSpaces.gridheight = 1;
         gbcSpaces.weightx = 0.0;
         gbcSpaces.weighty = 0.0;
-        pb.setFont(new Font("Segoe UI", Font.PLAIN, 6));
-        pb.setIndeterminate(!true);
-        pb.setValue(progressBarStatus);
-	pb.setBorder(BorderFactory.createLineBorder(borderColor));
-        quineMcPanel.add(pb, gbcSpaces);
+        progressBar.setFont(new Font("Segoe UI", Font.PLAIN, 6));
+        progressBar.setIndeterminate(!true);
+        progressBar.setValue(0);
+	progressBar.setBorder(BorderFactory.createLineBorder(borderColor));
+        quineMcPanel.add(progressBar, gbcSpaces);
         
         /*sliderTheme.addChangeListener(new ChangeListener() {
             
@@ -1564,7 +1563,7 @@ public class QuineMcCluskey implements KeyListener {
             }
             expressions.add(allExpressions.substring(begin, end));
             //expression = allExpressions;
-            sopsList.add(new SumOfProducts());
+            sopsList.add(new SumOfProducts(progressBar));
             int lastExpressionIndex = expressions.size()-1;
             int lastSOPIndex = sopsList.size()-1;
             //sopsList.get(lastSOPIndex).setExpression(expression, numVars);
@@ -1577,7 +1576,12 @@ public class QuineMcCluskey implements KeyListener {
             sopsList.get(lastSOPIndex).fillMinTermsList();
             sopsList.get(lastSOPIndex).fillTruthTable();
             sopsList.get(lastSOPIndex).fillFinalProductsLists();
+            
             sopsList.get(lastSOPIndex).completeFinalList();
+            //sopsList.get(lastSOPIndex).setNumberOfLiteralsList();
+            //generateAllCombinations(sopsList.get(lastSOPIndex).getNEPLSize());
+            //System.exit(0);
+            
             sopsList.get(lastSOPIndex).buildOptimizedExpression();
             
             if (writeResultsToFile) {
@@ -1598,6 +1602,12 @@ public class QuineMcCluskey implements KeyListener {
         while (begin < allExpressions.length());
     }
 
+    /*
+    tabbedPane.getComponent(0).addPropertyChangeListener(new PropertyChangeListener() {
+        @Override
+        public void propertyChange(PropertyChangeEvent evt) {
+            if ("foreground".equals(evt.getPropertyName())){
+    */
     public void print(Object obj) {
         System.out.print(obj);
     }
@@ -1646,4 +1656,45 @@ public class QuineMcCluskey implements KeyListener {
     public void keyReleased(KeyEvent e) {
     }
     
+    /*
+    private ArrayList<ArrayList<Integer>> combinationsList;
+    private int progress;
+    
+    // completeFinalList STEP 2 /////
+    public void generateAllCombinations(int n) {
+        long startTime = System.nanoTime();
+        combinationsList = new ArrayList<>();
+        for (int r = 1; r <= n; r++) {
+            int[] combination = new int[r];
+            
+            // initialize with lowest lexicographic combination
+            for (int i = 0; i < r; i++) {
+                combination[i] = i;
+            }
+            
+            while (combination[r - 1] < n) {
+                combinationsList.add(new ArrayList<>());
+                for (int i = 0; i < combination.length; i++) {
+                    combinationsList.get(combinationsList.size()-1).add(combination[i]);
+                }
+                
+                // generate next combination in lexicographic order
+                int t = r - 1;
+                while (t != 0 && combination[t] == n - r + t) {
+                    t--;
+                }
+                combination[t]++;
+                for (int i = t + 1; i < r; i++) {
+                    combination[i] = combination[i - 1] + 1;
+                }
+            }
+            progress = 100*r/n; //33
+            //print("\r"+progress+"\tSTEP 2");
+            progressBar.setValue(progress);
+            progressBar.update(progressBar.getGraphics());
+        }
+        print(String.format("\ngenerateAllCombinations: %.5f s", (float) (System.nanoTime() - startTime)/1000000000));
+        print("\n----------------------");
+    }
+    */
 }
