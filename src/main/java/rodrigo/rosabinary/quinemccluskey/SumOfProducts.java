@@ -600,7 +600,7 @@ public class SumOfProducts {
     
     // completeFinalList STEP 2 /////
     public void generateAllCombinations(int n) {
-        //long startTime = System.nanoTime();
+        long startTime = System.nanoTime();
         combinationsList = new ArrayList<>();
         for (int r = 1; r <= n; r++) {
             int[] combination = new int[r];
@@ -634,14 +634,16 @@ public class SumOfProducts {
                 */
             }
             progress = 33*r/n;
-            //print("\n"+progress);
+            print("\r"+progress+"\tSTEP 2");
         }
-        //print(String.format("\ngenerateAllCombinations: %.5f s", (float) (System.nanoTime() - startTime)/1000000000));
+        print(String.format("\ngenerateAllCombinations: %.5f s", (float) (System.nanoTime() - startTime)/1000000000));
+        print("\n----------------------");
     }
     
     // completeFinalList STEP 3 /////
     public void addIndexToCombinationsList() {
-        //long startTime = System.nanoTime();
+        long startTime = System.nanoTime();
+        int pbUpdateFactor = Math.max(1, combinationsList.size());
         for(int c = 0; c < combinationsList.size(); c++) {
             int combinationNumberOfLiterals = 0;
             for (int i = 0; i < combinationsList.get(c).size(); i++) {
@@ -649,75 +651,100 @@ public class SumOfProducts {
                     numberOfLiteralsList.get(combinationsList.get(c).get(i));
             }
             combinationsList.get(c).add(0, combinationNumberOfLiterals);
-            progress += 18*c/combinationsList.size();
-            //print("\n"+progress);
+            if(Math.floorMod(c, pbUpdateFactor)==0) {
+                progress = 33 + 12*c/combinationsList.size();
+                print("\r"+progress+"\tSTEP 3");
+            }
         }
-        //print(String.format("\naddIndexToCombinationsList: %.5f s", (float) (System.nanoTime() - startTime)/1000000000));
+        print(String.format("\naddIndexToCombinationsList: %.5f s", (float) (System.nanoTime() - startTime)/1000000000));
+        print("\n----------------------");
     }
     
     // completeFinalList STEP 4 /////
     // Counting Sort, by Rajat Mishra, geeksforgeeks.org
     public void sortCombinationsList() {
         
-        //long startTime = System.nanoTime();
+        long startTime;// = System.nanoTime();
         
         int n = combinationsList.size();
+        int pbUpdateFactor = Math.max(1, n/80);
+        
         // The output objects array that will have sorted
         ArrayList<ArrayList<Integer>> output = new ArrayList<>();
         
         // Create a count array to store count of individual
         // objects and initialize count array as 0
         int count[] = new int[totalNumberOfLiterals+1];
-        for (int i = 0; i < totalNumberOfLiterals+1; ++i)
+        startTime = System.nanoTime();
+        for (int i = 0; i < totalNumberOfLiterals+1; ++i) {
             count[i] = 0;
-        
+            progress = 45 + 5*i/(totalNumberOfLiterals+1);
+            print("\r"+progress+"\tSTEP 4a");
+        }
+        print(String.format("\nSTEP 4a: %.5f s", (float) (System.nanoTime() - startTime)/1000000000));
+        print("\n----------------------");
         // store count of each object
+        startTime = System.nanoTime();
         for (int i = 0; i < n; ++i) {
             ++count[combinationsList.get(i).get(0)];
+            if(Math.floorMod(i, pbUpdateFactor)==0) {
+                progress = 50 + 8*i/n;
+                print("\r"+progress+"\tSTEP 4b");
+            }
         }
-        
-        progress += 4;
-        //print("\n"+progress);
+        print(String.format("\nSTEP 4b: %.5f s", (float) (System.nanoTime() - startTime)/1000000000));
+        print("\n----------------------");
         
         // Change count[i] so that count[i] now contains
         // actual position of this object in output array
+        startTime = System.nanoTime();
         for (int i = 1; i <= totalNumberOfLiterals; ++i) {
             count[i] += count[i - 1];
+            progress = 58 + 6*i/totalNumberOfLiterals;
+            print("\r"+progress+"\tSTEP 4c");
         }
+        print(String.format("\nSTEP 4c: %.5f s", (float) (System.nanoTime() - startTime)/1000000000));
+        print("\n----------------------");
         
-        progress += 2;
-        //print("\n"+progress);
-        
+        startTime = System.nanoTime();
         int outputSize = (int) Math.pow(2, notEssentialProductsList.size())-1;
         for (int i = 0; i < outputSize; ++i) {
             output.add(new ArrayList<>());
+            if(Math.floorMod(i, pbUpdateFactor)==0) {
+                progress = 64 + 6*i/outputSize;
+                print("\r"+progress+"\tSTEP 4d");
+            }
         }
-        
-        progress += 2;
-        //print("\n"+progress);
+        print(String.format("\nSTEP 4d: %.5f s", (float) (System.nanoTime() - startTime)/1000000000));
+        print("\n----------------------");
         
         // Build the output object array
         // To make it stable we are operating in
         // reverse order.
+        startTime = System.nanoTime();
         for (int i = n - 1; i >= 0; i--) {
             int countIndex = combinationsList.get(i).get(0);
             int outputIndex = count[countIndex] - 1;
             output.set(outputIndex, combinationsList.get(i));
             --count[combinationsList.get(i).get(0)];
-            progress += 4*(n-i)/n;
-            //print("\n"+progress);
+            if(Math.floorMod(i, pbUpdateFactor)==0) {
+                progress = 70 + 8*(n-i)/n;
+                print("\r"+progress+"\tSTEP 4e");
+            }
         }
+        print(String.format("\nSTEP 4e: %.5f s", (float) (System.nanoTime() - startTime)/1000000000));
+        print("\n----------------------");
         
         // Copy the output array to arr, so that arr now
         // contains sorted objects
         combinationsList = (ArrayList) output.clone();
-        
         //print(String.format("\nsortCombinationsList: %.5f s", (float) (System.nanoTime() - startTime)/1000000000));
     }
     
     // completeFinalList STEP 5 /////
     public void testCombinations() {
-        //long startTime = System.nanoTime();
+        long startTime = System.nanoTime();
+        int pbUpdateFactor = Math.max(1, combinationsList.size()/80);
         ArrayList<String> finalListInitial = (ArrayList) finalProductsList.clone();
         for (int c = 0; c < combinationsList.size(); c++) {
             for (int i = 1; i < combinationsList.get(c).size(); i++) {
@@ -727,14 +754,18 @@ public class SumOfProducts {
             }
             setIsCovered();
             if (isAllCovered()) {
-                //print(String.format("\ntestCombinationsList: %.5f s", (float) (System.nanoTime() - startTime)/1000000000));
+                print(String.format("\ntestCombinationsList: %.5f s", (float) (System.nanoTime() - startTime)/1000000000));
                 return;
             }
             finalProductsList = (ArrayList) finalListInitial.clone();
             setIsCovered();
-            progress += 37*c/combinationsList.size();
-            //print("\n"+progress);
+            if(Math.floorMod(c, pbUpdateFactor)==0) {
+                progress = 78 + 22*c/combinationsList.size();
+                print("\r"+progress+"\tSTEP 5");
+            }
         }
+        print(String.format("\nSTEP 5: %.5f s", (float) (System.nanoTime() - startTime)/1000000000));
+        print("\n----------------------");
     }
     
     public void completeFinalList() {
