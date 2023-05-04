@@ -1,5 +1,6 @@
 package rodrigo.rosabinary.quinemccluskey;
 
+import java.io.*;
 import java.util.*;
 
 /**
@@ -305,7 +306,9 @@ public class Tools {
     
     public static String removeSpacesFromExpression(String in) {
         String out = "";
-        
+        if(in == null) {
+            return out;
+        }
         for (int c=0; c < in.length(); c++) {
             
             if (!(in.charAt(c) == ' ')) {
@@ -726,6 +729,33 @@ public class Tools {
                 productsSet.add(j, productsSet.remove(i));
             }
         }
+    }
+    
+    public static int countTotalLines(String fileName) {
+        
+        int lines = 0;
+        
+        try (InputStream is = new BufferedInputStream(new FileInputStream(fileName))) {
+            byte[] c = new byte[1024];
+            int count = 0;
+            int readChars;
+            boolean endsWithoutNewLine = false;
+            while ((readChars = is.read(c)) != -1) {
+                for (int i = 0; i < readChars; ++i) {
+                    if (c[i] == '\n') {
+                        ++count;
+                    }
+                }
+                endsWithoutNewLine = (c[readChars - 1] != '\n');
+            }
+            if (endsWithoutNewLine) {
+                ++count;
+            }
+            lines = count;
+        }
+        catch (IOException e) {
+        }
+        return lines;
     }
     
     private Tools() {

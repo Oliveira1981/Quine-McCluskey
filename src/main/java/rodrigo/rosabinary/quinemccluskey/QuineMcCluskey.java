@@ -4,8 +4,7 @@ import java.awt.*;
 import java.awt.event.*;
 import java.io.*;
 import java.util.*;
-import java.util.logging.Level;
-import java.util.logging.Logger;
+import java.util.logging.*;
 import javax.swing.*;
 import javax.swing.event.*;
 
@@ -13,21 +12,28 @@ import javax.swing.event.*;
  *
  * @author Rodrigo Rosa
  */
-public class QuineMcCluskey implements KeyListener {
+public final class QuineMcCluskey implements KeyListener {
     
     public String                inputFormat;
-    public ArrayList<String>     expressions;
+    public String                expressions;
     public int                       numVars;
     public boolean                 hasResult;
     public String                   errorMsg;
-    public ArrayList<SumOfProducts> sopsList;
+    public SumOfProducts       sumOfProducts;
     public PrintWriter            outputFile;
     public boolean        writeResultsToFile;
     public JButton                  okButton;
     public JLabel             labelVariables;
     public JLabel             labelThemeDark;
     public JProgressBar          progressBar;
+    public int                      progress;
+    public int                   oldProgress;
     public boolean                 darkTheme;
+    public JPanel               quineMcPanel;
+    public JTextArea          textAreaReport;
+    public JTextArea          textAreaResult;
+    public JComboBox<String> comboExpressions;
+    public JComboBox<String> comboWichReport;
     
     public String[] wichInput = {
         "Carregar expressões de um arquivo...",
@@ -72,25 +78,40 @@ public class QuineMcCluskey implements KeyListener {
         newHistoryFile.close();
     }
     
-    public QuineMcCluskey() {
-        inputFormat        = "";
-        numVars            = 0;
-        hasResult          = false;
-        errorMsg           = "";
-        sopsList           = null;
-        writeResultsToFile = !true;
-        //expressions        = new ArrayList<>();
+    public QuineMcCluskey(boolean darkTheme) throws FileNotFoundException {
+        inputFormat        =       "";
+        numVars            =        0;
+        hasResult          =    false;
+        errorMsg           =       "";
+        sumOfProducts      =     null;
+        writeResultsToFile =    !true;
+        progress           =        0;
+        oldProgress        =        0;
+        createQuineMcPanel(darkTheme);
     }
     
     public String getInputFormat(){
         return inputFormat;
     }
     
-    public ArrayList<String> getExpression(){
+    public String getExpression(){
         return expressions;
     }
     
-    public JPanel quineMcPanel (boolean theme) throws FileNotFoundException {
+    public void createQuineMcPanel (boolean theme) throws FileNotFoundException {
+        
+        /*SumOfProducts sops = new SumOfProducts(new SumOfProducts.LoadObserver() {
+            
+            @Override
+            public void progressDidChange(SumOfProducts source, int progress) {
+                progressBar.setValue(progress);
+            }
+            
+            @Override
+            public void informationDidUpdate(SumOfProducts source, String info) {
+                textAreaReport.append(info);
+            }
+        });*/
         
         this.darkTheme = theme;
         
@@ -126,7 +147,7 @@ public class QuineMcCluskey implements KeyListener {
             caretColor          = new Color( 30, 120, 255);
         }
         
-        JPanel quineMcPanel = new JPanel(new GridBagLayout());
+        quineMcPanel = new JPanel(new GridBagLayout());
         
         Font fontDefault = new Font("Segoe UI", Font.BOLD, 13);
         GridBagConstraints gbcSpaces = new GridBagConstraints();
@@ -363,7 +384,7 @@ public class QuineMcCluskey implements KeyListener {
 	space3a.setBorder(BorderFactory.createLineBorder(borderColor));
         quineMcPanel.add(space3a, gbcSpaces);
         
-        JComboBox<String> comboExpressions = new JComboBox<>(getHistory());
+        comboExpressions = new JComboBox<>(getHistory());
         comboExpressions.setPreferredSize(new Dimension(500, 30));
         comboExpressions.setMinimumSize(new Dimension(500, 30));
         comboExpressions.setEditable(true);
@@ -479,7 +500,7 @@ public class QuineMcCluskey implements KeyListener {
 	labelResult.setBorder(BorderFactory.createLineBorder(borderColor));
         quineMcPanel.add(labelResult, gbcLabelResult);
         
-        JTextArea textAreaResult = new JTextArea();
+        textAreaResult = new JTextArea();
         textAreaResult.addKeyListener(this);
         textAreaResult.setFocusable(true);
         textAreaResult.setLineWrap(true);
@@ -512,7 +533,7 @@ public class QuineMcCluskey implements KeyListener {
 	space9.setBorder(BorderFactory.createLineBorder(borderColor));
         quineMcPanel.add(space9, gbcSpaces);
         
-        JComboBox<String> comboWichReport = new JComboBox<>(wichReport);
+        comboWichReport = new JComboBox<>(wichReport);
         comboWichReport.setPreferredSize(new Dimension(250, 30));
         comboWichReport.setMinimumSize(new Dimension(250, 30));
         comboWichReport.addKeyListener(this);
@@ -565,7 +586,7 @@ public class QuineMcCluskey implements KeyListener {
 	labelTime.setBorder(BorderFactory.createLineBorder(borderColor));
         quineMcPanel.add(labelTime, gbcLabelTime);
         
-        JTextArea textAreaReport = new JTextArea();
+        textAreaReport = new JTextArea();
         textAreaReport.addKeyListener(this);
         textAreaReport.setFocusable(true);
         textAreaReport.setLineWrap(true);
@@ -621,7 +642,7 @@ public class QuineMcCluskey implements KeyListener {
         gbcSpaces.weightx = 0.0;
         gbcSpaces.weighty = 0.0;
         progressBar.setFont(new Font("Segoe UI", Font.PLAIN, 6));
-        progressBar.setIndeterminate(!true);
+        progressBar.setIndeterminate(false);
         progressBar.setValue(0);
 	progressBar.setBorder(BorderFactory.createLineBorder(borderColor));
         quineMcPanel.add(progressBar, gbcSpaces);
@@ -656,7 +677,7 @@ public class QuineMcCluskey implements KeyListener {
                     labelStartLine.setForeground(darkDisabledLabelColor);//110, 110, 110
                     
                     //ENJAMBRE pra GUI ouvir a mudança
-                    quineMcPanel.setForeground(Color.green);
+                    createQuineMcPanel.setForeground(Color.green);
                     
                     // e isto é só pra atualizar o comboWichReport, 
                     // que não foi atualizado pois estava off
@@ -690,7 +711,7 @@ public class QuineMcCluskey implements KeyListener {
                     labelStartLine.setForeground(lightDisabledLabelColor);
                     
                     //ENJAMBRE pra GUI ouvir a mudança
-                    quineMcPanel.setForeground(Color.red);
+                    createQuineMcPanel.setForeground(Color.red);
                     
                     // e isto é só pra atualizar o comboWichReport, 
                     // que não foi atualizado pois estava off
@@ -952,8 +973,6 @@ public class QuineMcCluskey implements KeyListener {
                     case 1 -> { // input: digitar
                         textAreaResult.setText("Processando...");
                         textAreaReport.setText("...");
-                        //textAreaResult.update(textAreaResult.getGraphics());
-                        //textAreaReport.update(textAreaReport.getGraphics());
                         
                         SwingUtilities.invokeLater(new Runnable() {
                             
@@ -962,17 +981,16 @@ public class QuineMcCluskey implements KeyListener {
                                 try {
                                     long startTime = System.nanoTime();
                                     labelTime.setText("Tempo:        ");
-                                    //labelTime.update(labelTime.getGraphics());
-                                    //SwingUtilities.updateComponentTreeUI(textAreaReport);
                                     optimizeExpressions(
                                             (String) comboExpressions.getSelectedItem(),
-                                            sliderVars.getValue()
+                                            sliderVars.getValue(),
+                                            true
                                     );
                                     textAreaReport.setFont(fontReport);
                                     String currentSelectedExp = (String) comboExpressions.getSelectedItem();
-                                    if (!(Arrays.asList(getHistory()))
-                                        .contains(
-                                            currentSelectedExp)) {
+                                    if (!(Arrays.asList(getHistory())
+                                        .contains(currentSelectedExp))
+                                        && currentSelectedExp != null) {
                                         comboExpressions.insertItemAt(currentSelectedExp, 0);
                                         comboExpressions.setSelectedIndex(0);
                                         comboExpressions.update(comboExpressions.getGraphics());
@@ -980,10 +998,7 @@ public class QuineMcCluskey implements KeyListener {
                                     }
                                     if (errorMsg.isEmpty()) {
                                         String results;
-                                        results = sopsList.get(0).getResult();
-                                        for (int r = 1; r < sopsList.size(); r++) {
-                                            results += ";\n" + sopsList.get(r).getResult();
-                                        }
+                                        results = sumOfProducts.getResult();
                                         textAreaResult.setText(results);
                                         textAreaReport.setText(reportText(comboWichReport));
                                     }
@@ -991,10 +1006,7 @@ public class QuineMcCluskey implements KeyListener {
                                         textAreaResult.setText(errorMsg);
                                         textAreaReport.setText("-");
                                     }
-                                    //textAreaReport.update(textAreaReport.getGraphics());
                                     labelTime.setText(String.format("Tempo: %.3f s", (float) (System.nanoTime() - startTime)/1000000000));
-                                    //labelTime.update(labelTime.getGraphics());
-                                    //quineMcPanel.repaint();
                                 } catch (Exception ex) {
                                     Logger.getLogger(QuineMcCluskey.class.getName()).log(Level.SEVERE, null, ex);
                                 }
@@ -1004,8 +1016,6 @@ public class QuineMcCluskey implements KeyListener {
                     case 2 -> { // input: aleatória
                         textAreaResult.setText("Processando...");
                         textAreaReport.setText("...");
-                        //textAreaResult.update(textAreaResult.getGraphics());
-                        //textAreaReport.update(textAreaReport.getGraphics());
                         
                         SwingUtilities.invokeLater(new Runnable() {
                             
@@ -1014,17 +1024,16 @@ public class QuineMcCluskey implements KeyListener {
                                 try {
                                     long startTime = System.nanoTime();
                                     labelTime.setText("Tempo:        ");
-                                    //labelTime.update(labelTime.getGraphics());
-                                    //SwingUtilities.updateComponentTreeUI(textAreaReport);
                                     optimizeExpressions(
-                                            (String) comboExpressions.getSelectedItem(),
-                                            sliderVars.getValue()
+                                        (String) comboExpressions.getSelectedItem(),
+                                        sliderVars.getValue(),
+                                        true
                                     );
                                     textAreaReport.setFont(fontReport);
                                     String currentSelectedExp = (String) comboExpressions.getSelectedItem();
-                                    if (!(Arrays.asList(getHistory()))
-                                        .contains(
-                                            currentSelectedExp)) {
+                                    if (!(Arrays.asList(getHistory())
+                                        .contains(currentSelectedExp))
+                                        && currentSelectedExp != null) {
                                         comboExpressions.insertItemAt(currentSelectedExp, 0);
                                         comboExpressions.setSelectedIndex(0);
                                         comboExpressions.update(comboExpressions.getGraphics());
@@ -1032,10 +1041,7 @@ public class QuineMcCluskey implements KeyListener {
                                     }
                                     if (errorMsg.isEmpty()) {
                                         String results;
-                                        results = sopsList.get(0).getResult();
-                                        for (int r = 1; r < sopsList.size(); r++) {
-                                            results += ";\n" + sopsList.get(r).getResult();
-                                        }
+                                        results = sumOfProducts.getResult();
                                         textAreaResult.setText(results);
                                         textAreaReport.setText(reportText(comboWichReport));
                                     }
@@ -1043,10 +1049,7 @@ public class QuineMcCluskey implements KeyListener {
                                         textAreaResult.setText(errorMsg);
                                         textAreaReport.setText("-");
                                     }
-                                    //textAreaReport.update(textAreaReport.getGraphics());
                                     labelTime.setText(String.format("Tempo: %.3f s", (float) (System.nanoTime() - startTime)/1000000000));
-                                    //labelTime.update(labelTime.getGraphics());
-                                    //quineMcPanel.repaint();
                                 } catch (Exception ex) {
                                     Logger.getLogger(QuineMcCluskey.class.getName()).log(Level.SEVERE, null, ex);
                                 }
@@ -1055,16 +1058,14 @@ public class QuineMcCluskey implements KeyListener {
                     }
                     case 0 -> { // input: arquivo
                         textAreaReport.setText("Processando...");
-                        //textAreaReport.update(textAreaReport.getGraphics());
-                        
+                        progressBar.setValue(1);
                         SwingUtilities.invokeLater(new Runnable() {
                             
                             @Override
                             public void run() {
+                                progressBar.update(progressBar.getGraphics());
                                 long startTime = System.nanoTime();
                                 labelTime.setText("Tempo:        ");
-                                //labelTime.update(labelTime.getGraphics());
-                                //SwingUtilities.updateComponentTreeUI(textAreaReport);
                                 
                                 int startLine = 1;
                                 int endLine = -1;
@@ -1100,11 +1101,8 @@ public class QuineMcCluskey implements KeyListener {
                                 } catch (FileNotFoundException ex) {
                                     Logger.getLogger(QuineMcCluskey.class.getName()).log(Level.SEVERE, null, ex);
                                 }
-                                    
+                                
                                 int line = 1;
-                                //if (line < startLine) {
-                                //    print("\nSkipping line(s)...\n");
-                                //}
                                 while (line < startLine) {
                                     if (sc.hasNext()) {
                                         sc.nextLine();
@@ -1119,133 +1117,125 @@ public class QuineMcCluskey implements KeyListener {
                                     textAreaReport.setText(errorMsg);
                                     return;
                                 }
-                                //print("\nReading...");
-                                    
+                                
                                 textAreaReport.setFont(new Font("Consolas", Font.PLAIN, 14));
-                                //textAreaReport.setText("");
                                 int count = line;
                                 ArrayList<String> fullReport = new ArrayList<>();
+                                int totalLines = Tools.countTotalLines(selectedFile.getPath());
+                                int linesToRead;
                                 if (endLine == -1) { // LER ATÉ O FINAL DO ARQUIVO
+                                    linesToRead = 1 + totalLines - line;
+                                    // updateFactor calculado de modo a aumentar suavemente com o aumento do número de linhas
+                                    int updateFactor = 100_000 * (int) Math.log10(Math.max(10, linesToRead-5000));
                                     while (sc.hasNext()) {
                                         try {
-                                            //print("\nline:"+line++);
-                                            optimizeExpressions(sc.nextLine(), numVars);
+                                            //print("\nline:"+line);
+                                            optimizeExpressions(sc.nextLine(), numVars, false);//, textAreaResult, textAreaReport);
                                         } catch (Exception ex) {
                                             Logger.getLogger(QuineMcCluskey.class.getName()).log(Level.SEVERE, null, ex);
                                         }
-                                            
-                                        //Apenas uma expressão por linha
-                                        int x = 0;
-                                            
-                                        //Aceita mais de uma expressão por linha
-                                        //for (int x = 0; x < expressions.size(); x++) {
-                                            
-                                            //textAreaReport.append("\n" + count + "\t");
-                                            fullReport.add("\n" + count + "\t");
-                                            count++;
-                                                
-                                            String result = sopsList.get(x).getResult();
-                                            String formattedResult = result + ' ';
-                                            for (int c = result.length(); c < 80; c++) {
-                                                formattedResult += '.';
-                                            }
-                                            //textAreaReport.append(formattedResult + " ");
-                                            fullReport.add(formattedResult + " ");
-                                                
-                                            String hexa = sopsList.get(x).expression2hexadecimal(sopsList.get(0).getResult());
-                                            String formattedHexa = hexa + ' ';
-                                            for (int c = hexa.length(); c < 20; c++) {
-                                                formattedHexa += '.';
-                                            }
-                                            //textAreaReport.append(formattedHexa + " ");
-                                            fullReport.add(formattedHexa + " ");
-                                                
-                                            //String numLit = String.valueOf(SumOfProducts.numberOfLiterals(sopsList.get(0).getResult(), sopsList.get(0).getNumberOfVars(), sopsList.get(0).getNumberOfProducts()));
-                                            String numLit = String.valueOf(Tools.numberOfLiterals(sopsList.get(x).getResult(), sopsList.get(x).getNumberOfVars(), sopsList.get(x).getNumberOfProducts()));String formattedNumLit = "";
-                                            for (int c = 0; c < (3 - numLit.length()); c++) {
-                                                formattedNumLit += ' ';
-                                            }
-                                            formattedNumLit += numLit;
-                                            //textAreaReport.append(formattedNumLit + "\n");
-                                            fullReport.add(formattedNumLit + "\n");
-                                                
-                                            //Exibe atualização a cada X iterações
-                                            if (Math.floorMod(count, 500) == 0) {
-                                                textAreaReport.setText(
-                                                    "ÍNDICE\t" +
-                                                    "EXPRESSÃO MINIMIZADA\n"
-                                                );
-                                                textAreaReport.append("\n" + count + "\t" + result + " ...");
-                                                textAreaReport.update(textAreaReport.getGraphics());
-                                                labelTime.setText(String.format("Tempo: %.3f s", (float) (System.nanoTime() - startTime)/1000000000));
-                                                labelTime.update(labelTime.getGraphics());
-                                            }
-                                        //}
+                                        
+                                        fullReport.add("\n" + count + "\t");
+                                        count++;
+                                        
+                                        String result = sumOfProducts.getResult();
+                                        String formattedResult = result + ' ';
+                                        for (int c = result.length(); c < 80; c++) {
+                                            formattedResult += '.';
+                                        }
+                                        fullReport.add(formattedResult + " ");
+                                        
+                                        String hexa = sumOfProducts.expression2hexadecimal(sumOfProducts.getResult());
+                                        String formattedHexa = hexa + ' ';
+                                        for (int c = hexa.length(); c < 20; c++) {
+                                            formattedHexa += '.';
+                                        }
+                                        fullReport.add(formattedHexa + " ");
+                                        
+                                        String numLit = String.valueOf(Tools.numberOfLiterals(sumOfProducts.getResult(), sumOfProducts.getNumberOfVars(), sumOfProducts.getNumberOfProducts()));String formattedNumLit = "";
+                                        for (int c = 0; c < (3 - numLit.length()); c++) {
+                                            formattedNumLit += ' ';
+                                        }
+                                        formattedNumLit += numLit;
+                                        fullReport.add(formattedNumLit + "\n");
+                                        
+                                        //Exibe atualização a cada X iterações
+                                        if (Math.floorMod(count, 500) == 0) {
+                                            textAreaReport.setText(
+                                                "ÍNDICE\t" +
+                                                "EXPRESSÃO MINIMIZADA\n"
+                                            );
+                                            textAreaReport.append("\n" + count + "\t" + result + " ...");
+                                            textAreaReport.update(textAreaReport.getGraphics());
+                                            labelTime.setText(String.format("Tempo: %.3f s", (float) (System.nanoTime() - startTime)/1000000000));
+                                            labelTime.update(labelTime.getGraphics());
+                                        }
+                                        progress = 95*line/linesToRead;
+                                        if(Math.floorMod(System.nanoTime()-startTime, updateFactor) == 0) { // aleatório, não tempo
+                                            progressBar.setValue(progress);
+                                            progressBar.update(progressBar.getGraphics());
+                                        }
+                                        line++;
                                     }
                                 }
                                 else {
+                                    linesToRead = 1 + endLine - line;
+                                    // updateFactor calculado de modo a aumentar suavemente com o aumento do número de linhas
+                                    int updateFactor = 100_000 * (int) Math.log10(Math.max(10, linesToRead-5000));
                                     while (line <= endLine) {
                                         try {
                                             //print("\nline:"+line);
-                                            optimizeExpressions(sc.nextLine(), numVars);
+                                            optimizeExpressions(sc.nextLine(), numVars, false);//, textAreaResult, textAreaReport);
                                         } catch (Exception ex) {
                                             Logger.getLogger(QuineMcCluskey.class.getName()).log(Level.SEVERE, null, ex);
                                         }
-                                            
-                                        //Apenas uma expressão por linha
-                                        int x = 0;
-                                            
-                                        //Aceita mais de uma expressão por linha
-                                        //for (int x = 0; x < expressions.size(); x++) {
-                                            
-                                            //textAreaReport.append("\n" + count + "\t");
-                                            fullReport.add("\n" + count + "\t");
-                                            count++;
-                                            
-                                            String result = sopsList.get(x).getResult();
-                                            String formattedResult = result + ' ';
-                                            for (int c = result.length(); c < 80; c++) {
-                                                formattedResult += '.';
-                                            }
-                                            //textAreaReport.append(formattedResult + " ");
-                                            fullReport.add(formattedResult + " ");
-                                                
-                                            String hexa = sopsList.get(x).expression2hexadecimal(sopsList.get(x).getResult());
-                                            String formattedHexa = hexa + ' ';
-                                            for (int c = hexa.length(); c < 20; c++) {
-                                                formattedHexa += '.';
-                                            }
-                                            //textAreaReport.append(formattedHexa + " ");
-                                            fullReport.add(formattedHexa + " ");
-                                                
-                                            //String numLit = String.valueOf(SumOfProducts.numberOfLiterals(sopsList.get(0).getResult(), sopsList.get(0).getNumberOfVars(), sopsList.get(0).getNumberOfProducts()));
-                                            String numLit = String.valueOf(Tools.numberOfLiterals(sopsList.get(x).getResult(), sopsList.get(x).getNumberOfVars(), sopsList.get(x).getNumberOfProducts()));
-                                            String formattedNumLit = "";
-                                            for (int c = 0; c < (3 - numLit.length()); c++) {
-                                                formattedNumLit += ' ';
-                                            }
-                                            formattedNumLit += numLit;
-                                            //textAreaReport.append(formattedNumLit + "\n");
-                                            fullReport.add(formattedNumLit + "\n");
-                                                
-                                            //Exibe atualização a cada X iterações
-                                            if (Math.floorMod(count, 500) == 0) {
-                                                textAreaReport.setText(
-                                                    "ÍNDICE\t" +
-                                                    "EXPRESSÃO MINIMIZADA\n"
-                                                );
-                                                textAreaReport.append("\n" + count + "\t" + result + " ...");
-                                                textAreaReport.update(textAreaReport.getGraphics());
-                                                labelTime.setText(String.format("Tempo: %.3f s", (float) (System.nanoTime() - startTime)/1000000000));
-                                                labelTime.update(labelTime.getGraphics());
-                                            }
-                                            line++;
-                                        //}
+                                        
+                                        fullReport.add("\n" + count + "\t");
+                                        count++;
+                                        
+                                        String result = sumOfProducts.getResult();
+                                        String formattedResult = result + ' ';
+                                        for (int c = result.length(); c < 80; c++) {
+                                            formattedResult += '.';
+                                        }
+                                        fullReport.add(formattedResult + " ");
+                                        
+                                        String hexa = sumOfProducts.expression2hexadecimal(sumOfProducts.getResult());
+                                        String formattedHexa = hexa + ' ';
+                                        for (int c = hexa.length(); c < 20; c++) {
+                                            formattedHexa += '.';
+                                        }
+                                        fullReport.add(formattedHexa + " ");
+                                        
+                                        String numLit = String.valueOf(Tools.numberOfLiterals(sumOfProducts.getResult(), sumOfProducts.getNumberOfVars(), sumOfProducts.getNumberOfProducts()));
+                                        String formattedNumLit = "";
+                                        for (int c = 0; c < (3 - numLit.length()); c++) {
+                                            formattedNumLit += ' ';
+                                        }
+                                        formattedNumLit += numLit;
+                                        fullReport.add(formattedNumLit + "\n");
+                                        
+                                        //Exibe atualização a cada X iterações
+                                        if (Math.floorMod(count, 500) == 0) {
+                                            textAreaReport.setText(
+                                                "ÍNDICE\t" +
+                                                "EXPRESSÃO MINIMIZADA\n"
+                                            );
+                                            textAreaReport.append("\n" + count + "\t" + result + " ...");
+                                            textAreaReport.update(textAreaReport.getGraphics());
+                                            labelTime.setText(String.format("Tempo: %.3f s", (float) (System.nanoTime() - startTime)/1000000000));
+                                            labelTime.update(labelTime.getGraphics());
+                                        }
+                                        progress = 95*line/linesToRead;
+                                        if(Math.floorMod(System.nanoTime()-startTime, updateFactor) == 0) { // aleatório, não tempo
+                                            progressBar.setValue(progress);
+                                            progressBar.update(progressBar.getGraphics());
+                                        }
+                                        line++;
                                     }
                                 }
                                 textAreaReport.append("\n\nFinalizando...");
                                 textAreaReport.update(textAreaReport.getGraphics());
-                                //mainFrame.setMinimumSize(new Dimension(1020,520));
                                 textAreaReport.setText(
                                     "ÍNDICE\t" +
                                     "EXPRESSÃO MINIMIZADA" +
@@ -1260,12 +1250,19 @@ public class QuineMcCluskey implements KeyListener {
                                 KeyboardFocusManager.getCurrentKeyboardFocusManager().focusNextComponent(labelTime);
                                 textAreaReport.setCaretColor(caretColor);
                                 textAreaReport.getCaret().setVisible(true);
+                                int fullReportSize = fullReport.size();
+                                // updateFactor calculado de modo a aumentar suavemente com o aumento do número de linhas
+                                int updateFactor = 100_000 * (int) Math.log10(Math.max(10, linesToRead-5000));
                                 for (int a = 0; a < fullReport.size(); a++) {
                                     textAreaReport.append(fullReport.get(a));
+                                    if(Math.floorMod(System.nanoTime()-startTime, updateFactor) == 0) { // aleatório, não tempo
+                                        progressBar.setValue(95 + 5*a/fullReportSize);
+                                        progressBar.update(progressBar.getGraphics());
+                                    }
                                 }
                                 textAreaReport.setCaretPosition(0);
+                                progressBar.setValue(100);
                                 labelTime.setText(String.format("Tempo: %.3f s", (float) (System.nanoTime() - startTime)/1000000000));
-                                //quineMcPanel.repaint();
                             }
                         });
                     }
@@ -1277,7 +1274,6 @@ public class QuineMcCluskey implements KeyListener {
                 if(writeResultsToFile) {
                     outputFile.close();
                 }
-                //labelTime.setText(String.format("Tempo: %.3f s", (float) (System.nanoTime() - startTime)/1000000000));
             }
         });
         
@@ -1288,11 +1284,7 @@ public class QuineMcCluskey implements KeyListener {
                 try {
                     if (errorMsg.isEmpty()) {
                         if (hasResult) {
-                            try {
-                                textAreaReport.setText(reportText(comboWichReport));
-                            }
-                            catch (UnsupportedEncodingException ex) {
-                            }
+                            textAreaReport.setText(reportText(comboWichReport));
                         }
                     }
                     else {
@@ -1300,7 +1292,7 @@ public class QuineMcCluskey implements KeyListener {
                     }
                     textAreaReport.setCaretPosition(0);
                 }
-                catch (FileNotFoundException ex) {
+                catch (FileNotFoundException | UnsupportedEncodingException ex) {
                 }
             }
         });
@@ -1309,13 +1301,10 @@ public class QuineMcCluskey implements KeyListener {
             
             @Override
             public void actionPerformed(ActionEvent e) {
-                //long startTime = System.nanoTime();
                 textAreaResult.setText("Processando...");
                 textAreaReport.setText("...");
                 labelTime.setText("Tempo:        ");
                 labelTime.update(labelTime.getGraphics());
-                //textAreaResult.update(textAreaResult.getGraphics());
-                //textAreaReport.update(textAreaReport.getGraphics());
                 if(editor.getText().isBlank()) {
                     editor.setText((String) comboExpressions.getSelectedItem());
                 }
@@ -1333,23 +1322,18 @@ public class QuineMcCluskey implements KeyListener {
                     @Override
                     public void run() {
                         long startTime = System.nanoTime();
-                        //SwingUtilities.updateComponentTreeUI(textAreaReport);
                         try {
                             optimizeExpressions(
                                 (String) comboExpressions.getSelectedItem(),
-                                sliderVars.getValue()
+                                sliderVars.getValue(),
+                                true
                             );
                         } catch (Exception ex) {
                             Logger.getLogger(QuineMcCluskey.class.getName()).log(Level.SEVERE, null, ex);
                         }
                         if (errorMsg.isEmpty()) {
                             String results;
-                            if (sopsList.size() > 1) {
-                                results = "";
-                            }
-                            else {
-                                results = sopsList.get(0).getResult();
-                            }
+                            results = sumOfProducts.getResult();
                             textAreaResult.setText(results);
                             try {
                                 textAreaReport.setText(reportText(comboWichReport));
@@ -1363,9 +1347,9 @@ public class QuineMcCluskey implements KeyListener {
                         }
                         try {
                             String currentSelectedExp = (String) comboExpressions.getSelectedItem();
-                            if (!(Arrays.asList(getHistory()))
-                                .contains(
-                                    currentSelectedExp)) {
+                                if (!(Arrays.asList(getHistory())
+                                    .contains(currentSelectedExp))
+                                    && currentSelectedExp != null) {
                                 comboExpressions.insertItemAt(currentSelectedExp, 0);
                                 comboExpressions.setSelectedIndex(0);
                                 comboExpressions.update(comboExpressions.getGraphics());
@@ -1376,21 +1360,17 @@ public class QuineMcCluskey implements KeyListener {
                         }
                         
                         textAreaReport.setCaretPosition(0);
-                        //textAreaReport.update(textAreaReport.getGraphics());
                         labelTime.setText(String.format("Tempo: %.3f s", (float) (System.nanoTime() - startTime)/1000000000));
-                        //labelTime.update(labelTime.getGraphics());
-                        //quineMcPanel.repaint();
                     }
                 });
                 if(writeResultsToFile) {
                     outputFile.close();
                 }
-                //labelTime.setText(String.format("Tempo: %.3f s", (float) (System.nanoTime() - startTime)/1000000000));
-                //labelTime.update(labelTime.getGraphics());
-                //System.out.printf("\nTime elapsed: %.3f s", (float) elapsedTime/1000000000);
             }
         });
-        
+    }
+    
+    public JPanel getPanel(){
         return quineMcPanel;
     }
     
@@ -1470,144 +1450,65 @@ public class QuineMcCluskey implements KeyListener {
         String out = "";
         switch ((String)comboWichReport.getSelectedItem()) {
             case "Relatório" -> {
-                try {
-                    for (int r=0; r < sopsList.size(); r++) {
-                        out += sopsList.get(r).getBasicReport();
-                    }
-                }
-                catch (UnsupportedEncodingException ex) {
-                }
+                out += sumOfProducts.getBasicReport();
             }
             case "Tabela Verdade" -> {
-                if (sopsList.size() == 1) {
-                    out += sopsList.get(0).getTruthTable();
-                }
-                else {
-                    for (int r=0; r < sopsList.size(); r++) {
-                        out += "Expressão de Entrada: \n> ";
-                        out += sopsList.get(r).getOriginalInputExpression() + "\n";
-                        out += sopsList.get(r).getTruthTable();
-                        out += "\n==================================================\n";
-                    }
-                }
+                out += sumOfProducts.getTruthTable();
             }
             case "Mintermos e seus Produtos" -> {
-                if (sopsList.size() == 1) {
-                    out += sopsList.get(0).getProductsFromMinTerms();
-                }
-                else{
-                    for (int r=0; r < sopsList.size(); r++) {
-                        out += "Expressão de Entrada: \n> ";
-                        out += sopsList.get(r).getOriginalInputExpression() + "\n";
-                        out += sopsList.get(r).getProductsFromMinTerms();
-                        out += "\n==================================================\n";
-                    }
-                }
+                out += sumOfProducts.getProductsFromMinTerms();
             }
             case "Produtos e seus Mintermos" -> {
-                if (sopsList.size() == 1) {
-                    out += sopsList.get(0).getMinTermsFromProducts();
-                }
-                else {
-                    for (int r=0; r < sopsList.size(); r++) {
-                        out += "Expressão de Entrada: \n> ";
-                        out += sopsList.get(r).getOriginalInputExpression() + "\n";
-                        out += sopsList.get(r).getMinTermsFromProducts();
-                        out += "\n==================================================\n";
-                    }
-                }
+                out += sumOfProducts.getMinTermsFromProducts();
             }
             case "Tabela de Cobertura" -> {
-                if (sopsList.size() == 1) {
-                    out += sopsList.get(0).getCoveringTable();
-                }
-                else {
-                    for (int r=0; r < sopsList.size(); r++) {
-                        out += "Expressão de Entrada: \n> ";
-                        out += sopsList.get(r).getOriginalInputExpression() + "\n";
-                        out += sopsList.get(r).getCoveringTable();
-                        out += "\n==================================================\n";
-                    }
-                }
+                out += sumOfProducts.getCoveringTable();
             }
             default -> {
-                try {
-                    for (int r=0; r < sopsList.size(); r++) {
-                        out = sopsList.get(r).getBasicReport();
-                    }
-                }
-                catch (UnsupportedEncodingException ex) {
-                }
+                out = sumOfProducts.getBasicReport();
             }
         }
         return out;
     }
     
     public void optimizeExpressions(
-        String allExpressions,
-        int numVars
+        String inputExpression,
+        int numVars,
+        boolean updateProgressBar//,
+        //JTextArea result,
+        //JTextArea report
         ) throws Exception {
         
-        //SumOfProducts sopsList = new SumOfProducts();
-        sopsList = new ArrayList<>();
-        expressions = new ArrayList<>();
+        expressions = Tools.removeSpacesFromExpression(inputExpression);
+        sumOfProducts = new SumOfProducts(progressBar);
+        if (!sumOfProducts.setExpression(expressions, numVars))
+            return;
+        sumOfProducts.sortByOnesCount();
+        sumOfProducts.mergePrimeImplicants(10);
+        sumOfProducts.fillMinTermsList();
+        sumOfProducts.fillTruthTable();
+        sumOfProducts.fillFinalProductsLists();
+        sumOfProducts.completeFinalList(updateProgressBar);
+        sumOfProducts.buildOptimizedExpression();
         
-        allExpressions = Tools.removeSpacesFromExpression(allExpressions);
-        int begin = 0;
-        int end;
-        do {
-            end = allExpressions.indexOf(';', begin);
-            //end = -1; //ACEITAR APENAS UMA EXPRESSÃO POR LINHA
-            if (end < 0) {
-                end = allExpressions.length();
-            }
-            expressions.add(allExpressions.substring(begin, end));
-            //expression = allExpressions;
-            sopsList.add(new SumOfProducts(progressBar));
-            int lastExpressionIndex = expressions.size()-1;
-            int lastSOPIndex = sopsList.size()-1;
-            //sopsList.get(lastSOPIndex).setExpression(expression, numVars);
-            if (!sopsList.get(lastSOPIndex).setExpression(expressions.get(lastExpressionIndex), numVars)) {
-                begin = end + 1;
-                continue;
-            }
-            sopsList.get(lastSOPIndex).sortByOnesCount();
-            sopsList.get(lastSOPIndex).mergePrimeImplicants(10);
-            sopsList.get(lastSOPIndex).fillMinTermsList();
-            sopsList.get(lastSOPIndex).fillTruthTable();
-            sopsList.get(lastSOPIndex).fillFinalProductsLists();
-            
-            sopsList.get(lastSOPIndex).completeFinalList();
-            //sopsList.get(lastSOPIndex).setNumberOfLiteralsList();
-            //generateAllCombinations(sopsList.get(lastSOPIndex).getNEPLSize());
-            //System.exit(0);
-            
-            sopsList.get(lastSOPIndex).buildOptimizedExpression();
-            
-            if (writeResultsToFile) {
-                print(sopsList.get(lastSOPIndex).getResult()+"\t", outputFile);
-                print(sopsList.get(lastSOPIndex).expression2hexadecimal(sopsList.get(lastSOPIndex).getResult())+"\t", outputFile);
-                print(Tools.numberOfLiterals(sopsList.get(lastSOPIndex).getResult(), sopsList.get(lastSOPIndex).getNumberOfVars(), sopsList.get(lastSOPIndex).getNumberOfProducts()), outputFile);
-                //print("\t"+sopsList.get(lastSOPIndex).getNEPLSize(), outputFile);
-                //if (sopsList.get(lastSOPIndex).isInspect())
-                //    print(" < INSPECT! >", outputFile);
-                print("\n", outputFile);
-            }
-            
-            begin = end + 1;
-            if (begin >= allExpressions.length()) {
-                break;
-            }
+        if (writeResultsToFile) {
+            print(sumOfProducts.getResult()+"\t", outputFile);
+            print(sumOfProducts.expression2hexadecimal(sumOfProducts.getResult())+"\t", outputFile);
+            print(Tools.numberOfLiterals(sumOfProducts.getResult(), sumOfProducts.getNumberOfVars(), sumOfProducts.getNumberOfProducts()), outputFile);
+            //print("\t"+sumOfProducts.getNEPLSize(), outputFile);
+            //if (sumOfProducts.isInspect())
+            //    print(" < INSPECT! >", outputFile);
+            print("\n", outputFile);
         }
-        while (begin < allExpressions.length());
     }
-
+    
     /*
     tabbedPane.getComponent(0).addPropertyChangeListener(new PropertyChangeListener() {
         @Override
         public void propertyChange(PropertyChangeEvent evt) {
             if ("foreground".equals(evt.getPropertyName())){
     */
+    
     public void print(Object obj) {
         System.out.print(obj);
     }
@@ -1655,46 +1556,5 @@ public class QuineMcCluskey implements KeyListener {
     @Override
     public void keyReleased(KeyEvent e) {
     }
-    
-    /*
-    private ArrayList<ArrayList<Integer>> combinationsList;
-    private int progress;
-    
-    // completeFinalList STEP 2 /////
-    public void generateAllCombinations(int n) {
-        long startTime = System.nanoTime();
-        combinationsList = new ArrayList<>();
-        for (int r = 1; r <= n; r++) {
-            int[] combination = new int[r];
-            
-            // initialize with lowest lexicographic combination
-            for (int i = 0; i < r; i++) {
-                combination[i] = i;
-            }
-            
-            while (combination[r - 1] < n) {
-                combinationsList.add(new ArrayList<>());
-                for (int i = 0; i < combination.length; i++) {
-                    combinationsList.get(combinationsList.size()-1).add(combination[i]);
-                }
-                
-                // generate next combination in lexicographic order
-                int t = r - 1;
-                while (t != 0 && combination[t] == n - r + t) {
-                    t--;
-                }
-                combination[t]++;
-                for (int i = t + 1; i < r; i++) {
-                    combination[i] = combination[i - 1] + 1;
-                }
-            }
-            progress = 100*r/n; //33
-            //print("\r"+progress+"\tSTEP 2");
-            progressBar.setValue(progress);
-            progressBar.update(progressBar.getGraphics());
-        }
-        print(String.format("\ngenerateAllCombinations: %.5f s", (float) (System.nanoTime() - startTime)/1000000000));
-        print("\n----------------------");
-    }
-    */
+
 }

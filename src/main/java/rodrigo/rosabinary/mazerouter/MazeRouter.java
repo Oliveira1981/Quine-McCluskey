@@ -11,10 +11,10 @@ import javax.swing.*;
  *
  * @author Rodrigo Rosa
  */
-public class MazeRouter implements KeyListener {
+public final class MazeRouter implements KeyListener {
     
     public Maze maze             = new Maze(60, 30);
-    public JPanel panel;
+    public JPanel mazePanel;
     public ArrayList<JTextField> textFields = new ArrayList<>();
     public Font textFieldFont    = new Font("Segoe UI", Font.BOLD, 10);
     public boolean pressed       = false;
@@ -34,16 +34,17 @@ public class MazeRouter implements KeyListener {
     public Color colorBorder;//     = new Color(100, 100, 100, 40);
     public Sound sound           = new Sound();
     public Clip clip;
+    //private JPanel mazePanel;
 
-    public MazeRouter(){
-        
+    public MazeRouter(boolean darkTheme){
+        createMazePanel(darkTheme);
     }
     
-    public JPanel mazeRouterPanel (boolean darkTheme) {
+    public void createMazePanel (boolean darkTheme) {
         GridBagLayout grid = new GridBagLayout();
         GridBagConstraints c = new GridBagConstraints();
-        panel = new JPanel(grid);
-        //JScrollPane scrollPane = new JScrollPane(panel);
+        mazePanel = new JPanel(grid);
+        //JScrollPane scrollPane = new JScrollPane(mazePanel);
         if (darkTheme) {
             colorFree = new Color(10, 10, 10);
             colorBorder = new Color(100, 100, 100, 40);
@@ -77,7 +78,7 @@ public class MazeRouter implements KeyListener {
         	c.gridheight = 1;
                 c.weightx = 0.1;
                 c.weighty = 0.1;
-                panel.add(textFields.get(last), c);
+                mazePanel.add(textFields.get(last), c);
                 textFields.get(last).addKeyListener(this);
                 textFields.get(last).addMouseListener(new MouseListener() {
                     
@@ -186,7 +187,11 @@ public class MazeRouter implements KeyListener {
                 });
             }
         }
-        return panel;
+        //return mazePanel;
+    }
+    
+    public JPanel getMazePanel() {
+        return mazePanel;
     }
     
     public void findPath(Maze maze){
