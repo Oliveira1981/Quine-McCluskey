@@ -26,7 +26,8 @@ public final class QuineMcCluskey implements KeyListener {
     private String
             inputFormat,
             expressions,
-            errorMsg;
+            errorMsg,
+            oldEditor;
     
     private Font
             fontReport;
@@ -101,6 +102,7 @@ public final class QuineMcCluskey implements KeyListener {
         progress           =        0;
         inputFormat        =       "";
         errorMsg           =       "";
+        oldEditor          =       "";
         sumOfProducts      =     null;
         createQuineMcPanel(darkTheme);
     }
@@ -973,6 +975,7 @@ public final class QuineMcCluskey implements KeyListener {
             
             @Override
             public void actionPerformed(ActionEvent e) {
+                oldEditor = editor.getText();
                 if (writeResultsToFile) {
                     try {
                         setFileToWrite("Quine-McCluskey Results.txt");
@@ -1147,6 +1150,7 @@ public final class QuineMcCluskey implements KeyListener {
             
             @Override
             public void actionPerformed(ActionEvent e) {
+                oldEditor = editor.getText();
                 if (writeResultsToFile) {
                     try {
                         setFileToWrite("Quine-McCluskey Results.txt");
@@ -1172,10 +1176,9 @@ public final class QuineMcCluskey implements KeyListener {
             // pelo histórico uma nova expressão
             @Override
             public void actionPerformed(ActionEvent e) {
-                if (!("comboBoxEdited".equals(e.getActionCommand()))) {
-                    // CAUSA PROBLEMA:
-                    //textAreaResult.setText("");
-                    //textAreaReport.setText("");
+                if(!editor.getText().equals(oldEditor)){
+                    textAreaResult.setText("");
+                    textAreaReport.setText("");
                 }
             }
         });
