@@ -95,8 +95,8 @@ public class GUI implements KeyListener {
                 
                 mainFrame.add(tabbedPane);
                 mainFrame.pack();
-                mainFrame.setMinimumSize(new Dimension(840, 400));
-                mainFrame.setSize(new Dimension(900, 600));
+                mainFrame.setMinimumSize(new Dimension(1200, 500));
+                mainFrame.setSize(new Dimension(1200, 600));
                 Dimension dim = Toolkit.getDefaultToolkit().getScreenSize();
                 mainFrame.setLocation(dim.width/2-mainFrame.getSize().width/2, dim.height/2-mainFrame.getSize().height/2);
                 mainFrame.setVisible(true);

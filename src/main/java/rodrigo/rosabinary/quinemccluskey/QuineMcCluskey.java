@@ -498,7 +498,7 @@ public final class QuineMcCluskey implements KeyListener {
 	gbcLabelResult.fill = GridBagConstraints.NONE;
 	gbcLabelResult.gridx = 1;
 	gbcLabelResult.gridy = 5;
-	gbcLabelResult.gridwidth = 14;
+	gbcLabelResult.gridwidth = 1;
 	gbcLabelResult.gridheight = 1;
         gbcLabelResult.weightx = 0.0;
         gbcLabelResult.weighty = 0.0;
@@ -582,9 +582,9 @@ public final class QuineMcCluskey implements KeyListener {
         labelTime.setHorizontalAlignment(SwingConstants.RIGHT);
         GridBagConstraints gbcLabelTime = new GridBagConstraints();
         gbcLabelTime.fill = GridBagConstraints.BOTH;
-	gbcLabelTime.gridx = 12;
+	gbcLabelTime.gridx = 3;
 	gbcLabelTime.gridy = 8;
-	gbcLabelTime.gridwidth = 3;
+	gbcLabelTime.gridwidth = 12;
 	gbcLabelTime.gridheight = 1;
         gbcLabelTime.weightx = 0.0;
         gbcLabelTime.weighty = 0.0;
