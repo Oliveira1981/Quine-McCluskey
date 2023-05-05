@@ -9,8 +9,6 @@ import javax.sound.sampled.*;
  */
 public class Sound {
     
-    
-    
     public Clip play(String sound) throws
             LineUnavailableException,
             UnsupportedAudioFileException,

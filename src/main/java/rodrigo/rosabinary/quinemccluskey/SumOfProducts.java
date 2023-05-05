@@ -10,48 +10,66 @@ import javax.swing.*;
  */
 public class SumOfProducts {
 
-    private boolean                                isError;
-    private boolean                                inspect;
-    private int                               numberOfVars;
-    private int                           numberOfProducts;
-    private String                                  result;
-    private String                                  report;
-    private String                     originalInputFormat;
-    private String                             inputFormat;
-    private String                 originalInputExpression;
-    private String                     convertedExpression;
-    private String                           variablesList;
-    private ArrayList<Integer>        numberOfLiteralsList;
-    private int                      totalNumberOfLiterals;
-    private ArrayList<String>        essentialProductsList;
-    private ArrayList<String>     notEssentialProductsList;
-    private ArrayList<String>            finalProductsList;
-    private ArrayList<String>                   truthTable;
-    private ArrayList<Product>                productsList; // Linhas da coveringTable
-    private ArrayList<Product>             auxProductsList;
-    private ArrayList<MinTerm>                minTermsList; // Colunas da coveringTable
-    private ArrayList<ArrayList<Integer>> combinationsList;
-    public int progress, oldProgress;
-    public JProgressBar progressBar;
+    private boolean
+            isError,
+            inspect;
+    
+    private int
+            numberOfVars,
+            numberOfProducts,
+            totalNumberOfLiterals,
+            progress,
+            oldProgress;
+    
+    private String
+            result,
+            report,
+            originalInputFormat,
+            inputFormat,
+            originalInputExpression,
+            convertedExpression,
+            variablesList;
+    
+    private ArrayList<Integer>
+            numberOfLiteralsList;
+    
+    private ArrayList<String>
+            essentialProductsList,
+            notEssentialProductsList,
+            finalProductsList,
+            truthTable;
+    
+    private ArrayList<Product>
+            productsList,     // Linhas da Tabela de Cobertura
+            auxProductsList;
+    
+    private ArrayList<MinTerm>
+            minTermsList;     // Colunas da Tabela de Cobertura
+    
+    private ArrayList<ArrayList<Integer>>
+            combinationsList;
+    
+    public JProgressBar
+            progressBar;
     
     public SumOfProducts(String expression, int numVars, JProgressBar progressBar) {
         setExpression(expression, numVars);
     }
     
     public SumOfProducts(JProgressBar progressBar) {
-        this.originalInputFormat     = "Literal";
-        this.inputFormat             = "Literal";
-        this.originalInputExpression = "";
-        this.convertedExpression     = "";
-        this.totalNumberOfLiterals   = 0;
-        this.variablesList           = "";
         this.isError                 = false;
         this.inspect                 = false;
-        this.report                  = "";
+        this.totalNumberOfLiterals   = 0;
         this.numberOfVars            = 0; //Auto
-        this.progressBar = progressBar;
-        this.progress = 0;
-        this.oldProgress = 0;
+        this.progress                = 0;
+        this.oldProgress             = 0;
+        this.originalInputExpression = "";
+        this.convertedExpression     = "";
+        this.variablesList           = "";
+        this.report                  = "";
+        this.originalInputFormat     = "Literal";
+        this.inputFormat             = "Literal";
+        this.progressBar             = progressBar;
     }
     
     public final boolean setExpression(String expression, int selectedNumberOfVars) {
@@ -954,7 +972,7 @@ public class SumOfProducts {
         return str;
     }
     
-    public String getCoveringTable() {
+    public String getCoverageTable() {
         if (isError) {
             return "-";
         }

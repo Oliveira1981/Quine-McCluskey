@@ -8,12 +8,19 @@ import java.util.ArrayList;
  */
 public class Maze {
     
-    private final int                   sizeX;
-    private final int                   sizeY;
-    private ArrayList<ArrayList<Cell>>   maze;
-    private Position           sourcePosition;
-    private Position           targetPosition;
-    private ArrayList<Position> expansionList;
+    private final int
+            sizeX,
+            sizeY;
+    
+    private Position
+            sourcePosition,
+            targetPosition;
+    
+    private ArrayList<Position>
+            expansionList;
+    
+    private ArrayList<ArrayList<Cell>>
+            maze;
     
     public Maze(int sizeX, int sizeY) {
         this.sizeX = sizeX;

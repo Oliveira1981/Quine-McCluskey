@@ -8,20 +8,27 @@ import java.util.ArrayList;
  */
 public class MinTerm {
     
-    private ArrayList<String> productsList;
-    private String             literalView;
-    private String              binaryView;
-    private int                decimalView;
-    private int                       size;
-    private boolean              isCovered;
+    private boolean
+            isCovered;
+    
+    private int
+            decimalView,
+            size;
+    
+    private String
+            literalView,
+            binaryView;
+    
+    private ArrayList<String>
+            productsList;
 
     public MinTerm() {
-        productsList = new ArrayList<>();
-        literalView  =                "";
-        binaryView   =            "0000";
+        isCovered    =             false;
         decimalView  =                 0;
         size         =                 0;
-        isCovered    =             false;
+        literalView  =                "";
+        binaryView   =            "0000";
+        productsList = new ArrayList<>();
     }
     
     public MinTerm(int decimal, String vars, int size) {
@@ -29,12 +36,12 @@ public class MinTerm {
     }
     
     public final void setMinTerm(int decimal, String vars, int size) {
+        isCovered        = false;
         this.size        = size;
         this.decimalView = decimal;
+        productsList     = new ArrayList<>();
         this.binaryView  = Tools.decimal2binary(decimal, size);
         this.literalView = Tools.binary2literal(this.binaryView, vars, size);
-        isCovered        = false;
-        productsList     = new ArrayList<>();
     }
     
     public ArrayList<String> getProductsList() {

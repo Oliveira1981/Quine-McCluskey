@@ -13,28 +13,27 @@ import javax.swing.*;
  */
 public final class MazeRouter implements KeyListener {
     
-    public Maze maze             = new Maze(60, 30);
-    public JPanel mazePanel;
-    public ArrayList<JTextField> textFields = new ArrayList<>();
-    public Font textFieldFont    = new Font("Segoe UI", Font.BOLD, 10);
-    public boolean pressed       = false;
-    public boolean played        = false;
-    //public boolean released      = false;
-    public boolean firstStepDone = false;
-    public boolean targetFound   = false;
-    public boolean showBorder    = true;
-    public Position currentPos   = new Position();
-    public Color colorFree;//       = new Color(10, 10, 10);
-    public Color colorBlocked    = new Color(150, 30, 50);
-    public Color colorSource     = new Color(80, 180, 255);
-    public Color colorTarget     = new Color(0, 220, 50);
-    public Color colorExpanding  = Color.MAGENTA;
-    public Color colorExpanded   = new Color(20, 50, 250);
-    public Color colorPath       = new Color(255, 200, 0);
-    public Color colorBorder;//     = new Color(100, 100, 100, 40);
-    public Sound sound           = new Sound();
-    public Clip clip;
-    //private JPanel mazePanel;
+    private boolean pressed                  = false;
+    private boolean played                   = false;
+    private boolean firstStepDone            = false;
+    private boolean targetFound              = false;
+    private boolean showBorder               = true;
+    //private boolean released                 = false;
+    private Color colorFree;                 //= new Color(10, 10, 10);
+    private Color colorBlocked               = new Color(150, 30, 50);
+    private Color colorSource                = new Color(80, 180, 255);
+    private Color colorTarget                = new Color(0, 220, 50);
+    private Color colorExpanding             = Color.MAGENTA;
+    private Color colorExpanded              = new Color(20, 50, 250);
+    private Color colorPath                  = new Color(255, 200, 0);
+    private Color colorBorder;               //= new Color(100, 100, 100, 40);
+    private Position currentPos              = new Position();
+    private Sound sound                      = new Sound();
+    private Maze maze                        = new Maze(60, 30);
+    private ArrayList<JTextField> textFields = new ArrayList<>();
+    private Font textFieldFont               = new Font("Segoe UI", Font.BOLD, 10);
+    private Clip clip;
+    private JPanel mazePanel;
 
     public MazeRouter(boolean darkTheme){
         createMazePanel(darkTheme);

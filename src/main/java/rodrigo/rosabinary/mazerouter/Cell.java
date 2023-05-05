@@ -6,24 +6,29 @@ package rodrigo.rosabinary.mazerouter;
  */
 public class Cell {
     
-    private char              c;
-    private int          weight;
-    private boolean      isFree;
-    private boolean  isExpanded;
-    private boolean isExpanding;
-    private boolean    isSource;
-    private boolean    isTarget;
-    private boolean      isPath;
+    private boolean
+            isFree,
+            isExpanded,
+            isExpanding,
+            isSource,
+            isTarget,
+            isPath;
+    
+    private int
+            weight;
+    
+    private char
+            c;
     
     public Cell(char c) {
-        this.c           =     c;
-        this.weight      =     0;
         this.isFree      =  true;
         this.isExpanded  = false;
         this.isExpanding = false;
         this.isSource    = false;
         this.isTarget    = false;
         this.isPath      = false;
+        this.weight      =     0;
+        this.c           =     c;
     }
     
     public void setChar(char c) {

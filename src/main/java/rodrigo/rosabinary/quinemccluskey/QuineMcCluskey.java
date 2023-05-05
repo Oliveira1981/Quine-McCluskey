@@ -14,47 +14,79 @@ import javax.swing.event.*;
  */
 public final class QuineMcCluskey implements KeyListener {
     
-    public boolean                  hasResult;
-    public boolean                  darkTheme;
-    public boolean         writeResultsToFile;
-    public int                        numVars;
-    public int                       progress;
-    public int                    oldProgress;
-    public String                 inputFormat;
-    public String                 expressions;
-    public String                    errorMsg;
-    public Font                    fontReport;
-    public JButton                   okButton;
-    public JCheckBox      checkReadEntireFile;
-    public JComboBox<String> comboExpressions;
-    public JComboBox<String>  comboWichReport;
-    public JComboBox<String>   comboWichInput;
-    public JLabel              labelVariables;
-    public JLabel              labelThemeDark;
-    public JLabel              labelStartLine;
-    public JLabel                labelEndLine;
-    public JLabel                 labelResult;
-    public JLabel        labelResultsFromFile;
-    public JPanel                quineMcPanel;
-    public JProgressBar           progressBar;
-    public JScrollPane           scrollReport;
-    public JSlider                 sliderVars;
-    public JTextArea           textAreaReport;
-    public JTextArea           textAreaResult;
-    public JTextField               labelTime;
-    public JTextField           textStartLine;
-    public JTextField             textEndLine;
-    public PrintWriter             outputFile;
-    public SumOfProducts        sumOfProducts;
-    public ArrayList<String>       fullReport;
+    private boolean
+            hasResult,
+            darkTheme,
+            writeResultsToFile;
     
-    public String[] wichInput = {
+    private int
+            numVars,
+            progress;
+    
+    private String
+            inputFormat,
+            expressions,
+            errorMsg;
+    
+    private Font
+            fontReport;
+    
+    private JButton
+            okButton;
+    
+    private JCheckBox
+            checkReadEntireFile;
+    
+    private JComboBox<String>
+            comboExpressions,
+            comboWichReport,
+            comboWichInput;
+    
+    public JLabel
+            labelVariables,
+            labelThemeDark,
+            labelStartLine,
+            labelEndLine,
+            labelResult,
+            labelResultsFromFile;
+    
+    private JPanel
+            quineMcPanel;
+    
+    private JProgressBar
+            progressBar;
+    
+    private JScrollPane
+            scrollReport;
+    
+    private JSlider
+            sliderVars;
+    
+    private JTextArea
+            textAreaReport,
+            textAreaResult;
+    
+    private JTextField
+            labelTime,
+            textStartLine,
+            textEndLine;
+    
+    private PrintWriter
+            outputFile;
+    
+    private SumOfProducts
+            sumOfProducts;
+    
+    private ArrayList<String>
+            fullReport;
+    
+    private String[] wichInput = {
         "Carregar expressões de um arquivo...",
         "Digitar expressão",
         "Gerar expressão aleatória"
     };
     
-    public String[] wichReport = {
+    private String[] wichReport = {
         "Relatório",
         "Tabela Verdade",
         "Mintermos e seus Produtos",
@@ -62,44 +94,14 @@ public final class QuineMcCluskey implements KeyListener {
         "Tabela de Cobertura"
     };
     
-    public String[] getHistory() throws FileNotFoundException {
-        File selectedFile = new File("history");
-        if(!selectedFile.exists()){
-            return new String[0];
-        }
-        Scanner sc = new Scanner(selectedFile);
-        ArrayList<String> arr = new ArrayList<>();
-        int i = 0;
-        while(sc.hasNext()) {
-            arr.add(sc.nextLine());
-            i++;
-        }
-        String[] history = new String[arr.size()];
-        history = arr.toArray(history);
-        return history;
-    }
-    
-    public void addToHistory(String newLine) throws FileNotFoundException {
-        String[] oldHistory = getHistory();
-        PrintWriter newHistoryFile = new PrintWriter("history");
-        newHistoryFile.print(newLine + "\n");
-        for (String oldHistoryLine : oldHistory) {
-            //if (!newLine.equals(oldHistoryLine)) {
-                newHistoryFile.print(oldHistoryLine + "\n");
-            //}
-        }
-        newHistoryFile.close();
-    }
-    
     public QuineMcCluskey(boolean darkTheme) throws FileNotFoundException {
-        inputFormat        =       "";
-        numVars            =        0;
         hasResult          =    false;
+        writeResultsToFile =    !true;
+        numVars            =        0;
+        progress           =        0;
+        inputFormat        =       "";
         errorMsg           =       "";
         sumOfProducts      =     null;
-        writeResultsToFile =    !true;
-        progress           =        0;
-        oldProgress        =        0;
         createQuineMcPanel(darkTheme);
     }
     
@@ -111,6 +113,10 @@ public final class QuineMcCluskey implements KeyListener {
         return expressions;
     }
     
+    public JPanel getPanel(){
+        return quineMcPanel;
+    }
+    
     public void createQuineMcPanel (boolean theme) throws FileNotFoundException {
         
         this.darkTheme = theme;
@@ -119,8 +125,7 @@ public final class QuineMcCluskey implements KeyListener {
               buttonBGColor       , buttonTextColor,
               comboBGColor        , comboTextColor,
               labelColor          , disabledLabelColor,
-              readEntireFileColor , caretColor
-        ;
+              readEntireFileColor , caretColor;
         
         if(darkTheme) {
             textBGColor         = new Color( 44,  44,  44);
@@ -1174,6 +1179,35 @@ public final class QuineMcCluskey implements KeyListener {
         });
     }
     
+    public void optimizeExpressions(
+        String inputExpression,
+        int numVars,
+        boolean updateProgressBar
+        ) throws Exception {
+        
+        expressions = Tools.removeSpacesFromExpression(inputExpression);
+        sumOfProducts = new SumOfProducts(progressBar);
+        if (!sumOfProducts.setExpression(expressions, numVars))
+            return;
+        sumOfProducts.sortByOnesCount();
+        sumOfProducts.mergePrimeImplicants(10);
+        sumOfProducts.fillMinTermsList();
+        sumOfProducts.fillTruthTable();
+        sumOfProducts.fillFinalProductsLists();
+        sumOfProducts.completeFinalList(updateProgressBar);
+        sumOfProducts.buildOptimizedExpression();
+        
+        if (writeResultsToFile) {
+            print(sumOfProducts.getResult()+"\t", outputFile);
+            print(sumOfProducts.expression2hexadecimal(sumOfProducts.getResult())+"\t", outputFile);
+            print(Tools.numberOfLiterals(sumOfProducts.getResult(), sumOfProducts.getNumberOfVars(), sumOfProducts.getNumberOfProducts()), outputFile);
+            //print("\t"+sumOfProducts.getNEPLSize(), outputFile);
+            //if (sumOfProducts.isInspect())
+            //    print(" < INSPECT! >", outputFile);
+            print("\n", outputFile);
+        }
+    }
+    
     public void executeSingle() {
         labelTime.setText("Tempo:        ");
         labelTime.update(labelTime.getGraphics());
@@ -1222,7 +1256,7 @@ public final class QuineMcCluskey implements KeyListener {
     
     public int executeSingleFromFile(String expression, int lineIndex, long startTime) {
         try {
-            optimizeExpressions(expression, numVars, false);//, textAreaResult, textAreaReport);
+            optimizeExpressions(expression, numVars, false);
         } catch (Exception ex) {
             Logger.getLogger(QuineMcCluskey.class.getName()).log(Level.SEVERE, null, ex);
         }
@@ -1265,10 +1299,6 @@ public final class QuineMcCluskey implements KeyListener {
         return lineIndex;
     }
     
-    public JPanel getPanel(){
-        return quineMcPanel;
-    }
-    
     public String selectFile() throws
         FileNotFoundException,
         UnsupportedEncodingException,
@@ -1285,42 +1315,7 @@ public final class QuineMcCluskey implements KeyListener {
         }
         return inputFilePath + inputFileName;
     }
-    /*
-    public int readFromFile(String filePath, int startLine, int endLine) throws Exception {
-        
-        File selectedFile = new File(filePath);
-        if(!selectedFile.exists()){
-            print("\nNo file selected.\n");
-            return 1;
-        }
-        Scanner sc = new Scanner(selectedFile);
-        
-        int line = 1;
-        if (line < startLine) {
-            print("\nSkipping line(s)...\n");
-        }
-        while (line < startLine) {
-            sc.nextLine();
-            line++;
-        }
-        print("\nReading...");
-        
-        if (endLine == -1) { // LER ATÉ O FINAL DO ARQUIVO
-            while (sc.hasNext()) {
-                optimizeExpressions(sc.nextLine(), numVars);
-            }
-        }
-        else {
-            while (line <= endLine) {
-                //print("\nLine " + line + "\t"); //LEVA MUITO MAIS TEMPO SE FICAR MOSTRANDO A LINHA
-                optimizeExpressions(sc.nextLine(), numVars);
-                line++;
-            }
-        }
-        outputFile.close();
-        return 0;
-    }
-    */
+    
     public void setFileToWrite(String outputFileName) throws
         FileNotFoundException,
         UnsupportedEncodingException {
@@ -1357,7 +1352,7 @@ public final class QuineMcCluskey implements KeyListener {
                 out += sumOfProducts.getMinTermsFromProducts();
             }
             case "Tabela de Cobertura" -> {
-                out += sumOfProducts.getCoveringTable();
+                out += sumOfProducts.getCoverageTable();
             }
             default -> {
                 out = sumOfProducts.getBasicReport();
@@ -1366,33 +1361,33 @@ public final class QuineMcCluskey implements KeyListener {
         return out;
     }
     
-    public void optimizeExpressions(
-        String inputExpression,
-        int numVars,
-        boolean updateProgressBar
-        ) throws Exception {
-        
-        expressions = Tools.removeSpacesFromExpression(inputExpression);
-        sumOfProducts = new SumOfProducts(progressBar);
-        if (!sumOfProducts.setExpression(expressions, numVars))
-            return;
-        sumOfProducts.sortByOnesCount();
-        sumOfProducts.mergePrimeImplicants(10);
-        sumOfProducts.fillMinTermsList();
-        sumOfProducts.fillTruthTable();
-        sumOfProducts.fillFinalProductsLists();
-        sumOfProducts.completeFinalList(updateProgressBar);
-        sumOfProducts.buildOptimizedExpression();
-        
-        if (writeResultsToFile) {
-            print(sumOfProducts.getResult()+"\t", outputFile);
-            print(sumOfProducts.expression2hexadecimal(sumOfProducts.getResult())+"\t", outputFile);
-            print(Tools.numberOfLiterals(sumOfProducts.getResult(), sumOfProducts.getNumberOfVars(), sumOfProducts.getNumberOfProducts()), outputFile);
-            //print("\t"+sumOfProducts.getNEPLSize(), outputFile);
-            //if (sumOfProducts.isInspect())
-            //    print(" < INSPECT! >", outputFile);
-            print("\n", outputFile);
+    public String[] getHistory() throws FileNotFoundException {
+        File selectedFile = new File("history");
+        if(!selectedFile.exists()){
+            return new String[0];
         }
+        Scanner sc = new Scanner(selectedFile);
+        ArrayList<String> arr = new ArrayList<>();
+        int i = 0;
+        while(sc.hasNext()) {
+            arr.add(sc.nextLine());
+            i++;
+        }
+        String[] history = new String[arr.size()];
+        history = arr.toArray(history);
+        return history;
+    }
+    
+    public void addToHistory(String newLine) throws FileNotFoundException {
+        String[] oldHistory = getHistory();
+        PrintWriter newHistoryFile = new PrintWriter("history");
+        newHistoryFile.print(newLine + "\n");
+        for (String oldHistoryLine : oldHistory) {
+            //if (!newLine.equals(oldHistoryLine)) {
+                newHistoryFile.print(oldHistoryLine + "\n");
+            //}
+        }
+        newHistoryFile.close();
     }
     
     /*

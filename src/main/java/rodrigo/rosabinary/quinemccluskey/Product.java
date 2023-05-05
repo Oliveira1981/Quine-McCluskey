@@ -8,28 +8,33 @@ import java.util.ArrayList;
  */
 public class Product {
 
-    private ArrayList<Integer> minTermsList;
-    private String              literalView;
-    private String               binaryView;
-    private int                 decimalView;
-    private int                   onesCount;
-    private int             implicantBitPos;
-    private int                        size;
-    //private int            numberOfLiterals;
-    private boolean                hasPrime;
-    private boolean             isEssential;
-    //private boolean                 isFinal;
+    private boolean
+            hasPrime,
+            isEssential;
+    
+    private int
+            decimalView,
+            onesCount,
+            implicantBitPos,
+            size;
+    
+    private String
+            literalView,
+            binaryView;
+    
+    private ArrayList<Integer>
+            minTermsList;
     
     public Product() {
-        minTermsList    = new ArrayList<>();
-        literalView     =                "";
-        binaryView      =            "0000";
-        decimalView     =                 0;
-        implicantBitPos =                -1;
-        onesCount       =                 0;
-        size            =                 0;
         hasPrime        =             false;
         isEssential     =              true;
+        decimalView     =                 0;
+        onesCount       =                 0;
+        size            =                 0;
+        implicantBitPos =                -1;
+        literalView     =                "";
+        binaryView      =            "0000";
+        minTermsList    = new ArrayList<>();
     }
     
     public Product(String inputFormat, String inputExp, String vars, int size) {

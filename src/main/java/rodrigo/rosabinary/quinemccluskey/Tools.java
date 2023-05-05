@@ -9,6 +9,9 @@ import java.util.*;
  */
 public class Tools {
     
+    private Tools() {
+    }
+    
     public static String literal2binary(String lit, String vars, int size) {
         String strBin = "";
         int pos = 0;
@@ -714,8 +717,8 @@ public class Tools {
         return false;
     }
     
-    //Sort a set o products (of literals) by number of literals
-    //from the smallest to the biggest
+    // Ordena um conjunto de produtos (de literais),
+    // por número de literais, do menor para o maior
     public static void sortProductsSet(ArrayList<String> productsSet) {
         for(int i=1; i < productsSet.size(); i++) {
             int count_k = numberOfLiterals2(productsSet.get(i));
@@ -756,9 +759,6 @@ public class Tools {
         catch (IOException e) {
         }
         return lines;
-    }
-    
-    private Tools() {
     }
 
 }
