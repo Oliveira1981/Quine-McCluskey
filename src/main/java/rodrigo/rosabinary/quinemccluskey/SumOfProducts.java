@@ -645,6 +645,8 @@ public class SumOfProducts {
                     oldProgress = progress;
                     //print("\r"+progress+"\tSTEP 2");
                     progressBar.setValue(progress);
+                    progressBar.setString(progress+"%");
+                    progressBar.setStringPainted(true);
                     progressBar.update(progressBar.getGraphics());
                 }
             }
@@ -671,6 +673,8 @@ public class SumOfProducts {
                         oldProgress = progress;
                         //print("\r"+progress+"\tSTEP 3");
                         progressBar.setValue(progress);
+                        progressBar.setString(progress+"%");
+                        progressBar.setStringPainted(true);
                         progressBar.update(progressBar.getGraphics());
                     }
                 }
@@ -703,6 +707,8 @@ public class SumOfProducts {
                     oldProgress = progress;
                     //print("\r"+progress+"\tSTEP 4a");
                     progressBar.setValue(progress);
+                    progressBar.setString(progress+"%");
+                    progressBar.setStringPainted(true);
                     progressBar.update(progressBar.getGraphics());
                 }
             }
@@ -720,6 +726,8 @@ public class SumOfProducts {
                         oldProgress = progress;
                         //print("\r"+progress+"\tSTEP 4b");
                         progressBar.setValue(progress);
+                        progressBar.setString(progress+"%");
+                        progressBar.setStringPainted(true);
                         progressBar.update(progressBar.getGraphics());
                     }
                 }
@@ -739,6 +747,8 @@ public class SumOfProducts {
                     oldProgress = progress;
                     //print("\r"+progress+"\tSTEP 4c");
                     progressBar.setValue(progress);
+                    progressBar.setString(progress+"%");
+                    progressBar.setStringPainted(true);
                     progressBar.update(progressBar.getGraphics());
                 }
             }
@@ -757,6 +767,8 @@ public class SumOfProducts {
                         oldProgress = progress;
                         //print("\r"+progress+"\tSTEP 4d");
                         progressBar.setValue(progress);
+                        progressBar.setString(progress+"%");
+                        progressBar.setStringPainted(true);
                         progressBar.update(progressBar.getGraphics());
                     }
                 }
@@ -781,6 +793,8 @@ public class SumOfProducts {
                         oldProgress = progress;
                         //print("\r"+progress+"\tSTEP 4e");
                         progressBar.setValue(progress);
+                        progressBar.setString(progress+"%");
+                        progressBar.setStringPainted(true);
                         progressBar.update(progressBar.getGraphics());
                     }
                 }
@@ -813,6 +827,8 @@ public class SumOfProducts {
                     progress = 100;
                     //print("\r"+progress+"\tSTEP 5");
                     progressBar.setValue(progress);
+                    progressBar.setString(progress+"%");
+                    progressBar.setStringPainted(true);
                     progressBar.update(progressBar.getGraphics());
                 }
                 //print(String.format("\ntestCombinationsList: %.5f s", (float) (System.nanoTime() - startTime)/1000000000));
@@ -827,6 +843,8 @@ public class SumOfProducts {
                         oldProgress = progress;
                         //print("\r"+progress+"\tSTEP 5");
                         progressBar.setValue(progress);
+                        progressBar.setString(progress+"%");
+                        progressBar.setStringPainted(true);
                         progressBar.update(progressBar.getGraphics());
                     }
                 }
@@ -841,6 +859,8 @@ public class SumOfProducts {
         progressBar.setValue(progress);
         if (isAllCovered()) {
             progressBar.setValue(100);
+            progressBar.setString(100+"%");
+            progressBar.setStringPainted(true);
             return;
         }
         if (notEssentialProductsList.size() > 23) {

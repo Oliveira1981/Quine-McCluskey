@@ -101,7 +101,7 @@ public class GUI implements KeyListener {
                 mainFrame.setLocation(dim.width/2-mainFrame.getSize().width/2, dim.height/2-mainFrame.getSize().height/2);
                 mainFrame.setVisible(true);
                 mainFrame.setExtendedState(mainFrame.getExtendedState() | JFrame.MAXIMIZED_BOTH);
-                mainFrame.getRootPane().setDefaultButton(quineMcCluskey.okButton);
+                //mainFrame.getRootPane().setDefaultButton(quineMcCluskey.okButton);
                 KeyboardFocusManager.getCurrentKeyboardFocusManager().focusNextComponent(quineMcCluskey.labelVariables);
                 
                 /*
