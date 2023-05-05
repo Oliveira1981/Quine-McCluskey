@@ -559,12 +559,14 @@ public class SumOfProducts {
     // pode não retornar o resultado ótimo.
     public void completeFinalList_ALT() {
         ArrayList<String> finalListOriginal = (ArrayList) finalProductsList.clone();
+        int NEPLSize = notEssentialProductsList.size();
+        int pbUpdateFactor = Math.max(1, NEPLSize/24);
         
         //NO SORTING
         ArrayList<String> finalList_NO_SORTING = (ArrayList) finalProductsList.clone();
         int numberOfLiterals_NO_SORTING = 0;
         int i = 1;
-        while (i <= notEssentialProductsList.size()) {
+        while (i <= NEPLSize) {
             String[] candidateCombination = new String[i];
             combinations(i, 0, candidateCombination);
             if (isAllCovered()) {
@@ -573,10 +575,24 @@ public class SumOfProducts {
                 for (int t=0; t < finalList_NO_SORTING.size(); t++) {
                     numberOfLiterals_NO_SORTING += Tools.numberOfLiterals2(finalList_NO_SORTING.get(t));
                 }
+                progress = 49*i/NEPLSize;
+                progressBar.setValue(progress);
+                progressBar.setString(progress+"%");
+                progressBar.update(progressBar.getGraphics());
                 break;
+            }
+            if(Math.floorMod(i, pbUpdateFactor) == 0) {
+                progress = 49*i/NEPLSize;
+                progressBar.setValue(progress);
+                progressBar.setString(progress+"%");
+                progressBar.update(progressBar.getGraphics());
             }
             i++;
         }
+        progress = 49;
+        progressBar.setValue(progress);
+        progressBar.setString(progress+"%");
+        progressBar.update(progressBar.getGraphics());
         
         //SORTING
         finalProductsList = (ArrayList) finalListOriginal.clone();
@@ -584,7 +600,7 @@ public class SumOfProducts {
         Tools.sortProductsSet(notEssentialProductsList);
         int numberOfLiterals_SORTING = 0;
         i = 1;
-        while (i <= notEssentialProductsList.size()) {
+        while (i <= NEPLSize) {
             String[] candidateCombination = new String[i];
             combinations(i, 0, candidateCombination);
             if (isAllCovered()) {
@@ -592,14 +608,32 @@ public class SumOfProducts {
                 for (int t=0; t < finalProductsList.size(); t++) {
                     numberOfLiterals_SORTING += Tools.numberOfLiterals2(finalProductsList.get(t));
                 }
+                progress = 49+ 49*i/NEPLSize;
+                progressBar.setValue(progress);
+                progressBar.setString(progress+"%");
+                progressBar.update(progressBar.getGraphics());
                 break;
+            }
+            if(Math.floorMod(i, pbUpdateFactor) == 0) {
+                progress = 49+ 49*i/NEPLSize;
+                progressBar.setValue(progress);
+                progressBar.setString(progress+"%");
+                progressBar.update(progressBar.getGraphics());
             }
             i++;
         }
+        progress = 98;
+        progressBar.setValue(progress);
+        progressBar.setString(progress+"%");
+        progressBar.update(progressBar.getGraphics());
         
         if (numberOfLiterals_NO_SORTING < numberOfLiterals_SORTING) {
             finalProductsList = (ArrayList) finalList_NO_SORTING.clone();
         }
+        progress = 100;
+        progressBar.setValue(progress);
+        progressBar.setString(progress+"%");
+        progressBar.update(progressBar.getGraphics());
     }
     
     // completeFinalList STEP 1 /////
