@@ -636,9 +636,9 @@ public final class QuineMcCluskey implements KeyListener {
         
         progressBar = new JProgressBar();
 	gbcSpaces.fill = GridBagConstraints.BOTH;
-	gbcSpaces.gridx = 12;
+	gbcSpaces.gridx = 11;
 	gbcSpaces.gridy = 10;
-	gbcSpaces.gridwidth = 3;
+	gbcSpaces.gridwidth = 4;
 	gbcSpaces.gridheight = 1;
         gbcSpaces.weightx = 0.0;
         gbcSpaces.weighty = 0.0;
@@ -1140,11 +1140,18 @@ public final class QuineMcCluskey implements KeyListener {
             
             @Override
             public void actionPerformed(ActionEvent e) {
-                
+                if (writeResultsToFile) {
+                    try {
+                        setFileToWrite("Quine-McCluskey Results.txt");
+                    } catch (FileNotFoundException | UnsupportedEncodingException ex) {
+                        Logger.getLogger(QuineMcCluskey.class.getName()).log(Level.SEVERE, null, ex);
+                    }
+                }
                 if(editor.getText().isBlank()) {
                     editor.setText((String) comboExpressions.getSelectedItem());
                 }
-                errorMsg = "";
+                //errorMsg = "";
+                hasResult = true;
                 executeSingle();
                 if(writeResultsToFile) {
                     outputFile.close();
@@ -1153,11 +1160,16 @@ public final class QuineMcCluskey implements KeyListener {
         });
         
         comboExpressions.addActionListener(new ActionListener() {
-            
+            // Isso é apenas para limpar os resultados
+            // quando se seleciona com o mouse
+            // pelo histórico uma nova expressão
             @Override
             public void actionPerformed(ActionEvent e) {
-                textAreaResult.setText("");
-                textAreaReport.setText("");
+                if (!("comboBoxEdited".equals(e.getActionCommand()))) {
+                    // CAUSA PROBLEMA:
+                    //textAreaResult.setText("");
+                    //textAreaReport.setText("");
+                }
             }
         });
     }
@@ -1189,6 +1201,8 @@ public final class QuineMcCluskey implements KeyListener {
                         textAreaResult.setText(errorMsg);
                         textAreaReport.setText("-");
                     }
+                    //textAreaResult.update(textAreaResult.getGraphics());
+                    //textAreaReport.update(textAreaReport.getGraphics());
                     String currentSelectedExp = (String) comboExpressions.getSelectedItem();
                     if (!(Arrays.asList(getHistory())
                             .contains(currentSelectedExp))
@@ -1431,8 +1445,24 @@ public final class QuineMcCluskey implements KeyListener {
             System.exit(0);
         }
         if ("Editor".equals(e.getComponent().getName())) {
-            textAreaResult.setText("");
-            textAreaReport.setText("");
+            if(e.getKeyCode() != KeyEvent.VK_CONTROL
+               &&
+               e.getKeyCode() != KeyEvent.VK_ALT
+               &&
+               e.getKeyCode() != KeyEvent.VK_SHIFT
+               &&
+               e.getKeyCode() != KeyEvent.VK_LEFT
+               &&
+               e.getKeyCode() != KeyEvent.VK_RIGHT
+               &&
+               e.getKeyCode() != KeyEvent.VK_UP
+               &&
+               e.getKeyCode() != KeyEvent.VK_DOWN
+               &&
+               e.getKeyCode() != KeyEvent.VK_TAB) {
+                textAreaResult.setText("");
+                textAreaReport.setText("");
+            }
         }
     }
 
