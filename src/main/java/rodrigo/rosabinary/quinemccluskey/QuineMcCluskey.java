@@ -743,6 +743,8 @@ public final class QuineMcCluskey implements KeyListener {
                 comboExpressions.setSelectedIndex(-1);
                 errorMsg = "";
                 textAreaReport.setText("");
+                progressBar.setValue(0);
+                progressBar.setString(" ");
                 switch (comboWichInput.getSelectedIndex()) {
                     case 1 -> { // input: digitar
                         textAreaResult.setText("");
