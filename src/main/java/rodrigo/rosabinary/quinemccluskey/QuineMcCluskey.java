@@ -1151,6 +1151,15 @@ public final class QuineMcCluskey implements KeyListener {
                 }
             }
         });
+        
+        comboExpressions.addActionListener(new ActionListener() {
+            
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                textAreaResult.setText("");
+                textAreaReport.setText("");
+            }
+        });
     }
     
     public void executeSingle() {
@@ -1346,9 +1355,7 @@ public final class QuineMcCluskey implements KeyListener {
     public void optimizeExpressions(
         String inputExpression,
         int numVars,
-        boolean updateProgressBar//,
-        //JTextArea result,
-        //JTextArea report
+        boolean updateProgressBar
         ) throws Exception {
         
         expressions = Tools.removeSpacesFromExpression(inputExpression);
