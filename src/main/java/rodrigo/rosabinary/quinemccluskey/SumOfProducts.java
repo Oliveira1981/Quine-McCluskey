@@ -557,10 +557,10 @@ public class SumOfProducts {
     // Usar quando número de produtos não essenciais > 23:
     // Mais rápido, mas, por não abordar todas as combinações,
     // pode não retornar o resultado ótimo.
-    public void completeFinalList_ALT() {
+    public void completeFinalList_ALT(Boolean updatePB) {
         ArrayList<String> finalListOriginal = (ArrayList) finalProductsList.clone();
         int NEPLSize = notEssentialProductsList.size();
-        int pbUpdateFactor = Math.max(1, NEPLSize/24);
+        int pbUpdateFactor = updatePB ? Math.max(1, NEPLSize/24) : -1;
         
         //NO SORTING
         ArrayList<String> finalList_NO_SORTING = (ArrayList) finalProductsList.clone();
@@ -575,24 +575,30 @@ public class SumOfProducts {
                 for (int t=0; t < finalList_NO_SORTING.size(); t++) {
                     numberOfLiterals_NO_SORTING += Tools.numberOfLiterals2(finalList_NO_SORTING.get(t));
                 }
-                progress = 49*i/NEPLSize;
-                progressBar.setValue(progress);
-                progressBar.setString(progress+"%");
-                progressBar.update(progressBar.getGraphics());
+                if(updatePB) {
+                    progress = 49*i/NEPLSize;
+                    progressBar.setValue(progress);
+                    progressBar.setString(progress+"%");
+                    progressBar.update(progressBar.getGraphics());
+                }
                 break;
             }
             if(Math.floorMod(i, pbUpdateFactor) == 0) {
-                progress = 49*i/NEPLSize;
-                progressBar.setValue(progress);
-                progressBar.setString(progress+"%");
-                progressBar.update(progressBar.getGraphics());
+                if(updatePB) {
+                    progress = 49*i/NEPLSize;
+                    progressBar.setValue(progress);
+                    progressBar.setString(progress+"%");
+                    progressBar.update(progressBar.getGraphics());
+                }
             }
             i++;
         }
-        progress = 49;
-        progressBar.setValue(progress);
-        progressBar.setString(progress+"%");
-        progressBar.update(progressBar.getGraphics());
+        if(updatePB) {
+            progress = 49;
+            progressBar.setValue(progress);
+            progressBar.setString(progress+"%");
+            progressBar.update(progressBar.getGraphics());
+        }
         
         //SORTING
         finalProductsList = (ArrayList) finalListOriginal.clone();
@@ -608,32 +614,40 @@ public class SumOfProducts {
                 for (int t=0; t < finalProductsList.size(); t++) {
                     numberOfLiterals_SORTING += Tools.numberOfLiterals2(finalProductsList.get(t));
                 }
-                progress = 49+ 49*i/NEPLSize;
-                progressBar.setValue(progress);
-                progressBar.setString(progress+"%");
-                progressBar.update(progressBar.getGraphics());
+                if(updatePB) {
+                    progress = 49+ 49*i/NEPLSize;
+                    progressBar.setValue(progress);
+                    progressBar.setString(progress+"%");
+                    progressBar.update(progressBar.getGraphics());
+                }
                 break;
             }
-            if(Math.floorMod(i, pbUpdateFactor) == 0) {
-                progress = 49+ 49*i/NEPLSize;
-                progressBar.setValue(progress);
-                progressBar.setString(progress+"%");
-                progressBar.update(progressBar.getGraphics());
+            if(updatePB) {
+                if(Math.floorMod(i, pbUpdateFactor) == 0) {
+                    progress = 49+ 49*i/NEPLSize;
+                    progressBar.setValue(progress);
+                    progressBar.setString(progress+"%");
+                    progressBar.update(progressBar.getGraphics());
+                }
             }
             i++;
         }
-        progress = 98;
-        progressBar.setValue(progress);
-        progressBar.setString(progress+"%");
-        progressBar.update(progressBar.getGraphics());
+        if(updatePB) {
+            progress = 98;
+            progressBar.setValue(progress);
+            progressBar.setString(progress+"%");
+            progressBar.update(progressBar.getGraphics());
+        }
         
         if (numberOfLiterals_NO_SORTING < numberOfLiterals_SORTING) {
             finalProductsList = (ArrayList) finalList_NO_SORTING.clone();
         }
-        progress = 100;
-        progressBar.setValue(progress);
-        progressBar.setString(progress+"%");
-        progressBar.update(progressBar.getGraphics());
+        if(updatePB) {
+            progress = 100;
+            progressBar.setValue(progress);
+            progressBar.setString(progress+"%");
+            progressBar.update(progressBar.getGraphics());
+        }
     }
     
     // completeFinalList STEP 1 /////
@@ -908,17 +922,21 @@ public class SumOfProducts {
     
     public void completeFinalList(Boolean updatePB) {
         progress = 0;
-        progressBar.setValue(progress);
+        if(updatePB) {
+            progressBar.setValue(progress);
+        }
         if (isAllCovered()) {
-            progressBar.setValue(100);
-            progressBar.setString(100+"%");
-            progressBar.setStringPainted(true);
+            if(updatePB) {
+                progressBar.setValue(100);
+                progressBar.setString(100+"%");
+                progressBar.setStringPainted(true);
+            }
             return;
         }
         if (notEssentialProductsList.size() > 23) {
             // Geraria um número muito grande de combinações
             inspect = true;
-            completeFinalList_ALT();
+            completeFinalList_ALT(updatePB);
             return;
         }
         // STEP 1 /////
