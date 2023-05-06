@@ -557,12 +557,17 @@ public class SumOfProducts {
     // Usar quando número de produtos não essenciais > 23:
     // Mais rápido, mas, por não abordar todas as combinações,
     // pode não retornar o resultado ótimo.
-    public void completeFinalList_ALT(Boolean updatePB) {
+    public void completeFinalList_ALT(Boolean updateScreen, Boolean updatePB, JTextArea report) {
         ArrayList<String> finalListOriginal = (ArrayList) finalProductsList.clone();
         int NEPLSize = notEssentialProductsList.size();
         int pbUpdateFactor = updatePB ? Math.max(1, NEPLSize/24) : -1;
         
         //NO SORTING
+        if (updateScreen) {
+            report.append("\n\n1. Combinações de produtos não ordenados:");
+            report.append("\n  » Buscando a melhor combinação...");
+            report.update(report.getGraphics());
+        }
         ArrayList<String> finalList_NO_SORTING = (ArrayList) finalProductsList.clone();
         int numberOfLiterals_NO_SORTING = 0;
         int i = 1;
@@ -601,9 +606,21 @@ public class SumOfProducts {
         }
         
         //SORTING
+        if(updateScreen) {
+            report.append(" Pronto.\n\n2. Combinações de produtos pré-ordenados:");
+            report.update(report.getGraphics());
+        }
         finalProductsList = (ArrayList) finalListOriginal.clone();
         setIsCovered();
+        if(updateScreen) {
+            report.append("\n  » Ordenando produtos por número de literais...");
+            report.update(report.getGraphics());
+        }
         Tools.sortProductsSet(notEssentialProductsList);
+        if(updateScreen) {
+            report.append(" Pronto.\n  » Buscando a melhor combinação...");
+            report.update(report.getGraphics());
+        }
         int numberOfLiterals_SORTING = 0;
         i = 1;
         while (i <= NEPLSize) {
@@ -637,6 +654,10 @@ public class SumOfProducts {
             progressBar.setValue(progress);
             progressBar.setString(progress+"%");
             progressBar.update(progressBar.getGraphics());
+        }
+        if(updateScreen) {
+            report.append(" Pronto.");
+            report.update(report.getGraphics());
         }
         
         if (numberOfLiterals_NO_SORTING < numberOfLiterals_SORTING) {
@@ -936,45 +957,51 @@ public class SumOfProducts {
         if (notEssentialProductsList.size() > 23) {
             // Geraria um número muito grande de combinações
             inspect = true;
-            completeFinalList_ALT(updatePB);
+            if (updateScreen) {
+                report.append("\n\nNúmero muito grande de combinações!"
+                            + "\n\nMÉTODO ALTERNATIVO:");
+                report.update(report.getGraphics());
+            }
+            completeFinalList_ALT(updateScreen, updatePB, report);
             return;
         }
 
         if (updateScreen) {
-            report.append("\n\nConstruindo tabela de cobertura...");
+            report.append("\n\n » Construindo tabela de cobertura...");
             report.update(report.getGraphics());
         }
         // STEP 1 /////
         if (updateScreen) {
-            report.append(" Pronto.\n\nListando números de literais...");
+            //187, »
+            report.append(" Pronto.\n\n » Listando números de literais...");
             report.update(report.getGraphics());
         }
         setNumberOfLiteralsList();
 
         // STEP 2 /////
         if (updateScreen) {
-            report.append(" Pronto.\n\nGernado combinações de produtos...");
+            report.append(" Pronto.\n\n » Gernado combinações de produtos...");
             report.update(report.getGraphics());
         }
         generateAllCombinations(notEssentialProductsList.size(), updatePB);
 
         // STEP 3 /////
         if (updateScreen) {
-            report.append(" Pronto.\n\nAdicionando índice às combinações...");
+            report.append(" Pronto.\n\n » Adicionando índice às combinações...");
             report.update(report.getGraphics());
         }
         addIndexToCombinationsList(updatePB);
 
         // STEP 4 /////
         if (updateScreen) {
-            report.append(" Pronto.\n\nOrdenando combinações...");
+            report.append(" Pronto.\n\n » Ordenando combinações...");
             report.update(report.getGraphics());
         }
         sortCombinationsList(updatePB);
 
         // STEP 5 /////
         if (updateScreen) {
-            report.append(" Pronto.\n\nBuscando a melhor combinação...");
+            report.append(" Pronto.\n\n » Buscando a melhor combinação...");
             report.update(report.getGraphics());
         }
         testCombinations(updatePB);
