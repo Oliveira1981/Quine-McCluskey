@@ -920,15 +920,15 @@ public class SumOfProducts {
         //print("\n----------------------");
     }
     
-    public void completeFinalList(Boolean updatePB) {
+    public void completeFinalList(Boolean updateScreen, Boolean updatePB, JTextArea report) {
         progress = 0;
-        if(updatePB) {
+        if (updatePB) {
             progressBar.setValue(progress);
         }
         if (isAllCovered()) {
-            if(updatePB) {
+            if (updatePB) {
                 progressBar.setValue(100);
-                progressBar.setString(100+"%");
+                progressBar.setString(100 + "%");
                 progressBar.setStringPainted(true);
             }
             return;
@@ -939,19 +939,44 @@ public class SumOfProducts {
             completeFinalList_ALT(updatePB);
             return;
         }
+
+        if (updateScreen) {
+            report.append("\n\nConstruindo tabela de cobertura...");
+            report.update(report.getGraphics());
+        }
         // STEP 1 /////
+        if (updateScreen) {
+            report.append(" Pronto.\n\nListando números de literais...");
+            report.update(report.getGraphics());
+        }
         setNumberOfLiteralsList();
 
         // STEP 2 /////
+        if (updateScreen) {
+            report.append(" Pronto.\n\nGernado combinações de produtos...");
+            report.update(report.getGraphics());
+        }
         generateAllCombinations(notEssentialProductsList.size(), updatePB);
 
         // STEP 3 /////
+        if (updateScreen) {
+            report.append(" Pronto.\n\nAdicionando índice às combinações...");
+            report.update(report.getGraphics());
+        }
         addIndexToCombinationsList(updatePB);
 
         // STEP 4 /////
+        if (updateScreen) {
+            report.append(" Pronto.\n\nOrdenando combinações...");
+            report.update(report.getGraphics());
+        }
         sortCombinationsList(updatePB);
 
         // STEP 5 /////
+        if (updateScreen) {
+            report.append(" Pronto.\n\nBuscando a melhor combinação...");
+            report.update(report.getGraphics());
+        }
         testCombinations(updatePB);
     }
     

@@ -17,9 +17,9 @@ public final class QuineMcCluskey implements KeyListener {
     private boolean
             hasResult,
             darkTheme,
-            writeToFile,
+            updateScreen,
             showProgressBar,
-            updateScreen;
+            writeToFile;
     
     private int
             numVars,
@@ -102,8 +102,9 @@ public final class QuineMcCluskey implements KeyListener {
     
     public QuineMcCluskey(boolean darkTheme) throws FileNotFoundException {
         hasResult          =    false;
-        writeToFile =    false;
+        updateScreen       =     true;
         showProgressBar    =     true;
+        writeToFile        =    false;
         numVars            =        0;
         progress           =        0;
         inputFormat        =       "";
@@ -332,6 +333,44 @@ public final class QuineMcCluskey implements KeyListener {
         labelVariables.setBorder(BorderFactory.createLineBorder(borderColor));
         quineMcPanel.add(labelVariables, gbcLabelVariables);
         
+        checkUpdateScreen = new JCheckBox("Atualizações na tela");
+        checkUpdateScreen.setForeground(highlightLabelColor);
+        checkUpdateScreen.setFont(new Font("Segoe.UI", Font.BOLD, 12));
+        checkUpdateScreen.addKeyListener(this);
+        checkUpdateScreen.setFocusable(true);
+        checkUpdateScreen.setSelected(true);
+        GridBagConstraints gbcCheckUpdateScreen = new GridBagConstraints();
+        gbcCheckUpdateScreen.fill = GridBagConstraints.HORIZONTAL;
+        gbcCheckUpdateScreen.gridx = 12;//14
+        gbcCheckUpdateScreen.gridy = 1;
+        gbcCheckUpdateScreen.gridwidth = 1;
+        gbcCheckUpdateScreen.gridheight = 1;
+        gbcCheckUpdateScreen.weightx = 1.0;
+        gbcCheckUpdateScreen.weighty = 0.0;
+        gbcCheckUpdateScreen.anchor = GridBagConstraints.EAST;
+        checkUpdateScreen.setHorizontalAlignment(SwingConstants.RIGHT);
+        checkUpdateScreen.setBorder(BorderFactory.createLineBorder(borderColor));
+        quineMcPanel.add(checkUpdateScreen, gbcCheckUpdateScreen);
+        
+        checkShowProgressBar = new JCheckBox("Barra de progresso");
+        checkShowProgressBar.setForeground(highlightLabelColor);
+        checkShowProgressBar.setFont(new Font("Segoe UI", Font.BOLD, 12));
+        checkShowProgressBar.addKeyListener(this);
+        checkShowProgressBar.setFocusable(true);
+        checkShowProgressBar.setSelected(true);
+        GridBagConstraints gbcCheckShowProgressBar = new GridBagConstraints();
+        gbcCheckShowProgressBar.fill = GridBagConstraints.HORIZONTAL;
+        gbcCheckShowProgressBar.gridx = 13;
+        gbcCheckShowProgressBar.gridy = 1;
+        gbcCheckShowProgressBar.gridwidth = 1;
+        gbcCheckShowProgressBar.gridheight = 1;
+        gbcCheckShowProgressBar.weightx = 1.0;
+        gbcCheckShowProgressBar.weighty = 0.0;
+        //gbcCheckShowProgressBar.anchor = GridBagConstraints.EAST;
+        checkShowProgressBar.setHorizontalAlignment(SwingConstants.RIGHT);
+        checkShowProgressBar.setBorder(BorderFactory.createLineBorder(borderColor));
+        quineMcPanel.add(checkShowProgressBar, gbcCheckShowProgressBar);
+        
         checkWriteToFile = new JCheckBox("Resultado em arquivo");
         checkWriteToFile.setForeground(labelColor);
         checkWriteToFile.setFont(new Font("Segoe UI", Font.BOLD, 12));
@@ -340,7 +379,7 @@ public final class QuineMcCluskey implements KeyListener {
         checkWriteToFile.setSelected(false);
         GridBagConstraints gbcCheckWriteToFile = new GridBagConstraints();
         gbcCheckWriteToFile.fill = GridBagConstraints.HORIZONTAL;
-        gbcCheckWriteToFile.gridx = 12;
+        gbcCheckWriteToFile.gridx = 14;//12
         gbcCheckWriteToFile.gridy = 1;
         gbcCheckWriteToFile.gridwidth = 1;
         gbcCheckWriteToFile.gridheight = 1;
@@ -363,25 +402,6 @@ public final class QuineMcCluskey implements KeyListener {
         space4a.setBorder(BorderFactory.createLineBorder(borderColor));
         quineMcPanel.add(space10, gbcSpaces);*/
         
-        checkShowProgressBar = new JCheckBox("Barra de progresso");
-        checkShowProgressBar.setForeground(highlightLabelColor);
-        checkShowProgressBar.setFont(new Font("Segoe UI", Font.BOLD, 12));
-        checkShowProgressBar.addKeyListener(this);
-        checkShowProgressBar.setFocusable(true);
-        checkShowProgressBar.setSelected(true);
-        GridBagConstraints gbcCheckShowProgressBar = new GridBagConstraints();
-        gbcCheckShowProgressBar.fill = GridBagConstraints.HORIZONTAL;
-        gbcCheckShowProgressBar.gridx = 13;
-        gbcCheckShowProgressBar.gridy = 1;
-        gbcCheckShowProgressBar.gridwidth = 1;
-        gbcCheckShowProgressBar.gridheight = 1;
-        gbcCheckShowProgressBar.weightx = 1.0;
-        gbcCheckShowProgressBar.weighty = 0.0;
-        //gbcCheckShowProgressBar.anchor = GridBagConstraints.EAST;
-        checkShowProgressBar.setHorizontalAlignment(SwingConstants.RIGHT);
-        checkShowProgressBar.setBorder(BorderFactory.createLineBorder(borderColor));
-        quineMcPanel.add(checkShowProgressBar, gbcCheckShowProgressBar);
-        
         /*JLabel space11 = new JLabel(" ");
         gbcSpaces.fill = GridBagConstraints.HORIZONTAL;
         gbcSpaces.gridx = 13;
@@ -393,26 +413,6 @@ public final class QuineMcCluskey implements KeyListener {
         gbcSpaces.anchor = GridBagConstraints.WEST;
         space4a.setBorder(BorderFactory.createLineBorder(borderColor));
         quineMcPanel.add(space11, gbcSpaces);*/
-        
-        checkUpdateScreen = new JCheckBox("Atualizações na tela");
-        checkUpdateScreen.setForeground(highlightLabelColor);
-        checkUpdateScreen.setFont(new Font("Segoe.UI", Font.BOLD, 12));
-        checkUpdateScreen.addKeyListener(this);
-        checkUpdateScreen.setFocusable(true);
-        checkUpdateScreen.setSelected(true);
-        GridBagConstraints gbcCheckUpdateScreen = new GridBagConstraints();
-        gbcCheckUpdateScreen.fill = GridBagConstraints.HORIZONTAL;
-        gbcCheckUpdateScreen.gridx = 14;
-        gbcCheckUpdateScreen.gridy = 1;
-        gbcCheckUpdateScreen.gridwidth = 1;
-        gbcCheckUpdateScreen.gridheight = 1;
-        gbcCheckUpdateScreen.weightx = 1.0;
-        gbcCheckUpdateScreen.weighty = 0.0;
-        gbcCheckUpdateScreen.anchor = GridBagConstraints.EAST;
-        checkUpdateScreen.setHorizontalAlignment(SwingConstants.RIGHT);
-        checkUpdateScreen.setBorder(BorderFactory.createLineBorder(borderColor));
-        checkUpdateScreen.setVisible(false);
-        quineMcPanel.add(checkUpdateScreen, gbcCheckUpdateScreen);
         
         /*JLabel labelThemeLight = new JLabel("Claro");
         labelThemeLight.setFont(fontDefault);
@@ -858,8 +858,6 @@ public final class QuineMcCluskey implements KeyListener {
                         
                         labelResult.setVisible(true);
                         textAreaResult.setVisible(true);
-                        checkUpdateScreen.setVisible(false);
-                        checkUpdateScreen.setToolTipText(null);
                         quineMcPanel.repaint();
                     }
                     case 2 -> { // input: aleatória
@@ -881,8 +879,6 @@ public final class QuineMcCluskey implements KeyListener {
                         
                         labelResult.setVisible(true);
                         textAreaResult.setVisible(true);
-                        checkUpdateScreen.setVisible(false);
-                        checkUpdateScreen.setToolTipText(null);
                         quineMcPanel.repaint();
                         hasResult = true;
                         String gen;
@@ -920,7 +916,6 @@ public final class QuineMcCluskey implements KeyListener {
                             
                         labelResult.setVisible(false);
                         textAreaResult.setVisible(false);
-                        checkUpdateScreen.setVisible(true);
                         quineMcPanel.repaint();
                         
                         try {
@@ -933,7 +928,7 @@ public final class QuineMcCluskey implements KeyListener {
                         }
                     }
                 }
-                KeyboardFocusManager.getCurrentKeyboardFocusManager().focusNextComponent(checkShowProgressBar);
+                KeyboardFocusManager.getCurrentKeyboardFocusManager().focusNextComponent(checkWriteToFile);
             }
         });
         
@@ -1123,9 +1118,11 @@ public final class QuineMcCluskey implements KeyListener {
             public void actionPerformed(ActionEvent e) {
                 if (checkUpdateScreen.isSelected()) {
                     checkUpdateScreen.setForeground(highlightLabelColor);
+                    updateScreen = true;
                 }
                 else {
                     checkUpdateScreen.setForeground(labelColor);
+                    updateScreen = false;
                 }
                 
             }
@@ -1147,14 +1144,9 @@ public final class QuineMcCluskey implements KeyListener {
 
             @Override
             public void mouseEntered(MouseEvent e) {
-                if(checkUpdateScreen.isVisible()) {
-                    checkUpdateScreen.setForeground(highlightLabelColor);
-                    //ToolTipManager.sharedInstance().setInitialDelay(50);
-                    //checkUpdateScreen.setToolTipText("marcado: mais lento\ndesmarcado: mais rápido");
-                }
-                else {
-                    //checkUpdateScreen.setToolTipText(null);
-                }
+                checkUpdateScreen.setForeground(highlightLabelColor);
+                //ToolTipManager.sharedInstance().setInitialDelay(50);
+                //checkUpdateScreen.setToolTipText("marcado: mais lento\ndesmarcado: mais rápido");
             }
 
             @Override
@@ -1497,7 +1489,8 @@ public final class QuineMcCluskey implements KeyListener {
     public void optimizeExpressions(
         String inputExpression,
         int numVars,
-        boolean updateProgressBar
+        boolean updateScreen,
+        boolean showProgressBar
         ) throws Exception {
         
         expressions = Tools.removeSpacesFromExpression(inputExpression);
@@ -1509,7 +1502,7 @@ public final class QuineMcCluskey implements KeyListener {
         sumOfProducts.fillMinTermsList();
         sumOfProducts.fillTruthTable();
         sumOfProducts.fillFinalProductsLists();
-        sumOfProducts.completeFinalList(updateProgressBar);
+        sumOfProducts.completeFinalList(updateScreen, showProgressBar, textAreaReport);
         sumOfProducts.buildOptimizedExpression();
         
         if (writeToFile) {
@@ -1538,6 +1531,7 @@ public final class QuineMcCluskey implements KeyListener {
                     optimizeExpressions(
                             (String) comboExpressions.getSelectedItem(),
                             sliderVars.getValue(),
+                            updateScreen,
                             showProgressBar
                     );
                     textAreaReport.setFont(fontReport);
@@ -1571,7 +1565,7 @@ public final class QuineMcCluskey implements KeyListener {
     
     public int executeSingleFromFile(String expression, int lineIndex, long startTime) {
         try {
-            optimizeExpressions(expression, numVars, false);
+            optimizeExpressions(expression, numVars, false, false);
         } catch (Exception ex) {
             Logger.getLogger(QuineMcCluskey.class.getName()).log(Level.SEVERE, null, ex);
         }
@@ -1602,16 +1596,16 @@ public final class QuineMcCluskey implements KeyListener {
 
         //Exibe atualização a cada X iterações
         if(updateScreen) {
-        if (Math.floorMod(lineIndex, 500) == 0) {
-            textAreaReport.setText(
+            if (Math.floorMod(lineIndex, 500) == 0) {
+                textAreaReport.setText(
                     "ÍNDICE\t"
                     + "EXPRESSÃO MINIMIZADA\n"
             );
-            textAreaReport.append("\n" + lineIndex + "\t" + result + " ...");
-            textAreaReport.update(textAreaReport.getGraphics());
-            labelTime.setText(String.format("Tempo: %.3f s", (float) (System.nanoTime() - startTime) / 1000000000));
-            labelTime.update(labelTime.getGraphics());
-        }
+                textAreaReport.append("\n" + lineIndex + "\t" + result + " ...");
+                textAreaReport.update(textAreaReport.getGraphics());
+                labelTime.setText(String.format("Tempo: %.3f s", (float) (System.nanoTime() - startTime) / 1000000000));
+                labelTime.update(labelTime.getGraphics());
+            }
         }
         return lineIndex;
     }

@@ -102,7 +102,7 @@ public class GUI implements KeyListener {
                 mainFrame.setVisible(true);
                 mainFrame.setExtendedState(mainFrame.getExtendedState() | JFrame.MAXIMIZED_BOTH);
                 //mainFrame.getRootPane().setDefaultButton(quineMcCluskey.okButton);
-                KeyboardFocusManager.getCurrentKeyboardFocusManager().focusNextComponent(quineMcCluskey.checkShowProgressBar);
+                KeyboardFocusManager.getCurrentKeyboardFocusManager().focusNextComponent(quineMcCluskey.checkWriteToFile);
                 
                 /*
                 mainFrame.addWindowListener(new WindowAdapter() {
