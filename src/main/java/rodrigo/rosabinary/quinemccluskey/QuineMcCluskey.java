@@ -1357,7 +1357,7 @@ public final class QuineMcCluskey implements KeyListener {
                                 int updateFactor = showProgressBar ? 100_000 * (int) Math.log10(Math.max(10, linesToRead-5000)) : -1;
                                 
                                 while (line <= endLine) {
-                                    lineIndex = executeSingleFromFile(sc.nextLine(), lineIndex, startTime);
+                                    lineIndex = executeSingleFromFile(sc.nextLine(), lineIndex, startTime, line==endLine);
                                     if(showProgressBar) {
                                         progress = 95*line/linesToRead;
                                         if(Math.floorMod(System.nanoTime()-startTime, updateFactor) == 0) { // aleatório, não tempo
@@ -1422,9 +1422,9 @@ public final class QuineMcCluskey implements KeyListener {
                     textAreaResult.setText("");
                 }
                 textAreaReport.setCaretPosition(0);
-                if(writeToFile) {
-                    outputFile.close();
-                }
+                //if(writeToFile) {
+                //    outputFile.close();
+                //}
             }
         });
         
@@ -1466,9 +1466,9 @@ public final class QuineMcCluskey implements KeyListener {
                 //errorMsg = "";
                 hasResult = true;
                 executeSingle();
-                if(writeToFile) {
-                    outputFile.close();
-                }
+                //if(writeToFile) {
+                //    outputFile.close();
+                //}
             }
         });
         
@@ -1487,12 +1487,13 @@ public final class QuineMcCluskey implements KeyListener {
     }
     
     public void optimizeExpressions(
-        String inputExpression,
-        int numVars,
-        boolean updateScreen,
-        boolean showProgressBar
-        ) throws Exception {
-        
+                String inputExpression,
+                int numVars,
+                boolean updateScreen,
+                boolean showProgressBar,
+                boolean lastLine
+                ) throws Exception {
+
         expressions = Tools.removeSpacesFromExpression(inputExpression);
         sumOfProducts = new SumOfProducts(progressBar);
         if (!sumOfProducts.setExpression(expressions, numVars))
@@ -1506,13 +1507,7 @@ public final class QuineMcCluskey implements KeyListener {
         sumOfProducts.buildOptimizedExpression();
         
         if (writeToFile) {
-            print(sumOfProducts.getResult()+"\t", outputFile);
-            print(sumOfProducts.expression2hexadecimal(sumOfProducts.getResult())+"\t", outputFile);
-            print(Tools.numberOfLiterals(sumOfProducts.getResult(), sumOfProducts.getNumberOfVars(), sumOfProducts.getNumberOfProducts()), outputFile);
-            //print("\t"+sumOfProducts.getNEPLSize(), outputFile);
-            //if (sumOfProducts.isInspect())
-            //    print(" < INSPECT! >", outputFile);
-            print("\n", outputFile);
+            writeResultsToFile(lastLine);
         }
     }
     
@@ -1532,7 +1527,8 @@ public final class QuineMcCluskey implements KeyListener {
                             (String) comboExpressions.getSelectedItem(),
                             sliderVars.getValue(),
                             updateScreen,
-                            showProgressBar
+                            showProgressBar,
+                            true
                     );
                     textAreaReport.setFont(fontReport);
                     if (errorMsg.isEmpty()) {
@@ -1563,9 +1559,9 @@ public final class QuineMcCluskey implements KeyListener {
         });
     }
     
-    public int executeSingleFromFile(String expression, int lineIndex, long startTime) {
+    public int executeSingleFromFile(String expression, int lineIndex, long startTime, boolean lastLine) {
         try {
-            optimizeExpressions(expression, numVars, false, false);
+            optimizeExpressions(expression, numVars, false, false, lastLine);
         } catch (Exception ex) {
             Logger.getLogger(QuineMcCluskey.class.getName()).log(Level.SEVERE, null, ex);
         }
@@ -1631,6 +1627,19 @@ public final class QuineMcCluskey implements KeyListener {
         FileNotFoundException,
         UnsupportedEncodingException {
         outputFile = new PrintWriter(outputFileName);
+    }
+    
+    public void writeResultsToFile(boolean lastLine) {
+        print(sumOfProducts.getResult()+"\t", outputFile);
+        print(sumOfProducts.expression2hexadecimal(sumOfProducts.getResult())+"\t", outputFile);
+        print(Tools.numberOfLiterals(sumOfProducts.getResult(), sumOfProducts.getNumberOfVars(), sumOfProducts.getNumberOfProducts()), outputFile);
+        //print("\t"+sumOfProducts.getNEPLSize(), outputFile);
+        //if (sumOfProducts.isInspect())
+        //    print(" < INSPECT! >", outputFile);
+        print("\n", outputFile);
+        if(lastLine) {
+            outputFile.close();
+        }
     }
     
     public void openOutputFile(String outputFileName)  throws

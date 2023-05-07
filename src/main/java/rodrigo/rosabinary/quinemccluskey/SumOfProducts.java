@@ -245,7 +245,6 @@ public class SumOfProducts {
         int begin    = 0;
         int end;
         do {
-            print("\nConverted Expression #"+begin+"/"+convertedExpression.length());
             end = convertedExpression.indexOf('+', begin);
             
             if (end < 0) {
@@ -266,7 +265,6 @@ public class SumOfProducts {
             }
             
             for (int a=0; a < allStr.size(); a++) {
-                print("\n   string #"+a+"/"+allStr.size());
                 Product newProduct = new Product(
                     inputFormat, allStr.get(a), variablesList, numberOfVars
                 );
@@ -560,7 +558,7 @@ public class SumOfProducts {
     // Usar quando número de produtos não essenciais > 23:
     // Mais rápido, mas, por não abordar todas as combinações,
     // pode não retornar o resultado ótimo.
-    public void completeFinalList_ALT(Boolean updateScreen, Boolean updatePB, JTextArea report) {
+    public void completeFinalList_ALT(boolean updateScreen, boolean updatePB, JTextArea report) {
         ArrayList<String> finalListOriginal = (ArrayList) finalProductsList.clone();
         int NEPLSize = notEssentialProductsList.size();
         int pbUpdateFactor = updatePB ? Math.max(1, NEPLSize/24) : -1;
@@ -694,7 +692,7 @@ public class SumOfProducts {
     }
     
     // completeFinalList STEP 2 /////
-    public void generateAllCombinations(int n, Boolean updatePB) {
+    public void generateAllCombinations(int n, boolean updatePB) {
         //long startTime = System.nanoTime();
         combinationsList = new ArrayList<>();
         for (int r = 1; r <= n; r++) {
@@ -746,7 +744,7 @@ public class SumOfProducts {
     }
     
     // completeFinalList STEP 3 /////
-    public void addIndexToCombinationsList(Boolean updatePB) {
+    public void addIndexToCombinationsList(boolean updatePB) {
         //long startTime = System.nanoTime();
         int pbUpdateFactor = updatePB ? Math.max(1, combinationsList.size()/80) : -1;
         for(int c = 0; c < combinationsList.size(); c++) {
@@ -776,7 +774,7 @@ public class SumOfProducts {
     
     // completeFinalList STEP 4 /////
     // Counting Sort, by Rajat Mishra, geeksforgeeks.org
-    public void sortCombinationsList(Boolean updatePB) {
+    public void sortCombinationsList(boolean updatePB) {
         //long startTime;// = System.nanoTime();
         
         int clSize = combinationsList.size();
@@ -900,7 +898,7 @@ public class SumOfProducts {
     }
     
     // completeFinalList STEP 5 /////
-    public void testCombinations(Boolean updatePB) {
+    public void testCombinations(boolean updatePB) {
         //long startTime = System.nanoTime();
         int pbUpdateFactor = updatePB ? Math.max(1, combinationsList.size()/80) : -1;
         ArrayList<String> finalListInitial = (ArrayList) finalProductsList.clone();
@@ -944,7 +942,7 @@ public class SumOfProducts {
         //print("\n----------------------");
     }
     
-    public void completeFinalList(Boolean updateScreen, Boolean updatePB, JTextArea report) {
+    public void completeFinalList(boolean updateScreen, boolean updatePB, JTextArea report) {
         progress = 0;
         if (updatePB) {
             progressBar.setValue(progress);
