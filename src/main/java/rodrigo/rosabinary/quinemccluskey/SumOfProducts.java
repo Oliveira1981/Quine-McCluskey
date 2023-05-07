@@ -245,6 +245,7 @@ public class SumOfProducts {
         int begin    = 0;
         int end;
         do {
+            print("\nConverted Expression #"+begin+"/"+convertedExpression.length());
             end = convertedExpression.indexOf('+', begin);
             
             if (end < 0) {
@@ -265,6 +266,7 @@ public class SumOfProducts {
             }
             
             for (int a=0; a < allStr.size(); a++) {
+                print("\n   string #"+a+"/"+allStr.size());
                 Product newProduct = new Product(
                     inputFormat, allStr.get(a), variablesList, numberOfVars
                 );
@@ -430,6 +432,7 @@ public class SumOfProducts {
     public void buildOptimizedExpression() {
         if (Tools.isDumb(minTermsList, numberOfVars)) {
             result = "1";
+            return;
         }
         result = "";
         
