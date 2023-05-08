@@ -243,7 +243,7 @@ public class SumOfProducts {
         minTermsList = new ArrayList<>();
         
         int begin    = 0;
-        int end;
+        int end, i=1;
         do {
             end = convertedExpression.indexOf('+', begin);
             
@@ -257,6 +257,7 @@ public class SumOfProducts {
             ArrayList<String> allStr;
             if (inputFormat.equals("Literal")) {
                 variablesList = Tools.completeVarsList(variablesList, numberOfVars);
+                //print("\nvariablesList: " + variablesList);
                 allStr = (ArrayList<String>) Tools.getAllVariations(str, variablesList, numberOfVars).clone();
             }
             else {
@@ -285,8 +286,10 @@ public class SumOfProducts {
             begin = end + 1;
             if (begin >= convertedExpression.length())
                 break;
+            i++;
         }
         while (begin < convertedExpression.length());
+        //print("\nfillProductsList: " + i + "\n");
         numberOfProducts = productsList.size();
     }
     
@@ -419,6 +422,10 @@ public class SumOfProducts {
         if (!productsList.get(productsList.size()-1).hasPrime()) {
             auxProductsList.add(productsList.get(productsList.size()-1));
         }
+        //print("\nCol: "+(numberOfVars-limit));
+        //for (int i=0; i < (productsList.size()); i++) {
+        //    print("\n"+productsList.get(i).getMinTermsList());
+        //}
         
         if (primesWereFound && numberOfVars > 1 && limit > 0) {
             productsList = auxProductsList;
@@ -973,7 +980,6 @@ public class SumOfProducts {
         }
         // STEP 1 /////
         if (updateScreen) {
-            //187, »
             report.append(" Pronto.\n\n » Listando números de literais...");
             report.update(report.getGraphics());
         }

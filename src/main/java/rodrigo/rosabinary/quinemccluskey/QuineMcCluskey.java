@@ -888,7 +888,7 @@ public final class QuineMcCluskey implements KeyListener {
                         }
                         else {
                             gen = Tools.generateRandomExpression(
-                                vars+vars*2, //numberOfProducts 
+                                vars*3, //numberOfProducts 
                                 vars    //numberOfVars
                             );
                         }
@@ -1270,7 +1270,7 @@ public final class QuineMcCluskey implements KeyListener {
                 previousEditor = editor.getText();
                 if (writeToFile) {
                     try {
-                        setFileToWrite("Quine-McCluskey Results.txt");
+                        setFileToWrite("Quine-McCluskey Results.csv");
                     } catch (FileNotFoundException | UnsupportedEncodingException ex) {
                         Logger.getLogger(QuineMcCluskey.class.getName()).log(Level.SEVERE, null, ex);
                     }
@@ -1498,8 +1498,20 @@ public final class QuineMcCluskey implements KeyListener {
         sumOfProducts = new SumOfProducts(progressBar);
         if (!sumOfProducts.setExpression(expressions, numVars))
             return;
+        
+        if(updateScreen) {
+            textAreaReport.append("\n\n » Ordenando e mesclando "
+                    + sumOfProducts.getProductsList().size() + " produtos...");
+            textAreaReport.update(textAreaReport.getGraphics());
+        }
+        
         sumOfProducts.sortByOnesCount();
-        sumOfProducts.mergePrimeImplicants(10);
+        sumOfProducts.mergePrimeImplicants(sumOfProducts.getNumberOfVars());
+        
+        if(updateScreen) {
+            textAreaReport.append(" Pronto.");
+            textAreaReport.update(textAreaReport.getGraphics());
+        }        
         sumOfProducts.fillMinTermsList();
         sumOfProducts.fillTruthTable();
         sumOfProducts.fillFinalProductsLists();
@@ -1507,7 +1519,12 @@ public final class QuineMcCluskey implements KeyListener {
         sumOfProducts.buildOptimizedExpression();
         
         if (writeToFile) {
-            writeResultsToFile(lastLine);
+            writeResultsToFile(
+                    true, // printIn
+                    true, // printResult
+                    true, // printHexa
+                    true, // printNumLit
+                    lastLine);
         }
     }
     
@@ -1629,13 +1646,35 @@ public final class QuineMcCluskey implements KeyListener {
         outputFile = new PrintWriter(outputFileName);
     }
     
-    public void writeResultsToFile(boolean lastLine) {
-        print(sumOfProducts.getResult()+"\t", outputFile);
-        print(sumOfProducts.expression2hexadecimal(sumOfProducts.getResult())+"\t", outputFile);
-        print(Tools.numberOfLiterals(sumOfProducts.getResult(), sumOfProducts.getNumberOfVars(), sumOfProducts.getNumberOfProducts()), outputFile);
-        //print("\t"+sumOfProducts.getNEPLSize(), outputFile);
-        //if (sumOfProducts.isInspect())
-        //    print(" < INSPECT! >", outputFile);
+    public void writeResultsToFile(
+            boolean printIn,
+            boolean printResult,
+            boolean printHexa,
+            boolean printNumLit,
+            boolean lastLine) {
+        boolean hasPreviousData = false;
+        if(printIn) {
+            print(sumOfProducts.getOriginalInputExpression(), outputFile);
+            hasPreviousData = true;
+        }
+        if(printResult) {
+            if(hasPreviousData)
+                print(",", outputFile);
+            print(sumOfProducts.getResult(), outputFile);
+            hasPreviousData = true;
+        }
+        if(printHexa) {
+            if(hasPreviousData)
+                print(",", outputFile);
+            print(sumOfProducts.expression2hexadecimal(sumOfProducts.getResult()), outputFile);
+            hasPreviousData = true;
+        }
+        if(printNumLit) {
+            if(hasPreviousData)
+                print(",", outputFile);
+            print(Tools.numberOfLiterals(sumOfProducts.getResult(), sumOfProducts.getNumberOfVars(), sumOfProducts.getNumberOfProducts()), outputFile);
+            hasPreviousData = true;
+        }
         print("\n", outputFile);
         if(lastLine) {
             outputFile.close();

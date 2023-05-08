@@ -170,8 +170,8 @@ public class Tools {
             if (bits.charAt(b) != '_') {
                 
                 if (lit.length() > 0) {
-                    if (lit.charAt(lit.length()-1) != '_')
-                        lit += "*";
+                    //if (lit.charAt(lit.length()-1) != '_')
+                        //lit += "*";
                 }
                 
                 if (bits.charAt(b) == '0') {
