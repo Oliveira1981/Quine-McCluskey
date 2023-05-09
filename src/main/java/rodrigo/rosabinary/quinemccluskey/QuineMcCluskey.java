@@ -21,7 +21,7 @@ public final class QuineMcCluskey implements KeyListener {
             showProgressBar,
             writeToFile,
             writeInputExp,
-            writeResult,
+            writeResultExp,
             writeHexa,
             writeNumLit;
     
@@ -46,7 +46,10 @@ public final class QuineMcCluskey implements KeyListener {
             checkWriteToFile,
             checkShowProgressBar,
             checkUpdateScreen,
-            checkInputExp;
+            checkInputExp,
+            checkResultExp,
+            checkHexa,
+            checkNumLit;
             
     private JDialog
             dialog;
@@ -114,14 +117,14 @@ public final class QuineMcCluskey implements KeyListener {
         showProgressBar    =     true;
         writeToFile        =    false;
         writeInputExp      =     true;
-        writeResult        =     true;
+        writeResultExp     =     true;
         writeHexa          =     true;
         writeNumLit        =    false;
         numVars            =        0;
         progress           =        0;
         inputFormat        =       "";
         errorMsg           =       "";
-        previousEditor          =       "";
+        previousEditor     =       "";
         sumOfProducts      =     null;
         createQuineMcPanel(darkTheme);
     }
@@ -750,6 +753,8 @@ public final class QuineMcCluskey implements KeyListener {
             quineMcPanel.getComponent(c).addKeyListener(this);
         }
         
+        wichResultsToFile();
+        
         /*sliderTheme.addChangeListener(new ChangeListener() {
             
             @Override
@@ -1020,7 +1025,8 @@ public final class QuineMcCluskey implements KeyListener {
                 if (checkWriteToFile.isSelected()) {
                     checkWriteToFile.setForeground(highlightLabelColor);
                     writeToFile = true;
-                    wichResultsToFile();
+                    //wichResultsToFile();
+                    showDialog();
                 }
                 else {
                     checkWriteToFile.setForeground(labelColor);
@@ -1496,22 +1502,20 @@ public final class QuineMcCluskey implements KeyListener {
         GridLayout gridLayout = new GridLayout(5,1);
         panel.setLayout(gridLayout);
 
-        checkInputExp = new JCheckBox("Expressão de entrada");
-        checkInputExp.setSelected(true);
-        checkInputExp.setName("checkInputExp");
-        panel.add(checkInputExp);
-        JCheckBox checkResultExp = new JCheckBox("Expressão minimizada");
+        checkInputExp  = new JCheckBox("Expressão de entrada");
+        checkResultExp = new JCheckBox("Expressão minimizada");
+        checkHexa      = new JCheckBox("Representação hexadecimal");
+        checkNumLit    = new JCheckBox("Número de literais");
+        JButton ok     = new JButton("OK");
+        checkInputExp .setSelected(true);
         checkResultExp.setSelected(true);
+        checkHexa     .setSelected(true);
+        checkHexa     .setSelected(true);
+        checkNumLit   .setSelected(true);
+        panel.add(checkInputExp);
         panel.add(checkResultExp);
-        JCheckBox checkHexa = new JCheckBox("Representação hexadecimal");
-        checkHexa.setSelected(true);
         panel.add(checkHexa);
-        JCheckBox checkNumLit = new JCheckBox("Número de literais");
-        checkNumLit.setSelected(true);
         panel.add(checkNumLit);
-        JButton ok = new JButton("OK");
-        ok.addKeyListener(this);
-        ok.setName("ok");
         panel.add(ok);
         
         for(int c=0; c<panel.getComponentCount(); c++) {
@@ -1523,6 +1527,28 @@ public final class QuineMcCluskey implements KeyListener {
         dialog.setSize(new Dimension(200, 180));
         dialog.setResizable(false);
         
+        /*Dimension dim = Toolkit.getDefaultToolkit().getScreenSize();
+        Point pointer = new Point(checkWriteToFile.getLocation());
+        SwingUtilities.convertPointToScreen(pointer, checkWriteToFile);
+        pointer.x -= 1180;
+        pointer.x = Math.min(Math.max(1, pointer.x - dialog.getWidth()/2), (int) dim.getWidth());
+        pointer.y = Math.min(pointer.y, dim.height - dialog.getHeight() - 100);
+        dialog.setLocation(pointer);*/
+        
+        ok.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                writeInputExp = checkInputExp.isSelected();
+                writeResultExp = checkResultExp.isSelected();
+                writeHexa = checkHexa.isSelected();
+                writeNumLit = checkNumLit.isSelected();
+                dialog.dispose();
+            }
+        });
+        dialog.setVisible(false);
+    }
+    
+    public void showDialog() {
         Dimension dim = Toolkit.getDefaultToolkit().getScreenSize();
         Point pointer = new Point(checkWriteToFile.getLocation());
         SwingUtilities.convertPointToScreen(pointer, checkWriteToFile);
@@ -1530,17 +1556,6 @@ public final class QuineMcCluskey implements KeyListener {
         pointer.x = Math.min(Math.max(1, pointer.x - dialog.getWidth()/2), (int) dim.getWidth());
         pointer.y = Math.min(pointer.y, dim.height - dialog.getHeight() - 100);
         dialog.setLocation(pointer);
-        
-        ok.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                writeInputExp = checkInputExp.isSelected();
-                writeResult = checkResultExp.isSelected();
-                writeHexa = checkHexa.isSelected();
-                writeNumLit = checkNumLit.isSelected();
-                dialog.dispose();
-            }
-        });
         dialog.setVisible(true);
     }
     
@@ -1577,9 +1592,8 @@ public final class QuineMcCluskey implements KeyListener {
         sumOfProducts.buildOptimizedExpression();
         
         if (writeToFile) {
-            writeResultsToFile(
-                writeInputExp,
-                writeResult,
+            writeResultsToFile(writeInputExp,
+                writeResultExp,
                 writeHexa,
                 writeNumLit,
                 lastLine);
@@ -1873,18 +1887,16 @@ public final class QuineMcCluskey implements KeyListener {
             }
         }
         if (e.getKeyCode() == KeyEvent.VK_ESCAPE) {
-            if(dialog == null) {
-                print("\n");
-                System.exit(0);
+            if(dialog.isVisible()) {
+                writeInputExp = checkInputExp.isSelected();
+                writeResultExp = checkResultExp.isSelected();
+                writeHexa = checkHexa.isSelected();
+                writeNumLit = checkNumLit.isSelected();
+                dialog.dispose();
             }
             else {
-                if(dialog.isVisible()) {
-                    dialog.dispose();
-                }
-                else {
-                    print("\n");
-                    System.exit(0);
-                }
+                print("\n");
+                System.exit(0);
             }
         }
         
