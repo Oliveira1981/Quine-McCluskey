@@ -14,12 +14,16 @@ import javax.swing.event.*;
  */
 public final class QuineMcCluskey implements KeyListener {
     
-    private boolean
+    public boolean
             hasResult,
             darkTheme,
             updateScreen,
             showProgressBar,
-            writeToFile;
+            writeToFile,
+            writeInputExp,
+            writeResult,
+            writeHexa,
+            writeNumLit;
     
     private int
             numVars,
@@ -41,7 +45,11 @@ public final class QuineMcCluskey implements KeyListener {
             checkReadEntireFile,
             checkWriteToFile,
             checkShowProgressBar,
-            checkUpdateScreen;
+            checkUpdateScreen,
+            checkInputExp;
+            
+    private JDialog
+            dialog;
     
     private JComboBox<String>
             comboExpressions,
@@ -105,6 +113,10 @@ public final class QuineMcCluskey implements KeyListener {
         updateScreen       =     true;
         showProgressBar    =     true;
         writeToFile        =    false;
+        writeInputExp      =     true;
+        writeResult        =     true;
+        writeHexa          =     true;
+        writeNumLit        =    false;
         numVars            =        0;
         progress           =        0;
         inputFormat        =       "";
@@ -197,7 +209,6 @@ public final class QuineMcCluskey implements KeyListener {
         comboWichInput.setSelectedIndex(1); // Digitar
         comboWichInput.setPreferredSize(new Dimension(220, 30));
         comboWichInput.setMinimumSize(new Dimension(220, 30));
-        comboWichInput.addKeyListener(this);
         comboWichInput.setFocusable(true);
         comboWichInput.setFont(new Font("Segoe UI", Font.BOLD, 12));
         comboWichInput.setBackground(comboBGColor);
@@ -229,7 +240,6 @@ public final class QuineMcCluskey implements KeyListener {
         checkReadEntireFile = new JCheckBox("Inteiro");
         checkReadEntireFile.setFont(fontDefaultBold);
         checkReadEntireFile.setForeground(labelColor);//30, 130, 230
-        checkReadEntireFile.addKeyListener(this);
         checkReadEntireFile.setFocusable(false);
         checkReadEntireFile.setSelected(true);
         GridBagConstraints gbcCheckReadEntireFile = new GridBagConstraints();
@@ -248,7 +258,6 @@ public final class QuineMcCluskey implements KeyListener {
         labelStartLine = new JLabel("     Linha inicial: ");
         labelStartLine.setFont(fontDefaultBold);
         labelStartLine.setForeground(disabledLabelColor);//110, 110, 110
-        labelStartLine.addKeyListener(this);
         GridBagConstraints gbcLabelStartLine = new GridBagConstraints();
         gbcLabelStartLine.fill = GridBagConstraints.HORIZONTAL;
         gbcLabelStartLine.gridx = 4;
@@ -266,7 +275,6 @@ public final class QuineMcCluskey implements KeyListener {
         textStartLine.setPreferredSize(new Dimension(55, 20));
         textStartLine.setMinimumSize(new Dimension(55, 20));
         textStartLine.setFont(new Font("Segoe UI", Font.PLAIN, 12));
-        textStartLine.addKeyListener(this);
         textStartLine.setFocusable(false);
         GridBagConstraints gbcTextStartLine = new GridBagConstraints();
         gbcTextStartLine.fill = GridBagConstraints.HORIZONTAL;
@@ -284,7 +292,6 @@ public final class QuineMcCluskey implements KeyListener {
         labelEndLine = new JLabel("     Linha final: ");
         labelEndLine.setFont(fontDefaultBold);
         labelEndLine.setForeground(disabledLabelColor);//110, 110, 110
-        labelEndLine.addKeyListener(this);
         GridBagConstraints gbcLabelEndLine = new GridBagConstraints();
         gbcLabelEndLine.fill = GridBagConstraints.HORIZONTAL;
         gbcLabelEndLine.gridx = 6;
@@ -303,7 +310,6 @@ public final class QuineMcCluskey implements KeyListener {
         textEndLine.setPreferredSize(new Dimension(55, 20));
         textEndLine.setMinimumSize(new Dimension(55, 20));
         textEndLine.setFont(new Font("Segoe UI", Font.PLAIN, 12));
-        textEndLine.addKeyListener(this);
         textEndLine.setFocusable(false);
         GridBagConstraints gbcTextEndLine = new GridBagConstraints();
         gbcTextEndLine.fill = GridBagConstraints.HORIZONTAL;
@@ -336,7 +342,6 @@ public final class QuineMcCluskey implements KeyListener {
         checkUpdateScreen = new JCheckBox("Atualizações na tela");
         checkUpdateScreen.setForeground(highlightLabelColor);
         checkUpdateScreen.setFont(new Font("Segoe.UI", Font.BOLD, 12));
-        checkUpdateScreen.addKeyListener(this);
         checkUpdateScreen.setFocusable(true);
         checkUpdateScreen.setSelected(true);
         GridBagConstraints gbcCheckUpdateScreen = new GridBagConstraints();
@@ -355,7 +360,6 @@ public final class QuineMcCluskey implements KeyListener {
         checkShowProgressBar = new JCheckBox("Barra de progresso");
         checkShowProgressBar.setForeground(highlightLabelColor);
         checkShowProgressBar.setFont(new Font("Segoe UI", Font.BOLD, 12));
-        checkShowProgressBar.addKeyListener(this);
         checkShowProgressBar.setFocusable(true);
         checkShowProgressBar.setSelected(true);
         GridBagConstraints gbcCheckShowProgressBar = new GridBagConstraints();
@@ -374,7 +378,6 @@ public final class QuineMcCluskey implements KeyListener {
         checkWriteToFile = new JCheckBox("Resultado em arquivo");
         checkWriteToFile.setForeground(labelColor);
         checkWriteToFile.setFont(new Font("Segoe UI", Font.BOLD, 12));
-        checkWriteToFile.addKeyListener(this);
         checkWriteToFile.setFocusable(true);
         checkWriteToFile.setSelected(false);
         GridBagConstraints gbcCheckWriteToFile = new GridBagConstraints();
@@ -432,7 +435,7 @@ public final class QuineMcCluskey implements KeyListener {
         quineMcPanel.add(labelThemeLight, gbcLabelThemeLight);
         
         JSlider sliderTheme = new JSlider(JSlider.HORIZONTAL, 0, 1, 1); // min, max, inicial
-        sliderTheme.addKeyListener(this);
+        //sliderTheme.addKeyListener(this);
         sliderTheme.setFocusable(false);
         sliderTheme.setMinorTickSpacing(1);
         sliderTheme.setSnapToTicks(true);
@@ -519,7 +522,6 @@ public final class QuineMcCluskey implements KeyListener {
         okButton = new JButton("Executar");
         okButton.setPreferredSize(new Dimension(90, 30));
         okButton.setMinimumSize(new Dimension(90, 30));
-        okButton.addKeyListener(this);
         okButton.setFocusable(true);
         okButton.setBackground(buttonBGColor);//30, 50, 100
         okButton.setForeground(buttonTextColor);//50, 150, 250
@@ -556,7 +558,6 @@ public final class QuineMcCluskey implements KeyListener {
         labelTable.put(16, new JLabel("16"));
         
         sliderVars = new JSlider(JSlider.HORIZONTAL, 0, 16, 0); // min, max, inicial
-        sliderVars.addKeyListener(this);
         sliderVars.setMinorTickSpacing(1);
         sliderVars.setSnapToTicks(true);
         sliderVars.setMinimumSize(new Dimension(200, 30));
@@ -600,7 +601,6 @@ public final class QuineMcCluskey implements KeyListener {
         quineMcPanel.add(labelResult, gbcLabelResult);
         
         textAreaResult = new JTextArea();
-        textAreaResult.addKeyListener(this);
         textAreaResult.setFocusable(true);
         textAreaResult.setLineWrap(true);
         textAreaResult.setEditable(false);
@@ -635,7 +635,6 @@ public final class QuineMcCluskey implements KeyListener {
         comboWichReport = new JComboBox<>(wichReport);
         comboWichReport.setPreferredSize(new Dimension(250, 30));
         comboWichReport.setMinimumSize(new Dimension(250, 30));
-        comboWichReport.addKeyListener(this);
         comboWichReport.setFocusable(true);
         comboWichReport.setFont(new Font("Segoe UI", Font.BOLD, 12));
         comboWichReport.setBackground(comboBGColor);
@@ -686,7 +685,6 @@ public final class QuineMcCluskey implements KeyListener {
         quineMcPanel.add(labelTime, gbcLabelTime);
         
         textAreaReport = new JTextArea();
-        textAreaReport.addKeyListener(this);
         textAreaReport.setFocusable(true);
         textAreaReport.setLineWrap(true);
         textAreaReport.setEditable(false);
@@ -747,6 +745,10 @@ public final class QuineMcCluskey implements KeyListener {
         progressBar.setValue(0);
         progressBar.setBorder(BorderFactory.createLineBorder(borderColor));
         quineMcPanel.add(progressBar, gbcSpaces);
+        
+        for(int c=0; c<quineMcPanel.getComponentCount(); c++) {
+            quineMcPanel.getComponent(c).addKeyListener(this);
+        }
         
         /*sliderTheme.addChangeListener(new ChangeListener() {
             
@@ -1018,6 +1020,7 @@ public final class QuineMcCluskey implements KeyListener {
                 if (checkWriteToFile.isSelected()) {
                     checkWriteToFile.setForeground(highlightLabelColor);
                     writeToFile = true;
+                    wichResultsToFile();
                 }
                 else {
                     checkWriteToFile.setForeground(labelColor);
@@ -1040,14 +1043,13 @@ public final class QuineMcCluskey implements KeyListener {
             @Override
             public void mouseReleased(MouseEvent e) {
             }
-
+            
             @Override
             public void mouseEntered(MouseEvent e) {
                 checkWriteToFile.setForeground(highlightLabelColor);
                 ToolTipManager.sharedInstance().setInitialDelay(50);
-                checkWriteToFile.setToolTipText("não está funcionando");
             }
-
+            
             @Override
             public void mouseExited(MouseEvent e) {
                 if (checkWriteToFile.isSelected()) {
@@ -1486,6 +1488,62 @@ public final class QuineMcCluskey implements KeyListener {
         });
     }
     
+    public void wichResultsToFile() {
+        dialog = new JDialog(SwingUtilities.windowForComponent(quineMcPanel));
+        dialog.setName("dialog");
+        dialog.setModal(true);
+        JPanel panel = new JPanel();
+        GridLayout gridLayout = new GridLayout(5,1);
+        panel.setLayout(gridLayout);
+
+        checkInputExp = new JCheckBox("Expressão de entrada");
+        checkInputExp.setSelected(true);
+        checkInputExp.setName("checkInputExp");
+        panel.add(checkInputExp);
+        JCheckBox checkResultExp = new JCheckBox("Expressão minimizada");
+        checkResultExp.setSelected(true);
+        panel.add(checkResultExp);
+        JCheckBox checkHexa = new JCheckBox("Representação hexadecimal");
+        checkHexa.setSelected(true);
+        panel.add(checkHexa);
+        JCheckBox checkNumLit = new JCheckBox("Número de literais");
+        checkNumLit.setSelected(true);
+        panel.add(checkNumLit);
+        JButton ok = new JButton("OK");
+        ok.addKeyListener(this);
+        ok.setName("ok");
+        panel.add(ok);
+        
+        for(int c=0; c<panel.getComponentCount(); c++) {
+            panel.getComponent(c).addKeyListener(this);
+        }
+        
+        dialog.add(panel);
+        dialog.pack();
+        dialog.setSize(new Dimension(200, 180));
+        dialog.setResizable(false);
+        
+        Dimension dim = Toolkit.getDefaultToolkit().getScreenSize();
+        Point pointer = new Point(checkWriteToFile.getLocation());
+        SwingUtilities.convertPointToScreen(pointer, checkWriteToFile);
+        pointer.x -= 1180;
+        pointer.x = Math.min(Math.max(1, pointer.x - dialog.getWidth()/2), (int) dim.getWidth());
+        pointer.y = Math.min(pointer.y, dim.height - dialog.getHeight() - 100);
+        dialog.setLocation(pointer);
+        
+        ok.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                writeInputExp = checkInputExp.isSelected();
+                writeResult = checkResultExp.isSelected();
+                writeHexa = checkHexa.isSelected();
+                writeNumLit = checkNumLit.isSelected();
+                dialog.dispose();
+            }
+        });
+        dialog.setVisible(true);
+    }
+    
     public void optimizeExpressions(
                 String inputExpression,
                 int numVars,
@@ -1520,11 +1578,11 @@ public final class QuineMcCluskey implements KeyListener {
         
         if (writeToFile) {
             writeResultsToFile(
-                    true, // printIn
-                    true, // printResult
-                    true, // printHexa
-                    true, // printNumLit
-                    lastLine);
+                writeInputExp,
+                writeResult,
+                writeHexa,
+                writeNumLit,
+                lastLine);
         }
     }
     
@@ -1794,10 +1852,6 @@ public final class QuineMcCluskey implements KeyListener {
 
     @Override
     public void keyPressed(KeyEvent e) {
-        if (e.getKeyCode() == KeyEvent.VK_ESCAPE) {
-            print("\n");
-            System.exit(0);
-        }
         if ("Editor".equals(e.getComponent().getName())) {
             if(e.getKeyCode() != KeyEvent.VK_CONTROL
                &&
@@ -1816,6 +1870,29 @@ public final class QuineMcCluskey implements KeyListener {
                e.getKeyCode() != KeyEvent.VK_TAB) {
                 textAreaResult.setText("");
                 textAreaReport.setText("");
+            }
+        }
+        if (e.getKeyCode() == KeyEvent.VK_ESCAPE) {
+            if(dialog == null) {
+                print("\n");
+                System.exit(0);
+            }
+            else {
+                if(dialog.isVisible()) {
+                    dialog.dispose();
+                }
+                else {
+                    print("\n");
+                    System.exit(0);
+                }
+            }
+        }
+        
+        if(e.getKeyCode() == KeyEvent.VK_ENTER) {
+            if(dialog != null) {
+                if(dialog.isVisible()) {
+                    dialog.dispose();
+                }
             }
         }
     }
