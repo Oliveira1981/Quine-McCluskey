@@ -525,7 +525,7 @@ public class SumOfProducts {
     public boolean isAllCovered() {
         for (int i=0; i < minTermsList.size(); i++) {
             
-            if (!minTermsList.get(i).isIsCovered()) {
+            if (!minTermsList.get(i).isCovered()) {
                 return false;
             }
         }

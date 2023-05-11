@@ -2,8 +2,10 @@ package rodrigo.rosabinary;
 
 import java.awt.*;
 import java.awt.event.*;
+import java.awt.image.BufferedImage;
 import java.io.*;
 import java.util.logging.*;
+import javax.imageio.ImageIO;
 import javax.swing.*;
 import rodrigo.rosabinary.mazerouter.*;
 import rodrigo.rosabinary.quinemccluskey.*;
@@ -44,6 +46,18 @@ public class GUI implements KeyListener {
                 
                 JFrame mainFrame = new JFrame("ROSA Binary");
                 mainFrame.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
+                
+                /*try {
+                    // the path must be relative to the *class* files
+                    String imagePath = "rosabicon.png";
+                    InputStream imgStream = RosaBinary.class.getResourceAsStream(imagePath);
+                    BufferedImage myImg;
+                    myImg = ImageIO.read(imgStream);
+                    // ImageIcon icon = new ImageIcon(myImg);
+                    mainFrame.setIconImage(myImg);
+                } catch (IOException ex) {
+                    Logger.getLogger(GUI.class.getName()).log(Level.SEVERE, null, ex);
+                }*/
                 
                 tabbedPane = new JTabbedPane(1);
                 tabbedPane.setName("mainTabbedPane");

@@ -1527,14 +1527,6 @@ public final class QuineMcCluskey implements KeyListener {
         dialog.setSize(new Dimension(200, 180));
         dialog.setResizable(false);
         
-        /*Dimension dim = Toolkit.getDefaultToolkit().getScreenSize();
-        Point pointer = new Point(checkWriteToFile.getLocation());
-        SwingUtilities.convertPointToScreen(pointer, checkWriteToFile);
-        pointer.x -= 1180;
-        pointer.x = Math.min(Math.max(1, pointer.x - dialog.getWidth()/2), (int) dim.getWidth());
-        pointer.y = Math.min(pointer.y, dim.height - dialog.getHeight() - 100);
-        dialog.setLocation(pointer);*/
-        
         ok.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {

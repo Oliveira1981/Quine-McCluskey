@@ -64,7 +64,7 @@ public class MinTerm {
         return size;
     }
     
-    public boolean isIsCovered() {
+    public boolean isCovered() {
         return isCovered;
     }
     
