@@ -987,7 +987,7 @@ public class SumOfProducts {
 
         // STEP 2 /////
         if (updateScreen) {
-            report.append(" Pronto.\n\n » Gernado combinações de produtos...");
+            report.append(" Pronto.\n\n » Gerando combinações de produtos...");
             report.update(report.getGraphics());
         }
         generateAllCombinations(notEssentialProductsList.size(), updatePB);
